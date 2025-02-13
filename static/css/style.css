@@ -128,3 +128,42 @@ nav ul li a {
         grid-template-columns: 1fr;
     }
 }
+
+/* Полупрозрачный серый фон для хедера */
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+    background: rgba(128, 128, 128, 0.5); /* Полупрозрачный серый */
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    border-bottom: 4px solid transparent;
+}
+
+/* Анимированная граница из сегментов */
+.header-border {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    display: flex;
+    justify-content: space-around;
+    overflow: hidden;
+}
+
+.border-segment {
+    width: 20px;
+    height: 4px;
+    background: white;
+    animation: moveSegments 1.5s infinite alternate ease-in-out;
+}
+
+/* Анимация границы */
+@keyframes moveSegments {
+    0% { transform: translateY(0px); }
+    100% { transform: translateY(3px); }
+}
+
