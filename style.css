@@ -37,56 +37,28 @@ nav ul li a {
     letter-spacing: 2px;
     position: relative;
     color: white;
-    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.2);
-    filter: contrast(1.2) brightness(1.1);
-    opacity: 0;
-    animation: glitch-reveal 2s ease-in-out forwards, glitch-random 1.5s infinite linear alternate-reverse 2s;
+    display: inline-block;
 }
 
-.glitch::before, .glitch::after {
-    content: attr(data-text);
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    background: black;
-    opacity: 0.8;
-    image-rendering: pixelated;
+.glitch span {
+    display: inline-block;
+    position: relative;
 }
 
-.glitch::before {
-    color: red;
-    transform: translate(-1px, -1px);
-    animation: glitch-random-1 1.5s infinite linear alternate-reverse;
+@keyframes glitch-random {
+    0% { transform: translateX(0px); }
+    25% { transform: translateX(-2px) skewX(10deg); }
+    50% { transform: translateX(2px) skewX(-10deg); }
+    75% { transform: translateX(-1px) skewX(5deg); }
+    100% { transform: translateX(0px); }
 }
 
-.glitch::after {
-    color: cyan;
-    transform: translate(1px, 1px);
-    animation: glitch-random-2 1.5s infinite linear alternate-reverse;
+.glitch span:nth-child(odd) {
+    animation: glitch-random 1.2s infinite alternate ease-in-out;
 }
 
-@keyframes glitch-reveal {
-    0% {
-        opacity: 0;
-        filter: blur(10px);
-        transform: scale(1.2);
-    }
-    100% {
-        opacity: 1;
-        filter: blur(0);
-        transform: scale(1);
-    }
-}
-
-@keyframes glitch-random-1 {
-    0% { clip-path: inset(2% 0 95% 0); transform: translateX(-2px); }
-    100% { clip-path: inset(80% 0 10% 0); transform: translateX(2px); }
-}
-
-@keyframes glitch-random-2 {
-    0% { clip-path: inset(5% 0 90% 0); transform: translateX(1px); }
-    100% { clip-path: inset(70% 0 20% 0); transform: translateX(-2px); }
+.glitch span:nth-child(even) {
+    animation: glitch-random 1.5s infinite alternate-reverse ease-in-out;
 }
 
 .cta-button {
