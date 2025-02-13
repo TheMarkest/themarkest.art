@@ -117,3 +117,14 @@ nav ul li a {
         font-size: 1.5em;
     }
 }
+
+/* Чередующиеся секции */
+.section.reverse {
+    grid-template-columns: 1fr 1fr;
+}
+
+@media (max-width: 768px) {
+    .section.reverse {
+        grid-template-columns: 1fr;
+    }
+}
