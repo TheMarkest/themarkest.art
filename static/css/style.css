@@ -1,7 +1,58 @@
-body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f4f4f4; color: #333; }
-header { background: #222; color: white; padding: 10px 20px; text-align: center; }
-nav ul { list-style: none; padding: 0; }
-nav ul li { display: inline; margin-right: 15px; }
-nav ul li a { color: white; text-decoration: none; }
-main { padding: 20px; max-width: 800px; margin: auto; }
-footer { background: #222; color: white; text-align: center; padding: 10px; margin-top: 20px; }
+
+body {
+    margin: 0;
+    padding: 0;
+    background: black;
+    color: white;
+    font-family: 'Courier New', monospace;
+}
+
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    background: black;
+}
+
+.logo-container {
+    width: 60px;
+    height: auto;
+    margin-left: 20px;
+}
+
+.logo {
+    width: 100%;
+    height: auto;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+}
+
+nav ul li {
+    display: inline;
+    margin: 10px;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+}
+
+main {
+    padding: 20px;
+    text-align: center;
+}
+
+footer {
+    text-align: center;
+    padding: 10px;
+    background: black;
+    color: white;
+    margin-top: 20px;
+}
