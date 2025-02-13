@@ -7,195 +7,16 @@ body {
     font-family: 'Arial', sans-serif;
 }
 
-/* Header */
+/* Полупрозрачный хедер с анимированной границей */
 header {
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 20px;
-    background: black;
+    background: rgba(128, 128, 128, 0.5);
     position: sticky;
     top: 0;
     z-index: 1000;
-}
-
-.logo-container {
-    width: 80px;
-    height: auto;
-}
-
-.logo {
-    width: 100%;
-    height: auto;
-}
-
-nav ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    gap: 20px;
-}
-
-nav ul li a {
-    color: white;
-    text-decoration: none;
-    font-weight: bold;
-}
-
-/* Hero Section */
-.hero {
-    background: url('static/images/placeholder-bg.jpg') no-repeat center center/cover;
-    height: 500px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    font-size: 1.8em;
-    padding: 20px;
-}
-
-/* Content Sections */
-.section {
-    max-width: 1200px;
-    margin: 40px auto;
-    padding: 20px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-    align-items: center;
-}
-
-/* Full-width sections */
-.full-width {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-}
-
-.section img {
-    width: 100%;
-    height: auto;
-    border-radius: 10px;
-}
-
-/* Portfolio Grid */
-.portfolio-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 20px;
-    padding: 20px;
-}
-
-.portfolio-item {
-    background: #222;
-    padding: 20px;
-    border-radius: 10px;
-    text-align: center;
-}
-
-.portfolio-item img {
-    width: 100%;
-    height: auto;
-    border-radius: 10px;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-    .section {
-        grid-template-columns: 1fr;
-        text-align: center;
-    }
-
-    nav ul {
-        flex-direction: column;
-        text-align: center;
-    }
-
-    .hero {
-        font-size: 1.5em;
-    }
-}
-
-/* Чередующиеся секции */
-.section.reverse {
-    grid-template-columns: 1fr 1fr;
-}
-
-@media (max-width: 768px) {
-    .section.reverse {
-        grid-template-columns: 1fr;
-    }
-}
-
-/* Полупрозрачный серый фон для хедера */
-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 20px;
-    background: rgba(128, 128, 128, 0.5); /* Полупрозрачный серый */
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    border-bottom: 4px solid transparent;
-}
-
-/* Анимированная граница из сегментов */
-.header-border {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 4px;
-    display: flex;
-    justify-content: space-around;
-    overflow: hidden;
-}
-
-.border-segment {
-    width: 20px;
-    height: 4px;
-    background: white;
-    animation: moveSegments 1.5s infinite alternate ease-in-out;
-}
-
-/* Анимация границы */
-@keyframes moveSegments {
-    0% { transform: translateY(0px); }
-    100% { transform: translateY(3px); }
-}
-
-
-/* Контейнер для SVG-анимации */
-.header-border {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 20px;
-    overflow: hidden;
-}
-
-/* Стили для SVG */
-.header-svg {
-    width: 100%;
-    height: 100%;
-}
-
-/* Анимация движения точек */
-@keyframes moveWave {
-    0% { d: path('M 0 10 Q 25 5, 50 10 T 100 10 T 150 10 T 200 10 T 250 10 T 300 10 T 350 10 T 400 10 T 450 10'); }
-    50% { d: path('M 0 10 Q 25 15, 50 10 T 100 10 T 150 15 T 200 10 T 250 5 T 300 10 T 350 15 T 400 10 T 450 5'); }
-    100% { d: path('M 0 10 Q 25 5, 50 10 T 100 10 T 150 10 T 200 10 T 250 10 T 300 10 T 350 10 T 400 10 T 450 10'); }
-}
-
-.animated-path {
-    stroke: white;
-    stroke-width: 2;
-    fill: transparent;
-    animation: moveWave 2s infinite ease-in-out;
 }
 
 /* Контейнер для SVG-анимации */
@@ -204,17 +25,16 @@ header {
     bottom: 0;
     left: 0;
     width: 100%;
-    height: 24px; /* Увеличено для точек */
+    height: 24px;
     overflow: hidden;
 }
 
-/* Стили для SVG */
 .header-svg {
     width: 100%;
     height: 100%;
 }
 
-/* Анимация движения волны и точек */
+/* Анимация волны и точек */
 @keyframes moveWave {
     0% { d: path('M 0 12 Q 25 6, 50 12 T 100 12 T 150 12 T 200 12 T 250 12 T 300 12 T 350 12 T 400 12 T 450 12'); }
     50% { d: path('M 0 12 Q 25 18, 50 12 T 100 12 T 150 18 T 200 12 T 250 6 T 300 12 T 350 18 T 400 12 T 450 6'); }
@@ -228,9 +48,24 @@ header {
     animation: moveWave 2s infinite ease-in-out;
 }
 
-/* Точки на линии */
 .animated-dots circle {
     fill: white;
-    r: 4; /* Размер точек */
+    r: 4;
     animation: moveWave 2s infinite ease-in-out;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 10px;
+    background: rgba(128, 128, 128, 0.5);
+    margin-top: 20px;
+}
+
+/* Основной контент */
+main {
+    padding: 20px;
+    max-width: 1200px;
+    margin: auto;
+    text-align: center;
 }
