@@ -17,8 +17,7 @@
 
   <style>
     /* ==========================
-       1) ЭФФЕКТ «СТАРОГО МОНИТОРА»
-       (усиленное виньетирование и скан-линии)
+       1) ЭФФЕКТ «СТАРОГО МОНИТОРА» (ВИНЬЕТКА + СКАН-ЛИНИИ)
     ========================== */
     body::before {
       content: "";
@@ -28,7 +27,7 @@
       width: 100%; height: 100%;
       z-index: 9999;
       background:
-        /* Виньетка: тёмные края */
+        /* Тёмная виньетка */
         radial-gradient(
           circle at center, 
           rgba(0,0,0,0) 40%, 
@@ -103,7 +102,7 @@
       top: 0; left: 0;
       width: 100%;
       height: 160px;   /* Высота холста */
-      z-index: 1000;   /* Чтобы волна была над всем */
+      z-index: 1000;   /* Волна над всем */
     }
     #waveCanvas {
       display: block;
@@ -135,21 +134,18 @@
     }
 
     /* ==========================
-       4) Блок обложки (Cover),
-          доходит до верхней границы
-          (задний фон) 
+       4) Блок обложки (Cover)
+       занимает всю высоту экрана
     ========================== */
     #cover {
       position: relative;
       width: 100%;
-      min-height: 100vh; /* на всю высоту экрана */
+      min-height: 100vh; /* во всю высоту экрана */
       background: url("https://picsum.photos/1600/900?grayscale") center/cover no-repeat;
-      /* При желании заменить на своё изображение */
       display: flex;
       align-items: center;
       justify-content: center;
       text-align: center;
-      /* Нет margin-top, чтобы занять верх экрана */
     }
     #cover .cover-content {
       background: rgba(0,0,0,0.4);
@@ -324,20 +320,11 @@
       text-align: center;
       font-size: 0.9rem;
     }
-
-    /* ==========================
-       6) ЭФФЕКТ ПОСТЕПЕННОЙ ОТРИСОВКИ ТЕКСТА
-          (ПРИМЕНЯЕМ К АБЗАЦАМ <p>)
-    ========================== */
-    .scramble-text {
-      display: inline-block;
-      opacity: 0; /* изначально невидим */
-    }
   </style>
 </head>
 <body>
 
-  <!-- ХЕДЕР: волна + логотип/меню -->
+  <!-- Хедер (волна + лого/меню) -->
   <header>
     <canvas id="waveCanvas"></canvas>
     <div class="header-content">
@@ -353,7 +340,7 @@
     </div>
   </header>
 
-  <!-- КОНТЕНТ: Сначала обложка (cover) с фоновым изображением -->
+  <!-- Блок обложки (Cover), на всю высоту экрана -->
   <section id="cover">
     <div class="cover-content">
       <h2>Обложка сайта</h2>
@@ -364,7 +351,7 @@
     </div>
   </section>
 
-  <!-- Далее остальные секции -->
+  <!-- Основной контент -->
   <main>
     <section id="works">
       <div class="container">
@@ -392,7 +379,7 @@
           <div class="bio">
             <h3>Биография</h3>
             <p>
-              Здесь вставьте реальный текст биографии. 
+              Здесь вставьте реальный текст биографии.
             </p>
           </div>
           <div class="artist-statement">
@@ -434,11 +421,9 @@
     </div>
   </footer>
 
-  <!-- ==========================
-       JS: Волна + Эффект текста
-  ========================== -->
+  <!-- Скрипты: Волна + Scramble-текст «как в CodePen wagerfield» -->
   <script>
-    /* === 1) Волна (canvas) === */
+    /* ============ 1) ВОЛНА (CANVAS) ============ */
     const canvas = document.getElementById("waveCanvas");
     const ctx = canvas.getContext("2d");
 
@@ -453,7 +438,7 @@
     const LINE_WIDTH  = 2;
     const DOT_RADIUS  = 4;
     const HEADER_BG_COLOR = "rgba(85, 85, 85, 0.8)";
-    const BASELINE = 120; /* на какой высоте волна */
+    const BASELINE = 120; /* высота волны */
 
     function initDots() {
       width = canvas.offsetWidth;
@@ -462,7 +447,7 @@
       canvas.height = height;
       dots = [];
 
-      // Левая крайняя точка (прибита к BASELINE)
+      // Левая крайняя точка
       dots.push({ x: 0, pinned: true });
 
       // Промежуточные точки
@@ -482,17 +467,14 @@
     function animateWave() {
       ctx.clearRect(0, 0, width, height);
 
-      // Генерируем координаты волны (слева направо)
+      // Волна (слева направо)
       const wavePoints = dots.map(dot => {
-        if (dot.pinned) {
-          return { x: dot.x, y: BASELINE };
-        } else {
-          let wave = AMPLITUDE * Math.sin(dot.x * dot.freq + time + dot.phase);
-          return { x: dot.x, y: BASELINE + wave };
-        }
+        if (dot.pinned) return { x: dot.x, y: BASELINE };
+        let wave = AMPLITUDE * Math.sin(dot.x * dot.freq + time + dot.phase);
+        return { x: dot.x, y: BASELINE + wave };
       });
 
-      // Заливаем область над волной
+      // Заливка над волной
       ctx.beginPath();
       ctx.moveTo(0, 0);
       wavePoints.forEach(p => {
@@ -503,16 +485,13 @@
       ctx.fillStyle = HEADER_BG_COLOR;
       ctx.fill();
 
-      // Рисуем неоновую линию
+      // Неоновая линия
       ctx.beginPath();
       ctx.strokeStyle = "#0ff";
       ctx.lineWidth = LINE_WIDTH;
       wavePoints.forEach((p, i) => {
-        if (i === 0) {
-          ctx.moveTo(p.x, p.y);
-        } else {
-          ctx.lineTo(p.x, p.y);
-        }
+        if (i===0) ctx.moveTo(p.x, p.y);
+        else       ctx.lineTo(p.x, p.y);
       });
       ctx.stroke();
 
@@ -532,76 +511,85 @@
       initDots();
     }
     window.addEventListener("resize", onResize);
-
     initDots();
     animateWave();
 
 
-    /* === 2) Эффект появления текста (постепенная отрисовка) === */
-    const scrambleChars = "!<>-_\\/[]{}—=+*^?#________";
+    /* ============ 2) SCRAMBLE-ТЕКСТ «КАК В CODEPEN WAGERFIELD» ============ */
     /* 
-       Функция scrambleLetterByLetter:
-       - Поочерёдно «печатает» каждую букву с несколькими
-         псевдо-случайными символами, а затем ставит нужную.
-       - Длится меньше и идёт постепенно.
+       Алгоритм:
+       1) Сохраняем исходный текст (oldText).
+       2) Генерируем «кадры» (start, end) для каждой буквы.
+       3) На каждом кадре (frame) случайно заменяем букву на псевдосимвол, пока не достигнем end.
+       4) Как только frame >= end, ставим финальную букву.
+       Таким образом, каждая буква «дребезжит» разное время.
     */
-    function scrambleLetterByLetter(el, speed=20, scrambleIterations=4) {
-      const text = el.textContent;
-      el.textContent = ""; // очистили
-      let i = 0;
+    const CHARS = "!<>-_\\/[]{}—=+*^?#________";
 
-      function printNextChar() {
-        if (i >= text.length) return; 
-        scrambleChar(i).then(() => {
-          i++;
-          printNextChar();
-        });
-      }
-
-      function scrambleChar(index) {
-        return new Promise(resolve => {
-          const originalChar = text[index];
-          let iteration = 0;
-          // Генерируем промежуточные символы
-          const interval = setInterval(() => {
-            if (iteration >= scrambleIterations) {
-              clearInterval(interval);
-              // Ставим финальный символ
-              el.textContent += originalChar;
-              resolve();
-            } else {
-              // случайный символ
-              const randChar = scrambleChars[Math.floor(Math.random()*scrambleChars.length)];
-              el.textContent += randChar;
-              iteration++;
-              // Убираем последний
-              if (iteration < scrambleIterations) {
-                el.textContent = el.textContent.slice(0, -1);
-              }
-            }
-          }, speed);
-        });
-      }
-
-      printNextChar();
+    function randomChar() {
+      return CHARS[Math.floor(Math.random() * CHARS.length)];
     }
 
-    // Применим эффект ко всем абзацам <p> (кроме заголовков)
+    // Возвращает Promise, чтобы можно было цеплять анимации
+    function scrambleText(el, newText) {
+      const oldText = el.innerText || "";
+      const length  = Math.max(oldText.length, newText.length);
+      const promise = new Promise(resolve => {
+        const queue = [];
+        for (let i=0; i<length; i++) {
+          const from  = oldText[i] || "";
+          const to    = newText[i] || "";
+          const start = Math.floor(Math.random()*20);
+          const end   = start + Math.floor(Math.random()*20);
+          queue.push({ from, to, start, end, char: null });
+        }
+
+        let frame = 0;
+        function update() {
+          let output = "";
+          let complete = 0;
+          for (let i=0; i<length; i++) {
+            const obj = queue[i];
+            if (frame >= obj.end) {
+              complete++;
+              output += obj.to;
+            } else if (frame >= obj.start) {
+              // показываем случайный символ
+              if (!obj.char || Math.random() < 0.28) {
+                obj.char = randomChar();
+              }
+              output += obj.char;
+            } else {
+              // до start показываем исходную букву (или пустоту)
+              output += obj.from;
+            }
+          }
+          el.innerText = output;
+          if (complete === length) {
+            resolve();
+          } else {
+            frame++;
+            requestAnimationFrame(update);
+          }
+        }
+        requestAnimationFrame(update);
+      });
+      return promise;
+    }
+
+    // Применим к каждому абзацу <p> (кроме заголовков) исходный scramble
     window.addEventListener("load", () => {
       const paragraphs = document.querySelectorAll("p");
-      paragraphs.forEach(p => {
-        // Добавляем класс, чтобы по умолчанию не было видно
-        p.classList.add("scramble-text");
-      });
-
-      // Запускаем анимацию с задержкой между абзацами
       let delay = 0;
-      paragraphs.forEach((p, index) => {
+      paragraphs.forEach(p => {
+        // Сохраняем исходный текст
+        const text = p.innerText;
+        p.innerText = ""; // Сначала очистим
+        // Ставим задержку между абзацами, чтобы эффект шёл последовательно
         setTimeout(() => {
-          scrambleLetterByLetter(p, 20, 4);
+          scrambleText(p, text);
         }, delay);
-        // Увеличиваем задержку (чтобы тексты появлялись по очереди)
-        delay += 400; // 0.4s между абзацами
+        delay += 300; // 0.3s задержка между абзацами
       });
     });
   </script>
