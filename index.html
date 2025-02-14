@@ -6,7 +6,7 @@
   <title>TheMarkest.art – Sci-Fi/Cyberpunk</title>
   <meta name="description" content="Портфолио художника, работающего в стиле sci-fi/cyberpunk с интерактивными и кинетическими скульптурами." />
 
-  <!-- Фавиконки (проверьте, что файлы лежат в assets/favicon/) -->
+  <!-- Фавиконки (убедитесь, что файлы лежат в assets/favicon/) -->
   <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/apple-touch-icon.png">
   <link rel="icon" type="image/svg+xml" href="assets/favicon/favicon.svg">
   <link rel="icon" type="image/png" sizes="96x96" href="assets/favicon/favicon-96x96.png">
@@ -16,10 +16,10 @@
   <meta name="theme-color" content="#000000">
 
   <style>
-    /* ===== Сброс и базовые стили ===== */
+    /* ===== СБРОС И БАЗОВЫЕ СТИЛИ ===== */
     * {
-      margin: 0; 
-      padding: 0; 
+      margin: 0;
+      padding: 0;
       box-sizing: border-box;
     }
     html {
@@ -27,7 +27,7 @@
     }
     body {
       font-family: "IBM Plex Sans", sans-serif;
-      background: #000;
+      background: #000; /* Чёрный фон страницы */
       color: #fff;
       line-height: 1.5;
     }
@@ -40,55 +40,64 @@
       color: #0ff;
     }
 
-    /* ===== ФИКСИРОВАННЫЙ ХЕДЕР (полупрозрачный) ===== */
-    header#header {
+    /* ===== ОБЩАЯ СХЕМА ШАПКИ =====
+       1) header-bg: холст + полупрозрачная заливка
+       2) header-content: лого и меню поверх неё
+    */
+    header {
       position: fixed;
       top: 0; left: 0;
       width: 100%;
-      height: 130px;                   /* Высота шапки */
-      background: rgba(85, 85, 85, 0.8); /* Полупрозрачный серый фон */
       z-index: 1000;
-      overflow: visible;              /* ВАЖНО: чтобы волна не обрезалась */
+    }
+    /* Высота "фона" шапки – побольше, чтобы вместить амплитуду */
+    .header-bg {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 160px; /* Можно увеличить, если амплитуда ещё больше */
+      pointer-events: none; /* Чтобы мышь не мешала */
+      z-index: 1000;
+    }
+    /* Внутри header-bg лежит <canvas>, где рисуем полупрозрачный фон + волну */
+    #waveCanvas {
+      display: block;
+      width: 100%;
+      height: 100%;
     }
 
-    /* ЛОГОТИП СЛЕВА */
+    /* Слой с логотипом и меню – поверх canvas */
+    .header-content {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 130px; /* "Официальная" высота шапки (logo + menu) */
+      z-index: 1001; /* Выше canvas */
+      display: flex;
+      align-items: center;
+      justify-content: center; /* Для меню по центру */
+    }
+    /* Лого слева */
     .logo-container {
       position: absolute;
-      top: 50%;
       left: 20px;
-      transform: translateY(-50%);
     }
     .logo {
       width: 80px;
       height: auto;
     }
-
-    /* МЕНЮ ПО ЦЕНТРУ */
-    .menu-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100%;
-    }
+    /* Меню по центру */
     nav a {
       margin: 0 15px;
       font-size: 1.2rem;
       color: #fff;
     }
 
-    /* CANVAS ДЛЯ НЕОНОВОЙ ЛИНИИ (50px ВЫСОТОЙ) */
-    .header-line {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 50px;
-      pointer-events: none;
-    }
-
-    /* ОТСТУП ДЛЯ ОСНОВНОГО КОНТЕНТА (130 + 50 = 180px) */
+    /* ОТСТУП ДЛЯ ОСНОВНОГО КОНТЕНТА
+       130px (высота header-content) + ещё запас (например 30px),
+       т.к. холст 160px, но часть может быть "холостая" над волной */
     main {
-      margin-top: 180px;
+      margin-top: 160px;
     }
 
     /* ===== ПРИМЕР СЕКЦИЙ ===== */
@@ -248,23 +257,26 @@
 </head>
 <body>
 
-  <!-- ФИКСИРОВАННЫЙ ХЕДЕР -->
-  <header id="header">
-    <div class="logo-container">
-      <img src="assets/logo.svg" alt="TheMarkest.art Logo" class="logo" />
+  <header>
+    <!-- 1) Холст с полупрозрачным серым фоном и волной -->
+    <div class="header-bg">
+      <canvas id="waveCanvas"></canvas>
     </div>
-    <div class="menu-container">
+
+    <!-- 2) Слой с логотипом и меню -->
+    <div class="header-content">
+      <div class="logo-container">
+        <img src="assets/logo.svg" alt="TheMarkest.art Logo" class="logo" />
+      </div>
       <nav>
         <a href="#works">Портфолио</a>
         <a href="#about">О художнике</a>
         <a href="#contact">Контакты</a>
       </nav>
     </div>
-    <!-- Холст для неоновой линии -->
-    <canvas id="header-line" class="header-line"></canvas>
   </header>
 
-  <!-- Контент, смещён на 180px -->
+  <!-- Основной контент смещён на 160px -->
   <main>
     <section id="works">
       <div class="container">
@@ -281,6 +293,7 @@
               <a href="#">Telegram</a>
             </div>
           </article>
+          <!-- Добавьте больше работ, если нужно -->
         </div>
       </div>
     </section>
@@ -291,11 +304,11 @@
         <div class="about-content">
           <div class="bio">
             <h3>Биография</h3>
-            <p>Краткий текст биографии.</p>
+            <p>Здесь вставьте реальный текст биографии. Расскажите о ключевых этапах пути, образовании и вдохновении.</p>
           </div>
           <div class="artist-statement">
             <h3>Artist Statement</h3>
-            <p>Опишите вашу философию, что вы хотите донести до зрителя.</p>
+            <p>Опишите вашу философию, что вы хотите донести до зрителя, как взаимодействуете с технологиями и материалами.</p>
           </div>
           <div class="artist-photo">
             <div>Photo</div>
@@ -330,37 +343,36 @@
     </div>
   </footer>
 
-  <!-- СКРИПТ: БОЛЬШАЯ АМПЛИТУДА, ПИННГОВАНИЕ КРАЁВ, OVERFLOW:VISIBLE -->
+  <!-- Скрипт: рисуем полупрозрачную заливку и волну -->
   <script>
-    const HEADER_HEIGHT = 130;  
-    const CANVAS_HEIGHT = 50;   
-    const DOT_SPACING = 40;     
-    const AMPLITUDE = 15;       // БОльшая амплитуда
-    const FREQ_MIN = 0.03;      
-    const FREQ_MAX = 0.08;      
-    const LINE_WIDTH = 2;       
-    const DOT_RADIUS = 4;       
-
-    const header = document.getElementById("header");
-    const canvas = document.getElementById("header-line");
+    const canvas = document.getElementById("waveCanvas");
     const ctx = canvas.getContext("2d");
 
-    let width = 0;
+    const BG_WIDTH = () => canvas.offsetWidth;
+    const BG_HEIGHT = () => canvas.offsetHeight;
+
+    // ПАРАМЕТРЫ ВОЛНЫ
+    const BASELINE = 130; // «нижняя граница» заливки (где волна)
+    const AMPLITUDE = 15; // ±15px
+    const DOT_SPACING = 40;
+    const FREQ_MIN = 0.03;
+    const FREQ_MAX = 0.08;
+    const LINE_WIDTH = 2;
+    const DOT_RADIUS = 4;
+
     let time = 0;
     let dots = [];
+    let width = 0, height = 0;
 
-    // Крайние точки (x=0 и x=width) "прибиты" к нижней границе (y=130)
     function initDots() {
-      width = header.offsetWidth;
+      width = BG_WIDTH();
+      height = BG_HEIGHT();
       canvas.width = width;
-      canvas.height = CANVAS_HEIGHT;
+      canvas.height = height;
       dots = [];
 
-      // Левая крайняя точка
-      dots.push({
-        x: 0,
-        pinned: true
-      });
+      // Левая «прибитая» точка (x=0,y=BASELINE)
+      dots.push({ x: 0, pinned: true });
 
       // Промежуточные точки
       for (let x = DOT_SPACING; x <= width - DOT_SPACING; x += DOT_SPACING) {
@@ -372,64 +384,62 @@
         });
       }
 
-      // Правая крайняя точка
-      dots.push({
-        x: width,
-        pinned: true
-      });
+      // Правая «прибитая» точка (x=width,y=BASELINE)
+      dots.push({ x: width, pinned: true });
     }
 
     function animate() {
-      ctx.clearRect(0, 0, width, CANVAS_HEIGHT);
+      ctx.clearRect(0, 0, width, height);
 
-      // Волна: pinned => y=130, иначе y=130 + sin(...)
-      let waveCoords = dots.map(dot => {
+      // Собираем координаты волны
+      // pinned => y=BASELINE
+      // иначе => y=BASELINE + sin(...)
+      const wavePoints = dots.map(dot => {
         if (dot.pinned) {
-          return { x: dot.x, y: HEADER_HEIGHT };
+          return { x: dot.x, y: BASELINE };
         } else {
           let wave = AMPLITUDE * Math.sin(dot.x * dot.freq + time + dot.phase);
-          return { x: dot.x, y: HEADER_HEIGHT + wave };
+          return { x: dot.x, y: BASELINE + wave };
         }
       });
 
-      // Формируем polygon (clip-path)
-      // Начало: (0,0)->(100%,0)->точки в обратном порядке->замыкаем
-      let polyPoints = ["0% 0%", "100% 0%"];
-      for (let i = waveCoords.length - 1; i >= 0; i--) {
-        let p = waveCoords[i];
-        // Перевод в проценты (от HEADER_HEIGHT=130)
-        let xPerc = ((p.x / width) * 100).toFixed(2) + "%";
-        let yPerc = ((p.y / HEADER_HEIGHT) * 100).toFixed(2) + "%";
-        polyPoints.push(`${xPerc} ${yPerc}`);
-      }
-      header.style.clipPath = `polygon(${polyPoints.join(", ")})`;
+      // 1) РИСУЕМ ПОЛУПРОЗРАЧНУЮ ЗАЛИВКУ
+      // Идея: от (0,0) до (width,0), потом волна (в прямом порядке),
+      //       затем опускаемся до (width,height) и (0,height).
+      // Всё, что выше волны, будет залито серым, а ниже волны – прозрачно.
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.lineTo(width, 0);
 
-      // Рисуем неоновую линию на canvas
+      wavePoints.forEach((p) => {
+        ctx.lineTo(p.x, p.y);
+      });
+
+      ctx.lineTo(width, height);
+      ctx.lineTo(0, height);
+      ctx.closePath();
+
+      ctx.fillStyle = "rgba(85, 85, 85, 0.8)"; // Полупрозрачный серый
+      ctx.fill();
+
+      // 2) РИСУЕМ НЕОНОВУЮ ЛИНИЮ ПОВЕРХ ЗАЛИВКИ
       ctx.beginPath();
       ctx.strokeStyle = "#0ff";
       ctx.lineWidth = LINE_WIDTH;
 
-      waveCoords.forEach((p, i) => {
-        // p.y ~ [130 - 15..130 + 15] => [115..145]
-        // На холсте (50px): y=130 => canvas=50, y=115 => 35, y=145 => 65
-        // Но canvas.height=50, => y>50 выйдет за canvas
-        // overflow: visible на header позволяет нам увидеть линию ниже 130
-        // однако сам canvas ограничен 50px
-        // => если p.y>130, часть волны ниже "условного низа" — но всё же нарисуется, т.к. header overflow=visible
-        let cy = CANVAS_HEIGHT - (HEADER_HEIGHT - p.y);
+      wavePoints.forEach((p, i) => {
         if (i === 0) {
-          ctx.moveTo(p.x, cy);
+          ctx.moveTo(p.x, p.y);
         } else {
-          ctx.lineTo(p.x, cy);
+          ctx.lineTo(p.x, p.y);
         }
       });
       ctx.stroke();
 
-      // Точки
-      waveCoords.forEach(p => {
-        let cy = CANVAS_HEIGHT - (HEADER_HEIGHT - p.y);
+      // 3) ТОЛСТЫЕ ТОЧКИ
+      wavePoints.forEach((p) => {
         ctx.beginPath();
-        ctx.arc(p.x, cy, DOT_RADIUS, 0, Math.PI * 2);
+        ctx.arc(p.x, p.y, DOT_RADIUS, 0, Math.PI * 2);
         ctx.fillStyle = "#0ff";
         ctx.fill();
       });
@@ -438,13 +448,12 @@
       requestAnimationFrame(animate);
     }
 
-    // Перезапуск при изменении размеров
     function onResize() {
       initDots();
     }
     window.addEventListener("resize", onResize);
 
-    // Старт
+    // Запуск
     initDots();
     animate();
   </script>
