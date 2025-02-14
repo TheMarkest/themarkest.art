@@ -2,11 +2,11 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TheMarkest.art – Sci-Fi/Cyberpunk</title>
   <meta name="description" content="Портфолио художника, работающего в стиле sci-fi/cyberpunk с интерактивными и кинетическими скульптурами." />
 
-  <!-- Подключение фавиконок (убедитесь, что файлы лежат в assets/favicon/) -->
+  <!-- Фавиконки – проверьте пути к файлам в assets/favicon/ -->
   <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/favicon-16x16.png">
@@ -21,7 +21,7 @@
     html { scroll-behavior: smooth; }
     body {
       font-family: "IBM Plex Sans", sans-serif;
-      background: #000; /* Всё ниже сепаратора – чисто чёрный */
+      background: #000;
       color: #fff;
       line-height: 1.5;
     }
@@ -38,96 +38,38 @@
       padding: 2rem 1rem;
     }
 
-    /* ===== ШАПКА (Header) – слегка серый фон ===== */
-    header {
-      background: #555;  /* слегка серый фон */
-      padding: 1rem 0;
-      text-align: center;
+    /* ===== HEADER – верхняя панель ===== */
+    header#header {
       position: relative;
+      background: #555;  /* Слегка серый фон */
+      height: 120px;
+      overflow: hidden;  /* Обеспечивает корректное отображение clip-path */
     }
-    /* Логотип */
-    .logo-container { margin-bottom: 0.5rem; }
-    .logo { width: 100px; height: auto; }
-    /* Заголовок с глитч-эффектом */
-    .glitch {
-      font-size: 2rem;
-      text-transform: uppercase;
-      color: #0ff;
-      position: relative;
-      display: inline-block;
-    }
-    .glitch::before,
-    .glitch::after {
-      content: attr(data-text);
+    /* Логотип в левом верхнем углу */
+    .logo-container {
       position: absolute;
-      left: 0;
-      width: 100%;
-      overflow: hidden;
-      clip: rect(0, 900px, 0, 0);
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
     }
-    .glitch::before {
-      text-shadow: -2px 0 #0ff;
-      animation: glitch-top 2s infinite linear alternate-reverse;
+    .logo {
+      width: 100px;
+      height: auto;
     }
-    .glitch::after {
-      text-shadow: -2px 0 #f0f;
-      animation: glitch-bottom 2s infinite linear alternate-reverse;
-    }
-    @keyframes glitch-top {
-      0% { clip: rect(0, 9999px, 0, 0); }
-      15% { clip: rect(10px, 9999px, 40px, 0); transform: translate(-2px, -2px); }
-      30% { clip: rect(0, 9999px, 0, 0); transform: translate(0, 0); }
-      45% { clip: rect(5px, 9999px, 50px, 0); transform: translate(-4px, -3px); }
-      100% { clip: rect(0, 9999px, 0, 0); }
-    }
-    @keyframes glitch-bottom {
-      0% { clip: rect(0, 9999px, 0, 0); }
-      15% { clip: rect(20px, 9999px, 60px, 0); transform: translate(2px, 2px); }
-      30% { clip: rect(0, 9999px, 0, 0); transform: translate(0, 0); }
-      45% { clip: rect(15px, 9999px, 55px, 0); transform: translate(4px, 3px); }
-      100% { clip: rect(0, 9999px, 0, 0); }
-    }
-    .subtitle { margin-top: 0.5rem; font-size: 1rem; opacity: 0.85; }
-    nav {
-      margin-top: 0.8rem;
+    /* Контейнер меню – пункты по центру */
+    .menu-container {
       display: flex;
-      gap: 1.5rem;
       justify-content: center;
-    }
-    nav a {
-      font-weight: 500;
-      padding-bottom: 2px;
-      border-bottom: 1px solid transparent;
-    }
-    nav a:hover { border-bottom: 1px solid #0ff; }
-    .social-links {
-      margin-top: 0.8rem;
-      display: flex;
-      gap: 1rem;
-      justify-content: center;
-    }
-    .social-links a {
-      padding: 0.3rem 0.6rem;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 4px;
-      font-weight: 600;
-    }
-    .social-links a:hover { background: rgba(0, 255, 255, 0.2); }
-
-    /* ===== Сепаратор – анимированная линия ===== */
-    .separator-container {
-      width: 100%;
-      height: 50px;
-      /* Контейнер сепаратора располагается сразу под шапкой и имеет фон чисто черного цвета */
-      background: #000;
-    }
-    canvas.separator {
-      display: block;
-      width: 100%;
+      align-items: center;
       height: 100%;
     }
+    nav a {
+      margin: 0 15px;
+      font-size: 1.2rem;
+      color: #fff;
+    }
 
-    /* ===== Остальные секции – фон чисто черный ===== */
+    /* ===== Остальные секции ===== */
     section {
       background: #000;
       padding: 4rem 0;
@@ -253,39 +195,25 @@
       text-align: center;
       font-size: 0.9rem;
     }
-
-    @media (max-width: 768px) {
-      nav { flex-wrap: wrap; gap: 1rem; }
-      .about-content { flex-direction: column; align-items: flex-start; }
-    }
   </style>
 </head>
 <body>
 
-  <!-- ШАПКА с меню -->
-  <header id="home">
+  <!-- HEADER с логотипом в левом углу и меню по центру -->
+  <header id="header">
     <div class="logo-container">
       <img src="assets/logo.svg" alt="TheMarkest.art Logo" class="logo" />
     </div>
-    <h1 class="glitch" data-text="TheMarkest.art">TheMarkest.art</h1>
-    <p class="subtitle">Художник интерактивной и кинетической скульптуры</p>
-    <nav>
-      <a href="#works">Портфолио</a>
-      <a href="#about">О художнике</a>
-      <a href="#contact">Контакты</a>
-    </nav>
-    <div class="social-links">
-      <a href="https://instagram.com/themarkest" target="_blank">Instagram</a>
-      <a href="https://t.me/markestart" target="_blank">Telegram</a>
+    <div class="menu-container">
+      <nav>
+        <a href="#works">Портфолио</a>
+        <a href="#about">О художнике</a>
+        <a href="#contact">Контакты</a>
+      </nav>
     </div>
   </header>
 
-  <!-- Сепаратор – линия, отделяющая серую шапку от чёрного фона -->
-  <div class="separator-container">
-    <canvas id="separator-top" class="separator"></canvas>
-  </div>
-
-  <!-- СЕКЦИЯ ПОРТФОЛИО -->
+  <!-- Секции страницы -->
   <section id="works">
     <div class="container">
       <h2>Портфолио</h2>
@@ -305,7 +233,6 @@
     </div>
   </section>
 
-  <!-- СЕКЦИЯ "О ХУДОЖНИКЕ" -->
   <section id="about">
     <div class="container">
       <h2>О художнике</h2>
@@ -325,7 +252,6 @@
     </div>
   </section>
 
-  <!-- СЕКЦИЯ "КОНТАКТЫ" -->
   <section id="contact">
     <div class="container">
       <h2>Контакты</h2>
@@ -345,93 +271,58 @@
     </div>
   </section>
 
-  <!-- ФУТЕР с сепаратором сверху -->
-  <div class="separator-container">
-    <canvas id="separator-footer" class="separator"></canvas>
-  </div>
   <footer>
     <div class="container">
       &copy; 2025 TheMarkest.art. Все права защищены.
     </div>
   </footer>
 
-  <!-- ===== JavaScript: Анимация сепараторов ===== -->
+  <!-- ===== JavaScript: Анимация деформируемой границы header ===== -->
   <script>
-    function animateSeparator(canvasId) {
-      const canvas = document.getElementById(canvasId);
-      if (!canvas) return;
-      const ctx = canvas.getContext("2d");
-      let width = canvas.width = canvas.offsetWidth;
-      let height = canvas.height = canvas.offsetHeight;
-      
-      const dotRadius = 3;
-      const dotSpacing = 40;  // Интервал между точками
-      const speed = 0.5;
-      
-      // Для каждой точки генерируем случайные амплитуду и частоту
-      let dots = [];
-      for (let x = 0; x <= width; x += dotSpacing) {
+    // Получаем header и его размеры
+    const header = document.getElementById("header");
+    function updateHeaderClip() {
+      const headerWidth = header.offsetWidth;
+      const headerHeight = header.offsetHeight; // 120px
+      const dotSpacing = 40; // интервал между точками
+      const dots = [];
+      // Генерируем точки вдоль нижней границы
+      for (let x = 0; x <= headerWidth; x += dotSpacing) {
         dots.push({
           x: x,
-          amplitude: 5 + Math.random() * 10,    // Амплитуда от 5 до 15
-          frequency: 0.03 + Math.random() * 0.07  // Частота от 0.03 до 0.1
+          amplitude: 5 + Math.random() * 10,      // амплитуда от 5 до 15 px
+          frequency: 0.03 + Math.random() * 0.07    // частота от 0.03 до 0.1
         });
       }
-      
       let time = 0;
-      function draw() {
-        ctx.clearRect(0, 0, width, height);
-        
-        // Рисуем соединяющую линию между точками
-        ctx.strokeStyle = "#0ff";
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        dots.forEach((dot, index) => {
-          let y = height / 2 + dot.amplitude * Math.sin(dot.x * dot.frequency + time);
-          if (index === 0) {
-            ctx.moveTo(dot.x, y);
-          } else {
-            ctx.lineTo(dot.x, y);
-          }
+      function animate() {
+        // Для каждой точки вычисляем y как функцию синуса от (x * frequency + time)
+        const bottomPoints = dots.map(dot => {
+          return {
+            x: dot.x,
+            y: headerHeight + dot.amplitude * Math.sin(dot.x * dot.frequency + time)
+          };
         });
-        ctx.stroke();
-        
-        // Рисуем сами точки
-        ctx.fillStyle = "#0ff";
-        dots.forEach(dot => {
-          let y = height / 2 + dot.amplitude * Math.sin(dot.x * dot.frequency + time);
-          ctx.beginPath();
-          ctx.arc(dot.x, y, dotRadius, 0, Math.PI * 2);
-          ctx.fill();
-        });
-        
-        // Обновляем позицию точек по горизонтали
-        dots.forEach(dot => {
-          dot.x += speed;
-          if (dot.x - dotRadius > width) {
-            dot.x = -dotRadius;
-          }
-        });
-        time += 0.1;
-        requestAnimationFrame(draw);
-      }
-      draw();
-    }
-    
-    // Инициализируем анимацию сепараторов
-    animateSeparator("separator-top");
-    animateSeparator("separator-footer");
-    
-    // Обновление размеров канвы при изменении окна
-    window.addEventListener("resize", () => {
-      ["separator-top", "separator-footer"].forEach(id => {
-        const canvas = document.getElementById(id);
-        if (canvas) {
-          canvas.width = canvas.offsetWidth;
-          canvas.height = canvas.offsetHeight;
+        // Строим массив точек для clip-path:
+        // Начинаем с верхнего левого и правого углов
+        let polyPoints = ["0% 0%", "100% 0%"];
+        // Затем нижняя граница – точки в обратном порядке (чтобы полигон был замкнут по часовой стрелке)
+        for (let i = bottomPoints.length - 1; i >= 0; i--) {
+          const p = bottomPoints[i];
+          const xPerc = ((p.x / headerWidth) * 100).toFixed(2) + "%";
+          const yPerc = ((p.y / headerHeight) * 100).toFixed(2) + "%";
+          polyPoints.push(xPerc + " " + yPerc);
         }
-      });
-    });
+        // Обновляем clip-path header'а
+        header.style.clipPath = "polygon(" + polyPoints.join(", ") + ")";
+        time += 0.1;
+        requestAnimationFrame(animate);
+      }
+      animate();
+    }
+    // Запускаем анимацию при загрузке и обновлении размеров
+    updateHeaderClip();
+    window.addEventListener("resize", updateHeaderClip);
   </script>
 </body>
 </html>
