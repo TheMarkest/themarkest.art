@@ -16,7 +16,7 @@
   <meta name="theme-color" content="#000000">
 
   <style>
-    /* ===== СБРОС И БАЗОВЫЕ СТИЛИ ===== */
+    /* ===== Сброс и базовые стили ===== */
     * {
       margin: 0; 
       padding: 0; 
@@ -40,15 +40,15 @@
       color: #0ff;
     }
 
-    /* ===== ФИКСИРОВАННЫЙ ХЕДЕР ===== */
+    /* ===== ФИКСИРОВАННЫЙ ХЕДЕР (полупрозрачный) ===== */
     header#header {
       position: fixed;
       top: 0; left: 0;
       width: 100%;
-      height: 124px;      /* Чуть больше 120px, чтобы волна уместилась */
-      background: #555;   /* Серый фон */
+      height: 130px;                   /* Высота шапки */
+      background: rgba(85, 85, 85, 0.8); /* Полупрозрачный серый фон */
       z-index: 1000;
-      overflow: hidden;   /* Для clip-path */
+      overflow: visible;              /* ВАЖНО: чтобы волна не обрезалась */
     }
 
     /* ЛОГОТИП СЛЕВА */
@@ -76,19 +76,19 @@
       color: #fff;
     }
 
-    /* CANVAS ДЛЯ НЕОНОВОЙ ЛИНИИ (30px ВЫСОТОЙ) */
+    /* CANVAS ДЛЯ НЕОНОВОЙ ЛИНИИ (50px ВЫСОТОЙ) */
     .header-line {
       position: absolute;
       bottom: 0;
       left: 0;
       width: 100%;
-      height: 30px;
+      height: 50px;
       pointer-events: none;
     }
 
-    /* ОТСТУП ДЛЯ ОСНОВНОГО КОНТЕНТА (124 + 30 = 154px) */
+    /* ОТСТУП ДЛЯ ОСНОВНОГО КОНТЕНТА (130 + 50 = 180px) */
     main {
-      margin-top: 154px;
+      margin-top: 180px;
     }
 
     /* ===== ПРИМЕР СЕКЦИЙ ===== */
@@ -102,6 +102,7 @@
       margin-bottom: 2rem;
       text-transform: uppercase;
     }
+    /* Пример сетки (портфолио) */
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -147,7 +148,7 @@
       background: #0cc;
     }
 
-    /* О художнике */
+    /* Секция "О художнике" */
     .about-content {
       display: flex;
       flex-wrap: wrap;
@@ -190,7 +191,7 @@
       background: #111;
     }
 
-    /* ФОРМА И ФУТЕР */
+    /* Форма и футер */
     form {
       display: flex;
       flex-direction: column;
@@ -247,7 +248,7 @@
 </head>
 <body>
 
-  <!-- Фиксированный хедер -->
+  <!-- ФИКСИРОВАННЫЙ ХЕДЕР -->
   <header id="header">
     <div class="logo-container">
       <img src="assets/logo.svg" alt="TheMarkest.art Logo" class="logo" />
@@ -259,11 +260,11 @@
         <a href="#contact">Контакты</a>
       </nav>
     </div>
-    <!-- Canvas для неоновой линии -->
+    <!-- Холст для неоновой линии -->
     <canvas id="header-line" class="header-line"></canvas>
   </header>
 
-  <!-- Контент, смещён на 154px вниз -->
+  <!-- Контент, смещён на 180px -->
   <main>
     <section id="works">
       <div class="container">
@@ -329,14 +330,14 @@
     </div>
   </footer>
 
-  <!-- Скрипт: ПРИБИТЫЕ КРАЯ + НЕБОЛЬШАЯ АМПЛИТУДА, чтобы волна не вылезала за хедер -->
+  <!-- СКРИПТ: БОЛЬШАЯ АМПЛИТУДА, ПИННГОВАНИЕ КРАЁВ, OVERFLOW:VISIBLE -->
   <script>
-    const HEADER_HEIGHT = 124;  
-    const CANVAS_HEIGHT = 30;   
+    const HEADER_HEIGHT = 130;  
+    const CANVAS_HEIGHT = 50;   
     const DOT_SPACING = 40;     
-    const AMPLITUDE = 3;        // Волна всего 3px
-    const FREQ_MIN = 0.05;      
-    const FREQ_MAX = 0.1;       
+    const AMPLITUDE = 15;       // БОльшая амплитуда
+    const FREQ_MIN = 0.03;      
+    const FREQ_MAX = 0.08;      
     const LINE_WIDTH = 2;       
     const DOT_RADIUS = 4;       
 
@@ -348,7 +349,7 @@
     let time = 0;
     let dots = [];
 
-    // Создаём точки, крайние (x=0 и x=width) "прибиты" на уровне y=HEADER_HEIGHT
+    // Крайние точки (x=0 и x=width) "прибиты" к нижней границе (y=130)
     function initDots() {
       width = header.offsetWidth;
       canvas.width = width;
@@ -381,12 +382,7 @@
     function animate() {
       ctx.clearRect(0, 0, width, CANVAS_HEIGHT);
 
-      // Волна
-      // pinned => y=HEADER_HEIGHT
-      // иначе y=HEADER_HEIGHT + wave
-      // wave в диапазоне [-3..+3], итого y в [121..127],
-      // но HEADER_HEIGHT=124, значит max y=127 — на 3px выше, что не страшно,
-      // так как clip-path будет обрезать ровно в 124px, а холст 30px нам хватает
+      // Волна: pinned => y=130, иначе y=130 + sin(...)
       let waveCoords = dots.map(dot => {
         if (dot.pinned) {
           return { x: dot.x, y: HEADER_HEIGHT };
@@ -396,27 +392,30 @@
         }
       });
 
-      // Polygon (clip-path)
+      // Формируем polygon (clip-path)
+      // Начало: (0,0)->(100%,0)->точки в обратном порядке->замыкаем
       let polyPoints = ["0% 0%", "100% 0%"];
       for (let i = waveCoords.length - 1; i >= 0; i--) {
         let p = waveCoords[i];
-        // Преобразуем в проценты от HEADER_HEIGHT
-        // Если y=124 => 100%, если y=127 => 102.4% (чуть выйдет),
-        // но за счёт overflow: hidden хедер обрежет
+        // Перевод в проценты (от HEADER_HEIGHT=130)
         let xPerc = ((p.x / width) * 100).toFixed(2) + "%";
         let yPerc = ((p.y / HEADER_HEIGHT) * 100).toFixed(2) + "%";
         polyPoints.push(`${xPerc} ${yPerc}`);
       }
       header.style.clipPath = `polygon(${polyPoints.join(", ")})`;
 
-      // Рисуем неоновую линию
+      // Рисуем неоновую линию на canvas
       ctx.beginPath();
       ctx.strokeStyle = "#0ff";
       ctx.lineWidth = LINE_WIDTH;
 
       waveCoords.forEach((p, i) => {
-        // p.y может быть ~ [121..127]
-        // на холсте (30px высоты) y=124 => bottom => 30, y=121 => 27
+        // p.y ~ [130 - 15..130 + 15] => [115..145]
+        // На холсте (50px): y=130 => canvas=50, y=115 => 35, y=145 => 65
+        // Но canvas.height=50, => y>50 выйдет за canvas
+        // overflow: visible на header позволяет нам увидеть линию ниже 130
+        // однако сам canvas ограничен 50px
+        // => если p.y>130, часть волны ниже "условного низа" — но всё же нарисуется, т.к. header overflow=visible
         let cy = CANVAS_HEIGHT - (HEADER_HEIGHT - p.y);
         if (i === 0) {
           ctx.moveTo(p.x, cy);
@@ -439,12 +438,13 @@
       requestAnimationFrame(animate);
     }
 
+    // Перезапуск при изменении размеров
     function onResize() {
       initDots();
     }
     window.addEventListener("resize", onResize);
 
-    // Запуск
+    // Старт
     initDots();
     animate();
   </script>
