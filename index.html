@@ -15,7 +15,7 @@
   <meta name="msapplication-TileColor" content="#000000">
   <meta name="theme-color" content="#000000">
 
-  <!-- Define CSS variables for glitch intensity -->
+  <!-- CSS Variables для динамики интенсивности глитча -->
   <style>
     :root {
       --mouse-intensity: 1;
@@ -86,7 +86,7 @@
       position: fixed;
       top: 0; left: 0;
       width: 100%;
-      height: 160px; /* Canvas height for the wave effect */
+      height: 160px; /* Canvas height for wave */
       z-index: 1000;
     }
     #waveCanvas {
@@ -98,7 +98,7 @@
       position: absolute;
       top: 0; left: 0;
       width: 100%;
-      height: 120px; /* "Official" header height for logo & menu */
+      height: 120px; /* Official header height for logo & menu */
       display: flex;
       align-items: center;
       justify-content: center;
@@ -108,7 +108,7 @@
       position: absolute;
       left: 20px;
     }
-    /* DIGITAL GLITCH EFFECT for logo inspired by defuz/pen/bGQyrdL */
+    /* DIGITAL GLITCH EFFECT for Logo (based on defuz/pen/bGQyrdL) */
     .glitch-logo {
       position: relative;
       display: inline-block;
@@ -126,12 +126,7 @@
       background-size: contain;
       pointer-events: none;
     }
-    .glitch-logo::before {
-      animation: glitch-anim 2s infinite linear alternate-reverse;
-    }
-    .glitch-logo::after {
-      animation: glitch-anim2 3s infinite linear alternate-reverse;
-    }
+    /* Keyframes – цифровой glitch (резкий, как в defuz) */
     @keyframes glitch-anim {
       0% { clip: rect(10px, 9999px, 20px, 0); transform: translate(0,0); }
       20% { clip: rect(30px, 9999px, 40px, 0); transform: translate(calc(-10px * var(--glitch-intensity)), calc(-10px * var(--glitch-intensity))); }
@@ -148,6 +143,8 @@
       80% { clip: rect(50px, 9999px, 60px, 0); transform: translate(calc(-10px * var(--glitch-intensity)), calc(10px * var(--glitch-intensity))); }
       100% { clip: rect(10px, 9999px, 20px, 0); transform: translate(0,0); }
     }
+    .glitch-logo::before { animation: glitch-anim 2s infinite linear alternate-reverse; }
+    .glitch-logo::after { animation: glitch-anim2 3s infinite linear alternate-reverse; }
     .logo { width: 80px; height: auto; }
     nav a { margin: 0 15px; font-size: 1.2rem; color: #fff; }
   </style>
@@ -245,8 +242,7 @@
     form button:hover { background: #0cc; }
     .contact-social { text-align: center; margin-top: 2rem; }
     .contact-social a {
-      margin: 0 0.5rem; background: rgba(255,255,255,0.1); padding: 0.5rem 1rem;
-      border-radius: 4px;
+      margin: 0 0.5rem; background: rgba(255,255,255,0.1); padding: 0.5rem 1rem; border-radius: 4px;
     }
     footer { background: #000; padding: 2rem 0; text-align: center; font-size: 0.9rem; }
   </style>
@@ -258,7 +254,7 @@
 </head>
 <body>
 
-  <!-- Header: Wave Canvas + Header Content (Logo with digital glitch and menu) -->
+  <!-- Header: Wave Canvas + Header Content (Logo with digital glitch effect and Menu) -->
   <header>
     <canvas id="waveCanvas"></canvas>
     <div class="header-content">
@@ -355,7 +351,7 @@
     </div>
   </footer>
 
-  <!-- Wave Script -->
+  <!-- Wave Animation Script -->
   <script>
     const canvas = document.getElementById("waveCanvas");
     const ctx = canvas.getContext("2d");
@@ -421,7 +417,7 @@
     animateWave();
   </script>
 
-  <!-- TextScramble Script -->
+  <!-- TextScramble Script with IntersectionObserver -->
   <script>
     class TextScramble {
       constructor(el) {
@@ -438,7 +434,7 @@
           const from = oldText[i] || "";
           const to   = newText[i] || "";
           const start = Math.floor(Math.random() * 30);
-          const end = start + Math.floor(Math.random() * 30);
+          const end   = start + Math.floor(Math.random() * 30);
           this.queue.push({ from, to, start, end, char: null });
         }
         cancelAnimationFrame(this.frameRequest);
@@ -494,7 +490,7 @@
     });
   </script>
 
-  <!-- Glitch Intensity Script: Update based on mousemove and scroll -->
+  <!-- Glitch Intensity Update Script -->
   <script>
     document.addEventListener("mousemove", e => {
       let mouseIntensity = 1 + ((e.clientX / window.innerWidth) - 0.5);
