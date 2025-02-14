@@ -6,8 +6,7 @@
   <title>TheMarkest.art – Sci-Fi/Cyberpunk</title>
   <meta name="description" content="Портфолио художника, работающего в стиле sci-fi/cyberpunk с интерактивными и кинетическими скульптурами." />
 
-  <!-- Пример подключения фавиконок (если у вас есть несколько размеров) -->
-  <!-- Замените пути на реальные из папки favicon/ -->
+  <!-- Подключение фавиконок (проверьте, что файлы лежат в assets/favicon/) -->
   <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/favicon-16x16.png">
@@ -17,15 +16,9 @@
   <meta name="theme-color" content="#000000">
 
   <style>
-    /* ===== Сброс отступов и базовые настройки ===== */
-    * {
-      margin: 0; 
-      padding: 0; 
-      box-sizing: border-box;
-    }
-    html {
-      scroll-behavior: smooth;
-    }
+    /* ===== Сброс и базовые настройки ===== */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
     body {
       font-family: "IBM Plex Sans", sans-serif;
       background: #000;
@@ -37,9 +30,7 @@
       text-decoration: none;
       transition: color 0.3s;
     }
-    a:hover {
-      color: #0ff; /* неоновый акцент */
-    }
+    a:hover { color: #0ff; }
     .container {
       width: 90%;
       max-width: 1200px;
@@ -47,7 +38,7 @@
       padding: 2rem 1rem;
     }
 
-    /* ===== ШАПКА (HEADER) ===== */
+    /* ===== ШАПКА ===== */
     header {
       height: 100vh;
       display: flex;
@@ -55,22 +46,17 @@
       justify-content: center;
       align-items: center;
       text-align: center;
-      background: linear-gradient(130deg, #111, #333); /* не просто чёрный, а лёгкий градиент */
+      background: linear-gradient(130deg, #111, #333);
       position: relative;
     }
     /* Логотип */
-    .logo-container {
-      margin-bottom: 1rem;
-    }
-    .logo {
-      width: 120px;
-      height: auto;
-    }
-    /* Глитч-эффект для главного заголовка */
+    .logo-container { margin-bottom: 1rem; }
+    .logo { width: 120px; height: auto; }
+    /* Глитч-эффект заголовка */
     .glitch {
       font-size: 3rem;
       text-transform: uppercase;
-      color: #0ff; 
+      color: #0ff;
       position: relative;
       display: inline-block;
     }
@@ -92,53 +78,20 @@
       animation: glitch-bottom 2s infinite linear alternate-reverse;
     }
     @keyframes glitch-top {
-      0% {
-        clip: rect(0, 9999px, 0, 0);
-      }
-      15% {
-        clip: rect(20px, 9999px, 60px, 0);
-        transform: translate(-2px, -2px);
-      }
-      30% {
-        clip: rect(0, 9999px, 0, 0);
-        transform: translate(0, 0);
-      }
-      45% {
-        clip: rect(10px, 9999px, 70px, 0);
-        transform: translate(-5px, -3px);
-      }
-      100% {
-        clip: rect(0, 9999px, 0, 0);
-      }
+      0% { clip: rect(0, 9999px, 0, 0); }
+      15% { clip: rect(20px, 9999px, 60px, 0); transform: translate(-2px, -2px); }
+      30% { clip: rect(0, 9999px, 0, 0); transform: translate(0, 0); }
+      45% { clip: rect(10px, 9999px, 70px, 0); transform: translate(-5px, -3px); }
+      100% { clip: rect(0, 9999px, 0, 0); }
     }
     @keyframes glitch-bottom {
-      0% {
-        clip: rect(0, 9999px, 0, 0);
-      }
-      15% {
-        clip: rect(40px, 9999px, 90px, 0);
-        transform: translate(2px, 2px);
-      }
-      30% {
-        clip: rect(0, 9999px, 0, 0);
-        transform: translate(0, 0);
-      }
-      45% {
-        clip: rect(60px, 9999px, 90px, 0);
-        transform: translate(5px, 3px);
-      }
-      100% {
-        clip: rect(0, 9999px, 0, 0);
-      }
+      0% { clip: rect(0, 9999px, 0, 0); }
+      15% { clip: rect(40px, 9999px, 90px, 0); transform: translate(2px, 2px); }
+      30% { clip: rect(0, 9999px, 0, 0); transform: translate(0, 0); }
+      45% { clip: rect(60px, 9999px, 90px, 0); transform: translate(5px, 3px); }
+      100% { clip: rect(0, 9999px, 0, 0); }
     }
-
-    /* Подзаголовок */
-    .subtitle {
-      margin-top: 1rem;
-      font-size: 1.2rem;
-      opacity: 0.85;
-    }
-    /* Навигация */
+    .subtitle { margin-top: 1rem; font-size: 1.2rem; opacity: 0.85; }
     nav {
       margin-top: 2rem;
       display: flex;
@@ -150,10 +103,7 @@
       padding-bottom: 2px;
       border-bottom: 1px solid transparent;
     }
-    nav a:hover {
-      border-bottom: 1px solid #0ff;
-    }
-    /* Соц. ссылки */
+    nav a:hover { border-bottom: 1px solid #0ff; }
     .social-links {
       margin-top: 2rem;
       display: flex;
@@ -166,21 +116,23 @@
       border-radius: 4px;
       font-weight: 600;
     }
-    .social-links a:hover {
-      background: rgba(0, 255, 255, 0.2);
+    .social-links a:hover { background: rgba(0, 255, 255, 0.2); }
+
+    /* ===== СЕКЦИЯ С СЕКРАТОР ПОСЛЕ ШАПКИ ===== */
+    .separator-container {
+      width: 100%;
+      height: 50px;
+      background: #000;
+    }
+    canvas.separator {
+      display: block;
+      width: 100%;
+      height: 100%;
     }
 
-    /* ===== ПОРТФОЛИО ===== */
-    section#works {
-      background: #111;
-      padding: 4rem 0;
-    }
-    #works h2 {
-      text-align: center;
-      font-size: 2rem;
-      margin-bottom: 2rem;
-      text-transform: uppercase;
-    }
+    /* ===== ПОРТФОЛИО, О ХУДОЖНИКЕ, КОНТАКТЫ ===== */
+    section#works { background: #111; padding: 4rem 0; }
+    #works h2 { text-align: center; font-size: 2rem; margin-bottom: 2rem; text-transform: uppercase; }
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -199,15 +151,8 @@
       transform: scale(1.02);
       box-shadow: 0 0 8px #0ff;
     }
-    .work-item h3 {
-      margin-bottom: 0.5rem;
-      font-size: 1.2rem;
-    }
-    .work-item p {
-      font-size: 0.95rem;
-      opacity: 0.9;
-      margin-bottom: 0.5rem;
-    }
+    .work-item h3 { margin-bottom: 0.5rem; font-size: 1.2rem; }
+    .work-item p { font-size: 0.95rem; opacity: 0.9; margin-bottom: 0.5rem; }
     .share-buttons {
       display: flex;
       gap: 0.5rem;
@@ -222,21 +167,10 @@
       font-size: 0.8rem;
       transition: background 0.3s;
     }
-    .share-buttons a:hover {
-      background: #0cc;
-    }
+    .share-buttons a:hover { background: #0cc; }
 
-    /* ===== О ХУДОЖНИКЕ ===== */
-    section#about {
-      background: #000;
-      padding: 4rem 0;
-    }
-    #about h2 {
-      text-align: center;
-      font-size: 2rem;
-      margin-bottom: 2rem;
-      text-transform: uppercase;
-    }
+    section#about { background: #000; padding: 4rem 0; }
+    #about h2 { text-align: center; font-size: 2rem; margin-bottom: 2rem; text-transform: uppercase; }
     .about-content {
       display: flex;
       flex-wrap: wrap;
@@ -244,20 +178,9 @@
       max-width: 1000px;
       margin: 0 auto;
     }
-    .bio, .artist-statement {
-      flex: 1 1 300px;
-      min-width: 300px;
-    }
-    .bio h3, .artist-statement h3 {
-      font-size: 1.3rem;
-      margin-bottom: 1rem;
-      text-transform: uppercase;
-    }
-    .bio p, .artist-statement p {
-      font-size: 1rem;
-      opacity: 0.9;
-      line-height: 1.5;
-    }
+    .bio, .artist-statement { flex: 1 1 300px; min-width: 300px; }
+    .bio h3, .artist-statement h3 { font-size: 1.3rem; margin-bottom: 1rem; text-transform: uppercase; }
+    .bio p, .artist-statement p { font-size: 1rem; opacity: 0.9; line-height: 1.5; }
     .artist-photo {
       flex: 1 1 300px;
       min-width: 300px;
@@ -265,7 +188,6 @@
       align-items: center;
       justify-content: center;
     }
-    /* Заглушка вместо фото: */
     .artist-photo div {
       width: 200px;
       height: 200px;
@@ -280,17 +202,8 @@
       background: #111;
     }
 
-    /* ===== КОНТАКТЫ ===== */
-    section#contact {
-      background: #111;
-      padding: 4rem 0;
-    }
-    #contact h2 {
-      text-align: center;
-      font-size: 2rem;
-      margin-bottom: 2rem;
-      text-transform: uppercase;
-    }
+    section#contact { background: #111; padding: 4rem 0; }
+    #contact h2 { text-align: center; font-size: 2rem; margin-bottom: 2rem; text-transform: uppercase; }
     form {
       display: flex;
       flex-direction: column;
@@ -298,10 +211,7 @@
       max-width: 500px;
       margin: 0 auto;
     }
-    form label {
-      font-weight: 600;
-      margin-bottom: 0.3rem;
-    }
+    form label { font-weight: 600; margin-bottom: 0.3rem; }
     form input, form textarea {
       padding: 0.6rem;
       border: 1px solid #333;
@@ -324,9 +234,7 @@
       cursor: pointer;
       transition: background 0.3s;
     }
-    form button:hover {
-      background: #0cc;
-    }
+    form button:hover { background: #0cc; }
     .contact-social {
       text-align: center;
       margin-top: 2rem;
@@ -338,16 +246,18 @@
       border-radius: 4px;
     }
 
-    /* ===== Адаптивность ===== */
+    /* ===== ФУТЕР ===== */
+    footer {
+      background: #000;
+      padding: 2rem 0;
+      text-align: center;
+      font-size: 0.9rem;
+    }
+
+    /* ===== АДАПТИВНОСТЬ ===== */
     @media (max-width: 768px) {
-      nav {
-        flex-wrap: wrap;
-        gap: 1rem;
-      }
-      .about-content {
-        flex-direction: column;
-        align-items: flex-start;
-      }
+      nav { flex-wrap: wrap; gap: 1rem; }
+      .about-content { flex-direction: column; align-items: flex-start; }
     }
   </style>
 </head>
@@ -355,36 +265,32 @@
 
   <!-- ШАПКА -->
   <header id="home">
-    <!-- Контейнер для SVG-логотипа -->
     <div class="logo-container">
-      <!-- Пусть файл лежит в папке assets/logo.svg -->
       <img src="assets/logo.svg" alt="TheMarkest.art Logo" class="logo" />
     </div>
-
-    <!-- Глитч-заголовок -->
     <h1 class="glitch" data-text="TheMarkest.art">TheMarkest.art</h1>
     <p class="subtitle">Художник интерактивной и кинетической скульптуры</p>
-
-    <!-- Навигация -->
     <nav>
       <a href="#works">Портфолио</a>
       <a href="#about">О художнике</a>
       <a href="#contact">Контакты</a>
     </nav>
-
-    <!-- Социальные ссылки -->
     <div class="social-links">
       <a href="https://instagram.com/themarkest" target="_blank">Instagram</a>
       <a href="https://t.me/markestart" target="_blank">Telegram</a>
     </div>
   </header>
 
-  <!-- ПОРТФОЛИО -->
+  <!-- Сепаратор под шапкой -->
+  <div class="separator-container">
+    <canvas id="separator-top" class="separator"></canvas>
+  </div>
+
+  <!-- СЕКЦИЯ ПОРТФОЛИО -->
   <section id="works">
     <div class="container">
       <h2>Портфолио</h2>
       <div class="grid">
-        <!-- Пример карточки работы -->
         <article class="work-item">
           <h3>Название работы 1</h3>
           <p>Год: 2023</p>
@@ -396,51 +302,42 @@
             <a href="#" title="Поделиться в Telegram">Telegram</a>
           </div>
         </article>
-        <!-- Добавьте больше работ при необходимости -->
+        <!-- Дополнительные работы можно добавить аналогичным блоком -->
       </div>
     </div>
   </section>
 
-  <!-- О ХУДОЖНИКЕ -->
+  <!-- СЕКЦИЯ "О ХУДОЖНИКЕ" -->
   <section id="about">
     <div class="container">
       <h2>О художнике</h2>
       <div class="about-content">
         <div class="bio">
           <h3>Биография</h3>
-          <p>
-            Здесь вставьте реальный текст биографии. Расскажите о ключевых этапах пути,
-            образовании и вдохновении.
-          </p>
+          <p>Здесь вставьте реальный текст биографии. Расскажите о ключевых этапах пути, образовании и вдохновении.</p>
         </div>
         <div class="artist-statement">
           <h3>Artist Statement</h3>
-          <p>
-            Опишите вашу философию, что вы хотите донести до зрителя,
-            как взаимодействуете с технологиями и материалами.
-          </p>
+          <p>Опишите вашу философию, что вы хотите донести до зрителя, как взаимодействуете с технологиями и материалами.</p>
         </div>
         <div class="artist-photo">
-          <div>Photo</div> <!-- Заглушка: можно заменить на <img src="images/artist.jpg" ... /> -->
+          <div>Photo</div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- КОНТАКТЫ -->
+  <!-- СЕКЦИЯ "КОНТАКТЫ" -->
   <section id="contact">
     <div class="container">
       <h2>Контакты</h2>
       <form action="mailto:markbogdanovofficial@gmail.com" method="post" enctype="text/plain">
         <label for="name">Имя:</label>
         <input type="text" id="name" name="name" required />
-
         <label for="email">Email:</label>
         <input type="email" id="email" name="email" required />
-
         <label for="message">Сообщение:</label>
         <textarea id="message" name="message" rows="5" required></textarea>
-
         <button type="submit">Отправить</button>
       </form>
       <div class="contact-social">
@@ -450,5 +347,77 @@
     </div>
   </section>
 
+  <!-- ФУТЕР -->
+  <!-- Сепаратор над футером -->
+  <div class="separator-container">
+    <canvas id="separator-footer" class="separator"></canvas>
+  </div>
+  <footer>
+    <div class="container">
+      &copy; 2025 TheMarkest.art. Все права защищены.
+    </div>
+  </footer>
+
+  <!-- ===== JavaScript: Анимация сепараторов ===== -->
+  <script>
+    function animateSeparator(canvasId) {
+      const canvas = document.getElementById(canvasId);
+      if (!canvas) return;
+      const ctx = canvas.getContext("2d");
+      // Устанавливаем размеры канвы равными размеру элемента
+      let width = canvas.width = canvas.offsetWidth;
+      let height = canvas.height = canvas.offsetHeight;
+      
+      const dotRadius = 3;
+      const dotSpacing = 20;
+      const speed = 0.5;
+      const frequency = 0.05;
+      const amplitude = 10;
+      
+      // Инициализация точек вдоль горизонтали
+      let dots = [];
+      for (let x = 0; x <= width; x += dotSpacing) {
+        dots.push({ x: x });
+      }
+      
+      let time = 0;
+      function draw() {
+        ctx.clearRect(0, 0, width, height);
+        ctx.fillStyle = "#0ff";
+        dots.forEach(dot => {
+          // По синусоиде для "ломаной" линии
+          let y = height / 2 + amplitude * Math.sin(dot.x * frequency + time);
+          ctx.beginPath();
+          ctx.arc(dot.x, y, dotRadius, 0, Math.PI * 2);
+          ctx.fill();
+        });
+        // Анимация: движение точек по горизонтали
+        dots.forEach(dot => {
+          dot.x += speed;
+          if (dot.x - dotRadius > width) {
+            dot.x = -dotRadius;
+          }
+        });
+        time += 0.1;
+        requestAnimationFrame(draw);
+      }
+      draw();
+    }
+    
+    // Инициализируем анимацию для обоих сепараторов
+    animateSeparator("separator-top");
+    animateSeparator("separator-footer");
+    
+    // При изменении размеров окна обновляем размеры канвы
+    window.addEventListener("resize", () => {
+      ["separator-top", "separator-footer"].forEach(id => {
+        const canvas = document.getElementById(id);
+        if (canvas) {
+          canvas.width = canvas.offsetWidth;
+          canvas.height = canvas.offsetHeight;
+        }
+      });
+    });
+  </script>
 </body>
 </html>
