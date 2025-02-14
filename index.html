@@ -4,9 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>TheMarkest.art – Sci-Fi/Cyberpunk</title>
-  <meta name="description" content="Портфолио художника, работающего в стиле sci‑fi/cyberpunk с интерактивными и кинетическими скульптурами.">
+  <meta name="description" content="Портфолио художника, работающего в стиле sci‑fi/cyberpunk с интерактивными и кинетическими скульптурами." />
 
-  <!-- Favicons -->
+  <!-- Favicons (убедитесь, что файлы в папке assets/favicon/) -->
   <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/apple-touch-icon.png">
   <link rel="icon" type="image/svg+xml" href="assets/favicon/favicon.svg">
   <link rel="icon" type="image/png" sizes="96x96" href="assets/favicon/favicon-96x96.png">
@@ -15,7 +15,9 @@
   <meta name="msapplication-TileColor" content="#000000">
   <meta name="theme-color" content="#000000">
 
-  <!-- CSS Variables for Glitch Intensity -->
+  <!-- ==========================
+       CSS Variables for Glitch Intensity
+  ========================== -->
   <style>
     :root {
       --mouse-intensity: 1;
@@ -24,7 +26,10 @@
     }
   </style>
 
-  <!-- Old Monitor Effect (Enhanced Vignette and Wider Scanlines) -->
+  <!-- ==========================
+       OLD MONITOR EFFECT
+       (Виньетка + Скан-линии)
+  ========================== -->
   <style>
     body::before {
       content: "";
@@ -33,7 +38,8 @@
       top: 0; left: 0;
       width: 100%; height: 100%;
       z-index: 9999;
-      background: 
+      /* Усиленное виньетирование (начинается с 30%) */
+      background:
         radial-gradient(circle at center, rgba(0,0,0,0) 30%, rgba(0,0,0,0.85) 100%),
         radial-gradient(circle, rgba(255,255,255,0.05) 1%, rgba(255,255,255,0) 60%);
       background-blend-mode: multiply;
@@ -46,6 +52,7 @@
       top: 0; left: 0;
       width: 100%; height: 100%;
       z-index: 99999;
+      /* Широкие скан-линии */
       background: repeating-linear-gradient(
         0deg,
         rgba(255,255,255,0.05) 0px,
@@ -57,37 +64,53 @@
       mix-blend-mode: lighten;
     }
     @keyframes flicker {
-      0% { opacity: 0.05; }
-      50% { opacity: 0.1; }
+      0%   { opacity: 0.05; }
+      50%  { opacity: 0.1; }
       100% { opacity: 0.05; }
     }
     @keyframes scanline {
-      0% { transform: translateY(0); }
+      0%   { transform: translateY(0); }
       100% { transform: translateY(4px); }
     }
   </style>
 
-  <!-- Basic Reset & Base Styles -->
+  <!-- ==========================
+       BASIC RESET & BASE STYLES
+  ========================== -->
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    html {
+      scroll-behavior: smooth;
+    }
     body {
       font-family: "IBM Plex Sans", sans-serif;
       background: #000;
       color: #fff;
       line-height: 1.5;
     }
-    a { color: inherit; text-decoration: none; transition: color 0.3s; }
-    a:hover { color: #0ff; }
+    a {
+      color: inherit;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    a:hover {
+      color: #0ff;
+    }
   </style>
 
-  <!-- Header: Wave Canvas + Header Content -->
+  <!-- ==========================
+       HEADER: Wave Canvas + Content
+  ========================== -->
   <style>
     header {
       position: fixed;
       top: 0; left: 0;
       width: 100%;
-      height: 160px; /* Canvas height for wave effect */
+      height: 160px; /* Холст для волны */
       z-index: 1000;
     }
     #waveCanvas {
@@ -99,24 +122,31 @@
       position: absolute;
       top: 0; left: 0;
       width: 100%;
-      height: 120px; /* Official header height for logo & menu */
+      height: 120px; /* "Официальная" высота шапки */
       display: flex;
       align-items: center;
       justify-content: center;
       z-index: 10;
     }
-    nav a { margin: 0 15px; font-size: 1.2rem; color: #fff; }
+    nav a {
+      margin: 0 15px;
+      font-size: 1.2rem;
+      color: #fff;
+    }
   </style>
 
-  <!-- Glitch Logo Effect (Old style, more fragmented) -->
+  <!-- ==========================
+       GLITCH LOGO (More Fragmented)
+       (три слоя: основной + 2 псевдо)
+  ========================== -->
   <style>
-    /* Логотип в левом верхнем углу с отступом 10px */
+    /* Лого в левом верхнем углу */
     .logo-container {
       position: absolute;
       top: 10px;
       left: 10px;
     }
-    /* Контейнер логотипа с псевдоэлементами */
+    /* Контейнер логотипа: width=80px */
     .glitch-logo {
       position: relative;
       width: 80px;
@@ -127,6 +157,11 @@
       width: 100%;
       height: auto;
     }
+
+    /* Два псевдослоя: ::before, ::after 
+       Более фрагментированная анимация (glitch-anim, glitch-anim2)
+       зависящая от var(--glitch-intensity)
+    */
     .glitch-logo::before,
     .glitch-logo::after {
       content: "";
@@ -135,38 +170,116 @@
       width: 80px;
       height: auto;
       background: url("assets/logo.svg") no-repeat center;
-      background-size: contain;
+      background-size: 80px auto;
       pointer-events: none;
+      opacity: 0.8;
     }
-    /* Более фрагментированная анимация */
+    /* Первый слой (top) */
+    .glitch-logo::before {
+      animation: glitch-anim 2s infinite linear alternate-reverse;
+    }
+    /* Второй слой (bottom) */
+    .glitch-logo::after {
+      animation: glitch-anim2 3s infinite linear alternate-reverse;
+    }
+
+    /* Более фрагментированная анимация
+       (каждый шаг случайный, но здесь имитируем,
+        прописав несколько clip/transform).
+       Все смещения умножаем на var(--glitch-intensity).
+    */
     @keyframes glitch-anim {
-      0% { clip: rect(5px, 9999px, 15px, 0); transform: translate(0, 0); }
-      10% { clip: rect(20px, 9999px, 30px, 0); transform: translate(calc(-8px * var(--glitch-intensity)), calc(-8px * var(--glitch-intensity))); }
-      20% { clip: rect(10px, 9999px, 20px, 0); transform: translate(calc(8px * var(--glitch-intensity)), calc(8px * var(--glitch-intensity))); }
-      30% { clip: rect(25px, 9999px, 35px, 0); transform: translate(calc(-8px * var(--glitch-intensity)), calc(8px * var(--glitch-intensity))); }
-      40% { clip: rect(15px, 9999px, 25px, 0); transform: translate(calc(8px * var(--glitch-intensity)), calc(-8px * var(--glitch-intensity))); }
-      50% { clip: rect(5px, 9999px, 15px, 0); transform: translate(0, 0); }
-      60% { clip: rect(20px, 9999px, 30px, 0); transform: translate(calc(-8px * var(--glitch-intensity)), calc(-8px * var(--glitch-intensity))); }
-      70% { clip: rect(10px, 9999px, 20px, 0); transform: translate(calc(8px * var(--glitch-intensity)), calc(8px * var(--glitch-intensity))); }
-      80% { clip: rect(25px, 9999px, 35px, 0); transform: translate(calc(-8px * var(--glitch-intensity)), calc(8px * var(--glitch-intensity))); }
-      90% { clip: rect(15px, 9999px, 25px, 0); transform: translate(calc(8px * var(--glitch-intensity)), calc(-8px * var(--glitch-intensity))); }
-      100% { clip: rect(5px, 9999px, 15px, 0); transform: translate(0, 0); }
+      0% {
+        clip: rect(10px, 9999px, 20px, 0);
+        transform: translate(0, 0);
+      }
+      10% {
+        clip: rect(30px, 9999px, 40px, 0);
+        transform: translate(calc(-8px * var(--glitch-intensity)), calc(-8px * var(--glitch-intensity)));
+      }
+      20% {
+        clip: rect(15px, 9999px, 25px, 0);
+        transform: translate(calc(8px * var(--glitch-intensity)), calc(8px * var(--glitch-intensity)));
+      }
+      30% {
+        clip: rect(5px, 9999px, 15px, 0);
+        transform: translate(calc(-8px * var(--glitch-intensity)), calc(8px * var(--glitch-intensity)));
+      }
+      40% {
+        clip: rect(20px, 9999px, 35px, 0);
+        transform: translate(calc(8px * var(--glitch-intensity)), calc(-8px * var(--glitch-intensity)));
+      }
+      50% {
+        clip: rect(10px, 9999px, 20px, 0);
+        transform: translate(0, 0);
+      }
+      60% {
+        clip: rect(30px, 9999px, 40px, 0);
+        transform: translate(calc(-8px * var(--glitch-intensity)), calc(-8px * var(--glitch-intensity)));
+      }
+      70% {
+        clip: rect(15px, 9999px, 25px, 0);
+        transform: translate(calc(8px * var(--glitch-intensity)), calc(8px * var(--glitch-intensity)));
+      }
+      80% {
+        clip: rect(5px, 9999px, 15px, 0);
+        transform: translate(calc(-8px * var(--glitch-intensity)), calc(8px * var(--glitch-intensity)));
+      }
+      90% {
+        clip: rect(20px, 9999px, 35px, 0);
+        transform: translate(calc(8px * var(--glitch-intensity)), calc(-8px * var(--glitch-intensity)));
+      }
+      100% {
+        clip: rect(10px, 9999px, 20px, 0);
+        transform: translate(0, 0);
+      }
     }
     @keyframes glitch-anim2 {
-      0% { clip: rect(5px, 9999px, 15px, 0); transform: translate(0, 0); }
-      10% { clip: rect(12px, 9999px, 22px, 0); transform: translate(calc(8px * var(--glitch-intensity)), calc(8px * var(--glitch-intensity))); }
-      20% { clip: rect(8px, 9999px, 18px, 0); transform: translate(calc(-8px * var(--glitch-intensity)), calc(-8px * var(--glitch-intensity))); }
-      30% { clip: rect(20px, 9999px, 30px, 0); transform: translate(calc(8px * var(--glitch-intensity)), calc(-8px * var(--glitch-intensity))); }
-      40% { clip: rect(15px, 9999px, 25px, 0); transform: translate(calc(-8px * var(--glitch-intensity)), calc(8px * var(--glitch-intensity))); }
-      50% { clip: rect(5px, 9999px, 15px, 0); transform: translate(0, 0); }
-      60% { clip: rect(12px, 9999px, 22px, 0); transform: translate(calc(8px * var(--glitch-intensity)), calc(8px * var(--glitch-intensity))); }
-      70% { clip: rect(8px, 9999px, 18px, 0); transform: translate(calc(-8px * var(--glitch-intensity)), calc(-8px * var(--glitch-intensity))); }
-      80% { clip: rect(20px, 9999px, 30px, 0); transform: translate(calc(8px * var(--glitch-intensity)), calc(-8px * var(--glitch-intensity))); }
-      90% { clip: rect(15px, 9999px, 25px, 0); transform: translate(calc(-8px * var(--glitch-intensity)), calc(8px * var(--glitch-intensity))); }
-      100% { clip: rect(5px, 9999px, 15px, 0); transform: translate(0, 0); }
+      0% {
+        clip: rect(5px, 9999px, 15px, 0);
+        transform: translate(0, 0);
+      }
+      10% {
+        clip: rect(25px, 9999px, 40px, 0);
+        transform: translate(calc(8px * var(--glitch-intensity)), calc(8px * var(--glitch-intensity)));
+      }
+      20% {
+        clip: rect(10px, 9999px, 20px, 0);
+        transform: translate(calc(-8px * var(--glitch-intensity)), calc(-8px * var(--glitch-intensity)));
+      }
+      30% {
+        clip: rect(35px, 9999px, 50px, 0);
+        transform: translate(calc(8px * var(--glitch-intensity)), calc(-8px * var(--glitch-intensity)));
+      }
+      40% {
+        clip: rect(15px, 9999px, 25px, 0);
+        transform: translate(calc(-8px * var(--glitch-intensity)), calc(8px * var(--glitch-intensity)));
+      }
+      50% {
+        clip: rect(5px, 9999px, 15px, 0);
+        transform: translate(0, 0);
+      }
+      60% {
+        clip: rect(25px, 9999px, 40px, 0);
+        transform: translate(calc(8px * var(--glitch-intensity)), calc(8px * var(--glitch-intensity)));
+      }
+      70% {
+        clip: rect(10px, 9999px, 20px, 0);
+        transform: translate(calc(-8px * var(--glitch-intensity)), calc(-8px * var(--glitch-intensity)));
+      }
+      80% {
+        clip: rect(35px, 9999px, 50px, 0);
+        transform: translate(calc(8px * var(--glitch-intensity)), calc(-8px * var(--glitch-intensity)));
+      }
+      90% {
+        clip: rect(15px, 9999px, 25px, 0);
+        transform: translate(calc(-8px * var(--glitch-intensity)), calc(8px * var(--glitch-intensity)));
+      }
+      100% {
+        clip: rect(5px, 9999px, 15px, 0);
+        transform: translate(0, 0);
+      }
     }
-    .glitch-logo::before { animation: glitch-anim 2s infinite linear alternate-reverse; }
-    .glitch-logo::after { animation: glitch-anim2 3s infinite linear alternate-reverse; }
   </style>
 
   <!-- Cover Section -->
@@ -256,6 +369,7 @@
     .share-buttons a:hover {
       background: #0cc;
     }
+
     .about-content {
       display: flex;
       flex-wrap: wrap;
@@ -299,7 +413,7 @@
     }
   </style>
 
-  <!-- Form and Footer -->
+  <!-- Form & Footer -->
   <style>
     form {
       display: flex;
@@ -365,15 +479,14 @@
 </head>
 <body>
 
-  <!-- HEADER: Wave Canvas + Header Content (Logo with old glitch effect) -->
+  <!-- HEADER: Wave + Glitch Logo (More Fragmented) + Menu -->
   <header>
     <canvas id="waveCanvas"></canvas>
     <div class="header-content">
       <div class="logo-container">
         <div class="glitch-logo">
-          <img src="assets/logo.svg" alt="TheMarkest.art Logo" class="logo">
-          <img src="assets/logo.svg" alt="Glitch Layer Top" class="glitch-layer top">
-          <img src="assets/logo.svg" alt="Glitch Layer Bottom" class="glitch-layer bottom">
+          <!-- Основной логотип -->
+          <img src="assets/logo.svg" alt="TheMarkest.art Logo" />
         </div>
       </div>
       <nav>
@@ -463,13 +576,16 @@
     </div>
   </footer>
 
-  <!-- Wave Animation Script -->
+  <!-- ==========================
+       Wave Animation Script
+  ========================== -->
   <script>
     const canvas = document.getElementById("waveCanvas");
     const ctx = canvas.getContext("2d");
     let width = 0, height = 0;
     let time = 0;
     let dots = [];
+
     const AMPLITUDE = 15;
     const DOT_SPACING = 40;
     const FREQ_MIN = 0.03;
@@ -478,30 +594,35 @@
     const DOT_RADIUS = 4;
     const HEADER_BG_COLOR = "rgba(85,85,85,0.8)";
     const BASELINE = 120;
+
     function initDots() {
       width = canvas.offsetWidth;
       height = canvas.offsetHeight;
       canvas.width = width;
       canvas.height = height;
       dots = [];
+
       dots.push({ x: 0, pinned: true });
       for (let x = DOT_SPACING; x <= width - DOT_SPACING; x += DOT_SPACING) {
         dots.push({
           x,
           pinned: false,
-          freq: FREQ_MIN + Math.random() * (FREQ_MAX - FREQ_MIN),
-          phase: Math.random() * Math.PI * 2
+          freq: FREQ_MIN + Math.random()*(FREQ_MAX-FREQ_MIN),
+          phase: Math.random()*Math.PI*2
         });
       }
       dots.push({ x: width, pinned: true });
     }
+
     function animateWave() {
       ctx.clearRect(0, 0, width, height);
+
       const wavePoints = dots.map(dot => {
         if (dot.pinned) return { x: dot.x, y: BASELINE };
         let wave = AMPLITUDE * Math.sin(dot.x * dot.freq + time + dot.phase);
         return { x: dot.x, y: BASELINE + wave };
       });
+
       ctx.beginPath();
       ctx.moveTo(0, 0);
       wavePoints.forEach(p => ctx.lineTo(p.x, p.y));
@@ -509,27 +630,42 @@
       ctx.closePath();
       ctx.fillStyle = HEADER_BG_COLOR;
       ctx.fill();
+
       ctx.beginPath();
       ctx.strokeStyle = "#0ff";
       ctx.lineWidth = LINE_WIDTH;
-      wavePoints.forEach((p, i) => { if(i===0) ctx.moveTo(p.x, p.y); else ctx.lineTo(p.x, p.y); });
+      wavePoints.forEach((p, i) => {
+        if (i === 0) {
+          ctx.moveTo(p.x, p.y);
+        } else {
+          ctx.lineTo(p.x, p.y);
+        }
+      });
       ctx.stroke();
+
       wavePoints.forEach(p => {
         ctx.beginPath();
-        ctx.arc(p.x, p.y, DOT_RADIUS, 0, Math.PI * 2);
+        ctx.arc(p.x, p.y, DOT_RADIUS, 0, Math.PI*2);
         ctx.fillStyle = "#0ff";
         ctx.fill();
       });
+
       time += 0.02;
       requestAnimationFrame(animateWave);
     }
-    function onResize() { initDots(); }
+
+    function onResize() {
+      initDots();
+    }
     window.addEventListener("resize", onResize);
+
     initDots();
     animateWave();
   </script>
 
-  <!-- TextScramble Script with IntersectionObserver -->
+  <!-- ==========================
+       TextScramble + IntersectionObserver
+  ========================== -->
   <script>
     class TextScramble {
       constructor(el) {
@@ -584,6 +720,7 @@
         return this.chars[Math.floor(Math.random() * this.chars.length)];
       }
     }
+
     window.addEventListener('load', () => {
       const paragraphs = document.querySelectorAll('p');
       const observer = new IntersectionObserver((entries, obs) => {
@@ -594,21 +731,28 @@
             el.dataset.scrambleText = text;
             el.innerText = "";
             const fx = new TextScramble(el);
-            fx.setText(text).then(() => { obs.unobserve(el); });
+            fx.setText(text).then(() => {
+              obs.unobserve(el);
+            });
           }
         });
       }, { threshold: 0.2 });
+
       paragraphs.forEach(p => observer.observe(p));
     });
   </script>
 
-  <!-- Glitch Intensity Update Script (based on mousemove and scroll) -->
+  <!-- ==========================
+       Glitch Intensity Script
+       (mouse + scroll)
+  ========================== -->
   <script>
     document.addEventListener("mousemove", e => {
       let mouseIntensity = 1 + ((e.clientX / window.innerWidth) - 0.5);
       document.documentElement.style.setProperty("--mouse-intensity", mouseIntensity);
       updateGlitchIntensity();
     });
+
     window.addEventListener("scroll", () => {
       let scrollY = window.scrollY;
       let docHeight = document.documentElement.scrollHeight - window.innerHeight;
@@ -616,6 +760,7 @@
       document.documentElement.style.setProperty("--scroll-intensity", scrollIntensity);
       updateGlitchIntensity();
     });
+
     function updateGlitchIntensity() {
       const mouse = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--mouse-intensity"));
       const scroll = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--scroll-intensity"));
