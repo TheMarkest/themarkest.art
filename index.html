@@ -6,7 +6,7 @@
   <title>TheMarkest.art – Sci-Fi/Cyberpunk</title>
   <meta name="description" content="Портфолио художника, работающего в стиле sci-fi/cyberpunk с интерактивными и кинетическими скульптурами." />
 
-  <!-- Фавиконки -->
+  <!-- Фавиконки (убедитесь, что файлы лежат в assets/favicon/) -->
   <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/apple-touch-icon.png">
   <link rel="icon" type="image/svg+xml" href="assets/favicon/favicon.svg">
   <link rel="icon" type="image/png" sizes="96x96" href="assets/favicon/favicon-96x96.png">
@@ -15,22 +15,11 @@
   <meta name="msapplication-TileColor" content="#000000">
   <meta name="theme-color" content="#000000">
 
-  <!-- SVG-фильтр для эффекта глитча логотипа -->
-  <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
-    <defs>
-      <filter id="glitchFilter">
-        <!-- feTurbulence для создания шума -->
-        <feTurbulence id="turbulence" type="fractalNoise" baseFrequency="0.02" numOctaves="2" result="noise"/>
-        <!-- feDisplacementMap для смещения -->
-        <feDisplacementMap in="SourceGraphic" in2="noise" scale="20" xChannelSelector="R" yChannelSelector="G"/>
-      </filter>
-    </defs>
-  </svg>
-
-  <style>
-    /* ==========================
+  <!-- ==========================
        Эффект «старого монитора»
-    ========================== */
+       (виньетка + скан-линии)
+  ========================== -->
+  <style>
     body::before {
       content: "";
       pointer-events: none;
@@ -63,16 +52,18 @@
     }
     @keyframes flicker {
       0%, 100% { opacity: 0.06; }
-      50%      { opacity: 0.09; }
+      50% { opacity: 0.09; }
     }
     @keyframes scanline {
-      0%   { transform: translateY(0); }
+      0% { transform: translateY(0); }
       100% { transform: translateY(4px); }
     }
+  </style>
 
-    /* ==========================
+  <!-- ==========================
        Сброс и базовые стили
-    ========================== */
+  ========================== -->
+  <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     html { scroll-behavior: smooth; }
     body {
@@ -83,15 +74,17 @@
     }
     a { color: inherit; text-decoration: none; transition: color 0.3s; }
     a:hover { color: #0ff; }
+  </style>
 
-    /* ==========================
-       Хедер (волна + логотип/меню)
-    ========================== */
+  <!-- ==========================
+       Хедер: Волна + Логотип/Меню
+  ========================== -->
+  <style>
     header {
       position: fixed;
       top: 0; left: 0;
       width: 100%;
-      height: 160px;
+      height: 160px; /* Высота холста */
       z-index: 1000;
     }
     #waveCanvas {
@@ -103,7 +96,7 @@
       position: absolute;
       top: 0; left: 0;
       width: 100%;
-      height: 120px;
+      height: 120px; /* "Официальная" высота шапки */
       display: flex;
       align-items: center;
       justify-content: center;
@@ -113,22 +106,52 @@
       position: absolute;
       left: 20px;
     }
-    /* Применяем SVG-фильтр к логотипу */
+    /* DIGITAL GLITCH ЭФФЕКТ для логотипа */
     .glitch-logo {
-      width: 80px;
-      height: auto;
-      filter: url(#glitchFilter);
-      transition: filter 0.3s ease;
+      position: relative;
+      display: inline-block;
+      --glitch-intensity: 1;
     }
-    nav a {
-      margin: 0 15px;
-      font-size: 1.2rem;
-      color: #fff;
+    .glitch-logo::before,
+    .glitch-logo::after {
+      content: "";
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      background: url("assets/logo.svg") no-repeat center;
+      background-size: contain;
     }
+    .glitch-logo::before {
+      animation: glitch1 2s infinite linear alternate-reverse;
+    }
+    .glitch-logo::after {
+      animation: glitch2 3s infinite linear alternate-reverse;
+    }
+    @keyframes glitch1 {
+      0% { clip: rect(10px, 9999px, 20px, 0); transform: translate(0); }
+      20% { clip: rect(30px, 9999px, 40px, 0); transform: translate(calc(-5px * var(--glitch-intensity)), calc(-5px * var(--glitch-intensity))); }
+      40% { clip: rect(50px, 9999px, 60px, 0); transform: translate(calc(5px * var(--glitch-intensity)), calc(5px * var(--glitch-intensity))); }
+      60% { clip: rect(20px, 9999px, 30px, 0); transform: translate(calc(-5px * var(--glitch-intensity)), calc(5px * var(--glitch-intensity))); }
+      80% { clip: rect(40px, 9999px, 50px, 0); transform: translate(calc(5px * var(--glitch-intensity)), calc(-5px * var(--glitch-intensity))); }
+      100% { clip: rect(10px, 9999px, 20px, 0); transform: translate(0); }
+    }
+    @keyframes glitch2 {
+      0% { clip: rect(10px, 9999px, 20px, 0); transform: translate(0); }
+      20% { clip: rect(20px, 9999px, 30px, 0); transform: translate(calc(5px * var(--glitch-intensity)), calc(5px * var(--glitch-intensity))); }
+      40% { clip: rect(40px, 9999px, 50px, 0); transform: translate(calc(-5px * var(--glitch-intensity)), calc(-5px * var(--glitch-intensity))); }
+      60% { clip: rect(30px, 9999px, 40px, 0); transform: translate(calc(5px * var(--glitch-intensity)), calc(-5px * var(--glitch-intensity))); }
+      80% { clip: rect(50px, 9999px, 60px, 0); transform: translate(calc(-5px * var(--glitch-intensity)), calc(5px * var(--glitch-intensity))); }
+      100% { clip: rect(10px, 9999px, 20px, 0); transform: translate(0); }
+    }
+    .logo { width: 80px; height: auto; }
+    nav a { margin: 0 15px; font-size: 1.2rem; color: #fff; }
+  </style>
 
-    /* ==========================
-       Блок обложки (Cover)
-    ========================== */
+  <!-- ==========================
+       Обложка (Cover)
+  ========================== -->
+  <style>
     #cover {
       position: relative;
       width: 100%;
@@ -156,20 +179,14 @@
       opacity: 0.9;
       line-height: 1.4;
     }
+  </style>
 
-    /* ==========================
+  <!-- ==========================
        Остальные секции
-    ========================== */
-    section {
-      padding: 4rem 0;
-      background: #000;
-    }
-    h2 {
-      text-align: center;
-      font-size: 2rem;
-      margin-bottom: 2rem;
-      text-transform: uppercase;
-    }
+  ========================== -->
+  <style>
+    section { padding: 4rem 0; background: #000; }
+    h2 { text-align: center; font-size: 2rem; margin-bottom: 2rem; text-transform: uppercase; }
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -184,18 +201,10 @@
       padding: 1rem;
       transition: transform 0.3s, box-shadow 0.3s;
     }
-    .work-item:hover {
-      transform: scale(1.02);
-      box-shadow: 0 0 8px #0ff;
-    }
+    .work-item:hover { transform: scale(1.02); box-shadow: 0 0 8px #0ff; }
     .work-item h3 { margin-bottom: 0.5rem; font-size: 1.2rem; }
     .work-item p { font-size: 0.95rem; opacity: 0.9; margin-bottom: 0.5rem; }
-    .share-buttons {
-      display: flex;
-      gap: 0.5rem;
-      margin-top: 0.5rem;
-      flex-wrap: wrap;
-    }
+    .share-buttons { display: flex; gap: 0.5rem; margin-top: 0.5rem; flex-wrap: wrap; }
     .share-buttons a {
       background: #0ff;
       color: #000;
@@ -205,7 +214,6 @@
       transition: background 0.3s;
     }
     .share-buttons a:hover { background: #0cc; }
-
     .about-content {
       display: flex;
       flex-wrap: wrap;
@@ -213,20 +221,13 @@
       max-width: 1000px;
       margin: 0 auto;
     }
-    .bio, .artist-statement {
-      flex: 1 1 300px;
-      min-width: 300px;
-    }
+    .bio, .artist-statement { flex: 1 1 300px; min-width: 300px; }
     .bio h3, .artist-statement h3 {
       font-size: 1.3rem;
       margin-bottom: 1rem;
       text-transform: uppercase;
     }
-    .bio p, .artist-statement p {
-      font-size: 1rem;
-      opacity: 0.9;
-      line-height: 1.5;
-    }
+    .bio p, .artist-statement p { font-size: 1rem; opacity: 0.9; line-height: 1.5; }
     .artist-photo {
       flex: 1 1 300px;
       min-width: 300px;
@@ -247,10 +248,12 @@
       font-size: 1rem;
       background: #111;
     }
+  </style>
 
-    /* ==========================
-       Форма и Футер
-    ========================== */
+  <!-- ==========================
+       Форма и футер
+  ========================== -->
+  <style>
     form {
       display: flex;
       flex-direction: column;
@@ -258,10 +261,7 @@
       max-width: 500px;
       margin: 0 auto;
     }
-    form label {
-      font-weight: 600;
-      margin-bottom: 0.3rem;
-    }
+    form label { font-weight: 600; margin-bottom: 0.3rem; }
     form input, form textarea {
       padding: 0.6rem;
       border: 1px solid #333;
@@ -301,25 +301,24 @@
       text-align: center;
       font-size: 0.9rem;
     }
+  </style>
 
-    /* ==========================
+  <!-- ==========================
        Эффект появления текста (TextScramble)
-       Будет запускаться при попадании элемента в зону видимости
-    ========================== */
-    .scramble-text {
-      display: inline-block;
-      opacity: 0;
-    }
+       Запуск по скроллу через IntersectionObserver
+  ========================== -->
+  <style>
+    .scramble-text { display: inline-block; opacity: 0; }
   </style>
 </head>
 <body>
 
-  <!-- ХЕДЕР: Волна + Логотип (с глитч-эффектом) и меню -->
+  <!-- Хедер: Волна + Логотип с цифровым глитч-эффектом и меню -->
   <header>
     <canvas id="waveCanvas"></canvas>
     <div class="header-content">
       <div class="logo-container">
-        <!-- Логотип с классом glitch-logo для применения фильтра -->
+        <!-- Логотип с классом glitch-logo для цифрового глитча -->
         <img src="assets/logo.svg" alt="TheMarkest.art Logo" class="logo glitch-logo" />
       </div>
       <nav>
@@ -331,7 +330,7 @@
     </div>
   </header>
 
-  <!-- ОБЛОЖКА (Cover) -->
+  <!-- Обложка (Cover) -->
   <section id="cover">
     <div class="cover-content">
       <h2>Обложка сайта</h2>
@@ -341,7 +340,7 @@
     </div>
   </section>
 
-  <!-- ОСНОВНОЙ КОНТЕНТ -->
+  <!-- Основной контент -->
   <main>
     <section id="works">
       <div class="container">
@@ -436,7 +435,12 @@
       dots = [];
       dots.push({ x: 0, pinned: true });
       for (let x = DOT_SPACING; x <= width - DOT_SPACING; x += DOT_SPACING) {
-        dots.push({ x, pinned: false, freq: FREQ_MIN + Math.random()*(FREQ_MAX-FREQ_MIN), phase: Math.random()*Math.PI*2 });
+        dots.push({
+          x,
+          pinned: false,
+          freq: FREQ_MIN + Math.random() * (FREQ_MAX - FREQ_MIN),
+          phase: Math.random() * Math.PI * 2
+        });
       }
       dots.push({ x: width, pinned: true });
     }
@@ -459,7 +463,12 @@
       ctx.lineWidth = LINE_WIDTH;
       wavePoints.forEach((p, i) => { if(i===0) ctx.moveTo(p.x, p.y); else ctx.lineTo(p.x, p.y); });
       ctx.stroke();
-      wavePoints.forEach(p => { ctx.beginPath(); ctx.arc(p.x, p.y, DOT_RADIUS, 0, Math.PI*2); ctx.fillStyle = "#0ff"; ctx.fill(); });
+      wavePoints.forEach(p => {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, DOT_RADIUS, 0, Math.PI * 2);
+        ctx.fillStyle = "#0ff";
+        ctx.fill();
+      });
       time += 0.02;
       requestAnimationFrame(animateWave);
     }
@@ -470,7 +479,7 @@
   </script>
 
   <!-- ==========================
-       Скрипт: TextScramble для появления текста по скроллу
+       Скрипт: TextScramble (запуск по скроллу)
   ========================== -->
   <script>
     class TextScramble {
@@ -536,9 +545,7 @@
             el.dataset.scrambleText = text;
             el.innerText = "";
             const fx = new TextScramble(el);
-            fx.setText(text).then(() => {
-              obs.unobserve(el);
-            });
+            fx.setText(text).then(() => { obs.unobserve(el); });
           }
         });
       }, { threshold: 0.2 });
@@ -547,25 +554,12 @@
   </script>
 
   <!-- ==========================
-       Скрипт: Обновление интенсивности глитча по движению мыши
+       Скрипт: Зависимость интенсивности глитча от движения мыши
   ========================== -->
   <script>
     document.addEventListener("mousemove", e => {
-      // Вычисляем интенсивность от 0.5 до 1.5 в зависимости от X
-      let intensity = 1 + ((e.clientX / window.innerWidth) - 0.5) * 1;
-      // Обновляем параметры фильтра: изменяем scale и baseFrequency
-      const turbulence = document.getElementById("turbulence");
-      if (turbulence) {
-        // Модифицируем baseFrequency, например, умножая на intensity
-        turbulence.setAttribute("baseFrequency", 0.02 * intensity);
-      }
-      const filter = document.getElementById("glitchFilter");
-      if (filter) {
-        const dispMap = filter.querySelector("feDisplacementMap");
-        if (dispMap) {
-          dispMap.setAttribute("scale", 20 * intensity);
-        }
-      }
+      let intensity = 1 + ((e.clientX / window.innerWidth) - 0.5);
+      document.documentElement.style.setProperty('--glitch-intensity', intensity);
     });
   </script>
 </body>
