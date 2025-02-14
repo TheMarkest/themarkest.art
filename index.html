@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>TheMarkest.art – Sci-Fi/Cyberpunk</title>
   <meta name="description" content="Портфолио художника, работающего в стиле sci-fi/cyberpunk с интерактивными и кинетическими скульптурами." />
 
@@ -38,7 +38,6 @@
       top: 0; left: 0;
       width: 100%; height: 100%;
       z-index: 9999;
-      /* Усиленное виньетирование */
       background:
         radial-gradient(circle at center, rgba(0,0,0,0) 30%, rgba(0,0,0,0.85) 100%),
         radial-gradient(circle, rgba(255,255,255,0.05) 1%, rgba(255,255,255,0) 60%);
@@ -52,7 +51,6 @@
       top: 0; left: 0;
       width: 100%; height: 100%;
       z-index: 99999;
-      /* Широкие скан-линии */
       background: repeating-linear-gradient(
         0deg,
         rgba(255,255,255,0.05) 0px,
@@ -79,7 +77,9 @@
   ========================== -->
   <style>
     * {
-      margin: 0; padding: 0; box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
     html {
       scroll-behavior: smooth;
@@ -134,67 +134,77 @@
   </style>
 
   <!-- ==========================
-       GLITCH (как в вашем SCSS, но собранное в CSS)
+       GLITCH: 4 LAYERS
+       .glitch, .glitch-before, .glitch-after, .glitch-black
   ========================== -->
   <style>
-    /* Базовый контейнер .glitch (position: absolute) */
-    .glitch {
+    /* Все слои: position absolute, фиксированный размер 312x119,
+       т.к. ваш SVG = 312 x 119
+    */
+    .glitch, .glitch-before, .glitch-after, .glitch-black {
       position: absolute;
-      left: 20px;
-      top: 20px;
+      width: 312px;
+      height: 119px;
+      overflow: hidden;
+      top: 20px;  /* как в вашем фрагменте */
+      left: 20px; /* */
+      z-index: 2001; /* чтобы быть над волной */
+      display: block;
       animation: glitch-skew 1s infinite linear alternate-reverse;
     }
 
-    /* glitch-before: смещение влево */
+    /* glitch-before: cдвиг влево */
     .glitch-before {
-      animation: glitch-anim 2s infinite steps(2, end) alternate-reverse;
-      left: 18px; top: 20px;
+      animation: glitch-anim 2s infinite steps(2,end) alternate-reverse;
+      left: 18px; /* чуть левее */
     }
-    /* glitch-after: смещение вправо */
+    /* glitch-after: cдвиг вправо */
     .glitch-after {
-      animation: glitch-anim2 3s infinite steps(2, end) alternate-reverse;
-      left: 22px; top: 20px;
+      animation: glitch-anim2 3s infinite steps(2,end) alternate-reverse;
+      left: 22px; /* чуть правее */
     }
-    /* glitch-black: ещё один слой (фон чёрный + своя анимация) */
+    /* glitch-black: чёрный фон + своя анимация */
     .glitch-black {
-      animation: glitch-black 12s infinite steps(1, end) alternate-reverse;
       background: #000;
+      animation: glitch-black 12s infinite steps(1,end) alternate-reverse;
     }
 
-    /* Анимация "glitch-anim": псевдо-случайные clip + skew
-       Здесь steps(2, end) имитирует случайные рывки */
+    /* Внутри каждого h1 лежит сам SVG. 
+       Убедитесь, что ваш SVG 312x119, иначе поправьте размеры.
+    */
+    .glitch svg {
+      width: 312px;
+      height: 119px;
+      display: block;
+    }
+
+    /* glitсh-anim: имитация случайных clip + skew, умножая на var(--glitch-intensity) */
     @keyframes glitch-anim {
-      0%   { clip: rect(44px,9999px,56px,0); transform: skew(-2deg); }
+      0%   { clip: rect(44px,9999px,56px,0); transform: skew(calc(-2deg * var(--glitch-intensity))); }
       10%  { clip: rect(60px,9999px,80px,0); transform: skew(calc(-2deg * var(--glitch-intensity))); }
       20%  { clip: rect(30px,9999px,40px,0); transform: skew(calc(2deg * var(--glitch-intensity))); }
       30%  { clip: rect(10px,9999px,20px,0); transform: skew(calc(-1deg * var(--glitch-intensity))); }
       40%  { clip: rect(55px,9999px,65px,0); transform: skew(calc(3deg * var(--glitch-intensity))); }
-      50%  { clip: rect(44px,9999px,56px,0); transform: skew(-2deg); }
-      100% { clip: rect(44px,9999px,56px,0); transform: skew(-2deg); }
+      50%  { clip: rect(44px,9999px,56px,0); transform: skew(calc(-2deg * var(--glitch-intensity))); }
+      100% { clip: rect(44px,9999px,56px,0); transform: skew(calc(-2deg * var(--glitch-intensity))); }
     }
-    /* glitch-anim2: ещё один набор ключевых кадров */
     @keyframes glitch-anim2 {
-      0%   { clip: rect(40px,9999px,60px,0); transform: skew(1deg); }
+      0%   { clip: rect(40px,9999px,60px,0); transform: skew(calc(1deg * var(--glitch-intensity))); }
       10%  { clip: rect(70px,9999px,90px,0); transform: skew(calc(-3deg * var(--glitch-intensity))); }
       20%  { clip: rect(20px,9999px,30px,0); transform: skew(calc(3deg * var(--glitch-intensity))); }
       30%  { clip: rect(10px,9999px,25px,0); transform: skew(calc(-2deg * var(--glitch-intensity))); }
       40%  { clip: rect(50px,9999px,70px,0); transform: skew(calc(4deg * var(--glitch-intensity))); }
-      50%  { clip: rect(40px,9999px,60px,0); transform: skew(1deg); }
-      100% { clip: rect(40px,9999px,60px,0); transform: skew(1deg); }
+      50%  { clip: rect(40px,9999px,60px,0); transform: skew(calc(1deg * var(--glitch-intensity))); }
+      100% { clip: rect(40px,9999px,60px,0); transform: skew(calc(1deg * var(--glitch-intensity))); }
     }
-    /* glitch-skew: лёгкая анимация skew */
+    @keyframes glitch-black {
+      0%,100% { clip: none; transform: none; }
+      50%     { clip: rect(50px,9999px,70px,0); transform: translate(2px,0) skew(calc(-2deg * var(--glitch-intensity))); }
+    }
     @keyframes glitch-skew {
       0%   { transform: skew(0deg); }
       50%  { transform: skew(1deg); }
       100% { transform: skew(0deg); }
-    }
-    /* glitch-black: имитируем полоски */
-    @keyframes glitch-black {
-      0%, 100% { clip: none; transform: none; }
-      50% {
-        clip: rect(50px,9999px,70px,0);
-        transform: translate(2px,0) skew(-2deg);
-      }
     }
   </style>
 
@@ -399,20 +409,37 @@
   <header>
     <canvas id="waveCanvas"></canvas>
     <div class="header-content">
-      <!-- Лого: 4 h1-слоя, как в вашем примере (glitch, glitch-before, glitch-after, glitch-black) -->
-      <!-- Можно вместо h1 использовать div/span, важно лишь наличие классов. -->
-
+      <!-- Четыре слоя глитча, как в вашем SCSS:
+           glitch (основной), glitch-before, glitch-after, glitch-black.
+           Внутри каждого h1 – ваш SVG (312x119).
+      -->
       <h1 class="glitch glitch-before">
-        <img src="assets/logo.svg" alt="Glitch Before" />
+        <!-- КРАСНОЕ/РОЗОВОЕ ЛОГО (пример) -->
+        <svg width="312" height="119" viewBox="0 0 312 119" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="..." fill="#ff00c1"/>
+          <!-- ... ваш SVG path ... -->
+        </svg>
       </h1>
       <h1 class="glitch glitch-after">
-        <img src="assets/logo.svg" alt="Glitch After" />
+        <!-- ГОЛУБОЕ ЛОГО -->
+        <svg width="312" height="119" viewBox="0 0 312 119" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="..." fill="#00fff9"/>
+          <!-- ... -->
+        </svg>
       </h1>
       <h1 class="glitch">
-        <img src="assets/logo.svg" alt="Main Logo" />
+        <!-- ОСНОВНОЕ ЛОГО (белое/серое) -->
+        <svg width="312" height="119" viewBox="0 0 312 119" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="..." fill="#F2EAE6"/>
+          <!-- ... -->
+        </svg>
       </h1>
       <h1 class="glitch glitch-black">
-        <img src="assets/logo.svg" alt="Glitch Black" />
+        <!-- ЛОГО + чёрный слой -->
+        <svg width="312" height="119" viewBox="0 0 312 119" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="..." fill="#F2EAE6"/>
+          <!-- ... -->
+        </svg>
       </h1>
 
       <nav>
@@ -428,14 +455,13 @@
   <section id="cover">
     <div class="cover-content">
       <h2>Обложка сайта</h2>
-      <p>
-        Здесь можно разместить слоган или вводную информацию о проекте.
-      </p>
+      <p>Разместите здесь слоган или вступительную информацию.</p>
     </div>
   </section>
 
   <!-- MAIN CONTENT -->
   <main>
+    <!-- Остальные секции -->
     <section id="works">
       <div class="container">
         <h2>Портфолио</h2>
@@ -443,7 +469,7 @@
           <article class="work-item">
             <h3>Название работы 1</h3>
             <p>Год: 2023</p>
-            <p>Краткое описание концепции. Технологии, материалы и уникальные особенности.</p>
+            <p>Краткое описание концепции...</p>
             <div class="share-buttons">
               <a href="#">Facebook</a>
               <a href="#">Twitter</a>
@@ -462,13 +488,13 @@
           <div class="bio">
             <h3>Биография</h3>
             <p class="scramble-text">
-              Здесь вставьте реальный текст биографии. Этот текст появится постепенно, когда вы доскроллите до него.
+              Текст биографии...
             </p>
           </div>
           <div class="artist-statement">
             <h3>Artist Statement</h3>
             <p class="scramble-text">
-              Опишите вашу философию, что вы хотите донести до зрителя. Текст появится с эффектом scramble.
+              Текст, описывающий вашу философию...
             </p>
           </div>
           <div class="artist-photo">
@@ -563,11 +589,8 @@
       ctx.strokeStyle = "#0ff";
       ctx.lineWidth = LINE_WIDTH;
       wavePoints.forEach((p, i) => {
-        if (i === 0) {
-          ctx.moveTo(p.x, p.y);
-        } else {
-          ctx.lineTo(p.x, p.y);
-        }
+        if (i === 0) ctx.moveTo(p.x, p.y);
+        else ctx.lineTo(p.x, p.y);
       });
       ctx.stroke();
 
