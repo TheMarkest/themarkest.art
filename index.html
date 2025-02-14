@@ -16,30 +16,52 @@
   <meta name="theme-color" content="#000000">
 
   <style>
-    /* ===== Эффект «старого монитора» (скан-линии, мерцание) ===== */
-    /* Взято из CodePen https://codepen.io/t0k3n/pen/ebdgNp (упрощённая версия) */
+    /* ============================= */
+    /* ЭФФЕКТ «СТАРОГО МОНИТОРА»    */
+    /* Взято и адаптировано из:     */
+    /* https://codepen.io/t0k3n/pen/ebdgNp */
+    /* ============================= */
     body::before {
+      /* Лёгкое мерцание (радиальный градиент) */
+      content: "";
+      pointer-events: none;
+      position: fixed;
+      left: 0; top: 0;
+      width: 100%; height: 100%;
+      background: radial-gradient(
+        circle, 
+        rgba(255, 255, 255, 0.03) 1%, 
+        rgba(255, 255, 255, 0) 60%
+      );
+      animation: flicker 3s infinite ease-in-out alternate;
+      z-index: 9999;
+    }
+    body::after {
+      /* Горизонтальные скан-линии, смещающиеся на 4px */
       content: "";
       position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
       pointer-events: none;
-      /* Поверх всего накладываем повторяющийся радиальный градиент */
-      background: repeating-radial-gradient(
-        rgba(255,255,255,0.03) 0px, 
-        rgba(255,255,255,0.03) 2px, 
-        transparent 2px, 
-        transparent 100px
+      left: 0; top: 0;
+      width: 100%; height: 100%;
+      background: repeating-linear-gradient(
+        0deg,
+        rgba(255,255,255,0) 0px,
+        rgba(255,255,255,0) 1px,
+        rgba(255,255,255,0.02) 2px,
+        rgba(255,255,255,0.02) 2px,
+        rgba(255,255,255,0) 4px
       );
-      mix-blend-mode: lighten; 
-      opacity: 0.04; 
-      animation: flicker 2.5s infinite ease-in-out alternate;
-      z-index: 999999; /* Самый верх */
+      animation: scanline 0.1s infinite steps(1);
+      z-index: 99999;
+      mix-blend-mode: lighten;
     }
-
     @keyframes flicker {
-      0%, 100%   { opacity: 0.04; }
-      50%        { opacity: 0.06; }
+      0%, 100% { opacity: 0.05; }
+      50% { opacity: 0.07; }
+    }
+    @keyframes scanline {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(4px); }
     }
 
     /* ===== Сброс и базовые стили ===== */
@@ -53,12 +75,9 @@
     }
     body {
       font-family: "IBM Plex Sans", sans-serif;
-      background: #000; /* Чёрный фон страницы */
+      background: #000; /* Чёрный фон */
       color: #fff;
       line-height: 1.5;
-      /* Для «монохромного» вида можно включить:
-         color: #0f0; background: #000; 
-         Но оставим классический белый на чёрном. */
     }
     a {
       color: inherit;
@@ -69,8 +88,7 @@
       color: #0ff;
     }
 
-    /* ===== ШАПКА ===== */
-    /* Вся шапка – это canvas + лого/меню поверх */
+    /* ===== ШАПКА: Canvas + Логотип и меню ===== */
     header {
       position: fixed;
       top: 0; left: 0;
@@ -78,15 +96,12 @@
       height: 160px;   /* Высота холста */
       z-index: 1000;
     }
-
-    /* Canvas с серой заливкой и волной */
     #waveCanvas {
       display: block;
       width: 100%;
       height: 100%;
     }
-
-    /* Слой с логотипом и меню (поверх canvas) */
+    /* Логотип и меню (поверх холста) */
     .header-content {
       position: absolute;
       top: 0; left: 0;
@@ -95,9 +110,8 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      z-index: 10;    /* Выше, чем холст */
+      z-index: 10;
     }
-    /* Логотип слева */
     .logo-container {
       position: absolute;
       left: 20px;
@@ -106,14 +120,13 @@
       width: 80px;
       height: auto;
     }
-    /* Меню по центру */
     nav a {
       margin: 0 15px;
       font-size: 1.2rem;
       color: #fff;
     }
 
-    /* Отступ под контент: ~160px (высота холста) */
+    /* Отступ под основной контент: 160px (высота холста) */
     main {
       margin-top: 160px;
     }
@@ -129,7 +142,7 @@
       margin-bottom: 2rem;
       text-transform: uppercase;
     }
-    /* Пример сетки (портфолио) */
+    /* Сетка (портфолио) */
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -275,7 +288,7 @@
 </head>
 <body>
 
-  <!-- ШАПКА: Canvas + Слой с логотипом и меню -->
+  <!-- ШАПКА: Canvas + Логотип/меню -->
   <header>
     <canvas id="waveCanvas"></canvas>
     <div class="header-content">
@@ -290,7 +303,7 @@
     </div>
   </header>
 
-  <!-- Основной контент, смещённый на 160px (высота холста) -->
+  <!-- Контент (смещён на 160px) -->
   <main>
     <section id="works">
       <div class="container">
@@ -307,7 +320,6 @@
               <a href="#">Telegram</a>
             </div>
           </article>
-          <!-- Добавьте больше работ, если нужно -->
         </div>
       </div>
     </section>
@@ -318,11 +330,11 @@
         <div class="about-content">
           <div class="bio">
             <h3>Биография</h3>
-            <p>Здесь вставьте реальный текст биографии. Расскажите о ключевых этапах пути, образовании и вдохновении.</p>
+            <p>Здесь вставьте реальный текст биографии.</p>
           </div>
           <div class="artist-statement">
             <h3>Artist Statement</h3>
-            <p>Опишите вашу философию, что вы хотите донести до зрителя, как взаимодействуете с технологиями и материалами.</p>
+            <p>Опишите вашу философию, что вы хотите донести до зрителя.</p>
           </div>
           <div class="artist-photo">
             <div>Photo</div>
@@ -357,35 +369,33 @@
     </div>
   </footer>
 
-  <!-- Скрипт: рисуем полупрозрачную заливку и неоновую волну внизу -->
+  <!-- Скрипт: полупрозрачная заливка + волна (исправленные углы) -->
   <script>
     const canvas = document.getElementById("waveCanvas");
     const ctx = canvas.getContext("2d");
 
-    let width, height;
+    let width = 0, height = 0;
     let time = 0;
     let dots = [];
 
-    // ПАРАМЕТРЫ ВОЛНЫ
-    const CANVAS_HEIGHT = () => canvas.offsetHeight; 
-    const CANVAS_WIDTH  = () => canvas.offsetWidth;
-    const BASELINE      = 120;  // «Линия» в нижней части холста
-    const AMPLITUDE     = 15;   // Волна ±15 px
-    const DOT_SPACING   = 40;   // Шаг точек
-    const FREQ_MIN      = 0.03;
-    const FREQ_MAX      = 0.08;
-    const LINE_WIDTH    = 2;
-    const DOT_RADIUS    = 4;
+    // ПАРАМЕТРЫ
+    const AMPLITUDE   = 15;  // ±15 px
+    const DOT_SPACING = 40;  // Шаг между точками
+    const FREQ_MIN    = 0.03;
+    const FREQ_MAX    = 0.08;
+    const LINE_WIDTH  = 2;
+    const DOT_RADIUS  = 4;
+    const HEADER_BG_COLOR = "rgba(85, 85, 85, 0.8)"; // Полупрозрачный серый
+    const BASELINE = 120; // «Линия» волны на холсте (в пикселях от верха)
 
-    // Создаём точки, крайние «прибиты» на уровне BASELINE
     function initDots() {
-      width  = CANVAS_WIDTH();
-      height = CANVAS_HEIGHT();
-      canvas.width  = width;
+      width = canvas.offsetWidth;
+      height = canvas.offsetHeight;
+      canvas.width = width;
       canvas.height = height;
       dots = [];
 
-      // Левая точка
+      // Левая крайняя точка (прибита по y=BASELINE)
       dots.push({ x: 0, pinned: true });
 
       // Промежуточные точки
@@ -398,14 +408,14 @@
         });
       }
 
-      // Правая точка
+      // Правая крайняя точка
       dots.push({ x: width, pinned: true });
     }
 
     function animate() {
       ctx.clearRect(0, 0, width, height);
 
-      // Волна: pinned => y=BASELINE, иначе => BASELINE + sin(...)
+      // Генерируем координаты волны
       const wavePoints = dots.map(dot => {
         if (dot.pinned) {
           return { x: dot.x, y: BASELINE };
@@ -415,19 +425,25 @@
         }
       });
 
-      // 1) Рисуем полупрозрачную заливку СВЕРХУ ДО волны
-      //    От (0,0) → (width,0) → wavePoints → closePath
+      // 1) Заливаем верх canvas до волны
       ctx.beginPath();
+      // Начинаем слева сверху (0,0)
       ctx.moveTo(0, 0);
+      // Линия до правого верхнего угла (width, 0)
       ctx.lineTo(width, 0);
+      // Проходим по точкам волны (справа налево? Или слева направо?)
+      // Чтобы углы не были перепутаны, идём слева → направо
       wavePoints.forEach(p => ctx.lineTo(p.x, p.y));
+      // Замыкаем вниз влево (0,height) – но здесь нам нужно просто закрыть многоугольник
+      ctx.lineTo(width, height);
+      ctx.lineTo(0, height);
       ctx.closePath();
 
-      // Полупрозрачный серый цвет
-      ctx.fillStyle = "rgba(85, 85, 85, 0.8)";
+      // Полупрозрачный серый фон
+      ctx.fillStyle = HEADER_BG_COLOR;
       ctx.fill();
 
-      // 2) Рисуем неоновую линию по тем же точкам
+      // 2) Неоновая линия по точкам
       ctx.beginPath();
       ctx.strokeStyle = "#0ff";
       ctx.lineWidth = LINE_WIDTH;
@@ -440,7 +456,7 @@
       });
       ctx.stroke();
 
-      // 3) Точки (толще линии)
+      // 3) Точки
       wavePoints.forEach(p => {
         ctx.beginPath();
         ctx.arc(p.x, p.y, DOT_RADIUS, 0, Math.PI * 2);
@@ -452,7 +468,7 @@
       requestAnimationFrame(animate);
     }
 
-    // При ресайзе пересчитываем точки
+    // Перезапуск при ресайзе
     function onResize() {
       initDots();
     }
