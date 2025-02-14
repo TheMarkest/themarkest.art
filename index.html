@@ -130,7 +130,7 @@
       height: 100%;
     }
 
-    /* ===== ПОРТФОЛИО, О ХУДОЖНИКЕ, КОНТАКТЫ ===== */
+    /* ===== Остальные секции ===== */
     section#works { background: #111; padding: 4rem 0; }
     #works h2 { text-align: center; font-size: 2rem; margin-bottom: 2rem; text-transform: uppercase; }
     .grid {
@@ -365,29 +365,31 @@
       let width = canvas.width = canvas.offsetWidth;
       let height = canvas.height = canvas.offsetHeight;
       
-      // Увеличиваем интервал между точками для уменьшения их количества
       const dotRadius = 3;
-      const dotSpacing = 40;  // раньше было 20
+      const dotSpacing = 40;  // Интервал между точками
       const speed = 0.5;
-      const frequency = 0.05;
-      const amplitude = 10;
       
-      // Инициализация точек
+      // Для каждого "участка" линии задаём случайные амплитуду и частоту
       let dots = [];
       for (let x = 0; x <= width; x += dotSpacing) {
-        dots.push({ x: x });
+        dots.push({
+          x: x,
+          amplitude: 5 + Math.random() * 10,    // Амплитуда от 5 до 15
+          frequency: 0.03 + Math.random() * 0.07  // Частота от 0.03 до 0.1
+        });
       }
       
       let time = 0;
       function draw() {
         ctx.clearRect(0, 0, width, height);
+        
+        // Рисуем соединяющую линию между точками
         ctx.strokeStyle = "#0ff";
         ctx.lineWidth = 1;
         ctx.beginPath();
-        // Рисуем соединяющую линию через точки
         dots.forEach((dot, index) => {
-          let y = height / 2 + amplitude * Math.sin(dot.x * frequency + time);
-          if(index === 0) {
+          let y = height / 2 + dot.amplitude * Math.sin(dot.x * dot.frequency + time);
+          if (index === 0) {
             ctx.moveTo(dot.x, y);
           } else {
             ctx.lineTo(dot.x, y);
@@ -398,16 +400,16 @@
         // Рисуем сами точки
         ctx.fillStyle = "#0ff";
         dots.forEach(dot => {
-          let y = height / 2 + amplitude * Math.sin(dot.x * frequency + time);
+          let y = height / 2 + dot.amplitude * Math.sin(dot.x * dot.frequency + time);
           ctx.beginPath();
           ctx.arc(dot.x, y, dotRadius, 0, Math.PI * 2);
           ctx.fill();
         });
         
-        // Обновляем позиции точек
+        // Обновляем позицию точек по горизонтали
         dots.forEach(dot => {
           dot.x += speed;
-          if(dot.x - dotRadius > width) {
+          if (dot.x - dotRadius > width) {
             dot.x = -dotRadius;
           }
         });
@@ -417,11 +419,11 @@
       draw();
     }
     
-    // Инициализируем анимацию сепараторов
+    // Инициализируем анимацию для верхнего и нижнего сепараторов
     animateSeparator("separator-top");
     animateSeparator("separator-footer");
     
-    // Обновление размеров канвы при изменении окна
+    // Обновляем размеры канвы при изменении окна
     window.addEventListener("resize", () => {
       ["separator-top", "separator-footer"].forEach(id => {
         const canvas = document.getElementById(id);
