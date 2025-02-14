@@ -15,9 +15,17 @@
   <meta name="msapplication-TileColor" content="#000000">
   <meta name="theme-color" content="#000000">
 
+  <!-- Объявляем CSS-переменные для динамической интенсивности глитча -->
+  <style>
+    :root {
+      --mouse-intensity: 1;
+      --scroll-intensity: 1;
+      --glitch-intensity: calc(var(--mouse-intensity) * var(--scroll-intensity));
+    }
+  </style>
+
   <!-- ==========================
        Эффект «старого монитора»
-       (виньетка + скан-линии)
   ========================== -->
   <style>
     body::before {
@@ -61,7 +69,7 @@
   </style>
 
   <!-- ==========================
-       Сброс и базовые стили
+       Базовые стили
   ========================== -->
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -77,14 +85,14 @@
   </style>
 
   <!-- ==========================
-       Хедер: Волна + Логотип/Меню
+       Хедер: Волна + Логотип с цифровым glitch-эффектом и меню
   ========================== -->
   <style>
     header {
       position: fixed;
       top: 0; left: 0;
       width: 100%;
-      height: 160px; /* Высота холста */
+      height: 160px;  /* Высота холста */
       z-index: 1000;
     }
     #waveCanvas {
@@ -96,7 +104,7 @@
       position: absolute;
       top: 0; left: 0;
       width: 100%;
-      height: 120px; /* "Официальная" высота шапки */
+      height: 120px;  /* "Официальная" высота хедера */
       display: flex;
       align-items: center;
       justify-content: center;
@@ -106,29 +114,30 @@
       position: absolute;
       left: 20px;
     }
-    /* DIGITAL GLITCH ЭФФЕКТ для логотипа */
+    /* Цифровой glitch-эффект (как в defuz/pen/bGQyrdL) */
     .glitch-logo {
       position: relative;
       display: inline-block;
-      --glitch-intensity: 1;
+      --glitch-intensity: 1; /* базовое значение */
     }
     .glitch-logo::before,
     .glitch-logo::after {
       content: "";
       position: absolute;
-      top: 0; left: 0;
+      top: 0;
+      left: 0;
       width: 100%;
       height: 100%;
       background: url("assets/logo.svg") no-repeat center;
       background-size: contain;
     }
     .glitch-logo::before {
-      animation: glitch1 2s infinite linear alternate-reverse;
+      animation: glitch-anim 2s infinite linear alternate-reverse;
     }
     .glitch-logo::after {
-      animation: glitch2 3s infinite linear alternate-reverse;
+      animation: glitch-anim2 3s infinite linear alternate-reverse;
     }
-    @keyframes glitch1 {
+    @keyframes glitch-anim {
       0% { clip: rect(10px, 9999px, 20px, 0); transform: translate(0); }
       20% { clip: rect(30px, 9999px, 40px, 0); transform: translate(calc(-5px * var(--glitch-intensity)), calc(-5px * var(--glitch-intensity))); }
       40% { clip: rect(50px, 9999px, 60px, 0); transform: translate(calc(5px * var(--glitch-intensity)), calc(5px * var(--glitch-intensity))); }
@@ -136,7 +145,7 @@
       80% { clip: rect(40px, 9999px, 50px, 0); transform: translate(calc(5px * var(--glitch-intensity)), calc(-5px * var(--glitch-intensity))); }
       100% { clip: rect(10px, 9999px, 20px, 0); transform: translate(0); }
     }
-    @keyframes glitch2 {
+    @keyframes glitch-anim2 {
       0% { clip: rect(10px, 9999px, 20px, 0); transform: translate(0); }
       20% { clip: rect(20px, 9999px, 30px, 0); transform: translate(calc(5px * var(--glitch-intensity)), calc(5px * var(--glitch-intensity))); }
       40% { clip: rect(40px, 9999px, 50px, 0); transform: translate(calc(-5px * var(--glitch-intensity)), calc(-5px * var(--glitch-intensity))); }
@@ -204,103 +213,50 @@
     .work-item:hover { transform: scale(1.02); box-shadow: 0 0 8px #0ff; }
     .work-item h3 { margin-bottom: 0.5rem; font-size: 1.2rem; }
     .work-item p { font-size: 0.95rem; opacity: 0.9; margin-bottom: 0.5rem; }
-    .share-buttons { display: flex; gap: 0.5rem; margin-top: 0.5rem; flex-wrap: wrap; }
+    .share-buttons {
+      display: flex; gap: 0.5rem; margin-top: 0.5rem; flex-wrap: wrap;
+    }
     .share-buttons a {
-      background: #0ff;
-      color: #000;
-      padding: 0.3rem 0.6rem;
-      border-radius: 3px;
-      font-size: 0.8rem;
-      transition: background 0.3s;
+      background: #0ff; color: #000; padding: 0.3rem 0.6rem; border-radius: 3px; font-size: 0.8rem; transition: background 0.3s;
     }
     .share-buttons a:hover { background: #0cc; }
     .about-content {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 2rem;
-      max-width: 1000px;
-      margin: 0 auto;
+      display: flex; flex-wrap: wrap; gap: 2rem; max-width: 1000px; margin: 0 auto;
     }
     .bio, .artist-statement { flex: 1 1 300px; min-width: 300px; }
-    .bio h3, .artist-statement h3 {
-      font-size: 1.3rem;
-      margin-bottom: 1rem;
-      text-transform: uppercase;
-    }
+    .bio h3, .artist-statement h3 { font-size: 1.3rem; margin-bottom: 1rem; text-transform: uppercase; }
     .bio p, .artist-statement p { font-size: 1rem; opacity: 0.9; line-height: 1.5; }
-    .artist-photo {
-      flex: 1 1 300px;
-      min-width: 300px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+    .artist-photo { flex: 1 1 300px; min-width: 300px; display: flex; align-items: center; justify-content: center; }
     .artist-photo div {
-      width: 200px;
-      height: 200px;
-      border: 2px solid #0ff;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 700;
-      text-transform: uppercase;
-      font-size: 1rem;
-      background: #111;
+      width: 200px; height: 200px; border: 2px solid #0ff; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center; font-weight: 700;
+      text-transform: uppercase; font-size: 1rem; background: #111;
     }
   </style>
 
   <!-- ==========================
-       Форма и футер
+       Форма и Футер
   ========================== -->
   <style>
     form {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      max-width: 500px;
-      margin: 0 auto;
+      display: flex; flex-direction: column; gap: 1rem; max-width: 500px; margin: 0 auto;
     }
     form label { font-weight: 600; margin-bottom: 0.3rem; }
     form input, form textarea {
-      padding: 0.6rem;
-      border: 1px solid #333;
-      border-radius: 4px;
-      background: #222;
-      color: #fff;
-      font-family: inherit;
+      padding: 0.6rem; border: 1px solid #333; border-radius: 4px; background: #222;
+      color: #fff; font-family: inherit;
     }
-    form input:focus, form textarea:focus {
-      outline: none;
-      border-color: #0ff;
-    }
+    form input:focus, form textarea:focus { outline: none; border-color: #0ff; }
     form button {
-      background: #0ff;
-      color: #000;
-      padding: 0.7rem 1rem;
-      border: none;
-      border-radius: 4px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.3s;
+      background: #0ff; color: #000; padding: 0.7rem 1rem; border: none;
+      border-radius: 4px; font-weight: 600; cursor: pointer; transition: background 0.3s;
     }
     form button:hover { background: #0cc; }
-    .contact-social {
-      text-align: center;
-      margin-top: 2rem;
-    }
+    .contact-social { text-align: center; margin-top: 2rem; }
     .contact-social a {
-      margin: 0 0.5rem;
-      background: rgba(255,255,255,0.1);
-      padding: 0.5rem 1rem;
-      border-radius: 4px;
+      margin: 0 0.5rem; background: rgba(255,255,255,0.1); padding: 0.5rem 1rem; border-radius: 4px;
     }
-    footer {
-      background: #000;
-      padding: 2rem 0;
-      text-align: center;
-      font-size: 0.9rem;
-    }
+    footer { background: #000; padding: 2rem 0; text-align: center; font-size: 0.9rem; }
   </style>
 
   <!-- ==========================
@@ -313,12 +269,12 @@
 </head>
 <body>
 
-  <!-- Хедер: Волна + Логотип с цифровым глитч-эффектом и меню -->
+  <!-- Хедер: Волна + Логотип с цифровым glitch-эффектом и меню -->
   <header>
     <canvas id="waveCanvas"></canvas>
     <div class="header-content">
       <div class="logo-container">
-        <!-- Логотип с классом glitch-logo для цифрового глитча -->
+        <!-- Логотип с классом glitch-logo -->
         <img src="assets/logo.svg" alt="TheMarkest.art Logo" class="logo glitch-logo" />
       </div>
       <nav>
@@ -435,12 +391,7 @@
       dots = [];
       dots.push({ x: 0, pinned: true });
       for (let x = DOT_SPACING; x <= width - DOT_SPACING; x += DOT_SPACING) {
-        dots.push({
-          x,
-          pinned: false,
-          freq: FREQ_MIN + Math.random() * (FREQ_MAX - FREQ_MIN),
-          phase: Math.random() * Math.PI * 2
-        });
+        dots.push({ x, pinned: false, freq: FREQ_MIN + Math.random()*(FREQ_MAX-FREQ_MIN), phase: Math.random()*Math.PI*2 });
       }
       dots.push({ x: width, pinned: true });
     }
@@ -465,7 +416,7 @@
       ctx.stroke();
       wavePoints.forEach(p => {
         ctx.beginPath();
-        ctx.arc(p.x, p.y, DOT_RADIUS, 0, Math.PI * 2);
+        ctx.arc(p.x, p.y, DOT_RADIUS, 0, Math.PI*2);
         ctx.fillStyle = "#0ff";
         ctx.fill();
       });
@@ -495,9 +446,9 @@
         this.queue = [];
         for (let i = 0; i < length; i++) {
           const from = oldText[i] || "";
-          const to = newText[i] || "";
+          const to   = newText[i] || "";
           const start = Math.floor(Math.random() * 30);
-          const end = start + Math.floor(Math.random() * 30);
+          const end   = start + Math.floor(Math.random() * 30);
           this.queue.push({ from, to, start, end, char: null });
         }
         cancelAnimationFrame(this.frameRequest);
@@ -554,13 +505,31 @@
   </script>
 
   <!-- ==========================
-       Скрипт: Зависимость интенсивности глитча от движения мыши
+       Скрипт: Обновление интенсивности глитча
+         (зависимость от движения мыши и скролла)
   ========================== -->
   <script>
+    // Обновляем интенсивность от движения мыши
     document.addEventListener("mousemove", e => {
-      let intensity = 1 + ((e.clientX / window.innerWidth) - 0.5);
-      document.documentElement.style.setProperty('--glitch-intensity', intensity);
+      let mouseIntensity = 1 + ((e.clientX / window.innerWidth) - 0.5); // от ~0.5 до 1.5
+      document.documentElement.style.setProperty("--mouse-intensity", mouseIntensity);
+      // Пересчитываем итоговую интенсивность
+      updateGlitchIntensity();
     });
+    // Обновляем интенсивность от скролла
+    window.addEventListener("scroll", () => {
+      let scrollY = window.scrollY;
+      let docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      let scrollIntensity = 1 + (scrollY / docHeight); // от 1 до ~2
+      document.documentElement.style.setProperty("--scroll-intensity", scrollIntensity);
+      updateGlitchIntensity();
+    });
+    function updateGlitchIntensity() {
+      const mouse = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--mouse-intensity"));
+      const scroll = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--scroll-intensity"));
+      const final = mouse * scroll;
+      document.documentElement.style.setProperty("--glitch-intensity", final);
+    }
   </script>
 </body>
 </html>
