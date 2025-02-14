@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>TheMarkest.art – Sci-Fi/Cyberpunk</title>
-  <meta name="description" content="Портфолио художника, работающего в sci‑fi/cyberpunk с интерактивными и кинетическими скульптурами." />
+  <meta name="description" content="Портфолио художника, работающего в стиле sci-fi/cyberpunk с интерактивными и кинетическими скульптурами." />
 
   <!-- Favicons -->
   <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/apple-touch-icon.png">
@@ -24,7 +24,7 @@
     }
   </style>
 
-  <!-- Old Monitor Effect (Enhanced Vignette and Wider Scanlines) -->
+  <!-- Old Monitor Effect (Vignette + Scanlines) -->
   <style>
     body::before {
       content: "";
@@ -33,9 +33,9 @@
       top: 0; left: 0;
       width: 100%; height: 100%;
       z-index: 9999;
-      /* Виньетка начинается уже с 30% и становится более темной */
-      background: radial-gradient(circle at center, rgba(0,0,0,0) 30%, rgba(0,0,0,0.85) 100%),
-                  radial-gradient(circle, rgba(255,255,255,0.05) 1%, rgba(255,255,255,0) 60%);
+      background:
+        radial-gradient(circle at center, rgba(0,0,0,0) 30%, rgba(0,0,0,0.85) 100%),
+        radial-gradient(circle, rgba(255,255,255,0.05) 1%, rgba(255,255,255,0) 60%);
       background-blend-mode: multiply;
       animation: flicker 2s infinite alternate;
     }
@@ -46,7 +46,7 @@
       top: 0; left: 0;
       width: 100%; height: 100%;
       z-index: 99999;
-      /* Scanlines: 2px thick, 2px gap */
+      /* Широкие скан-линии */
       background: repeating-linear-gradient(
         0deg,
         rgba(255,255,255,0.05) 0px,
@@ -70,16 +70,28 @@
 
   <!-- Basic Reset & Base Styles -->
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    html {
+      scroll-behavior: smooth;
+    }
     body {
       font-family: "IBM Plex Sans", sans-serif;
       background: #000;
       color: #fff;
       line-height: 1.5;
     }
-    a { color: inherit; text-decoration: none; transition: color 0.3s; }
-    a:hover { color: #0ff; }
+    a {
+      color: inherit;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    a:hover {
+      color: #0ff;
+    }
   </style>
 
   <!-- Header: Wave Canvas + Header Content -->
@@ -88,7 +100,7 @@
       position: fixed;
       top: 0; left: 0;
       width: 100%;
-      height: 160px; /* Height for wave canvas */
+      height: 160px; /* Высота холста под волну */
       z-index: 1000;
     }
     #waveCanvas {
@@ -100,18 +112,29 @@
       position: absolute;
       top: 0; left: 0;
       width: 100%;
-      height: 120px; /* Official header height for logo & menu */
+      height: 120px; /* Официальная высота шапки */
       display: flex;
       align-items: center;
       justify-content: center;
       z-index: 10;
     }
-    nav a { margin: 0 15px; font-size: 1.2rem; color: #fff; }
+    nav a {
+      margin: 0 15px;
+      font-size: 1.2rem;
+      color: #fff;
+    }
   </style>
 
-  <!-- Glitch Logo Effect (Digital Glitch inspired by defuz/pen/bGQyrdL) -->
+  <!-- Glitch Logo Effect (Digital Glitch with smaller offset ±6px) -->
   <style>
-    /* Instead of pseudo-elements on a single image, we use layered images */
+    /* Лого в левом верхнем углу (10px отступ сверху и слева) */
+    .logo-container {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+    }
+
+    /* Вместо псевдоэлементов: три слоя */
     .glitch-logo {
       position: relative;
       width: 80px;
@@ -137,21 +160,71 @@
     .glitch-layer.bottom {
       animation: glitch-bottom 3s infinite linear alternate;
     }
+
+    /* Глитч анимация с ±6px (меньше, чем было 12px) */
     @keyframes glitch-top {
-      0% { clip: rect(0, 80px, 0, 0); transform: translate(0,0); opacity: 0.8; }
-      20% { clip: rect(10px, 80px, 30px, 0); transform: translate(calc(-12px * var(--glitch-intensity)), calc(-12px * var(--glitch-intensity))); opacity: 1; }
-      40% { clip: rect(20px, 80px, 40px, 0); transform: translate(calc(12px * var(--glitch-intensity)), calc(12px * var(--glitch-intensity))); opacity: 0.8; }
-      60% { clip: rect(10px, 80px, 30px, 0); transform: translate(calc(-12px * var(--glitch-intensity)), calc(12px * var(--glitch-intensity))); opacity: 1; }
-      80% { clip: rect(20px, 80px, 40px, 0); transform: translate(calc(12px * var(--glitch-intensity)), calc(-12px * var(--glitch-intensity))); opacity: 0.8; }
-      100% { clip: rect(0, 80px, 0, 0); transform: translate(0,0); opacity: 0.8; }
+      0% {
+        clip: rect(0, 80px, 0, 0);
+        transform: translate(0,0);
+        opacity: 0.8;
+      }
+      20% {
+        clip: rect(10px, 80px, 30px, 0);
+        transform: translate(calc(-6px * var(--glitch-intensity)), calc(-6px * var(--glitch-intensity)));
+        opacity: 1;
+      }
+      40% {
+        clip: rect(20px, 80px, 40px, 0);
+        transform: translate(calc(6px * var(--glitch-intensity)), calc(6px * var(--glitch-intensity)));
+        opacity: 0.8;
+      }
+      60% {
+        clip: rect(10px, 80px, 30px, 0);
+        transform: translate(calc(-6px * var(--glitch-intensity)), calc(6px * var(--glitch-intensity)));
+        opacity: 1;
+      }
+      80% {
+        clip: rect(20px, 80px, 40px, 0);
+        transform: translate(calc(6px * var(--glitch-intensity)), calc(-6px * var(--glitch-intensity)));
+        opacity: 0.8;
+      }
+      100% {
+        clip: rect(0, 80px, 0, 0);
+        transform: translate(0,0);
+        opacity: 0.8;
+      }
     }
     @keyframes glitch-bottom {
-      0% { clip: rect(0, 80px, 0, 0); transform: translate(0,0); opacity: 0.8; }
-      20% { clip: rect(15px, 80px, 35px, 0); transform: translate(calc(12px * var(--glitch-intensity)), calc(12px * var(--glitch-intensity))); opacity: 1; }
-      40% { clip: rect(5px, 80px, 25px, 0); transform: translate(calc(-12px * var(--glitch-intensity)), calc(-12px * var(--glitch-intensity))); opacity: 0.8; }
-      60% { clip: rect(15px, 80px, 35px, 0); transform: translate(calc(12px * var(--glitch-intensity)), calc(-12px * var(--glitch-intensity))); opacity: 1; }
-      80% { clip: rect(10px, 80px, 30px, 0); transform: translate(calc(-12px * var(--glitch-intensity)), calc(12px * var(--glitch-intensity))); opacity: 0.8; }
-      100% { clip: rect(0, 80px, 0, 0); transform: translate(0,0); opacity: 0.8; }
+      0% {
+        clip: rect(0, 80px, 0, 0);
+        transform: translate(0,0);
+        opacity: 0.8;
+      }
+      20% {
+        clip: rect(15px, 80px, 35px, 0);
+        transform: translate(calc(6px * var(--glitch-intensity)), calc(6px * var(--glitch-intensity)));
+        opacity: 1;
+      }
+      40% {
+        clip: rect(5px, 80px, 25px, 0);
+        transform: translate(calc(-6px * var(--glitch-intensity)), calc(-6px * var(--glitch-intensity)));
+        opacity: 0.8;
+      }
+      60% {
+        clip: rect(15px, 80px, 35px, 0);
+        transform: translate(calc(6px * var(--glitch-intensity)), calc(-6px * var(--glitch-intensity)));
+        opacity: 1;
+      }
+      80% {
+        clip: rect(10px, 80px, 30px, 0);
+        transform: translate(calc(-6px * var(--glitch-intensity)), calc(6px * var(--glitch-intensity)));
+        opacity: 0.8;
+      }
+      100% {
+        clip: rect(0, 80px, 0, 0);
+        transform: translate(0,0);
+        opacity: 0.8;
+      }
     }
   </style>
 
@@ -188,8 +261,16 @@
 
   <!-- Other Sections -->
   <style>
-    section { padding: 4rem 0; background: #000; }
-    h2 { text-align: center; font-size: 2rem; margin-bottom: 2rem; text-transform: uppercase; }
+    section {
+      padding: 4rem 0;
+      background: #000;
+    }
+    h2 {
+      text-align: center;
+      font-size: 2rem;
+      margin-bottom: 2rem;
+      text-transform: uppercase;
+    }
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -204,72 +285,156 @@
       padding: 1rem;
       transition: transform 0.3s, box-shadow 0.3s;
     }
-    .work-item:hover { transform: scale(1.02); box-shadow: 0 0 8px #0ff; }
-    .work-item h3 { margin-bottom: 0.5rem; font-size: 1.2rem; }
-    .work-item p { font-size: 0.95rem; opacity: 0.9; margin-bottom: 0.5rem; }
+    .work-item:hover {
+      transform: scale(1.02);
+      box-shadow: 0 0 8px #0ff;
+    }
+    .work-item h3 {
+      margin-bottom: 0.5rem;
+      font-size: 1.2rem;
+    }
+    .work-item p {
+      font-size: 0.95rem;
+      opacity: 0.9;
+      margin-bottom: 0.5rem;
+    }
     .share-buttons {
-      display: flex; gap: 0.5rem; margin-top: 0.5rem; flex-wrap: wrap;
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+      flex-wrap: wrap;
     }
     .share-buttons a {
-      background: #0ff; color: #000; padding: 0.3rem 0.6rem; border-radius: 3px; font-size: 0.8rem; transition: background 0.3s;
+      background: #0ff;
+      color: #000;
+      padding: 0.3rem 0.6rem;
+      border-radius: 3px;
+      font-size: 0.8rem;
+      transition: background 0.3s;
     }
-    .share-buttons a:hover { background: #0cc; }
+    .share-buttons a:hover {
+      background: #0cc;
+    }
     .about-content {
-      display: flex; flex-wrap: wrap; gap: 2rem; max-width: 1000px; margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      max-width: 1000px;
+      margin: 0 auto;
     }
-    .bio, .artist-statement { flex: 1 1 300px; min-width: 300px; }
-    .bio h3, .artist-statement h3 { font-size: 1.3rem; margin-bottom: 1rem; text-transform: uppercase; }
-    .bio p, .artist-statement p { font-size: 1rem; opacity: 0.9; line-height: 1.5; }
+    .bio, .artist-statement {
+      flex: 1 1 300px;
+      min-width: 300px;
+    }
+    .bio h3, .artist-statement h3 {
+      font-size: 1.3rem;
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+    }
+    .bio p, .artist-statement p {
+      font-size: 1rem;
+      opacity: 0.9;
+      line-height: 1.5;
+    }
     .artist-photo {
-      flex: 1 1 300px; min-width: 300px; display: flex; align-items: center; justify-content: center;
+      flex: 1 1 300px;
+      min-width: 300px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     .artist-photo div {
-      width: 200px; height: 200px; border: 2px solid #0ff; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center; font-weight: 700;
-      text-transform: uppercase; font-size: 1rem; background: #111;
+      width: 200px;
+      height: 200px;
+      border: 2px solid #0ff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: 1rem;
+      background: #111;
     }
   </style>
 
-  <!-- Form & Footer -->
+  <!-- Form and Footer -->
   <style>
     form {
-      display: flex; flex-direction: column; gap: 1rem; max-width: 500px; margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      max-width: 500px;
+      margin: 0 auto;
     }
-    form label { font-weight: 600; margin-bottom: 0.3rem; }
+    form label {
+      font-weight: 600;
+      margin-bottom: 0.3rem;
+    }
     form input, form textarea {
-      padding: 0.6rem; border: 1px solid #333; border-radius: 4px; background: #222;
-      color: #fff; font-family: inherit;
+      padding: 0.6rem;
+      border: 1px solid #333;
+      border-radius: 4px;
+      background: #222;
+      color: #fff;
+      font-family: inherit;
     }
-    form input:focus, form textarea:focus { outline: none; border-color: #0ff; }
+    form input:focus, form textarea:focus {
+      outline: none;
+      border-color: #0ff;
+    }
     form button {
-      background: #0ff; color: #000; padding: 0.7rem 1rem; border: none;
-      border-radius: 4px; font-weight: 600; cursor: pointer; transition: background 0.3s;
+      background: #0ff;
+      color: #000;
+      padding: 0.7rem 1rem;
+      border: none;
+      border-radius: 4px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s;
     }
-    form button:hover { background: #0cc; }
-    .contact-social { text-align: center; margin-top: 2rem; }
+    form button:hover {
+      background: #0cc;
+    }
+    .contact-social {
+      text-align: center;
+      margin-top: 2rem;
+    }
     .contact-social a {
-      margin: 0 0.5rem; background: rgba(255,255,255,0.1); padding: 0.5rem 1rem; border-radius: 4px;
+      margin: 0 0.5rem;
+      background: rgba(255,255,255,0.1);
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
     }
-    footer { background: #000; padding: 2rem 0; text-align: center; font-size: 0.9rem; }
+    footer {
+      background: #000;
+      padding: 2rem 0;
+      text-align: center;
+      font-size: 0.9rem;
+    }
   </style>
 
   <!-- TextScramble Styles -->
   <style>
-    .scramble-text { display: inline-block; opacity: 0; }
+    .scramble-text {
+      display: inline-block;
+      opacity: 0;
+    }
   </style>
 </head>
 <body>
 
-  <!-- Header: Wave Canvas + Header Content (Logo with digital glitch effect and Menu) -->
+  <!-- HEADER: Wave Canvas + Logo with Digital Glitch & smaller offset ±6px -->
   <header>
     <canvas id="waveCanvas"></canvas>
     <div class="header-content">
       <div class="logo-container">
-        <!-- Glitch Logo: Container with three layers -->
         <div class="glitch-logo">
+          <!-- Base logo -->
           <img src="assets/logo.svg" alt="TheMarkest.art Logo" class="logo" />
-          <img src="assets/logo.svg" alt="TheMarkest.art Logo" class="glitch-layer top" />
-          <img src="assets/logo.svg" alt="TheMarkest.art Logo" class="glitch-layer bottom" />
+          <!-- Two glitch layers -->
+          <img src="assets/logo.svg" alt="Glitch top layer" class="glitch-layer top" />
+          <img src="assets/logo.svg" alt="Glitch bottom layer" class="glitch-layer bottom" />
         </div>
       </div>
       <nav>
@@ -281,7 +446,7 @@
     </div>
   </header>
 
-  <!-- Cover Section -->
+  <!-- COVER -->
   <section id="cover">
     <div class="cover-content">
       <h2>Обложка сайта</h2>
@@ -291,7 +456,7 @@
     </div>
   </section>
 
-  <!-- Main Content -->
+  <!-- MAIN CONTENT -->
   <main>
     <section id="works">
       <div class="container">
@@ -384,7 +549,12 @@
       dots = [];
       dots.push({ x: 0, pinned: true });
       for (let x = DOT_SPACING; x <= width - DOT_SPACING; x += DOT_SPACING) {
-        dots.push({ x, pinned: false, freq: FREQ_MIN + Math.random()*(FREQ_MAX-FREQ_MIN), phase: Math.random()*Math.PI*2 });
+        dots.push({
+          x,
+          pinned: false,
+          freq: FREQ_MIN + Math.random() * (FREQ_MAX - FREQ_MIN),
+          phase: Math.random() * Math.PI * 2
+        });
       }
       dots.push({ x: width, pinned: true });
     }
@@ -405,7 +575,10 @@
       ctx.beginPath();
       ctx.strokeStyle = "#0ff";
       ctx.lineWidth = LINE_WIDTH;
-      wavePoints.forEach((p, i) => { if(i===0) ctx.moveTo(p.x, p.y); else ctx.lineTo(p.x, p.y); });
+      wavePoints.forEach((p, i) => {
+        if(i===0) ctx.moveTo(p.x, p.y);
+        else ctx.lineTo(p.x, p.y);
+      });
       ctx.stroke();
       wavePoints.forEach(p => {
         ctx.beginPath();
@@ -416,7 +589,9 @@
       time += 0.02;
       requestAnimationFrame(animateWave);
     }
-    function onResize() { initDots(); }
+    function onResize() {
+      initDots();
+    }
     window.addEventListener("resize", onResize);
     initDots();
     animateWave();
