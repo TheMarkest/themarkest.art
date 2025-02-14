@@ -16,10 +16,10 @@
   <meta name="theme-color" content="#000000">
 
   <style>
-    /* ============================= */
-    /*  ЭФФЕКТ «СТАРОГО МОНИТОРА»   */
-    /*  + УСИЛЕННОЕ ВИНЬЕТИРОВАНИЕ  */
-    /* ============================= */
+    /* ==========================
+       1) ЭФФЕКТ «СТАРОГО МОНИТОРА»
+       (усиленное виньетирование и скан-линии)
+    ========================== */
     body::before {
       content: "";
       pointer-events: none;
@@ -34,7 +34,7 @@
           rgba(0,0,0,0) 40%, 
           rgba(0,0,0,0.7) 100%
         ),
-        /* Лёгкий белый шум в центре */
+        /* Лёгкий белый блик в центре */
         radial-gradient(
           circle, 
           rgba(255,255,255,0.05) 1%, 
@@ -69,10 +69,12 @@
       100% { transform: translateY(4px); }
     }
 
-    /* ===== СБРОС И БАЗОВЫЕ СТИЛИ ===== */
+    /* ==========================
+       2) СБРОС И БАЗОВЫЕ СТИЛИ
+    ========================== */
     * {
-      margin: 0; 
-      padding: 0; 
+      margin: 0;
+      padding: 0;
       box-sizing: border-box;
     }
     html {
@@ -93,13 +95,15 @@
       color: #0ff;
     }
 
-    /* ===== ШАПКА (Canvas + Логотип и меню) ===== */
+    /* ==========================
+       3) ХЕДЕР (волна + лого/меню)
+    ========================== */
     header {
       position: fixed;
       top: 0; left: 0;
       width: 100%;
-      height: 160px;  /* Высота холста */
-      z-index: 1000;
+      height: 160px;   /* Высота холста */
+      z-index: 1000;   /* Чтобы волна была над всем */
     }
     #waveCanvas {
       display: block;
@@ -110,7 +114,7 @@
       position: absolute;
       top: 0; left: 0;
       width: 100%;
-      height: 120px;  /* «Официальная» высота хедера */
+      height: 120px;   /* «Официальная» высота шапки */
       display: flex;
       align-items: center;
       justify-content: center;
@@ -130,24 +134,25 @@
       color: #fff;
     }
 
-    /* Отступ под контент (160px) */
-    main {
-      margin-top: 160px;
-    }
-
-    /* ===== ОБЛОЖКА (Cover) – над блоком Портфолио ===== */
+    /* ==========================
+       4) Блок обложки (Cover),
+          доходит до верхней границы
+          (задний фон) 
+    ========================== */
     #cover {
       position: relative;
+      width: 100%;
+      min-height: 100vh; /* на всю высоту экрана */
       background: url("https://picsum.photos/1600/900?grayscale") center/cover no-repeat;
-      /* или свой фон */
-      min-height: 400px; /* примерная высота обложки */
+      /* При желании заменить на своё изображение */
       display: flex;
       align-items: center;
       justify-content: center;
       text-align: center;
+      /* Нет margin-top, чтобы занять верх экрана */
     }
     #cover .cover-content {
-      background: rgba(0,0,0,0.5);
+      background: rgba(0,0,0,0.4);
       padding: 2rem;
       border-radius: 8px;
       max-width: 600px;
@@ -164,7 +169,9 @@
       line-height: 1.4;
     }
 
-    /* ===== ПРИМЕР СЕКЦИЙ ===== */
+    /* ==========================
+       5) Остальные секции
+    ========================== */
     section {
       padding: 4rem 0;
       background: #000;
@@ -175,7 +182,7 @@
       margin-bottom: 2rem;
       text-transform: uppercase;
     }
-    /* Сетка (портфолио) */
+    /* Пример сетки (портфолио) */
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -221,7 +228,7 @@
       background: #0cc;
     }
 
-    /* О художнике */
+    /* Секция "О художнике" */
     .about-content {
       display: flex;
       flex-wrap: wrap;
@@ -318,21 +325,19 @@
       font-size: 0.9rem;
     }
 
-    /* ===== Эффект появления (scramble) для обычного текста ===== */
-    /* Для плавности появления в CSS можно добавить transition или opacity. */
+    /* ==========================
+       6) ЭФФЕКТ ПОСТЕПЕННОЙ ОТРИСОВКИ ТЕКСТА
+          (ПРИМЕНЯЕМ К АБЗАЦАМ <p>)
+    ========================== */
     .scramble-text {
-      display: inline-block; /* Чтобы эффект был виден для каждого блока */
-      opacity: 0; /* изначально скрыт */
-    }
-    .scramble-active {
-      opacity: 1; /* Появляется после анимации */
-      transition: opacity 0.3s;
+      display: inline-block;
+      opacity: 0; /* изначально невидим */
     }
   </style>
 </head>
 <body>
 
-  <!-- ШАПКА -->
+  <!-- ХЕДЕР: волна + логотип/меню -->
   <header>
     <canvas id="waveCanvas"></canvas>
     <div class="header-content">
@@ -340,6 +345,7 @@
         <img src="assets/logo.svg" alt="TheMarkest.art Logo" class="logo" />
       </div>
       <nav>
+        <a href="#cover">Обложка</a>
         <a href="#works">Портфолио</a>
         <a href="#about">О художнике</a>
         <a href="#contact">Контакты</a>
@@ -347,19 +353,19 @@
     </div>
   </header>
 
-  <!-- ОСНОВНОЙ КОНТЕНТ -->
-  <main>
-    <!-- Блок обложки (Cover) над Портфолио -->
-    <section id="cover">
-      <div class="cover-content">
-        <h2>Обложка сайта</h2>
-        <p>
-          Здесь можно разместить небольшой слоган, превью или другую информацию, 
-          которая вводит посетителя в суть проекта.
-        </p>
-      </div>
-    </section>
+  <!-- КОНТЕНТ: Сначала обложка (cover) с фоновым изображением -->
+  <section id="cover">
+    <div class="cover-content">
+      <h2>Обложка сайта</h2>
+      <p>
+        Здесь можно разместить небольшой слоган, превью или другую информацию, 
+        которая вводит посетителя в суть проекта.
+      </p>
+    </div>
+  </section>
 
+  <!-- Далее остальные секции -->
+  <main>
     <section id="works">
       <div class="container">
         <h2>Портфолио</h2>
@@ -386,7 +392,7 @@
           <div class="bio">
             <h3>Биография</h3>
             <p>
-              Здесь вставьте реальный текст биографии.
+              Здесь вставьте реальный текст биографии. 
             </p>
           </div>
           <div class="artist-statement">
@@ -428,9 +434,11 @@
     </div>
   </footer>
 
-  <!-- ====== Скрипты ====== -->
+  <!-- ==========================
+       JS: Волна + Эффект текста
+  ========================== -->
   <script>
-    /* 1) Волна на canvas */
+    /* === 1) Волна (canvas) === */
     const canvas = document.getElementById("waveCanvas");
     const ctx = canvas.getContext("2d");
 
@@ -438,7 +446,6 @@
     let time = 0;
     let dots = [];
 
-    /* ПАРАМЕТРЫ ВОЛНЫ */
     const AMPLITUDE   = 15;  
     const DOT_SPACING = 40;  
     const FREQ_MIN    = 0.03;
@@ -446,7 +453,7 @@
     const LINE_WIDTH  = 2;
     const DOT_RADIUS  = 4;
     const HEADER_BG_COLOR = "rgba(85, 85, 85, 0.8)";
-    const BASELINE = 120; /* Высота волны от верха canvas */
+    const BASELINE = 120; /* на какой высоте волна */
 
     function initDots() {
       width = canvas.offsetWidth;
@@ -455,7 +462,7 @@
       canvas.height = height;
       dots = [];
 
-      // Левая крайняя точка
+      // Левая крайняя точка (прибита к BASELINE)
       dots.push({ x: 0, pinned: true });
 
       // Промежуточные точки
@@ -475,7 +482,7 @@
     function animateWave() {
       ctx.clearRect(0, 0, width, height);
 
-      // Координаты волны
+      // Генерируем координаты волны (слева направо)
       const wavePoints = dots.map(dot => {
         if (dot.pinned) {
           return { x: dot.x, y: BASELINE };
@@ -485,7 +492,7 @@
         }
       });
 
-      // Заливаем область над волной (слева направо)
+      // Заливаем область над волной
       ctx.beginPath();
       ctx.moveTo(0, 0);
       wavePoints.forEach(p => {
@@ -530,69 +537,71 @@
     animateWave();
 
 
-    /* 2) Эффект появления текста (scramble)
-          Применяем ко всем абзацам <p> (кроме заголовков).
-          Можно расширить на <li> или другие элементы при желании.
+    /* === 2) Эффект появления текста (постепенная отрисовка) === */
+    const scrambleChars = "!<>-_\\/[]{}—=+*^?#________";
+    /* 
+       Функция scrambleLetterByLetter:
+       - Поочерёдно «печатает» каждую букву с несколькими
+         псевдо-случайными символами, а затем ставит нужную.
+       - Длится меньше и идёт постепенно.
     */
+    function scrambleLetterByLetter(el, speed=20, scrambleIterations=4) {
+      const text = el.textContent;
+      el.textContent = ""; // очистили
+      let i = 0;
 
-    // Набор символов для «мешанины»
-    const chars = "!<>-_\\/[]{}—=+*^?#________";
-
-    function scrambleText(el) {
-      const originalText = el.textContent;
-      const length = originalText.length;
-      let output = "";
-      let progress = 0;
-      const iterations = 20; // сколько итераций «перебора» на символ
-
-      // Разбиваем текст на массив символов
-      const letters = originalText.split("");
-
-      // Функция анимации
-      function update() {
-        output = "";
-        for (let i = 0; i < length; i++) {
-          if (i < progress) {
-            // Уже «открытый» символ
-            output += letters[i];
-          } else {
-            // Случайный символ
-            output += chars[Math.floor(Math.random() * chars.length)];
-          }
-        }
-        el.textContent = output;
-        if (progress < length) {
-          progress += 1 / iterations;
-          requestAnimationFrame(update);
-        } else {
-          // Закончили, восстанавливаем оригинальный текст
-          el.textContent = originalText;
-          // Добавляем класс для плавного появления (opacity)
-          el.classList.add("scramble-active");
-        }
+      function printNextChar() {
+        if (i >= text.length) return; 
+        scrambleChar(i).then(() => {
+          i++;
+          printNextChar();
+        });
       }
-      update();
+
+      function scrambleChar(index) {
+        return new Promise(resolve => {
+          const originalChar = text[index];
+          let iteration = 0;
+          // Генерируем промежуточные символы
+          const interval = setInterval(() => {
+            if (iteration >= scrambleIterations) {
+              clearInterval(interval);
+              // Ставим финальный символ
+              el.textContent += originalChar;
+              resolve();
+            } else {
+              // случайный символ
+              const randChar = scrambleChars[Math.floor(Math.random()*scrambleChars.length)];
+              el.textContent += randChar;
+              iteration++;
+              // Убираем последний
+              if (iteration < scrambleIterations) {
+                el.textContent = el.textContent.slice(0, -1);
+              }
+            }
+          }, speed);
+        });
+      }
+
+      printNextChar();
     }
 
-    // Ищем все абзацы (p) и оборачиваем их в класс scramble-text,
-    // чтобы потом запустить анимацию
-    const paragraphs = document.querySelectorAll("p");
-    paragraphs.forEach(p => {
-      // Исключаем h2/h3... (у нас h2/h3 уже, но вдруг)
-      // Если хотим исключить заголовки, можно проверять tagName
-      if (!["H1","H2","H3","H4","H5","H6"].includes(p.tagName)) {
-        p.classList.add("scramble-text");
-      }
-    });
-
-    // Запускаем эффект после загрузки
+    // Применим эффект ко всем абзацам <p> (кроме заголовков)
     window.addEventListener("load", () => {
-      const scrambleEls = document.querySelectorAll(".scramble-text");
-      scrambleEls.forEach((el, index) => {
-        // Ставим небольшую задержку между абзацами, чтобы не все разом
+      const paragraphs = document.querySelectorAll("p");
+      paragraphs.forEach(p => {
+        // Добавляем класс, чтобы по умолчанию не было видно
+        p.classList.add("scramble-text");
+      });
+
+      // Запускаем анимацию с задержкой между абзацами
+      let delay = 0;
+      paragraphs.forEach((p, index) => {
         setTimeout(() => {
-          scrambleText(el);
-        }, 500 * index);
+          scrambleLetterByLetter(p, 20, 4);
+        }, delay);
+        // Увеличиваем задержку (чтобы тексты появлялись по очереди)
+        delay += 400; // 0.4s между абзацами
       });
     });
   </script>
