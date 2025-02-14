@@ -4,34 +4,42 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>TheMarkest.art – Sci-Fi/Cyberpunk</title>
-  <meta name="description" content="Портфолио художника, работающего в стиле sci-fi/cyberpunk с интерактивными и кинетическими скульптурами."/>
+  <meta name="description" content="Портфолио художника, работающего в стиле sci-fi/cyberpunk с интерактивными и кинетическими скульптурами." />
+
+  <!-- Пример подключения фавиконок (если у вас есть несколько размеров) -->
+  <!-- Замените пути на реальные из папки favicon/ -->
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/favicon-16x16.png">
+  <link rel="manifest" href="assets/favicon/site.webmanifest">
+  <link rel="mask-icon" href="assets/favicon/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#000000">
+  <meta name="theme-color" content="#000000">
 
   <style>
-    /* СБРОС ОТСТУПОВ */
+    /* ===== Сброс отступов и базовые настройки ===== */
     * {
       margin: 0; 
       padding: 0; 
       box-sizing: border-box;
     }
-    /* ОБЩИЕ НАСТРОЙКИ */
     html {
-      scroll-behavior: smooth; /* плавная прокрутка */
+      scroll-behavior: smooth;
     }
     body {
       font-family: "IBM Plex Sans", sans-serif;
-      background: #000;     /* основной фон */
-      color: #fff;          /* основной цвет текста */
+      background: #000;
+      color: #fff;
       line-height: 1.5;
     }
     a {
-      color: inherit; 
-      text-decoration: none; 
+      color: inherit;
+      text-decoration: none;
       transition: color 0.3s;
     }
     a:hover {
-      color: #0ff; /* неоновый акцент при наведении */
+      color: #0ff; /* неоновый акцент */
     }
-    /* БАЗОВЫЙ КОНТЕЙНЕР ДЛЯ СЕКЦИЙ */
     .container {
       width: 90%;
       max-width: 1200px;
@@ -39,9 +47,7 @@
       padding: 2rem 1rem;
     }
 
-    /*******************************************************
-     *                      ШАПКА (HEADER)                 *
-     *******************************************************/
+    /* ===== ШАПКА (HEADER) ===== */
     header {
       height: 100vh;
       display: flex;
@@ -49,15 +55,22 @@
       justify-content: center;
       align-items: center;
       text-align: center;
-      /* Градиентный фон, чтобы не было «просто чёрного» */
-      background: linear-gradient(130deg, #111, #333);
+      background: linear-gradient(130deg, #111, #333); /* не просто чёрный, а лёгкий градиент */
       position: relative;
     }
-    /* ГЛИТЧ-ЭФФЕКТ ДЛЯ ГЛАВНОГО ЗАГОЛОВКА */
+    /* Логотип */
+    .logo-container {
+      margin-bottom: 1rem;
+    }
+    .logo {
+      width: 120px;
+      height: auto;
+    }
+    /* Глитч-эффект для главного заголовка */
     .glitch {
       font-size: 3rem;
       text-transform: uppercase;
-      color: #0ff;         /* Основной цвет текста (неоновый) */
+      color: #0ff; 
       position: relative;
       display: inline-block;
     }
@@ -70,12 +83,10 @@
       overflow: hidden;
       clip: rect(0, 900px, 0, 0);
     }
-    /* Сине-зелёный «двойник» */
     .glitch::before {
       text-shadow: -2px 0 #0ff;
       animation: glitch-top 2s infinite linear alternate-reverse;
     }
-    /* Розово-фиолетовый «двойник» */
     .glitch::after {
       text-shadow: -2px 0 #f0f;
       animation: glitch-bottom 2s infinite linear alternate-reverse;
@@ -121,14 +132,13 @@
       }
     }
 
-    /* ПОДЗАГОЛОВОК */
+    /* Подзаголовок */
     .subtitle {
       margin-top: 1rem;
       font-size: 1.2rem;
       opacity: 0.85;
     }
-
-    /* НАВИГАЦИЯ В ШАПКЕ */
+    /* Навигация */
     nav {
       margin-top: 2rem;
       display: flex;
@@ -143,8 +153,7 @@
     nav a:hover {
       border-bottom: 1px solid #0ff;
     }
-
-    /* СОЦСЕТИ ПОД НАВИГАЦИЕЙ */
+    /* Соц. ссылки */
     .social-links {
       margin-top: 2rem;
       display: flex;
@@ -161,11 +170,9 @@
       background: rgba(0, 255, 255, 0.2);
     }
 
-    /*******************************************************
-     *                  СЕКЦИЯ ПОРТФОЛИО                   *
-     *******************************************************/
+    /* ===== ПОРТФОЛИО ===== */
     section#works {
-      background: #111; /* слегка отличаемся от header */
+      background: #111;
       padding: 4rem 0;
     }
     #works h2 {
@@ -201,7 +208,6 @@
       opacity: 0.9;
       margin-bottom: 0.5rem;
     }
-    /* Кнопки "Поделиться" */
     .share-buttons {
       display: flex;
       gap: 0.5rem;
@@ -220,9 +226,7 @@
       background: #0cc;
     }
 
-    /*******************************************************
-     *                  СЕКЦИЯ О ХУДОЖНИКЕ                 *
-     *******************************************************/
+    /* ===== О ХУДОЖНИКЕ ===== */
     section#about {
       background: #000;
       padding: 4rem 0;
@@ -261,7 +265,7 @@
       align-items: center;
       justify-content: center;
     }
-    /* Просто демонстрация "фото": */
+    /* Заглушка вместо фото: */
     .artist-photo div {
       width: 200px;
       height: 200px;
@@ -276,9 +280,7 @@
       background: #111;
     }
 
-    /*******************************************************
-     *                  СЕКЦИЯ КОНТАКТЫ                     *
-     *******************************************************/
+    /* ===== КОНТАКТЫ ===== */
     section#contact {
       background: #111;
       padding: 4rem 0;
@@ -336,13 +338,8 @@
       border-radius: 4px;
     }
 
-    /*******************************************************
-     *                  АДАПТИВНОСТЬ                        *
-     *******************************************************/
+    /* ===== Адаптивность ===== */
     @media (max-width: 768px) {
-      header {
-        padding: 2rem 1rem;
-      }
       nav {
         flex-wrap: wrap;
         gap: 1rem;
@@ -358,6 +355,13 @@
 
   <!-- ШАПКА -->
   <header id="home">
+    <!-- Контейнер для SVG-логотипа -->
+    <div class="logo-container">
+      <!-- Пусть файл лежит в папке assets/logo.svg -->
+      <img src="assets/logo.svg" alt="TheMarkest.art Logo" class="logo" />
+    </div>
+
+    <!-- Глитч-заголовок -->
     <h1 class="glitch" data-text="TheMarkest.art">TheMarkest.art</h1>
     <p class="subtitle">Художник интерактивной и кинетической скульптуры</p>
 
@@ -380,7 +384,7 @@
     <div class="container">
       <h2>Портфолио</h2>
       <div class="grid">
-        <!-- Карточка 1 -->
+        <!-- Пример карточки работы -->
         <article class="work-item">
           <h3>Название работы 1</h3>
           <p>Год: 2023</p>
@@ -392,19 +396,7 @@
             <a href="#" title="Поделиться в Telegram">Telegram</a>
           </div>
         </article>
-        <!-- Карточка 2 -->
-        <article class="work-item">
-          <h3>Название работы 2</h3>
-          <p>Год: 2024</p>
-          <p>Ещё одна футуристичная скульптура с элементами киберпанка и интерактивности.</p>
-          <div class="share-buttons">
-            <a href="#" title="Поделиться в Facebook">Facebook</a>
-            <a href="#" title="Поделиться в Twitter">Twitter</a>
-            <a href="#" title="Поделиться в Instagram">Instagram</a>
-            <a href="#" title="Поделиться в Telegram">Telegram</a>
-          </div>
-        </article>
-        <!-- Добавляйте больше работ по мере необходимости -->
+        <!-- Добавьте больше работ при необходимости -->
       </div>
     </div>
   </section>
@@ -417,20 +409,19 @@
         <div class="bio">
           <h3>Биография</h3>
           <p>
-            Здесь вставьте реальный текст биографии. Расскажите о ключевых этапах пути, 
-            образовании и вдохновении. 
+            Здесь вставьте реальный текст биографии. Расскажите о ключевых этапах пути,
+            образовании и вдохновении.
           </p>
         </div>
         <div class="artist-statement">
           <h3>Artist Statement</h3>
           <p>
-            Опишите вашу философию, что вы хотите донести до зрителя, 
+            Опишите вашу философию, что вы хотите донести до зрителя,
             как взаимодействуете с технологиями и материалами.
           </p>
         </div>
         <div class="artist-photo">
-          <!-- Вместо div можно вставить <img> с фото -->
-          <div>Photo</div>
+          <div>Photo</div> <!-- Заглушка: можно заменить на <img src="images/artist.jpg" ... /> -->
         </div>
       </div>
     </div>
@@ -440,7 +431,6 @@
   <section id="contact">
     <div class="container">
       <h2>Контакты</h2>
-      <!-- Форма mailto -->
       <form action="mailto:markbogdanovofficial@gmail.com" method="post" enctype="text/plain">
         <label for="name">Имя:</label>
         <input type="text" id="name" name="name" required />
@@ -453,8 +443,6 @@
 
         <button type="submit">Отправить</button>
       </form>
-
-      <!-- Дополнительные соцсети -->
       <div class="contact-social">
         <a href="https://instagram.com/themarkest" target="_blank">Instagram</a>
         <a href="https://t.me/markestart" target="_blank">Telegram</a>
