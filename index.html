@@ -6,39 +6,64 @@
   <title>TheMarkest.art – Sci-Fi/Cyberpunk</title>
   <meta name="description" content="Портфолио художника, работающего в стиле sci-fi/cyberpunk с интерактивными и кинетическими скульптурами." />
 
-  <!-- Фавиконки -->
-  <link rel="icon" href="assets/favicon/favicon.ico">
+  <!-- Фавиконки из папки assets/favicon/ -->
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/apple-touch-icon.png">
+  <link rel="icon" type="image/svg+xml" href="assets/favicon/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="assets/favicon/favicon-96x96.png">
+  <link rel="icon" type="image/x-icon" href="assets/favicon/favicon.ico">
+  <link rel="manifest" href="assets/favicon/site.webmanifest">
+  <meta name="msapplication-TileColor" content="#000000">
+  <meta name="theme-color" content="#000000">
 
   <style>
-    /* Сброс и базовые стили */
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    /* ===== Сброс и базовые стили ===== */
+    * {
+      margin: 0; 
+      padding: 0; 
+      box-sizing: border-box;
+    }
+    html {
+      scroll-behavior: smooth;
+    }
     body {
-      background: #000; 
-      color: #fff; 
-      font-family: "IBM Plex Sans", sans-serif; 
+      font-family: "IBM Plex Sans", sans-serif;
+      background: #000;
+      color: #fff;
       line-height: 1.5;
     }
-    a { color: inherit; text-decoration: none; }
-    a:hover { color: #0ff; }
-    
-    /* Фиксированный хедер */
-    header {
+    a {
+      color: inherit;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    a:hover {
+      color: #0ff;
+    }
+
+    /* ===== Фиксированный хедер (высота 120px) ===== */
+    header#header {
       position: fixed;
       top: 0; left: 0;
       width: 100%;
-      height: 120px;
-      background: #555;
+      height: 120px;     /* Компактная высота */
+      background: #555;  /* Серый фон */
       z-index: 1000;
-      overflow: hidden;
+      overflow: hidden;  /* Важно для clip-path */
     }
-    /* Контейнер лого */
+
+    /* Логотип слева */
     .logo-container {
       position: absolute;
       top: 50%;
       left: 20px;
       transform: translateY(-50%);
     }
-    /* Меню по центру (пример) */
+    .logo {
+      width: 80px;
+      height: auto;
+    }
+
+    /* Меню по центру */
     .menu-container {
       display: flex;
       justify-content: center;
@@ -48,46 +73,185 @@
     nav a {
       margin: 0 15px;
       font-size: 1.2rem;
-    }
-    
-    /* Инлайн-SVG логотипа */
-    /* Задаём анимацию прорисовки для path */
-    svg#animated-logo {
-      width: 80px; 
-      height: 80px; 
-      /* Можно подстроить под нужные размеры */
-    }
-    /* Если в лого несколько <path>, то можно назначать анимацию для каждого */
-    svg#animated-logo path {
-      fill: none;              /* Не заливаем, только контур */
-      stroke: #0ff;           /* Цвет обводки */
-      stroke-width: 2;        /* Толщина линии */
-      stroke-dasharray: 600;  /* Длина штриха (больше длины контура) */
-      stroke-dashoffset: 600; /* Начальное смещение */
-      animation: drawLogo 3s ease forwards; 
-      /* 3s – время анимации, можно менять */
-    }
-    @keyframes drawLogo {
-      to {
-        stroke-dashoffset: 0; /* Сдвиг до нуля => контур «прорисован» */
-      }
+      color: #fff;
     }
 
-    /* Пример отступа под хедер */
-    main { margin-top: 120px; }
+    /* Canvas для неоновой линии (внизу хедера) */
+    .header-line {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 25px;  /* Небольшая высота под волну */
+      pointer-events: none;
+    }
 
-    /* Пример содержимого */
-    section { padding: 3rem; }
-    h2 { text-align: center; margin-bottom: 1rem; }
+    /* Отступ сверху под хедер (120px) + 25px канвы = 145px */
+    main {
+      margin-top: 145px;
+    }
+
+    /* ===== Пример секций ===== */
+    section {
+      padding: 4rem 0;
+      background: #000;
+    }
+    h2 {
+      text-align: center;
+      font-size: 2rem;
+      margin-bottom: 2rem;
+      text-transform: uppercase;
+    }
+    /* Сетка (портфолио) */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    .work-item {
+      background: #222;
+      border: 1px solid #333;
+      border-radius: 6px;
+      padding: 1rem;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .work-item:hover {
+      transform: scale(1.02);
+      box-shadow: 0 0 8px #0ff;
+    }
+    .work-item h3 {
+      margin-bottom: 0.5rem;
+      font-size: 1.2rem;
+    }
+    .work-item p {
+      font-size: 0.95rem;
+      opacity: 0.9;
+      margin-bottom: 0.5rem;
+    }
+    .share-buttons {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .share-buttons a {
+      background: #0ff;
+      color: #000;
+      padding: 0.3rem 0.6rem;
+      border-radius: 3px;
+      font-size: 0.8rem;
+      transition: background 0.3s;
+    }
+    .share-buttons a:hover {
+      background: #0cc;
+    }
+
+    /* О художнике */
+    .about-content {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    .bio, .artist-statement {
+      flex: 1 1 300px;
+      min-width: 300px;
+    }
+    .bio h3, .artist-statement h3 {
+      font-size: 1.3rem;
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+    }
+    .bio p, .artist-statement p {
+      font-size: 1rem;
+      opacity: 0.9;
+      line-height: 1.5;
+    }
+    .artist-photo {
+      flex: 1 1 300px;
+      min-width: 300px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .artist-photo div {
+      width: 200px;
+      height: 200px;
+      border: 2px solid #0ff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: 1rem;
+      background: #111;
+    }
+
+    /* Форма и футер */
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+    form label {
+      font-weight: 600;
+      margin-bottom: 0.3rem;
+    }
+    form input, form textarea {
+      padding: 0.6rem;
+      border: 1px solid #333;
+      border-radius: 4px;
+      background: #222;
+      color: #fff;
+      font-family: inherit;
+    }
+    form input:focus, form textarea:focus {
+      outline: none;
+      border-color: #0ff;
+    }
+    form button {
+      background: #0ff;
+      color: #000;
+      padding: 0.7rem 1rem;
+      border: none;
+      border-radius: 4px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    form button:hover {
+      background: #0cc;
+    }
+    .contact-social {
+      text-align: center;
+      margin-top: 2rem;
+    }
+    .contact-social a {
+      margin: 0 0.5rem;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+    }
+    footer {
+      background: #000;
+      padding: 2rem 0;
+      text-align: center;
+      font-size: 0.9rem;
+    }
   </style>
 </head>
 <body>
-  <header>
+
+  <!-- ФИКСИРОВАННЫЙ ХЕДЕР (120px) -->
+  <header id="header">
     <div class="logo-container">
-      <!-- Замените path на реальный из вашего assets/logo.svg -->
-      <svg id="animated-logo" viewBox="0 0 200 200">
-        <path d="M 50,50 L 150,50 L 100,150 z" />
-      </svg>
+      <img src="assets/logo.svg" alt="TheMarkest.art Logo" class="logo" />
     </div>
     <div class="menu-container">
       <nav>
@@ -96,21 +260,190 @@
         <a href="#contact">Контакты</a>
       </nav>
     </div>
+    <!-- Холст для неоновой линии -->
+    <canvas id="header-line" class="header-line"></canvas>
   </header>
 
+  <!-- Контент (отступ 145px) -->
   <main>
     <section id="works">
-      <h2>Портфолио</h2>
-      <p>Пример контента...</p>
+      <div class="container">
+        <h2>Портфолио</h2>
+        <div class="grid">
+          <article class="work-item">
+            <h3>Название работы 1</h3>
+            <p>Год: 2023</p>
+            <p>Краткое описание концепции. Технологии, материалы и уникальные особенности.</p>
+            <div class="share-buttons">
+              <a href="#">Facebook</a>
+              <a href="#">Twitter</a>
+              <a href="#">Instagram</a>
+              <a href="#">Telegram</a>
+            </div>
+          </article>
+        </div>
+      </div>
     </section>
+
     <section id="about">
-      <h2>О художнике</h2>
-      <p>Биография, Artist Statement и т. д.</p>
+      <div class="container">
+        <h2>О художнике</h2>
+        <div class="about-content">
+          <div class="bio">
+            <h3>Биография</h3>
+            <p>Здесь вставьте реальный текст биографии.</p>
+          </div>
+          <div class="artist-statement">
+            <h3>Artist Statement</h3>
+            <p>Опишите вашу философию, что вы хотите донести до зрителя.</p>
+          </div>
+          <div class="artist-photo">
+            <div>Photo</div>
+          </div>
+        </div>
+      </div>
     </section>
+
     <section id="contact">
-      <h2>Контакты</h2>
-      <p>Форма для связи, соцсети и пр.</p>
+      <div class="container">
+        <h2>Контакты</h2>
+        <form action="mailto:markbogdanovofficial@gmail.com" method="post" enctype="text/plain">
+          <label for="name">Имя:</label>
+          <input type="text" id="name" name="name" required />
+          <label for="email">Email:</label>
+          <input type="email" id="email" name="email" required />
+          <label for="message">Сообщение:</label>
+          <textarea id="message" name="message" rows="5" required></textarea>
+          <button type="submit">Отправить</button>
+        </form>
+        <div class="contact-social">
+          <a href="https://instagram.com/themarkest" target="_blank">Instagram</a>
+          <a href="https://t.me/markestart" target="_blank">Telegram</a>
+        </div>
+      </div>
     </section>
   </main>
+
+  <footer>
+    <div class="container">
+      &copy; 2025 TheMarkest.art. Все права защищены.
+    </div>
+  </footer>
+
+  <!-- СКРИПТ: ПИНГОВАНИЕ УГЛОВ + ВОЛНА ПО СЕРЕДИНЕ, ЧТОБЫ КРАЯ НЕ ЗАДИРАЛИСЬ -->
+  <script>
+    const HEADER_HEIGHT = 120;  
+    const CANVAS_HEIGHT = 25;   
+    const DOT_SPACING = 40;     
+    const AMPLITUDE = 5;        
+    const FREQ_MIN = 0.05;      
+    const FREQ_MAX = 0.1;       
+    const LINE_WIDTH = 2;       
+    const DOT_RADIUS = 4;       
+
+    const header = document.getElementById("header");
+    const canvas = document.getElementById("header-line");
+    const ctx = canvas.getContext("2d");
+
+    let width = 0;
+    let time = 0;
+    let dots = [];
+
+    // Создаём массив точек, где первые и последние – "закреплены" в самом низу (y=120)
+    function initDots() {
+      width = header.offsetWidth;
+      canvas.width = width;
+      canvas.height = CANVAS_HEIGHT;
+      dots = [];
+
+      // Левая точка (x=0, pinned)
+      dots.push({
+        x: 0,
+        pinned: true
+      });
+
+      // Промежуточные точки (x от DOT_SPACING до width-DOT_SPACING)
+      for (let x = DOT_SPACING; x <= width - DOT_SPACING; x += DOT_SPACING) {
+        dots.push({
+          x,
+          pinned: false,
+          freq: FREQ_MIN + Math.random() * (FREQ_MAX - FREQ_MIN),
+          phase: Math.random() * Math.PI * 2
+        });
+      }
+
+      // Правая точка (x=width, pinned)
+      dots.push({
+        x: width,
+        pinned: true
+      });
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, width, CANVAS_HEIGHT);
+
+      // Собираем координаты для волны
+      let waveCoords = dots.map(dot => {
+        // Если pinned => y=HEADER_HEIGHT (самый низ)
+        // Иначе y=120 + sin(...)
+        if (dot.pinned) {
+          return { x: dot.x, y: HEADER_HEIGHT };
+        } else {
+          let wave = AMPLITUDE * Math.sin(dot.x * dot.freq + time + dot.phase);
+          return { x: dot.x, y: HEADER_HEIGHT + wave }; 
+        }
+      });
+
+      // Построим polygon (clip-path)
+      // Начало: (0,0) -> (100%,0) -> волна (справа налево) -> замыкаем
+      let polyPoints = ["0% 0%", "100% 0%"];
+      for (let i = waveCoords.length - 1; i >= 0; i--) {
+        let p = waveCoords[i];
+        let xPerc = ((p.x / width) * 100).toFixed(2) + "%";
+        let yPerc = ((p.y / HEADER_HEIGHT) * 100).toFixed(2) + "%";
+        polyPoints.push(`${xPerc} ${yPerc}`);
+      }
+      header.style.clipPath = `polygon(${polyPoints.join(", ")})`;
+
+      // Рисуем неоновую линию (та же волна) на canvas
+      ctx.beginPath();
+      ctx.strokeStyle = "#0ff";
+      ctx.lineWidth = LINE_WIDTH;
+
+      waveCoords.forEach((p, i) => {
+        // p.y ~ [120 - 5.. 120 + 5] => [115..125]
+        // Но pinned углы = 120
+        // Приведём [115..125] к [CANVAS_HEIGHT-5 .. CANVAS_HEIGHT+5], но фактически
+        // нам надо 120 -> CANVAS_HEIGHT, 115 -> CANVAS_HEIGHT-5
+        let cy = CANVAS_HEIGHT - (HEADER_HEIGHT - p.y);
+        if (i === 0) {
+          ctx.moveTo(p.x, cy);
+        } else {
+          ctx.lineTo(p.x, cy);
+        }
+      });
+      ctx.stroke();
+
+      // Точки толще линии
+      waveCoords.forEach(p => {
+        let cy = CANVAS_HEIGHT - (HEADER_HEIGHT - p.y);
+        ctx.beginPath();
+        ctx.arc(p.x, cy, DOT_RADIUS, 0, Math.PI * 2);
+        ctx.fillStyle = "#0ff";
+        ctx.fill();
+      });
+
+      time += 0.02;
+      requestAnimationFrame(animate);
+    }
+
+    function onResize() {
+      initDots();
+    }
+    window.addEventListener("resize", onResize);
+
+    initDots();
+    animate();
+  </script>
 </body>
 </html>
