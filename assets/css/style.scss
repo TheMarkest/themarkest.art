@@ -1,0 +1,11 @@
+$primary-color: #fff;
+$background-color: #000;
+$accent-color: #0ff;
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: $background-color;
+  color: $primary-color;
+  margin: 0;
+  padding: 0;
+}

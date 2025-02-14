@@ -1,17 +1,22 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Главная | TheMarkest</title>
-    <link rel="stylesheet" href="static/css/style.css">
-    <script defer src="static/js/components.js"></script>
-</head>
-<body>
-    <div id="header"></div>
-    <main>
-        <h2>Скульптуры будущего: искусство, технологии, наука</h2>
-    </main>
-    <div id="footer"></div>
-</body>
-</html>
+---
+layout: default
+title: Home
+description: Портфолио художника интерактивной и кинетической скульптуры.
+---
+
+<section class="hero">
+  <div class="hero-bg">
+    <video autoplay muted loop id="heroVideo">
+      <source src="{{ site.baseurl }}/media/hero.mp4" type="video/mp4">
+      Ваш браузер не поддерживает видео.
+    </video>
+  </div>
+  <div class="hero-content">
+    <h1>TheMarkest.art</h1>
+    <p>Интерактивная и кинетическая скульптура в стиле sci‑fi cyberpunk</p>
+    <div class="social-links">
+      <a href="https://instagram.com/themarkest" target="_blank">Instagram</a>
+      <a href="https://t.me/markestart" target="_blank">Telegram</a>
+    </div>
+  </div>
+</section>
