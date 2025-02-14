@@ -1,22 +1,64 @@
----
-layout: default
-title: Home
-description: Портфолио художника интерактивной и кинетической скульптуры.
----
-
-<section class="hero">
-  <div class="hero-bg">
-    <video autoplay muted loop id="heroVideo">
-      <source src="{{ site.baseurl }}/media/hero.mp4" type="video/mp4">
-      Ваш браузер не поддерживает видео.
-    </video>
-  </div>
-  <div class="hero-content">
-    <h1>TheMarkest.art</h1>
-    <p>Интерактивная и кинетическая скульптура в стиле sci‑fi cyberpunk</p>
-    <div class="social-links">
-      <a href="https://instagram.com/themarkest" target="_blank">Instagram</a>
-      <a href="https://t.me/markestart" target="_blank">Telegram</a>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home | TheMarkest.art</title>
+  <meta name="description" content="Портфолио художника интерактивной и кинетической скульптуры.">
+  <meta property="og:title" content="Home | TheMarkest.art">
+  <meta property="og:description" content="Портфолио художника интерактивной и кинетической скульптуры.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://themarkest.art/">
+  <meta property="og:image" content="/media/ARTlogo@2x.svg">
+  <link rel="icon" type="image/svg+xml" href="/media/ARTlogo@2x.svg">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="logo">
+      <a href="/">
+        <img src="media/ARTlogo@2x.svg" alt="TheMarkest.art Logo">
+      </a>
     </div>
-  </div>
-</section>
+    <nav>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="works.html">Works</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+  
+  <!-- Main Content -->
+  <main>
+    <section class="hero">
+      <div class="hero-bg">
+        <video autoplay muted loop id="heroVideo">
+          <source src="media/hero.mp4" type="video/mp4">
+          Ваш браузер не поддерживает видео.
+        </video>
+      </div>
+      <div class="hero-content">
+        <h1>TheMarkest.art</h1>
+        <p>Интерактивная и кинетическая скульптура в стиле sci‑fi cyberpunk</p>
+        <div class="social-links">
+          <a href="https://instagram.com/themarkest" target="_blank">Instagram</a>
+          <a href="https://t.me/markestart" target="_blank">Telegram</a>
+        </div>
+      </div>
+    </section>
+  </main>
+  
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2025 TheMarkest.art</p>
+    <div class="theme-toggle">
+      <button id="toggleTheme">Light/Dark</button>
+    </div>
+  </footer>
+  
+  <script src="assets/js/main.js"></script>
+</body>
+</html>
