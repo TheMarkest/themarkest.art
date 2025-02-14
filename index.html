@@ -18,30 +18,17 @@
   <style>
     /* ============================= */
     /*  ЭФФЕКТ «СТАРОГО МОНИТОРА»   */
-    /*  (адаптация CodePen @t0k3n)  */
+    /*  + УСИЛЕННОЕ ВИНЬЕТИРОВАНИЕ  */
     /* ============================= */
-
-    /* 
-       1) body::before – несколько радиальных градиентов,
-          дающих более сильную виньетку и мерцание.
-       2) body::after – скан-линии (горизонтальные полосы).
-    */
-
     body::before {
       content: "";
       pointer-events: none;
       position: fixed;
       left: 0; top: 0;
-      width: 100%; 
-      height: 100%;
+      width: 100%; height: 100%;
       z-index: 9999;
-
-      /* Два градиента:
-         - Внешний тёмный (виньетка),
-         - Внутренний белый шум (легкий свет в центре).
-       И анимация мерцания (flicker). */
       background:
-        /* Виньетка: от прозрачного к тёмному по краям */
+        /* Виньетка: тёмные края */
         radial-gradient(
           circle at center, 
           rgba(0,0,0,0) 40%, 
@@ -56,17 +43,13 @@
       background-blend-mode: multiply;
       animation: flicker 2.5s infinite ease-in-out alternate;
     }
-
     body::after {
       content: "";
       position: fixed;
       pointer-events: none;
       left: 0; top: 0;
-      width: 100%; 
-      height: 100%;
+      width: 100%; height: 100%;
       z-index: 99999;
-      /* Горизонтальные полосы (скан-линии),
-         более заметные за счёт opacity */
       background: repeating-linear-gradient(
         0deg,
         rgba(255,255,255,0.03) 0px,
@@ -77,7 +60,6 @@
       animation: scanline 0.15s infinite steps(1);
       mix-blend-mode: lighten;
     }
-
     @keyframes flicker {
       0%, 100% { opacity: 0.06; }
       50%      { opacity: 0.09; }
@@ -98,7 +80,7 @@
     }
     body {
       font-family: "IBM Plex Sans", sans-serif;
-      background: #000; /* Чёрный фон */
+      background: #000;
       color: #fff;
       line-height: 1.5;
     }
@@ -111,7 +93,7 @@
       color: #0ff;
     }
 
-    /* ===== ШАПКА: Canvas + Логотип и меню ===== */
+    /* ===== ШАПКА (Canvas + Логотип и меню) ===== */
     header {
       position: fixed;
       top: 0; left: 0;
@@ -124,7 +106,6 @@
       width: 100%;
       height: 100%;
     }
-    /* Логотип и меню (поверх холста) */
     .header-content {
       position: absolute;
       top: 0; left: 0;
@@ -149,12 +130,41 @@
       color: #fff;
     }
 
-    /* Отступ под основной контент: 160px (высота холста) */
+    /* Отступ под контент (160px) */
     main {
       margin-top: 160px;
     }
 
-    /* ===== Пример секций ===== */
+    /* ===== ОБЛОЖКА (Cover) – над блоком Портфолио ===== */
+    #cover {
+      position: relative;
+      background: url("https://picsum.photos/1600/900?grayscale") center/cover no-repeat;
+      /* или свой фон */
+      min-height: 400px; /* примерная высота обложки */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+    #cover .cover-content {
+      background: rgba(0,0,0,0.5);
+      padding: 2rem;
+      border-radius: 8px;
+      max-width: 600px;
+      margin: 2rem;
+    }
+    #cover .cover-content h2 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+    }
+    #cover .cover-content p {
+      font-size: 1.1rem;
+      opacity: 0.9;
+      line-height: 1.4;
+    }
+
+    /* ===== ПРИМЕР СЕКЦИЙ ===== */
     section {
       padding: 4rem 0;
       background: #000;
@@ -307,11 +317,22 @@
       text-align: center;
       font-size: 0.9rem;
     }
+
+    /* ===== Эффект появления (scramble) для обычного текста ===== */
+    /* Для плавности появления в CSS можно добавить transition или opacity. */
+    .scramble-text {
+      display: inline-block; /* Чтобы эффект был виден для каждого блока */
+      opacity: 0; /* изначально скрыт */
+    }
+    .scramble-active {
+      opacity: 1; /* Появляется после анимации */
+      transition: opacity 0.3s;
+    }
   </style>
 </head>
 <body>
 
-  <!-- ШАПКА: Canvas + Логотип и меню -->
+  <!-- ШАПКА -->
   <header>
     <canvas id="waveCanvas"></canvas>
     <div class="header-content">
@@ -326,8 +347,19 @@
     </div>
   </header>
 
-  <!-- Основной контент, смещён на 160px (высота холста) -->
+  <!-- ОСНОВНОЙ КОНТЕНТ -->
   <main>
+    <!-- Блок обложки (Cover) над Портфолио -->
+    <section id="cover">
+      <div class="cover-content">
+        <h2>Обложка сайта</h2>
+        <p>
+          Здесь можно разместить небольшой слоган, превью или другую информацию, 
+          которая вводит посетителя в суть проекта.
+        </p>
+      </div>
+    </section>
+
     <section id="works">
       <div class="container">
         <h2>Портфолио</h2>
@@ -335,7 +367,7 @@
           <article class="work-item">
             <h3>Название работы 1</h3>
             <p>Год: 2023</p>
-            <p>Краткое описание концепции. Технологии, материалы и уникальные особенности.</p>
+            <p>Короткое описание концепции. Технологии, материалы и уникальные особенности.</p>
             <div class="share-buttons">
               <a href="#">Facebook</a>
               <a href="#">Twitter</a>
@@ -343,7 +375,6 @@
               <a href="#">Telegram</a>
             </div>
           </article>
-          <!-- Добавьте другие работы при необходимости -->
         </div>
       </div>
     </section>
@@ -354,11 +385,15 @@
         <div class="about-content">
           <div class="bio">
             <h3>Биография</h3>
-            <p>Короткий текст биографии.</p>
+            <p>
+              Здесь вставьте реальный текст биографии.
+            </p>
           </div>
           <div class="artist-statement">
             <h3>Artist Statement</h3>
-            <p>Опишите вашу философию, что вы хотите донести до зрителя.</p>
+            <p>
+              Опишите вашу философию, что вы хотите донести до зрителя.
+            </p>
           </div>
           <div class="artist-photo">
             <div>Photo</div>
@@ -393,8 +428,9 @@
     </div>
   </footer>
 
-  <!-- Скрипт: исправленный полигон (слева-направо) и большая амплитуда -->
+  <!-- ====== Скрипты ====== -->
   <script>
+    /* 1) Волна на canvas */
     const canvas = document.getElementById("waveCanvas");
     const ctx = canvas.getContext("2d");
 
@@ -403,19 +439,15 @@
     let dots = [];
 
     /* ПАРАМЕТРЫ ВОЛНЫ */
-    const AMPLITUDE   = 15;  // ±15 px
-    const DOT_SPACING = 40;  // Шаг между точками
+    const AMPLITUDE   = 15;  
+    const DOT_SPACING = 40;  
     const FREQ_MIN    = 0.03;
     const FREQ_MAX    = 0.08;
     const LINE_WIDTH  = 2;
     const DOT_RADIUS  = 4;
-    /* Серый цвет для заливки над волной */
     const HEADER_BG_COLOR = "rgba(85, 85, 85, 0.8)";
+    const BASELINE = 120; /* Высота волны от верха canvas */
 
-    /* На какой высоте (от верха canvas) будет «базовая линия» волны */
-    const BASELINE = 120;
-
-    /* Инициализация точек (крайние «прибиты» к BASELINE) */
     function initDots() {
       width = canvas.offsetWidth;
       height = canvas.offsetHeight;
@@ -440,10 +472,10 @@
       dots.push({ x: width, pinned: true });
     }
 
-    function animate() {
+    function animateWave() {
       ctx.clearRect(0, 0, width, height);
 
-      // Генерируем координаты волны (sl->sr)
+      // Координаты волны
       const wavePoints = dots.map(dot => {
         if (dot.pinned) {
           return { x: dot.x, y: BASELINE };
@@ -453,8 +485,7 @@
         }
       });
 
-      /* 1) Заливаем область над волной:
-            (0,0) -> (wavePoints слева-направо) -> (width,0) -> closePath */
+      // Заливаем область над волной (слева направо)
       ctx.beginPath();
       ctx.moveTo(0, 0);
       wavePoints.forEach(p => {
@@ -465,7 +496,7 @@
       ctx.fillStyle = HEADER_BG_COLOR;
       ctx.fill();
 
-      /* 2) Рисуем неоновую линию */
+      // Рисуем неоновую линию
       ctx.beginPath();
       ctx.strokeStyle = "#0ff";
       ctx.lineWidth = LINE_WIDTH;
@@ -478,7 +509,7 @@
       });
       ctx.stroke();
 
-      /* 3) Точки (толще линии) */
+      // Точки
       wavePoints.forEach(p => {
         ctx.beginPath();
         ctx.arc(p.x, p.y, DOT_RADIUS, 0, Math.PI * 2);
@@ -487,7 +518,7 @@
       });
 
       time += 0.02;
-      requestAnimationFrame(animate);
+      requestAnimationFrame(animateWave);
     }
 
     function onResize() {
@@ -496,7 +527,74 @@
     window.addEventListener("resize", onResize);
 
     initDots();
-    animate();
+    animateWave();
+
+
+    /* 2) Эффект появления текста (scramble)
+          Применяем ко всем абзацам <p> (кроме заголовков).
+          Можно расширить на <li> или другие элементы при желании.
+    */
+
+    // Набор символов для «мешанины»
+    const chars = "!<>-_\\/[]{}—=+*^?#________";
+
+    function scrambleText(el) {
+      const originalText = el.textContent;
+      const length = originalText.length;
+      let output = "";
+      let progress = 0;
+      const iterations = 20; // сколько итераций «перебора» на символ
+
+      // Разбиваем текст на массив символов
+      const letters = originalText.split("");
+
+      // Функция анимации
+      function update() {
+        output = "";
+        for (let i = 0; i < length; i++) {
+          if (i < progress) {
+            // Уже «открытый» символ
+            output += letters[i];
+          } else {
+            // Случайный символ
+            output += chars[Math.floor(Math.random() * chars.length)];
+          }
+        }
+        el.textContent = output;
+        if (progress < length) {
+          progress += 1 / iterations;
+          requestAnimationFrame(update);
+        } else {
+          // Закончили, восстанавливаем оригинальный текст
+          el.textContent = originalText;
+          // Добавляем класс для плавного появления (opacity)
+          el.classList.add("scramble-active");
+        }
+      }
+      update();
+    }
+
+    // Ищем все абзацы (p) и оборачиваем их в класс scramble-text,
+    // чтобы потом запустить анимацию
+    const paragraphs = document.querySelectorAll("p");
+    paragraphs.forEach(p => {
+      // Исключаем h2/h3... (у нас h2/h3 уже, но вдруг)
+      // Если хотим исключить заголовки, можно проверять tagName
+      if (!["H1","H2","H3","H4","H5","H6"].includes(p.tagName)) {
+        p.classList.add("scramble-text");
+      }
+    });
+
+    // Запускаем эффект после загрузки
+    window.addEventListener("load", () => {
+      const scrambleEls = document.querySelectorAll(".scramble-text");
+      scrambleEls.forEach((el, index) => {
+        // Ставим небольшую задержку между абзацами, чтобы не все разом
+        setTimeout(() => {
+          scrambleText(el);
+        }, 500 * index);
+      });
+    });
   </script>
 </body>
 </html>
