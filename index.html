@@ -2,64 +2,465 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TheMarkest.art – Портфолио художника</title>
-  <meta name="description" content="Портфолио художника, специализирующегося на интерактивной и кинетической скульптуре в стиле sci-fi/cyberpunk." />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>TheMarkest.art – Sci-Fi/Cyberpunk</title>
+  <meta name="description" content="Портфолио художника, работающего в стиле sci-fi/cyberpunk с интерактивными и кинетическими скульптурами."/>
 
-  <!-- Open Graph -->
-  <meta property="og:title" content="TheMarkest.art – Портфолио художника" />
-  <meta property="og:description" content="Интерактивное портфолио с работами в жанре интерактивной и кинетической скульптуры." />
-  <meta property="og:image" content="images/preview.jpg" />
-  <meta property="og:url" content="https://themarkest.art" />
-  <meta property="og:type" content="website" />
-
-  <!-- JSON-LD (пример) -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Person",
-    "name": "Имя Художника",
-    "url": "https://themarkest.art",
-    "sameAs": [
-      "https://instagram.com/themarkest",
-      "https://t.me/markestart"
-    ],
-    "jobTitle": "Художник",
-    "description": "Портфолио художника, специализирующегося на интерактивной и кинетической скульптуре."
-  }
-  </script>
-
-  <!-- Стили (встроенные) -->
   <style>
-    /* Общие настройки */
+    /* СБРОС ОТСТУПОВ */
     * {
-      margin: 0;
-      padding: 0;
+      margin: 0; 
+      padding: 0; 
       box-sizing: border-box;
     }
+    /* ОБЩИЕ НАСТРОЙКИ */
     html {
-      scroll-behavior: smooth; /* Плавная прокрутка */
+      scroll-behavior: smooth; /* плавная прокрутка */
     }
     body {
       font-family: "IBM Plex Sans", sans-serif;
-      background: #000; /* Основной фон */
-      color: #fff;      /* Основной цвет текста */
-      line-height: 1.6;
+      background: #000;     /* основной фон */
+      color: #fff;          /* основной цвет текста */
+      line-height: 1.5;
     }
     a {
-      color: inherit; /* Ссылки по умолчанию белые */
-      text-decoration: none;
+      color: inherit; 
+      text-decoration: none; 
       transition: color 0.3s;
     }
     a:hover {
-      color: #0ff; /* Неоновый акцент при наведении */
+      color: #0ff; /* неоновый акцент при наведении */
     }
-    /* Контейнер для контента */
+    /* БАЗОВЫЙ КОНТЕЙНЕР ДЛЯ СЕКЦИЙ */
     .container {
       width: 90%;
       max-width: 1200px;
       margin: 0 auto;
-      padding: 2rem 0;
+      padding: 2rem 1rem;
     }
 
-    /****
+    /*******************************************************
+     *                      ШАПКА (HEADER)                 *
+     *******************************************************/
+    header {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      /* Градиентный фон, чтобы не было «просто чёрного» */
+      background: linear-gradient(130deg, #111, #333);
+      position: relative;
+    }
+    /* ГЛИТЧ-ЭФФЕКТ ДЛЯ ГЛАВНОГО ЗАГОЛОВКА */
+    .glitch {
+      font-size: 3rem;
+      text-transform: uppercase;
+      color: #0ff;         /* Основной цвет текста (неоновый) */
+      position: relative;
+      display: inline-block;
+    }
+    .glitch::before,
+    .glitch::after {
+      content: attr(data-text);
+      position: absolute;
+      left: 0;
+      width: 100%;
+      overflow: hidden;
+      clip: rect(0, 900px, 0, 0);
+    }
+    /* Сине-зелёный «двойник» */
+    .glitch::before {
+      text-shadow: -2px 0 #0ff;
+      animation: glitch-top 2s infinite linear alternate-reverse;
+    }
+    /* Розово-фиолетовый «двойник» */
+    .glitch::after {
+      text-shadow: -2px 0 #f0f;
+      animation: glitch-bottom 2s infinite linear alternate-reverse;
+    }
+    @keyframes glitch-top {
+      0% {
+        clip: rect(0, 9999px, 0, 0);
+      }
+      15% {
+        clip: rect(20px, 9999px, 60px, 0);
+        transform: translate(-2px, -2px);
+      }
+      30% {
+        clip: rect(0, 9999px, 0, 0);
+        transform: translate(0, 0);
+      }
+      45% {
+        clip: rect(10px, 9999px, 70px, 0);
+        transform: translate(-5px, -3px);
+      }
+      100% {
+        clip: rect(0, 9999px, 0, 0);
+      }
+    }
+    @keyframes glitch-bottom {
+      0% {
+        clip: rect(0, 9999px, 0, 0);
+      }
+      15% {
+        clip: rect(40px, 9999px, 90px, 0);
+        transform: translate(2px, 2px);
+      }
+      30% {
+        clip: rect(0, 9999px, 0, 0);
+        transform: translate(0, 0);
+      }
+      45% {
+        clip: rect(60px, 9999px, 90px, 0);
+        transform: translate(5px, 3px);
+      }
+      100% {
+        clip: rect(0, 9999px, 0, 0);
+      }
+    }
+
+    /* ПОДЗАГОЛОВОК */
+    .subtitle {
+      margin-top: 1rem;
+      font-size: 1.2rem;
+      opacity: 0.85;
+    }
+
+    /* НАВИГАЦИЯ В ШАПКЕ */
+    nav {
+      margin-top: 2rem;
+      display: flex;
+      gap: 2rem;
+      justify-content: center;
+    }
+    nav a {
+      font-weight: 500;
+      padding-bottom: 2px;
+      border-bottom: 1px solid transparent;
+    }
+    nav a:hover {
+      border-bottom: 1px solid #0ff;
+    }
+
+    /* СОЦСЕТИ ПОД НАВИГАЦИЕЙ */
+    .social-links {
+      margin-top: 2rem;
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+    }
+    .social-links a {
+      padding: 0.4rem 0.8rem;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+      font-weight: 600;
+    }
+    .social-links a:hover {
+      background: rgba(0, 255, 255, 0.2);
+    }
+
+    /*******************************************************
+     *                  СЕКЦИЯ ПОРТФОЛИО                   *
+     *******************************************************/
+    section#works {
+      background: #111; /* слегка отличаемся от header */
+      padding: 4rem 0;
+    }
+    #works h2 {
+      text-align: center;
+      font-size: 2rem;
+      margin-bottom: 2rem;
+      text-transform: uppercase;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    .work-item {
+      background: #222;
+      border: 1px solid #333;
+      border-radius: 6px;
+      padding: 1rem;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .work-item:hover {
+      transform: scale(1.02);
+      box-shadow: 0 0 8px #0ff;
+    }
+    .work-item h3 {
+      margin-bottom: 0.5rem;
+      font-size: 1.2rem;
+    }
+    .work-item p {
+      font-size: 0.95rem;
+      opacity: 0.9;
+      margin-bottom: 0.5rem;
+    }
+    /* Кнопки "Поделиться" */
+    .share-buttons {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .share-buttons a {
+      background: #0ff;
+      color: #000;
+      padding: 0.3rem 0.6rem;
+      border-radius: 3px;
+      font-size: 0.8rem;
+      transition: background 0.3s;
+    }
+    .share-buttons a:hover {
+      background: #0cc;
+    }
+
+    /*******************************************************
+     *                  СЕКЦИЯ О ХУДОЖНИКЕ                 *
+     *******************************************************/
+    section#about {
+      background: #000;
+      padding: 4rem 0;
+    }
+    #about h2 {
+      text-align: center;
+      font-size: 2rem;
+      margin-bottom: 2rem;
+      text-transform: uppercase;
+    }
+    .about-content {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    .bio, .artist-statement {
+      flex: 1 1 300px;
+      min-width: 300px;
+    }
+    .bio h3, .artist-statement h3 {
+      font-size: 1.3rem;
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+    }
+    .bio p, .artist-statement p {
+      font-size: 1rem;
+      opacity: 0.9;
+      line-height: 1.5;
+    }
+    .artist-photo {
+      flex: 1 1 300px;
+      min-width: 300px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    /* Просто демонстрация "фото": */
+    .artist-photo div {
+      width: 200px;
+      height: 200px;
+      border: 2px solid #0ff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: 1rem;
+      background: #111;
+    }
+
+    /*******************************************************
+     *                  СЕКЦИЯ КОНТАКТЫ                     *
+     *******************************************************/
+    section#contact {
+      background: #111;
+      padding: 4rem 0;
+    }
+    #contact h2 {
+      text-align: center;
+      font-size: 2rem;
+      margin-bottom: 2rem;
+      text-transform: uppercase;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+    form label {
+      font-weight: 600;
+      margin-bottom: 0.3rem;
+    }
+    form input, form textarea {
+      padding: 0.6rem;
+      border: 1px solid #333;
+      border-radius: 4px;
+      background: #222;
+      color: #fff;
+      font-family: inherit;
+    }
+    form input:focus, form textarea:focus {
+      outline: none;
+      border-color: #0ff;
+    }
+    form button {
+      background: #0ff;
+      color: #000;
+      padding: 0.7rem 1rem;
+      border: none;
+      border-radius: 4px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    form button:hover {
+      background: #0cc;
+    }
+    .contact-social {
+      text-align: center;
+      margin-top: 2rem;
+    }
+    .contact-social a {
+      margin: 0 0.5rem;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+    }
+
+    /*******************************************************
+     *                  АДАПТИВНОСТЬ                        *
+     *******************************************************/
+    @media (max-width: 768px) {
+      header {
+        padding: 2rem 1rem;
+      }
+      nav {
+        flex-wrap: wrap;
+        gap: 1rem;
+      }
+      .about-content {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ШАПКА -->
+  <header id="home">
+    <h1 class="glitch" data-text="TheMarkest.art">TheMarkest.art</h1>
+    <p class="subtitle">Художник интерактивной и кинетической скульптуры</p>
+
+    <!-- Навигация -->
+    <nav>
+      <a href="#works">Портфолио</a>
+      <a href="#about">О художнике</a>
+      <a href="#contact">Контакты</a>
+    </nav>
+
+    <!-- Социальные ссылки -->
+    <div class="social-links">
+      <a href="https://instagram.com/themarkest" target="_blank">Instagram</a>
+      <a href="https://t.me/markestart" target="_blank">Telegram</a>
+    </div>
+  </header>
+
+  <!-- ПОРТФОЛИО -->
+  <section id="works">
+    <div class="container">
+      <h2>Портфолио</h2>
+      <div class="grid">
+        <!-- Карточка 1 -->
+        <article class="work-item">
+          <h3>Название работы 1</h3>
+          <p>Год: 2023</p>
+          <p>Краткое описание концепции. Технологии, материалы и уникальные особенности.</p>
+          <div class="share-buttons">
+            <a href="#" title="Поделиться в Facebook">Facebook</a>
+            <a href="#" title="Поделиться в Twitter">Twitter</a>
+            <a href="#" title="Поделиться в Instagram">Instagram</a>
+            <a href="#" title="Поделиться в Telegram">Telegram</a>
+          </div>
+        </article>
+        <!-- Карточка 2 -->
+        <article class="work-item">
+          <h3>Название работы 2</h3>
+          <p>Год: 2024</p>
+          <p>Ещё одна футуристичная скульптура с элементами киберпанка и интерактивности.</p>
+          <div class="share-buttons">
+            <a href="#" title="Поделиться в Facebook">Facebook</a>
+            <a href="#" title="Поделиться в Twitter">Twitter</a>
+            <a href="#" title="Поделиться в Instagram">Instagram</a>
+            <a href="#" title="Поделиться в Telegram">Telegram</a>
+          </div>
+        </article>
+        <!-- Добавляйте больше работ по мере необходимости -->
+      </div>
+    </div>
+  </section>
+
+  <!-- О ХУДОЖНИКЕ -->
+  <section id="about">
+    <div class="container">
+      <h2>О художнике</h2>
+      <div class="about-content">
+        <div class="bio">
+          <h3>Биография</h3>
+          <p>
+            Здесь вставьте реальный текст биографии. Расскажите о ключевых этапах пути, 
+            образовании и вдохновении. 
+          </p>
+        </div>
+        <div class="artist-statement">
+          <h3>Artist Statement</h3>
+          <p>
+            Опишите вашу философию, что вы хотите донести до зрителя, 
+            как взаимодействуете с технологиями и материалами.
+          </p>
+        </div>
+        <div class="artist-photo">
+          <!-- Вместо div можно вставить <img> с фото -->
+          <div>Photo</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- КОНТАКТЫ -->
+  <section id="contact">
+    <div class="container">
+      <h2>Контакты</h2>
+      <!-- Форма mailto -->
+      <form action="mailto:markbogdanovofficial@gmail.com" method="post" enctype="text/plain">
+        <label for="name">Имя:</label>
+        <input type="text" id="name" name="name" required />
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required />
+
+        <label for="message">Сообщение:</label>
+        <textarea id="message" name="message" rows="5" required></textarea>
+
+        <button type="submit">Отправить</button>
+      </form>
+
+      <!-- Дополнительные соцсети -->
+      <div class="contact-social">
+        <a href="https://instagram.com/themarkest" target="_blank">Instagram</a>
+        <a href="https://t.me/markestart" target="_blank">Telegram</a>
+      </div>
+    </div>
+  </section>
+
+</body>
+</html>
