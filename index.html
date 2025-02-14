@@ -15,23 +15,10 @@
   <meta name="msapplication-TileColor" content="#000000">
   <meta name="theme-color" content="#000000">
 
-  <!-- SVG-фильтр для постоянного глитч-эффекта на логотипе (из CodePen eriswhalesea/pen/ZELPmNy) -->
-  <svg xmlns="http://www.w3.org/2000/svg" style="display:none;">
-    <defs>
-      <filter id="glitchFilter">
-        <feTurbulence type="fractalNoise" baseFrequency="0.01" numOctaves="5" result="warp">
-          <!-- Анимация изменения baseFrequency для непрерывного "жидкого" движения -->
-          <animate attributeName="baseFrequency" values="0.01;0.03;0.01" dur="6s" repeatCount="indefinite"/>
-        </feTurbulence>
-        <!-- scale=50 даёт сильное искажение; уменьшите до 20 или 10 при необходимости -->
-        <feDisplacementMap in="SourceGraphic" in2="warp" scale="50" xChannelSelector="R" yChannelSelector="B" />
-      </filter>
-    </defs>
-  </svg>
-
   <style>
     /* ==========================
-       1) Эффект «старого монитора» (виньетка + скан-линии)
+       1) ЭФФЕКТ «СТАРОГО МОНИТОРА»
+       (виньетка + скан-линии)
     ========================== */
     body::before {
       content: "";
@@ -41,18 +28,8 @@
       width: 100%; height: 100%;
       z-index: 9999;
       background:
-        /* Тёмная виньетка */
-        radial-gradient(
-          circle at center, 
-          rgba(0,0,0,0) 40%, 
-          rgba(0,0,0,0.7) 100%
-        ),
-        /* Лёгкий белый блик в центре */
-        radial-gradient(
-          circle, 
-          rgba(255,255,255,0.05) 1%, 
-          rgba(255,255,255,0) 60%
-        );
+        radial-gradient(circle at center, rgba(0,0,0,0) 40%, rgba(0,0,0,0.7) 100%),
+        radial-gradient(circle, rgba(255,255,255,0.05) 1%, rgba(255,255,255,0) 60%);
       background-blend-mode: multiply;
       animation: flicker 2.5s infinite ease-in-out alternate;
     }
@@ -75,17 +52,19 @@
     }
     @keyframes flicker {
       0%, 100% { opacity: 0.06; }
-      50% { opacity: 0.09; }
+      50%      { opacity: 0.09; }
     }
     @keyframes scanline {
-      0% { transform: translateY(0); }
+      0%   { transform: translateY(0); }
       100% { transform: translateY(4px); }
     }
 
     /* ==========================
-       2) Сброс и базовые стили
+       2) СБРОС И БАЗОВЫЕ СТИЛИ
     ========================== */
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    * {
+      margin: 0; padding: 0; box-sizing: border-box;
+    }
     html { scroll-behavior: smooth; }
     body {
       font-family: "IBM Plex Sans", sans-serif;
@@ -97,13 +76,13 @@
     a:hover { color: #0ff; }
 
     /* ==========================
-       3) Хедер (волна + логотип/меню)
+       3) ХЕДЕР (волна + логотип/меню)
     ========================== */
     header {
       position: fixed;
       top: 0; left: 0;
       width: 100%;
-      height: 160px; /* Высота холста */
+      height: 160px;  /* Высота холста для волны */
       z-index: 1000;
     }
     #waveCanvas {
@@ -115,7 +94,7 @@
       position: absolute;
       top: 0; left: 0;
       width: 100%;
-      height: 120px; /* «Официальная» высота шапки */
+      height: 120px;  /* «Официальная» высота хедера */
       display: flex;
       align-items: center;
       justify-content: center;
@@ -125,12 +104,57 @@
       position: absolute;
       left: 20px;
     }
+    /* Применяем эффект глитча к логотипу */
+    .glitch-logo {
+      position: relative;
+      display: inline-block;
+    }
+    .glitch-logo::before,
+    .glitch-logo::after {
+      content: "";
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      background: url("assets/logo.svg") no-repeat center;
+      background-size: contain;
+      opacity: 0.8;
+      mix-blend-mode: screen;
+    }
+    .glitch-logo::before {
+      animation: glitch1 2s infinite linear alternate-reverse;
+    }
+    .glitch-logo::after {
+      animation: glitch2 3s infinite linear alternate-reverse;
+    }
+    @keyframes glitch1 {
+      0% { clip: rect(0, 9999px, 0, 0); transform: translate(0px, 0px); }
+      20% { clip: rect(10px, 9999px, 50px, 0); transform: translate(-2px, -2px); }
+      40% { clip: rect(30px, 9999px, 70px, 0); transform: translate(2px, 2px); }
+      60% { clip: rect(20px, 9999px, 60px, 0); transform: translate(-2px, 0px); }
+      80% { clip: rect(40px, 9999px, 80px, 0); transform: translate(2px, -2px); }
+      100% { clip: rect(0, 9999px, 0, 0); transform: translate(0px, 0px); }
+    }
+    @keyframes glitch2 {
+      0% { clip: rect(0, 9999px, 0, 0); transform: translate(0px, 0px); }
+      20% { clip: rect(30px, 9999px, 60px, 0); transform: translate(2px, 2px); }
+      40% { clip: rect(10px, 9999px, 50px, 0); transform: translate(-2px, -2px); }
+      60% { clip: rect(50px, 9999px, 90px, 0); transform: translate(2px, 0px); }
+      80% { clip: rect(20px, 9999px, 60px, 0); transform: translate(-2px, 2px); }
+      100% { clip: rect(0, 9999px, 0, 0); transform: translate(0px, 0px); }
+    }
     .logo {
       width: 80px;
       height: auto;
-      /* Применяем постоянный глитч-эффект */
-      filter: url(#glitchFilter);
     }
+    /* Оборачиваем логотип в класс glitch-logo */
+    .logo-container img {
+      display: block;
+    }
+    .logo-container img.glitch-logo {
+      /* Дополнительный стиль можно добавить, если нужно */
+    }
+    /* Меню по центру */
     nav a {
       margin: 0 15px;
       font-size: 1.2rem;
@@ -138,13 +162,13 @@
     }
 
     /* ==========================
-       4) Блок обложки (Cover)
-       Занимает всю высоту экрана
+       4) ОБЛОЖКА (Cover)
+       занимает всю высоту экрана
     ========================== */
     #cover {
       position: relative;
       width: 100%;
-      min-height: 100vh; /* на всю высоту экрана */
+      min-height: 100vh;
       background: url("https://picsum.photos/1600/900?grayscale") center/cover no-repeat;
       display: flex;
       align-items: center;
@@ -170,7 +194,7 @@
     }
 
     /* ==========================
-       5) Остальные секции
+       5) ОСТАЛЬНЫЕ СЕКЦИИ
     ========================== */
     section {
       padding: 4rem 0;
@@ -182,7 +206,6 @@
       margin-bottom: 2rem;
       text-transform: uppercase;
     }
-    /* Сетка (портфолио) */
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -201,8 +224,15 @@
       transform: scale(1.02);
       box-shadow: 0 0 8px #0ff;
     }
-    .work-item h3 { margin-bottom: 0.5rem; font-size: 1.2rem; }
-    .work-item p { font-size: 0.95rem; opacity: 0.9; margin-bottom: 0.5rem; }
+    .work-item h3 {
+      margin-bottom: 0.5rem;
+      font-size: 1.2rem;
+    }
+    .work-item p {
+      font-size: 0.95rem;
+      opacity: 0.9;
+      margin-bottom: 0.5rem;
+    }
     .share-buttons {
       display: flex;
       gap: 0.5rem;
@@ -217,8 +247,9 @@
       font-size: 0.8rem;
       transition: background 0.3s;
     }
-    .share-buttons a:hover { background: #0cc; }
-
+    .share-buttons a:hover {
+      background: #0cc;
+    }
     .about-content {
       display: flex;
       flex-wrap: wrap;
@@ -262,7 +293,7 @@
     }
 
     /* ==========================
-       6) Форма и Футер
+       6) ФОРМА И ФУТЕР
     ========================== */
     form {
       display: flex;
@@ -297,14 +328,16 @@
       cursor: pointer;
       transition: background 0.3s;
     }
-    form button:hover { background: #0cc; }
+    form button:hover {
+      background: #0cc;
+    }
     .contact-social {
       text-align: center;
       margin-top: 2rem;
     }
     .contact-social a {
       margin: 0 0.5rem;
-      background: rgba(255,255,255,0.1);
+      background: rgba(255, 255, 255, 0.1);
       padding: 0.5rem 1rem;
       border-radius: 4px;
     }
@@ -316,24 +349,24 @@
     }
 
     /* ==========================
-       7) Эффект появления текста (TextScramble)
-          (замедлен) + запуск при скролле
+       7) ЭФФЕКТ ПОЯВЛЕНИЯ ТЕКСТА (TextScramble)
+          Будет запускаться при попадании элемента в зону видимости
     ========================== */
     .scramble-text {
       display: inline-block;
-      opacity: 0; /* Изначально скрыт */
+      opacity: 0;
     }
   </style>
 </head>
 <body>
 
-  <!-- Хедер (волна + логотип с глитч-эффектом) -->
+  <!-- ХЕДЕР: Волна на canvas + Логотип с эффектом глитча и меню -->
   <header>
     <canvas id="waveCanvas"></canvas>
     <div class="header-content">
       <div class="logo-container">
-        <!-- Логотип с постоянным "жидким" глитчем -->
-        <img src="assets/logo.svg" alt="TheMarkest.art Logo" class="logo" />
+        <!-- Добавляем класс glitch-logo к логотипу -->
+        <img src="assets/logo.svg" alt="TheMarkest.art Logo" class="logo glitch-logo" />
       </div>
       <nav>
         <a href="#cover">Обложка</a>
@@ -344,15 +377,17 @@
     </div>
   </header>
 
-  <!-- Блок обложки (Cover) -->
+  <!-- ОБЛОЖКА (Cover) -->
   <section id="cover">
     <div class="cover-content">
       <h2>Обложка сайта</h2>
-      <p>Здесь можно разместить вводную информацию о проекте.</p>
+      <p>
+        Здесь можно разместить слоган или вводную информацию о проекте.
+      </p>
     </div>
   </section>
 
-  <!-- Основной контент -->
+  <!-- ОСНОВНОЙ КОНТЕНТ -->
   <main>
     <section id="works">
       <div class="container">
@@ -361,7 +396,7 @@
           <article class="work-item">
             <h3>Название работы 1</h3>
             <p>Год: 2023</p>
-            <p>Короткое описание концепции, технологии и материалы.</p>
+            <p>Краткое описание концепции. Технологии, материалы и уникальные особенности.</p>
             <div class="share-buttons">
               <a href="#">Facebook</a>
               <a href="#">Twitter</a>
@@ -380,13 +415,13 @@
           <div class="bio">
             <h3>Биография</h3>
             <p class="scramble-text">
-              Здесь вставьте реальный текст биографии, который будет постепенно появляться при скролле.
+              Здесь вставьте реальный текст биографии. Этот текст появится постепенно, когда вы доскроллите до него.
             </p>
           </div>
           <div class="artist-statement">
             <h3>Artist Statement</h3>
             <p class="scramble-text">
-              Опишите вашу философию, что вы хотите донести до зрителя. Эффект запускается при достижении зоны видимости.
+              Опишите вашу философию, что вы хотите донести до зрителя. Текст появится с эффектом scramble.
             </p>
           </div>
           <div class="artist-photo">
@@ -422,9 +457,10 @@
     </div>
   </footer>
 
-  <!-- Скрипты: Волна + Scramble-текст (IntersectionObserver) -->
+  <!-- ==========================
+       Скрипт: Волна (canvas)
+  ========================== -->
   <script>
-    /* === 1) Волна (canvas) === */
     const canvas = document.getElementById("waveCanvas");
     const ctx = canvas.getContext("2d");
 
@@ -462,14 +498,12 @@
 
     function animateWave() {
       ctx.clearRect(0, 0, width, height);
-
       const wavePoints = dots.map(dot => {
         if (dot.pinned) return { x: dot.x, y: BASELINE };
         let wave = AMPLITUDE * Math.sin(dot.x * dot.freq + time + dot.phase);
         return { x: dot.x, y: BASELINE + wave };
       });
 
-      // Полигон сверху
       ctx.beginPath();
       ctx.moveTo(0, 0);
       wavePoints.forEach(p => ctx.lineTo(p.x, p.y));
@@ -478,17 +512,15 @@
       ctx.fillStyle = HEADER_BG_COLOR;
       ctx.fill();
 
-      // Неоновая линия
       ctx.beginPath();
       ctx.strokeStyle = "#0ff";
       ctx.lineWidth = LINE_WIDTH;
       wavePoints.forEach((p, i) => {
-        if (i===0) ctx.moveTo(p.x, p.y);
+        if (i === 0) ctx.moveTo(p.x, p.y);
         else ctx.lineTo(p.x, p.y);
       });
       ctx.stroke();
 
-      // Точки
       wavePoints.forEach(p => {
         ctx.beginPath();
         ctx.arc(p.x, p.y, DOT_RADIUS, 0, Math.PI * 2);
@@ -506,9 +538,12 @@
     window.addEventListener("resize", onResize);
     initDots();
     animateWave();
+  </script>
 
-
-    /* === 2) Scramble-текст (замедленный) при скролле === */
+  <!-- ==========================
+       Скрипт: TextScramble (при скролле)
+  ========================== -->
+  <script>
     class TextScramble {
       constructor(el) {
         this.el = el;
@@ -516,75 +551,71 @@
         this.update = this.update.bind(this);
       }
       setText(newText) {
-        const oldText = this.el.innerText || "";
-        const length  = Math.max(oldText.length, newText.length);
-        return new Promise(resolve => {
-          const queue = [];
-          for (let i=0; i<length; i++) {
-            const from  = oldText[i] || "";
-            const to    = newText[i] || "";
-            // Увеличиваем диапазон для более медленного эффекта
-            const start = Math.floor(Math.random()*40);
-            const end   = start + Math.floor(Math.random()*40);
-            queue.push({ from, to, start, end, char: null });
+        const oldText = this.el.innerText;
+        const length = Math.max(oldText.length, newText.length);
+        const promise = new Promise(resolve => this.resolve = resolve);
+        this.queue = [];
+        for (let i = 0; i < length; i++) {
+          const from = oldText[i] || "";
+          const to   = newText[i] || "";
+          // Замедляем эффект: используем множитель 30 вместо 20
+          const start = Math.floor(Math.random() * 30);
+          const end   = start + Math.floor(Math.random() * 30);
+          this.queue.push({ from, to, start, end, char: null });
+        }
+        cancelAnimationFrame(this.frameRequest);
+        this.frame = 0;
+        this.update();
+        return promise;
+      }
+      update() {
+        let output = "";
+        let complete = 0;
+        for (let i = 0, n = this.queue.length; i < n; i++) {
+          let { from, to, start, end, char } = this.queue[i];
+          if (this.frame >= end) {
+            complete++;
+            output += to;
+          } else if (this.frame >= start) {
+            if (!char || Math.random() < 0.28) {
+              char = this.randomChar();
+              this.queue[i].char = char;
+            }
+            output += `<span class="dud">${char}</span>`;
+          } else {
+            output += from;
           }
-          let frame = 0;
-          const update = () => {
-            let output = "";
-            let complete = 0;
-            for (let i=0; i<length; i++) {
-              let { from, to, start, end, char } = queue[i];
-              if (frame >= end) {
-                complete++;
-                output += to;
-              } else if (frame >= start) {
-                if (!char || Math.random() < 0.28) {
-                  char = this.randomChar();
-                  queue[i].char = char;
-                }
-                output += char;
-              } else {
-                output += from;
-              }
-            }
-            this.el.innerText = output;
-            if (complete === length) {
-              resolve();
-            } else {
-              requestAnimationFrame(update);
-              frame++;
-            }
-          };
-          update();
-        });
+        }
+        this.el.innerHTML = output;
+        if (complete === this.queue.length) {
+          this.resolve();
+        } else {
+          this.frameRequest = requestAnimationFrame(this.update);
+          this.frame++;
+        }
       }
       randomChar() {
         return this.chars[Math.floor(Math.random() * this.chars.length)];
       }
     }
 
-    // IntersectionObserver: эффект запускается при попадании <p> в зону видимости
+    // IntersectionObserver для запуска scramble-эффекта по скроллу
     window.addEventListener('load', () => {
       const paragraphs = document.querySelectorAll('p');
-      paragraphs.forEach(p => {
-        p.dataset.scrambleText = p.innerText;
-        p.innerText = ""; // Изначально очищаем
-      });
-
       const observer = new IntersectionObserver((entries, obs) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
             const el = entry.target;
-            // Запускаем анимацию
+            const text = el.innerText;
+            el.dataset.scrambleText = text;
+            el.innerText = "";
             const fx = new TextScramble(el);
-            fx.setText(el.dataset.scrambleText).then(() => {
-              // После завершения убираем наблюдатель
+            fx.setText(text).then(() => {
               obs.unobserve(el);
             });
           }
         });
       }, { threshold: 0.2 });
-
       paragraphs.forEach(p => observer.observe(p));
     });
   </script>
