@@ -62,9 +62,7 @@
     /* ==========================
        2) СБРОС И БАЗОВЫЕ СТИЛИ
     ========================== */
-    * {
-      margin: 0; padding: 0; box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     html { scroll-behavior: smooth; }
     body {
       font-family: "IBM Plex Sans", sans-serif;
@@ -94,7 +92,7 @@
       position: absolute;
       top: 0; left: 0;
       width: 100%;
-      height: 120px;  /* «Официальная» высота хедера */
+      height: 120px;  /* «Официальная» высота шапки */
       display: flex;
       align-items: center;
       justify-content: center;
@@ -104,10 +102,12 @@
       position: absolute;
       left: 20px;
     }
-    /* Применяем эффект глитча к логотипу */
+    /* Глитч-эффект на логотипе с динамической интенсивностью */
     .glitch-logo {
       position: relative;
       display: inline-block;
+      /* По умолчанию интенсивность равна 1 */
+      --glitch-intensity: 1;
     }
     .glitch-logo::before,
     .glitch-logo::after {
@@ -129,30 +129,23 @@
     }
     @keyframes glitch1 {
       0% { clip: rect(0, 9999px, 0, 0); transform: translate(0px, 0px); }
-      20% { clip: rect(10px, 9999px, 50px, 0); transform: translate(-2px, -2px); }
-      40% { clip: rect(30px, 9999px, 70px, 0); transform: translate(2px, 2px); }
-      60% { clip: rect(20px, 9999px, 60px, 0); transform: translate(-2px, 0px); }
-      80% { clip: rect(40px, 9999px, 80px, 0); transform: translate(2px, -2px); }
+      20% { clip: rect(10px, 9999px, 50px, 0); transform: translate(calc(-2px * var(--glitch-intensity)), calc(-2px * var(--glitch-intensity))); }
+      40% { clip: rect(30px, 9999px, 70px, 0); transform: translate(calc(2px * var(--glitch-intensity)), calc(2px * var(--glitch-intensity))); }
+      60% { clip: rect(20px, 9999px, 60px, 0); transform: translate(calc(-2px * var(--glitch-intensity)), 0px); }
+      80% { clip: rect(40px, 9999px, 80px, 0); transform: translate(calc(2px * var(--glitch-intensity)), calc(-2px * var(--glitch-intensity))); }
       100% { clip: rect(0, 9999px, 0, 0); transform: translate(0px, 0px); }
     }
     @keyframes glitch2 {
       0% { clip: rect(0, 9999px, 0, 0); transform: translate(0px, 0px); }
-      20% { clip: rect(30px, 9999px, 60px, 0); transform: translate(2px, 2px); }
-      40% { clip: rect(10px, 9999px, 50px, 0); transform: translate(-2px, -2px); }
-      60% { clip: rect(50px, 9999px, 90px, 0); transform: translate(2px, 0px); }
-      80% { clip: rect(20px, 9999px, 60px, 0); transform: translate(-2px, 2px); }
+      20% { clip: rect(30px, 9999px, 60px, 0); transform: translate(calc(2px * var(--glitch-intensity)), calc(2px * var(--glitch-intensity))); }
+      40% { clip: rect(10px, 9999px, 50px, 0); transform: translate(calc(-2px * var(--glitch-intensity)), calc(-2px * var(--glitch-intensity))); }
+      60% { clip: rect(50px, 9999px, 90px, 0); transform: translate(calc(2px * var(--glitch-intensity)), 0px); }
+      80% { clip: rect(20px, 9999px, 60px, 0); transform: translate(calc(-2px * var(--glitch-intensity)), calc(2px * var(--glitch-intensity))); }
       100% { clip: rect(0, 9999px, 0, 0); transform: translate(0px, 0px); }
     }
     .logo {
       width: 80px;
       height: auto;
-    }
-    /* Оборачиваем логотип в класс glitch-logo */
-    .logo-container img {
-      display: block;
-    }
-    .logo-container img.glitch-logo {
-      /* Дополнительный стиль можно добавить, если нужно */
     }
     /* Меню по центру */
     nav a {
@@ -163,7 +156,6 @@
 
     /* ==========================
        4) ОБЛОЖКА (Cover)
-       занимает всю высоту экрана
     ========================== */
     #cover {
       position: relative;
@@ -250,6 +242,7 @@
     .share-buttons a:hover {
       background: #0cc;
     }
+
     .about-content {
       display: flex;
       flex-wrap: wrap;
@@ -349,7 +342,7 @@
     }
 
     /* ==========================
-       7) ЭФФЕКТ ПОЯВЛЕНИЯ ТЕКСТА (TextScramble)
+       7) Эффект появления текста (TextScramble)
           Будет запускаться при попадании элемента в зону видимости
     ========================== */
     .scramble-text {
@@ -360,12 +353,11 @@
 </head>
 <body>
 
-  <!-- ХЕДЕР: Волна на canvas + Логотип с эффектом глитча и меню -->
+  <!-- ХЕДЕР: Волна (canvas) + Логотип с глитч-эффектом и меню -->
   <header>
     <canvas id="waveCanvas"></canvas>
     <div class="header-content">
       <div class="logo-container">
-        <!-- Добавляем класс glitch-logo к логотипу -->
         <img src="assets/logo.svg" alt="TheMarkest.art Logo" class="logo glitch-logo" />
       </div>
       <nav>
@@ -377,7 +369,7 @@
     </div>
   </header>
 
-  <!-- ОБЛОЖКА (Cover) -->
+  <!-- ОБЛОЖКА: занимает всю высоту экрана -->
   <section id="cover">
     <div class="cover-content">
       <h2>Обложка сайта</h2>
@@ -483,7 +475,6 @@
       canvas.width = width;
       canvas.height = height;
       dots = [];
-
       dots.push({ x: 0, pinned: true });
       for (let x = DOT_SPACING; x <= width - DOT_SPACING; x += DOT_SPACING) {
         dots.push({
@@ -503,7 +494,6 @@
         let wave = AMPLITUDE * Math.sin(dot.x * dot.freq + time + dot.phase);
         return { x: dot.x, y: BASELINE + wave };
       });
-
       ctx.beginPath();
       ctx.moveTo(0, 0);
       wavePoints.forEach(p => ctx.lineTo(p.x, p.y));
@@ -516,14 +506,14 @@
       ctx.strokeStyle = "#0ff";
       ctx.lineWidth = LINE_WIDTH;
       wavePoints.forEach((p, i) => {
-        if (i === 0) ctx.moveTo(p.x, p.y);
+        if (i===0) ctx.moveTo(p.x, p.y);
         else ctx.lineTo(p.x, p.y);
       });
       ctx.stroke();
 
       wavePoints.forEach(p => {
         ctx.beginPath();
-        ctx.arc(p.x, p.y, DOT_RADIUS, 0, Math.PI * 2);
+        ctx.arc(p.x, p.y, DOT_RADIUS, 0, Math.PI*2);
         ctx.fillStyle = "#0ff";
         ctx.fill();
       });
@@ -531,17 +521,14 @@
       time += 0.02;
       requestAnimationFrame(animateWave);
     }
-
-    function onResize() {
-      initDots();
-    }
+    function onResize() { initDots(); }
     window.addEventListener("resize", onResize);
     initDots();
     animateWave();
   </script>
 
   <!-- ==========================
-       Скрипт: TextScramble (при скролле)
+       Скрипт: TextScramble для появления текста при скролле
   ========================== -->
   <script>
     class TextScramble {
@@ -558,7 +545,6 @@
         for (let i = 0; i < length; i++) {
           const from = oldText[i] || "";
           const to   = newText[i] || "";
-          // Замедляем эффект: используем множитель 30 вместо 20
           const start = Math.floor(Math.random() * 30);
           const end   = start + Math.floor(Math.random() * 30);
           this.queue.push({ from, to, start, end, char: null });
@@ -599,7 +585,7 @@
       }
     }
 
-    // IntersectionObserver для запуска scramble-эффекта по скроллу
+    // IntersectionObserver для запуска эффекта scramble по скроллу
     window.addEventListener('load', () => {
       const paragraphs = document.querySelectorAll('p');
       const observer = new IntersectionObserver((entries, obs) => {
@@ -617,6 +603,16 @@
         });
       }, { threshold: 0.2 });
       paragraphs.forEach(p => observer.observe(p));
+    });
+  </script>
+
+  <!-- Скрипт: зависимость интенсивности глитча от движения мыши -->
+  <script>
+    document.addEventListener("mousemove", e => {
+      // Вычисляем значение от 0.5 до 1.5 в зависимости от положения по X
+      let intensity = 1 + ((e.clientX / window.innerWidth) - 0.5) * 1;
+      // Устанавливаем CSS-переменную
+      document.documentElement.style.setProperty('--glitch-intensity', intensity);
     });
   </script>
 </body>
