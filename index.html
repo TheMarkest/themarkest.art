@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>TheMarkest.art – Sci-Fi/Cyberpunk</title>
   <meta name="description" content="Портфолио художника, работающего в стиле sci-fi/cyberpunk с интерактивными и кинетическими скульптурами." />
 
-  <!-- Фавиконки из папки assets/favicon/ -->
+  <!-- Фавиконки (проверьте, что файлы лежат в assets/favicon/) -->
   <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/apple-touch-icon.png">
   <link rel="icon" type="image/svg+xml" href="assets/favicon/favicon.svg">
   <link rel="icon" type="image/png" sizes="96x96" href="assets/favicon/favicon-96x96.png">
@@ -16,7 +16,7 @@
   <meta name="theme-color" content="#000000">
 
   <style>
-    /* ===== Сброс и базовые стили ===== */
+    /* ===== СБРОС И БАЗОВЫЕ СТИЛИ ===== */
     * {
       margin: 0; 
       padding: 0; 
@@ -40,18 +40,18 @@
       color: #0ff;
     }
 
-    /* ===== Фиксированный хедер (высота 120px) ===== */
+    /* ===== ФИКСИРОВАННЫЙ ХЕДЕР ===== */
     header#header {
       position: fixed;
       top: 0; left: 0;
       width: 100%;
-      height: 120px;     /* Компактная высота */
-      background: #555;  /* Серый фон */
+      height: 124px;      /* Чуть больше 120px, чтобы волна уместилась */
+      background: #555;   /* Серый фон */
       z-index: 1000;
-      overflow: hidden;  /* Важно для clip-path */
+      overflow: hidden;   /* Для clip-path */
     }
 
-    /* Логотип слева */
+    /* ЛОГОТИП СЛЕВА */
     .logo-container {
       position: absolute;
       top: 50%;
@@ -63,7 +63,7 @@
       height: auto;
     }
 
-    /* Меню по центру */
+    /* МЕНЮ ПО ЦЕНТРУ */
     .menu-container {
       display: flex;
       justify-content: center;
@@ -76,22 +76,22 @@
       color: #fff;
     }
 
-    /* Canvas для неоновой линии (внизу хедера) */
+    /* CANVAS ДЛЯ НЕОНОВОЙ ЛИНИИ (30px ВЫСОТОЙ) */
     .header-line {
       position: absolute;
       bottom: 0;
       left: 0;
       width: 100%;
-      height: 25px;  /* Небольшая высота под волну */
+      height: 30px;
       pointer-events: none;
     }
 
-    /* Отступ сверху под хедер (120px) + 25px канвы = 145px */
+    /* ОТСТУП ДЛЯ ОСНОВНОГО КОНТЕНТА (124 + 30 = 154px) */
     main {
-      margin-top: 145px;
+      margin-top: 154px;
     }
 
-    /* ===== Пример секций ===== */
+    /* ===== ПРИМЕР СЕКЦИЙ ===== */
     section {
       padding: 4rem 0;
       background: #000;
@@ -102,7 +102,6 @@
       margin-bottom: 2rem;
       text-transform: uppercase;
     }
-    /* Сетка (портфолио) */
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -191,7 +190,7 @@
       background: #111;
     }
 
-    /* Форма и футер */
+    /* ФОРМА И ФУТЕР */
     form {
       display: flex;
       flex-direction: column;
@@ -248,7 +247,7 @@
 </head>
 <body>
 
-  <!-- ФИКСИРОВАННЫЙ ХЕДЕР (120px) -->
+  <!-- Фиксированный хедер -->
   <header id="header">
     <div class="logo-container">
       <img src="assets/logo.svg" alt="TheMarkest.art Logo" class="logo" />
@@ -260,11 +259,11 @@
         <a href="#contact">Контакты</a>
       </nav>
     </div>
-    <!-- Холст для неоновой линии -->
+    <!-- Canvas для неоновой линии -->
     <canvas id="header-line" class="header-line"></canvas>
   </header>
 
-  <!-- Контент (отступ 145px) -->
+  <!-- Контент, смещён на 154px вниз -->
   <main>
     <section id="works">
       <div class="container">
@@ -291,7 +290,7 @@
         <div class="about-content">
           <div class="bio">
             <h3>Биография</h3>
-            <p>Здесь вставьте реальный текст биографии.</p>
+            <p>Краткий текст биографии.</p>
           </div>
           <div class="artist-statement">
             <h3>Artist Statement</h3>
@@ -330,12 +329,12 @@
     </div>
   </footer>
 
-  <!-- СКРИПТ: ПИНГОВАНИЕ УГЛОВ + ВОЛНА ПО СЕРЕДИНЕ, ЧТОБЫ КРАЯ НЕ ЗАДИРАЛИСЬ -->
+  <!-- Скрипт: ПРИБИТЫЕ КРАЯ + НЕБОЛЬШАЯ АМПЛИТУДА, чтобы волна не вылезала за хедер -->
   <script>
-    const HEADER_HEIGHT = 120;  
-    const CANVAS_HEIGHT = 25;   
+    const HEADER_HEIGHT = 124;  
+    const CANVAS_HEIGHT = 30;   
     const DOT_SPACING = 40;     
-    const AMPLITUDE = 5;        
+    const AMPLITUDE = 3;        // Волна всего 3px
     const FREQ_MIN = 0.05;      
     const FREQ_MAX = 0.1;       
     const LINE_WIDTH = 2;       
@@ -349,20 +348,20 @@
     let time = 0;
     let dots = [];
 
-    // Создаём массив точек, где первые и последние – "закреплены" в самом низу (y=120)
+    // Создаём точки, крайние (x=0 и x=width) "прибиты" на уровне y=HEADER_HEIGHT
     function initDots() {
       width = header.offsetWidth;
       canvas.width = width;
       canvas.height = CANVAS_HEIGHT;
       dots = [];
 
-      // Левая точка (x=0, pinned)
+      // Левая крайняя точка
       dots.push({
         x: 0,
         pinned: true
       });
 
-      // Промежуточные точки (x от DOT_SPACING до width-DOT_SPACING)
+      // Промежуточные точки
       for (let x = DOT_SPACING; x <= width - DOT_SPACING; x += DOT_SPACING) {
         dots.push({
           x,
@@ -372,7 +371,7 @@
         });
       }
 
-      // Правая точка (x=width, pinned)
+      // Правая крайняя точка
       dots.push({
         x: width,
         pinned: true
@@ -382,39 +381,42 @@
     function animate() {
       ctx.clearRect(0, 0, width, CANVAS_HEIGHT);
 
-      // Собираем координаты для волны
+      // Волна
+      // pinned => y=HEADER_HEIGHT
+      // иначе y=HEADER_HEIGHT + wave
+      // wave в диапазоне [-3..+3], итого y в [121..127],
+      // но HEADER_HEIGHT=124, значит max y=127 — на 3px выше, что не страшно,
+      // так как clip-path будет обрезать ровно в 124px, а холст 30px нам хватает
       let waveCoords = dots.map(dot => {
-        // Если pinned => y=HEADER_HEIGHT (самый низ)
-        // Иначе y=120 + sin(...)
         if (dot.pinned) {
           return { x: dot.x, y: HEADER_HEIGHT };
         } else {
           let wave = AMPLITUDE * Math.sin(dot.x * dot.freq + time + dot.phase);
-          return { x: dot.x, y: HEADER_HEIGHT + wave }; 
+          return { x: dot.x, y: HEADER_HEIGHT + wave };
         }
       });
 
-      // Построим polygon (clip-path)
-      // Начало: (0,0) -> (100%,0) -> волна (справа налево) -> замыкаем
+      // Polygon (clip-path)
       let polyPoints = ["0% 0%", "100% 0%"];
       for (let i = waveCoords.length - 1; i >= 0; i--) {
         let p = waveCoords[i];
+        // Преобразуем в проценты от HEADER_HEIGHT
+        // Если y=124 => 100%, если y=127 => 102.4% (чуть выйдет),
+        // но за счёт overflow: hidden хедер обрежет
         let xPerc = ((p.x / width) * 100).toFixed(2) + "%";
         let yPerc = ((p.y / HEADER_HEIGHT) * 100).toFixed(2) + "%";
         polyPoints.push(`${xPerc} ${yPerc}`);
       }
       header.style.clipPath = `polygon(${polyPoints.join(", ")})`;
 
-      // Рисуем неоновую линию (та же волна) на canvas
+      // Рисуем неоновую линию
       ctx.beginPath();
       ctx.strokeStyle = "#0ff";
       ctx.lineWidth = LINE_WIDTH;
 
       waveCoords.forEach((p, i) => {
-        // p.y ~ [120 - 5.. 120 + 5] => [115..125]
-        // Но pinned углы = 120
-        // Приведём [115..125] к [CANVAS_HEIGHT-5 .. CANVAS_HEIGHT+5], но фактически
-        // нам надо 120 -> CANVAS_HEIGHT, 115 -> CANVAS_HEIGHT-5
+        // p.y может быть ~ [121..127]
+        // на холсте (30px высоты) y=124 => bottom => 30, y=121 => 27
         let cy = CANVAS_HEIGHT - (HEADER_HEIGHT - p.y);
         if (i === 0) {
           ctx.moveTo(p.x, cy);
@@ -424,7 +426,7 @@
       });
       ctx.stroke();
 
-      // Точки толще линии
+      // Точки
       waveCoords.forEach(p => {
         let cy = CANVAS_HEIGHT - (HEADER_HEIGHT - p.y);
         ctx.beginPath();
@@ -442,6 +444,7 @@
     }
     window.addEventListener("resize", onResize);
 
+    // Запуск
     initDots();
     animate();
   </script>
