@@ -38,12 +38,16 @@
       padding: 2rem 1rem;
     }
 
-    /* ===== HEADER – верхняя панель ===== */
+    /* ===== HEADER – фиксирован вверху, серый фон ===== */
     header#header {
-      position: relative;
-      background: #555;  /* Слегка серый фон */
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: #555; /* слегка серый фон */
       height: 120px;
-      overflow: hidden;  /* Обеспечивает корректное отображение clip-path */
+      z-index: 1000;
+      overflow: hidden;
     }
     /* Логотип в левом верхнем углу */
     .logo-container {
@@ -56,7 +60,7 @@
       width: 100px;
       height: auto;
     }
-    /* Контейнер меню – пункты по центру */
+    /* Меню – пункты по центру */
     .menu-container {
       display: flex;
       justify-content: center;
@@ -68,8 +72,23 @@
       font-size: 1.2rem;
       color: #fff;
     }
+    /* Социальные ссылки можно при необходимости разместить справа, но в данном примере они не показаны */
 
-    /* ===== Остальные секции ===== */
+    /* ===== Сепаратор в виде канвы с точками – нижняя граница header ===== */
+    .header-separator {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 50px;
+      pointer-events: none;
+    }
+
+    /* ===== Основной контент ===== */
+    main {
+      /* Отступ сверху равен высоте header + сепаратор (120px + 50px = 170px) */
+      margin-top: 170px;
+    }
     section {
       background: #000;
       padding: 4rem 0;
@@ -199,7 +218,7 @@
 </head>
 <body>
 
-  <!-- HEADER с логотипом в левом углу и меню по центру -->
+  <!-- HEADER: фиксированный с логотипом слева и меню по центру -->
   <header id="header">
     <div class="logo-container">
       <img src="assets/logo.svg" alt="TheMarkest.art Logo" class="logo" />
@@ -211,65 +230,69 @@
         <a href="#contact">Контакты</a>
       </nav>
     </div>
+    <!-- Анимированная граница с точками -->
+    <canvas id="header-separator" class="header-separator"></canvas>
   </header>
 
-  <!-- Секции страницы -->
-  <section id="works">
-    <div class="container">
-      <h2>Портфолио</h2>
-      <div class="grid">
-        <article class="work-item">
-          <h3>Название работы 1</h3>
-          <p>Год: 2023</p>
-          <p>Краткое описание концепции. Технологии, материалы и уникальные особенности.</p>
-          <div class="share-buttons">
-            <a href="#" title="Поделиться в Facebook">Facebook</a>
-            <a href="#" title="Поделиться в Twitter">Twitter</a>
-            <a href="#" title="Поделиться в Instagram">Instagram</a>
-            <a href="#" title="Поделиться в Telegram">Telegram</a>
+  <!-- Основной контент (отступ сверху, чтобы не перекрывался фиксированным header) -->
+  <main>
+    <section id="works">
+      <div class="container">
+        <h2>Портфолио</h2>
+        <div class="grid">
+          <article class="work-item">
+            <h3>Название работы 1</h3>
+            <p>Год: 2023</p>
+            <p>Краткое описание концепции. Технологии, материалы и уникальные особенности.</p>
+            <div class="share-buttons">
+              <a href="#" title="Поделиться в Facebook">Facebook</a>
+              <a href="#" title="Поделиться в Twitter">Twitter</a>
+              <a href="#" title="Поделиться в Instagram">Instagram</a>
+              <a href="#" title="Поделиться в Telegram">Telegram</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="about">
+      <div class="container">
+        <h2>О художнике</h2>
+        <div class="about-content">
+          <div class="bio">
+            <h3>Биография</h3>
+            <p>Здесь вставьте реальный текст биографии. Расскажите о ключевых этапах пути, образовании и вдохновении.</p>
           </div>
-        </article>
+          <div class="artist-statement">
+            <h3>Artist Statement</h3>
+            <p>Опишите вашу философию, что вы хотите донести до зрителя, как взаимодействуете с технологиями и материалами.</p>
+          </div>
+          <div class="artist-photo">
+            <div>Photo</div>
+          </div>
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <section id="about">
-    <div class="container">
-      <h2>О художнике</h2>
-      <div class="about-content">
-        <div class="bio">
-          <h3>Биография</h3>
-          <p>Здесь вставьте реальный текст биографии. Расскажите о ключевых этапах пути, образовании и вдохновении.</p>
-        </div>
-        <div class="artist-statement">
-          <h3>Artist Statement</h3>
-          <p>Опишите вашу философию, что вы хотите донести до зрителя, как взаимодействуете с технологиями и материалами.</p>
-        </div>
-        <div class="artist-photo">
-          <div>Photo</div>
+    <section id="contact">
+      <div class="container">
+        <h2>Контакты</h2>
+        <form action="mailto:markbogdanovofficial@gmail.com" method="post" enctype="text/plain">
+          <label for="name">Имя:</label>
+          <input type="text" id="name" name="name" required />
+          <label for="email">Email:</label>
+          <input type="email" id="email" name="email" required />
+          <label for="message">Сообщение:</label>
+          <textarea id="message" name="message" rows="5" required></textarea>
+          <button type="submit">Отправить</button>
+        </form>
+        <div class="contact-social">
+          <a href="https://instagram.com/themarkest" target="_blank">Instagram</a>
+          <a href="https://t.me/markestart" target="_blank">Telegram</a>
         </div>
       </div>
-    </div>
-  </section>
-
-  <section id="contact">
-    <div class="container">
-      <h2>Контакты</h2>
-      <form action="mailto:markbogdanovofficial@gmail.com" method="post" enctype="text/plain">
-        <label for="name">Имя:</label>
-        <input type="text" id="name" name="name" required />
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required />
-        <label for="message">Сообщение:</label>
-        <textarea id="message" name="message" rows="5" required></textarea>
-        <button type="submit">Отправить</button>
-      </form>
-      <div class="contact-social">
-        <a href="https://instagram.com/themarkest" target="_blank">Instagram</a>
-        <a href="https://t.me/markestart" target="_blank">Telegram</a>
-      </div>
-    </div>
-  </section>
+    </section>
+  </main>
 
   <footer>
     <div class="container">
@@ -277,52 +300,80 @@
     </div>
   </footer>
 
-  <!-- ===== JavaScript: Анимация деформируемой границы header ===== -->
+  <!-- ===== JavaScript: Анимация сепаратора в header ===== -->
   <script>
-    // Получаем header и его размеры
-    const header = document.getElementById("header");
-    function updateHeaderClip() {
-      const headerWidth = header.offsetWidth;
-      const headerHeight = header.offsetHeight; // 120px
+    function animateSeparator(canvasId) {
+      const canvas = document.getElementById(canvasId);
+      if (!canvas) return;
+      const ctx = canvas.getContext("2d");
+      let width = canvas.width = canvas.offsetWidth;
+      let height = canvas.height = canvas.offsetHeight;
+      
+      const dotRadius = 3;
       const dotSpacing = 40; // интервал между точками
-      const dots = [];
-      // Генерируем точки вдоль нижней границы
-      for (let x = 0; x <= headerWidth; x += dotSpacing) {
+      const speed = 0.5;
+      
+      // Для каждой точки генерируем случайные амплитуду и частоту
+      let dots = [];
+      for (let x = 0; x <= width; x += dotSpacing) {
         dots.push({
           x: x,
-          amplitude: 5 + Math.random() * 10,      // амплитуда от 5 до 15 px
-          frequency: 0.03 + Math.random() * 0.07    // частота от 0.03 до 0.1
+          amplitude: 5 + Math.random() * 10,    // амплитуда от 5 до 15 px
+          frequency: 0.03 + Math.random() * 0.07  // частота от 0.03 до 0.1
         });
       }
+      
       let time = 0;
-      function animate() {
-        // Для каждой точки вычисляем y как функцию синуса от (x * frequency + time)
-        const bottomPoints = dots.map(dot => {
-          return {
-            x: dot.x,
-            y: headerHeight + dot.amplitude * Math.sin(dot.x * dot.frequency + time)
-          };
+      function draw() {
+        ctx.clearRect(0, 0, width, height);
+        
+        // Рисуем соединяющую линию между точками
+        ctx.strokeStyle = "#0ff";
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        dots.forEach((dot, index) => {
+          let y = height / 2 + dot.amplitude * Math.sin(dot.x * dot.frequency + time);
+          if (index === 0) {
+            ctx.moveTo(dot.x, y);
+          } else {
+            ctx.lineTo(dot.x, y);
+          }
         });
-        // Строим массив точек для clip-path:
-        // Начинаем с верхнего левого и правого углов
-        let polyPoints = ["0% 0%", "100% 0%"];
-        // Затем нижняя граница – точки в обратном порядке (чтобы полигон был замкнут по часовой стрелке)
-        for (let i = bottomPoints.length - 1; i >= 0; i--) {
-          const p = bottomPoints[i];
-          const xPerc = ((p.x / headerWidth) * 100).toFixed(2) + "%";
-          const yPerc = ((p.y / headerHeight) * 100).toFixed(2) + "%";
-          polyPoints.push(xPerc + " " + yPerc);
-        }
-        // Обновляем clip-path header'а
-        header.style.clipPath = "polygon(" + polyPoints.join(", ") + ")";
+        ctx.stroke();
+        
+        // Рисуем сами точки
+        ctx.fillStyle = "#0ff";
+        dots.forEach(dot => {
+          let y = height / 2 + dot.amplitude * Math.sin(dot.x * dot.frequency + time);
+          ctx.beginPath();
+          ctx.arc(dot.x, y, dotRadius, 0, Math.PI * 2);
+          ctx.fill();
+        });
+        
+        // Обновляем положение точек по горизонтали
+        dots.forEach(dot => {
+          dot.x += speed;
+          if (dot.x - dotRadius > width) {
+            dot.x = -dotRadius;
+          }
+        });
         time += 0.1;
-        requestAnimationFrame(animate);
+        requestAnimationFrame(draw);
       }
-      animate();
+      draw();
     }
-    // Запускаем анимацию при загрузке и обновлении размеров
-    updateHeaderClip();
-    window.addEventListener("resize", updateHeaderClip);
+    
+    // Инициализируем анимацию сепаратора для header
+    animateSeparator("header-separator");
+    
+    // Обновление размеров канвы при изменении окна
+    window.addEventListener("resize", () => {
+      const canvas = document.getElementById("header-separator");
+      if (canvas) {
+        canvas.width = canvas.offsetWidth;
+        canvas.height = canvas.offsetHeight;
+      }
+    });
   </script>
 </body>
 </html>
