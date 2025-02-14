@@ -17,54 +17,77 @@
 
   <style>
     /* ============================= */
-    /* ЭФФЕКТ «СТАРОГО МОНИТОРА»    */
-    /* Взято и адаптировано из:     */
-    /* https://codepen.io/t0k3n/pen/ebdgNp */
+    /*  ЭФФЕКТ «СТАРОГО МОНИТОРА»   */
+    /*  (адаптация CodePen @t0k3n)  */
     /* ============================= */
+
+    /* 
+       1) body::before – несколько радиальных градиентов,
+          дающих более сильную виньетку и мерцание.
+       2) body::after – скан-линии (горизонтальные полосы).
+    */
+
     body::before {
-      /* Лёгкое мерцание (радиальный градиент) */
       content: "";
       pointer-events: none;
       position: fixed;
       left: 0; top: 0;
-      width: 100%; height: 100%;
-      background: radial-gradient(
-        circle, 
-        rgba(255, 255, 255, 0.03) 1%, 
-        rgba(255, 255, 255, 0) 60%
-      );
-      animation: flicker 3s infinite ease-in-out alternate;
+      width: 100%; 
+      height: 100%;
       z-index: 9999;
+
+      /* Два градиента:
+         - Внешний тёмный (виньетка),
+         - Внутренний белый шум (легкий свет в центре).
+       И анимация мерцания (flicker). */
+      background:
+        /* Виньетка: от прозрачного к тёмному по краям */
+        radial-gradient(
+          circle at center, 
+          rgba(0,0,0,0) 40%, 
+          rgba(0,0,0,0.7) 100%
+        ),
+        /* Лёгкий белый шум в центре */
+        radial-gradient(
+          circle, 
+          rgba(255,255,255,0.05) 1%, 
+          rgba(255,255,255,0) 60%
+        );
+      background-blend-mode: multiply;
+      animation: flicker 2.5s infinite ease-in-out alternate;
     }
+
     body::after {
-      /* Горизонтальные скан-линии, смещающиеся на 4px */
       content: "";
       position: fixed;
       pointer-events: none;
       left: 0; top: 0;
-      width: 100%; height: 100%;
+      width: 100%; 
+      height: 100%;
+      z-index: 99999;
+      /* Горизонтальные полосы (скан-линии),
+         более заметные за счёт opacity */
       background: repeating-linear-gradient(
         0deg,
-        rgba(255,255,255,0) 0px,
-        rgba(255,255,255,0) 1px,
-        rgba(255,255,255,0.02) 2px,
-        rgba(255,255,255,0.02) 2px,
+        rgba(255,255,255,0.03) 0px,
+        rgba(255,255,255,0.03) 1px,
+        rgba(255,255,255,0) 2px,
         rgba(255,255,255,0) 4px
       );
-      animation: scanline 0.1s infinite steps(1);
-      z-index: 99999;
+      animation: scanline 0.15s infinite steps(1);
       mix-blend-mode: lighten;
     }
+
     @keyframes flicker {
-      0%, 100% { opacity: 0.05; }
-      50% { opacity: 0.07; }
+      0%, 100% { opacity: 0.06; }
+      50%      { opacity: 0.09; }
     }
     @keyframes scanline {
-      0% { transform: translateY(0); }
+      0%   { transform: translateY(0); }
       100% { transform: translateY(4px); }
     }
 
-    /* ===== Сброс и базовые стили ===== */
+    /* ===== СБРОС И БАЗОВЫЕ СТИЛИ ===== */
     * {
       margin: 0; 
       padding: 0; 
@@ -93,7 +116,7 @@
       position: fixed;
       top: 0; left: 0;
       width: 100%;
-      height: 160px;   /* Высота холста */
+      height: 160px;  /* Высота холста */
       z-index: 1000;
     }
     #waveCanvas {
@@ -288,7 +311,7 @@
 </head>
 <body>
 
-  <!-- ШАПКА: Canvas + Логотип/меню -->
+  <!-- ШАПКА: Canvas + Логотип и меню -->
   <header>
     <canvas id="waveCanvas"></canvas>
     <div class="header-content">
@@ -303,7 +326,7 @@
     </div>
   </header>
 
-  <!-- Контент (смещён на 160px) -->
+  <!-- Основной контент, смещён на 160px (высота холста) -->
   <main>
     <section id="works">
       <div class="container">
@@ -320,6 +343,7 @@
               <a href="#">Telegram</a>
             </div>
           </article>
+          <!-- Добавьте другие работы при необходимости -->
         </div>
       </div>
     </section>
@@ -330,7 +354,7 @@
         <div class="about-content">
           <div class="bio">
             <h3>Биография</h3>
-            <p>Здесь вставьте реальный текст биографии.</p>
+            <p>Короткий текст биографии.</p>
           </div>
           <div class="artist-statement">
             <h3>Artist Statement</h3>
@@ -369,7 +393,7 @@
     </div>
   </footer>
 
-  <!-- Скрипт: полупрозрачная заливка + волна (исправленные углы) -->
+  <!-- Скрипт: исправленный полигон (слева-направо) и большая амплитуда -->
   <script>
     const canvas = document.getElementById("waveCanvas");
     const ctx = canvas.getContext("2d");
@@ -378,16 +402,20 @@
     let time = 0;
     let dots = [];
 
-    // ПАРАМЕТРЫ
+    /* ПАРАМЕТРЫ ВОЛНЫ */
     const AMPLITUDE   = 15;  // ±15 px
     const DOT_SPACING = 40;  // Шаг между точками
     const FREQ_MIN    = 0.03;
     const FREQ_MAX    = 0.08;
     const LINE_WIDTH  = 2;
     const DOT_RADIUS  = 4;
-    const HEADER_BG_COLOR = "rgba(85, 85, 85, 0.8)"; // Полупрозрачный серый
-    const BASELINE = 120; // «Линия» волны на холсте (в пикселях от верха)
+    /* Серый цвет для заливки над волной */
+    const HEADER_BG_COLOR = "rgba(85, 85, 85, 0.8)";
 
+    /* На какой высоте (от верха canvas) будет «базовая линия» волны */
+    const BASELINE = 120;
+
+    /* Инициализация точек (крайние «прибиты» к BASELINE) */
     function initDots() {
       width = canvas.offsetWidth;
       height = canvas.offsetHeight;
@@ -395,7 +423,7 @@
       canvas.height = height;
       dots = [];
 
-      // Левая крайняя точка (прибита по y=BASELINE)
+      // Левая крайняя точка
       dots.push({ x: 0, pinned: true });
 
       // Промежуточные точки
@@ -415,7 +443,7 @@
     function animate() {
       ctx.clearRect(0, 0, width, height);
 
-      // Генерируем координаты волны
+      // Генерируем координаты волны (sl->sr)
       const wavePoints = dots.map(dot => {
         if (dot.pinned) {
           return { x: dot.x, y: BASELINE };
@@ -425,25 +453,19 @@
         }
       });
 
-      // 1) Заливаем верх canvas до волны
+      /* 1) Заливаем область над волной:
+            (0,0) -> (wavePoints слева-направо) -> (width,0) -> closePath */
       ctx.beginPath();
-      // Начинаем слева сверху (0,0)
       ctx.moveTo(0, 0);
-      // Линия до правого верхнего угла (width, 0)
+      wavePoints.forEach(p => {
+        ctx.lineTo(p.x, p.y);
+      });
       ctx.lineTo(width, 0);
-      // Проходим по точкам волны (справа налево? Или слева направо?)
-      // Чтобы углы не были перепутаны, идём слева → направо
-      wavePoints.forEach(p => ctx.lineTo(p.x, p.y));
-      // Замыкаем вниз влево (0,height) – но здесь нам нужно просто закрыть многоугольник
-      ctx.lineTo(width, height);
-      ctx.lineTo(0, height);
       ctx.closePath();
-
-      // Полупрозрачный серый фон
       ctx.fillStyle = HEADER_BG_COLOR;
       ctx.fill();
 
-      // 2) Неоновая линия по точкам
+      /* 2) Рисуем неоновую линию */
       ctx.beginPath();
       ctx.strokeStyle = "#0ff";
       ctx.lineWidth = LINE_WIDTH;
@@ -456,7 +478,7 @@
       });
       ctx.stroke();
 
-      // 3) Точки
+      /* 3) Точки (толще линии) */
       wavePoints.forEach(p => {
         ctx.beginPath();
         ctx.arc(p.x, p.y, DOT_RADIUS, 0, Math.PI * 2);
@@ -468,13 +490,11 @@
       requestAnimationFrame(animate);
     }
 
-    // Перезапуск при ресайзе
     function onResize() {
       initDots();
     }
     window.addEventListener("resize", onResize);
 
-    // Старт
     initDots();
     animate();
   </script>
