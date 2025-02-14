@@ -3,62 +3,139 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Home | TheMarkest.art</title>
-  <meta name="description" content="Портфолио художника интерактивной и кинетической скульптуры.">
-  <meta property="og:title" content="Home | TheMarkest.art">
-  <meta property="og:description" content="Портфолио художника интерактивной и кинетической скульптуры.">
+  <title>TheMarkest.art – Портфолио художника</title>
+  <meta name="description" content="Портфолио художника, специализирующегося на интерактивной и кинетической скульптуре в стиле sci‑fi/cyberpunk.">
+  
+  <!-- Open Graph -->
+  <meta property="og:title" content="TheMarkest.art – Портфолио художника">
+  <meta property="og:description" content="Интерактивное портфолио с работами в жанре интерактивной и кинетической скульптуры.">
+  <meta property="og:image" content="images/preview.jpg">
+  <meta property="og:url" content="https://themarkest.art">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://themarkest.art/">
-  <meta property="og:image" content="/media/ARTlogo@2x.svg">
-  <link rel="icon" type="image/svg+xml" href="/media/ARTlogo@2x.svg">
-  <link rel="stylesheet" href="assets/css/style.css">
+  
+  <!-- JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Имя Художника",
+    "url": "https://themarkest.art",
+    "sameAs": [
+      "https://instagram.com/themarkest",
+      "https://t.me/markestart"
+    ],
+    "jobTitle": "Художник",
+    "description": "Портфолио художника, специализирующегося на интерактивной и кинетической скульптуре."
+  }
+  </script>
+  
+  <!-- Стили -->
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <!-- Header -->
-  <header>
-    <div class="logo">
-      <a href="/">
-        <img src="media/ARTlogo@2x.svg" alt="TheMarkest.art Logo">
-      </a>
+  <!-- Главная страница -->
+  <header id="home">
+    <div class="background">
+      <!-- Фоновое видео/анимация -->
+      <video autoplay muted loop id="bgVideo">
+        <source src="video/background.mp4" type="video/mp4">
+      </video>
+      <div class="overlay"></div>
     </div>
-    <nav>
-      <ul>
-        <li><a href="index.html">Home</a></li>
-        <li><a href="works.html">Works</a></li>
-        <li><a href="about.html">About</a></li>
-        <li><a href="contact.html">Contact</a></li>
-      </ul>
-    </nav>
-  </header>
-  
-  <!-- Main Content -->
-  <main>
-    <section class="hero">
-      <div class="hero-bg">
-        <video autoplay muted loop id="heroVideo">
-          <source src="media/hero.mp4" type="video/mp4">
-          Ваш браузер не поддерживает видео.
-        </video>
+    <div class="container">
+      <h1>TheMarkest.art</h1>
+      <p>Художник интерактивной и кинетической скульптуры</p>
+      <nav>
+        <ul>
+          <li><a href="#works">Портфолио</a></li>
+          <li><a href="#about">О художнике</a></li>
+          <li><a href="#contact">Контакты</a></li>
+        </ul>
+      </nav>
+      <div class="social">
+        <a href="https://instagram.com/themarkest" target="_blank">Instagram</a>
+        <a href="https://t.me/markestart" target="_blank">Telegram</a>
+        <!-- Дополнительные соцсети при необходимости -->
       </div>
-      <div class="hero-content">
-        <h1>TheMarkest.art</h1>
-        <p>Интерактивная и кинетическая скульптура в стиле sci‑fi cyberpunk</p>
-        <div class="social-links">
-          <a href="https://instagram.com/themarkest" target="_blank">Instagram</a>
-          <a href="https://t.me/markestart" target="_blank">Telegram</a>
+    </div>
+  </header>
+
+  <!-- Портфолио -->
+  <section id="works">
+    <div class="container">
+      <h2>Портфолио</h2>
+      <div class="grid">
+        <!-- Пример карточки работы -->
+        <article class="work-item">
+          <img src="images/work1.jpg" alt="Название работы 1" loading="lazy">
+          <div class="work-info">
+            <h3>Название работы 1</h3>
+            <p>Год создания: 2023</p>
+            <p>Краткое описание концепции работы. Использованы инновационные технологии и материалы.</p>
+            <div class="share-buttons">
+              <a href="#" title="Поделиться в Facebook">Facebook</a>
+              <a href="#" title="Поделиться в Twitter">Twitter</a>
+              <a href="#" title="Поделиться в Instagram">Instagram</a>
+              <a href="#" title="Поделиться в Telegram">Telegram</a>
+            </div>
+          </div>
+        </article>
+        <!-- Добавьте дополнительные работы аналогичным блоком -->
+      </div>
+    </div>
+  </section>
+
+  <!-- О художнике -->
+  <section id="about">
+    <div class="container">
+      <h2>О художнике</h2>
+      <div class="about-content">
+        <div class="bio">
+          <h3>Биография</h3>
+          <p>
+            <!-- Здесь вставьте подготовленный текст био -->
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus lacinia odio vitae vestibulum vestibulum.
+          </p>
+        </div>
+        <div class="artist-statement">
+          <h3>Artist Statement</h3>
+          <p>
+            <!-- Здесь вставьте подготовленный текст творческого заявления -->
+            Cras ultricies ligula sed magna dictum porta. Nulla porttitor accumsan tincidunt.
+          </p>
+        </div>
+        <div class="artist-photo">
+          <img src="images/artist.jpg" alt="Художник">
         </div>
       </div>
-    </section>
-  </main>
-  
-  <!-- Footer -->
-  <footer>
-    <p>&copy; 2025 TheMarkest.art</p>
-    <div class="theme-toggle">
-      <button id="toggleTheme">Light/Dark</button>
     </div>
-  </footer>
-  
-  <script src="assets/js/main.js"></script>
+  </section>
+
+  <!-- Контакты -->
+  <section id="contact">
+    <div class="container">
+      <h2>Контакты</h2>
+      <form action="mailto:markbogdanovofficial@gmail.com" method="post" enctype="text/plain">
+        <label for="name">Имя:</label>
+        <input type="text" id="name" name="name" required>
+        
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+        
+        <label for="message">Сообщение:</label>
+        <textarea id="message" name="message" required></textarea>
+        
+        <button type="submit">Отправить</button>
+      </form>
+      <div class="social">
+        <a href="https://instagram.com/themarkest" target="_blank">Instagram</a>
+        <a href="https://t.me/markestart" target="_blank">Telegram</a>
+        <!-- Дополнительные ссылки -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Скрипты -->
+  <script src="main.js"></script>
 </body>
 </html>
