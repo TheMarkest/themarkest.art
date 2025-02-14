@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TheMarkest.art – Sci-Fi/Cyberpunk</title>
-  <meta name="description" content="Портфолио художника, работающего в стиле sci-fi/cyberpunk с интерактивными и кинетическими скульптурами." />
+  <title>TheMarkest.art – Glitch by Habr tutorial</title>
+  <meta name="description" content="Портфолио художника в стиле sci-fi/cyberpunk, с волной, старомониторным эффектом, TextScramble и глитч-текстом как на Habr." />
 
-  <!-- Favicons (убедитесь, что файлы лежат в папке assets/favicon/) -->
+  <!-- Favicons (убедитесь, что файлы лежат в assets/favicon/) -->
   <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/apple-touch-icon.png">
   <link rel="icon" type="image/svg+xml" href="assets/favicon/favicon.svg">
   <link rel="icon" type="image/png" sizes="96x96" href="assets/favicon/favicon-96x96.png">
@@ -15,9 +15,9 @@
   <meta name="msapplication-TileColor" content="#000000">
   <meta name="theme-color" content="#000000">
 
-  <!-- ==========================
-       CSS Variables for Glitch Intensity
-  ========================== -->
+  <!-- =============
+       1) CSS-переменные для интенсивности (зависимость от мыши и скролла)
+  ============== -->
   <style>
     :root {
       --mouse-intensity: 1;
@@ -26,10 +26,9 @@
     }
   </style>
 
-  <!-- ==========================
-       OLD MONITOR EFFECT
-       (Виньетка + Скан-линии)
-  ========================== -->
+  <!-- =============
+       2) Старомониторный эффект (виньетка + скан-линии)
+  ============== -->
   <style>
     body::before {
       content: "";
@@ -39,7 +38,9 @@
       width: 100%; height: 100%;
       z-index: 9999;
       background:
+        /* Тёмная виньетка (30% → 85%) */
         radial-gradient(circle at center, rgba(0,0,0,0) 30%, rgba(0,0,0,0.85) 100%),
+        /* Лёгкий блик */
         radial-gradient(circle, rgba(255,255,255,0.05) 1%, rgba(255,255,255,0) 60%);
       background-blend-mode: multiply;
       animation: flicker 2s infinite alternate;
@@ -51,6 +52,7 @@
       top: 0; left: 0;
       width: 100%; height: 100%;
       z-index: 99999;
+      /* Широкие скан-линии: 2px полоса, 2px зазор */
       background: repeating-linear-gradient(
         0deg,
         rgba(255,255,255,0.05) 0px,
@@ -72,14 +74,12 @@
     }
   </style>
 
-  <!-- ==========================
-       BASIC RESET & BASE STYLES
-  ========================== -->
+  <!-- =============
+       3) Сброс и базовые стили
+  ============== -->
   <style>
     * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+      margin: 0; padding: 0; box-sizing: border-box;
     }
     html {
       scroll-behavior: smooth;
@@ -100,15 +100,15 @@
     }
   </style>
 
-  <!-- ==========================
-       HEADER: Wave + Content
-  ========================== -->
+  <!-- =============
+       4) Хедер: Волна + Контент
+  ============== -->
   <style>
     header {
       position: fixed;
       top: 0; left: 0;
       width: 100%;
-      height: 160px; /* Canvas height for wave */
+      height: 160px;  /* Холст для волны */
       z-index: 1000;
     }
     #waveCanvas {
@@ -120,7 +120,7 @@
       position: absolute;
       top: 0; left: 0;
       width: 100%;
-      height: 120px; /* "Официальная" высота шапки */
+      height: 120px; /* «Официальная» высота хедера */
       display: flex;
       align-items: center;
       justify-content: center;
@@ -133,54 +133,54 @@
     }
   </style>
 
-  <!-- ==========================
-       GLITCH: 4 LAYERS
-       .glitch, .glitch-before, .glitch-after, .glitch-black
-  ========================== -->
+  <!-- =============
+       5) Глитч-текст «по уроку на Хабре»
+       .glitch => псевдоэлементы ::before, ::after, content: attr(data-text)
+  ============== -->
   <style>
-    /* Все слои: position absolute, фиксированный размер 312x119,
-       т.к. ваш SVG = 312 x 119
-    */
-    .glitch, .glitch-before, .glitch-after, .glitch-black {
+    /* Контейнер glitch (по уроку https://habr.com/ru/articles/236263/) */
+    .glitch {
       position: absolute;
-      width: 312px;
-      height: 119px;
-      overflow: hidden;
-      top: 20px;  /* как в вашем фрагменте */
-      left: 20px; /* */
-      z-index: 2001; /* чтобы быть над волной */
-      display: block;
+      top: 20px; left: 20px;
+      z-index: 2001; /* Над волной */
+      font-size: 60px;
+      font-weight: 900;
+      color: #fff;
+      font-family: "Roboto Mono", monospace; /* как в статье */
       animation: glitch-skew 1s infinite linear alternate-reverse;
     }
+    /* Указываем текст через data-text, чтобы псевдоэлементы могли его скопировать */
+    .glitch::before,
+    .glitch::after {
+      content: attr(data-text);
+      position: absolute;
+      top: 0; left: 0;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0); /* по уроку */
+    }
+    /* glitch::before – смещение влево + красный/розовый */
+    .glitch::before {
+      color: #ff00c1;
+      z-index: -1;
+      text-shadow: -2px 0 #ff00c1;
+      animation: glitch-anim 2s infinite steps(2, end) alternate-reverse;
+      transform: translate(calc(-2px * var(--glitch-intensity)), 0);
+    }
+    /* glitch::after – смещение вправо + голубой */
+    .glitch::after {
+      color: #00fff9;
+      z-index: -2;
+      text-shadow: -2px 0 #00fff9;
+      animation: glitch-anim2 3s infinite steps(2, end) alternate-reverse;
+      transform: translate(calc(2px * var(--glitch-intensity)), 0);
+    }
 
-    /* glitch-before: cдвиг влево */
-    .glitch-before {
-      animation: glitch-anim 2s infinite steps(2,end) alternate-reverse;
-      left: 18px; /* чуть левее */
-    }
-    /* glitch-after: cдвиг вправо */
-    .glitch-after {
-      animation: glitch-anim2 3s infinite steps(2,end) alternate-reverse;
-      left: 22px; /* чуть правее */
-    }
-    /* glitch-black: чёрный фон + своя анимация */
-    .glitch-black {
-      background: #000;
-      animation: glitch-black 12s infinite steps(1,end) alternate-reverse;
-    }
-
-    /* Внутри каждого h1 лежит сам SVG. 
-       Убедитесь, что ваш SVG 312x119, иначе поправьте размеры.
+    /* Основные анимации, как в примере:
+       clip: rect(...) + transform: skew/translate.
+       Для упрощения steps(2,end), можно добавить больше шагов.
     */
-    .glitch svg {
-      width: 312px;
-      height: 119px;
-      display: block;
-    }
-
-    /* glitсh-anim: имитация случайных clip + skew, умножая на var(--glitch-intensity) */
     @keyframes glitch-anim {
-      0%   { clip: rect(44px,9999px,56px,0); transform: skew(calc(-2deg * var(--glitch-intensity))); }
+      0%   { clip: rect(44px,9999px,56px,0); transform: skew(-2deg); }
       10%  { clip: rect(60px,9999px,80px,0); transform: skew(calc(-2deg * var(--glitch-intensity))); }
       20%  { clip: rect(30px,9999px,40px,0); transform: skew(calc(2deg * var(--glitch-intensity))); }
       30%  { clip: rect(10px,9999px,20px,0); transform: skew(calc(-1deg * var(--glitch-intensity))); }
@@ -189,7 +189,7 @@
       100% { clip: rect(44px,9999px,56px,0); transform: skew(calc(-2deg * var(--glitch-intensity))); }
     }
     @keyframes glitch-anim2 {
-      0%   { clip: rect(40px,9999px,60px,0); transform: skew(calc(1deg * var(--glitch-intensity))); }
+      0%   { clip: rect(40px,9999px,60px,0); transform: skew(1deg); }
       10%  { clip: rect(70px,9999px,90px,0); transform: skew(calc(-3deg * var(--glitch-intensity))); }
       20%  { clip: rect(20px,9999px,30px,0); transform: skew(calc(3deg * var(--glitch-intensity))); }
       30%  { clip: rect(10px,9999px,25px,0); transform: skew(calc(-2deg * var(--glitch-intensity))); }
@@ -197,10 +197,7 @@
       50%  { clip: rect(40px,9999px,60px,0); transform: skew(calc(1deg * var(--glitch-intensity))); }
       100% { clip: rect(40px,9999px,60px,0); transform: skew(calc(1deg * var(--glitch-intensity))); }
     }
-    @keyframes glitch-black {
-      0%,100% { clip: none; transform: none; }
-      50%     { clip: rect(50px,9999px,70px,0); transform: translate(2px,0) skew(calc(-2deg * var(--glitch-intensity))); }
-    }
+    /* Лёгкая анимация skew для самого блока */
     @keyframes glitch-skew {
       0%   { transform: skew(0deg); }
       50%  { transform: skew(1deg); }
@@ -295,7 +292,6 @@
     .share-buttons a:hover {
       background: #0cc;
     }
-
     .about-content {
       display: flex;
       flex-wrap: wrap;
@@ -409,38 +405,8 @@
   <header>
     <canvas id="waveCanvas"></canvas>
     <div class="header-content">
-      <!-- Четыре слоя глитча, как в вашем SCSS:
-           glitch (основной), glitch-before, glitch-after, glitch-black.
-           Внутри каждого h1 – ваш SVG (312x119).
-      -->
-      <h1 class="glitch glitch-before">
-        <!-- КРАСНОЕ/РОЗОВОЕ ЛОГО (пример) -->
-        <svg width="312" height="119" viewBox="0 0 312 119" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="..." fill="#ff00c1"/>
-          <!-- ... ваш SVG path ... -->
-        </svg>
-      </h1>
-      <h1 class="glitch glitch-after">
-        <!-- ГОЛУБОЕ ЛОГО -->
-        <svg width="312" height="119" viewBox="0 0 312 119" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="..." fill="#00fff9"/>
-          <!-- ... -->
-        </svg>
-      </h1>
-      <h1 class="glitch">
-        <!-- ОСНОВНОЕ ЛОГО (белое/серое) -->
-        <svg width="312" height="119" viewBox="0 0 312 119" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="..." fill="#F2EAE6"/>
-          <!-- ... -->
-        </svg>
-      </h1>
-      <h1 class="glitch glitch-black">
-        <!-- ЛОГО + чёрный слой -->
-        <svg width="312" height="119" viewBox="0 0 312 119" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="..." fill="#F2EAE6"/>
-          <!-- ... -->
-        </svg>
-      </h1>
+      <!-- Глитч-текст по уроку с Habr -->
+      <h1 class="glitch" data-text="TheMarkest">TheMarkest</h1>
 
       <nav>
         <a href="#cover">Обложка</a>
@@ -461,7 +427,6 @@
 
   <!-- MAIN CONTENT -->
   <main>
-    <!-- Остальные секции -->
     <section id="works">
       <div class="container">
         <h2>Портфолио</h2>
@@ -469,7 +434,7 @@
           <article class="work-item">
             <h3>Название работы 1</h3>
             <p>Год: 2023</p>
-            <p>Краткое описание концепции...</p>
+            <p>Краткое описание концепции, технологий и материалов.</p>
             <div class="share-buttons">
               <a href="#">Facebook</a>
               <a href="#">Twitter</a>
@@ -561,8 +526,8 @@
         dots.push({
           x,
           pinned: false,
-          freq: FREQ_MIN + Math.random()*(FREQ_MAX-FREQ_MIN),
-          phase: Math.random()*Math.PI*2
+          freq: FREQ_MIN + Math.random() * (FREQ_MAX - FREQ_MIN),
+          phase: Math.random() * Math.PI * 2
         });
       }
       dots.push({ x: width, pinned: true });
