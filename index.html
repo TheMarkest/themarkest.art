@@ -6,19 +6,25 @@
   <title>TheMarkest.art – Sci-Fi/Cyberpunk</title>
   <meta name="description" content="Портфолио художника, работающего в стиле sci-fi/cyberpunk с интерактивными и кинетическими скульптурами." />
 
-  <!-- Фавиконки – проверьте пути к файлам -->
+  <!-- Фавиконки из папки assets/favicon/ -->
   <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/favicon-16x16.png">
+  <link rel="icon" type="image/svg+xml" href="assets/favicon/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="assets/favicon/favicon-96x96.png">
+  <link rel="icon" type="image/x-icon" href="assets/favicon/favicon.ico">
   <link rel="manifest" href="assets/favicon/site.webmanifest">
-  <link rel="mask-icon" href="assets/favicon/safari-pinned-tab.svg" color="#5bbad5">
   <meta name="msapplication-TileColor" content="#000000">
   <meta name="theme-color" content="#000000">
 
   <style>
     /* Сброс и базовые стили */
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
+    * {
+      margin: 0; 
+      padding: 0; 
+      box-sizing: border-box;
+    }
+    html {
+      scroll-behavior: smooth;
+    }
     body {
       font-family: "IBM Plex Sans", sans-serif;
       background: #000;
@@ -30,7 +36,9 @@
       text-decoration: none;
       transition: color 0.3s;
     }
-    a:hover { color: #0ff; }
+    a:hover {
+      color: #0ff;
+    }
 
     /* Фиксированный хедер (серый фон), высота 200px */
     header#header {
@@ -38,7 +46,7 @@
       top: 0; left: 0;
       width: 100%;
       height: 200px;
-      background: #555; /* Серый */
+      background: #555; /* Серый фон */
       z-index: 1000;
       overflow: hidden; /* Важно для clip-path */
     }
@@ -71,14 +79,17 @@
     /* Canvas для неоновой линии */
     .header-line {
       position: absolute;
-      bottom: 0; left: 0;
+      bottom: 0; 
+      left: 0;
       width: 100%;
-      height: 60px;       /* Высота холста */
-      pointer-events: none; /* Мышь не мешает */
+      height: 60px;    /* Высота холста */
+      pointer-events: none; 
     }
 
     /* Отступ сверху под хедер + канву (200 + 60 = 260) */
-    main { margin-top: 260px; }
+    main {
+      margin-top: 260px;
+    }
 
     /* Пример секций */
     section {
@@ -110,8 +121,15 @@
       transform: scale(1.02);
       box-shadow: 0 0 8px #0ff;
     }
-    .work-item h3 { margin-bottom: 0.5rem; font-size: 1.2rem; }
-    .work-item p { font-size: 0.95rem; opacity: 0.9; margin-bottom: 0.5rem; }
+    .work-item h3 {
+      margin-bottom: 0.5rem;
+      font-size: 1.2rem;
+    }
+    .work-item p {
+      font-size: 0.95rem;
+      opacity: 0.9;
+      margin-bottom: 0.5rem;
+    }
     .share-buttons {
       display: flex;
       gap: 0.5rem;
@@ -246,7 +264,7 @@
     <canvas id="header-line" class="header-line"></canvas>
   </header>
 
-  <!-- Основное содержимое, с учётом отступа сверху -->
+  <!-- Основной контент с отступом 260px (200 + 60) -->
   <main>
     <section id="works">
       <div class="container">
@@ -263,7 +281,7 @@
               <a href="#">Telegram</a>
             </div>
           </article>
-          <!-- Добавьте больше работ, если нужно -->
+          <!-- Можно добавить другие работы -->
         </div>
       </div>
     </section>
@@ -313,29 +331,28 @@
     </div>
   </footer>
 
-  <!-- ===== Скрипт анимации: полигон (clip-path) + неоновая линия + более толстые точки ===== -->
+  <!-- Скрипт анимации: полигон (clip-path) + неоновая линия + чуть толще точки -->
   <script>
     const header = document.getElementById("header");
     const canvas = document.getElementById("header-line");
     const ctx = canvas.getContext("2d");
 
-    // Параметры
-    const HEADER_HEIGHT = 200;     // высота хедера
-    const CANVAS_HEIGHT = 60;      // высота холста
-    const DOT_SPACING = 40;        // шаг между точками по оси X
-    const AMPLITUDE_MIN = 5;       // минимальная амплитуда
-    const AMPLITUDE_MAX = 15;      // максимальная амплитуда
-    const FREQ_MIN = 0.03;         // минимальная частота
-    const FREQ_MAX = 0.10;         // максимальная частота
-    const LINE_WIDTH = 2;          // толщина неоновой линии
-    const DOT_RADIUS = 4;          // радиус точек (чуть толще линии)
+    // ПАРАМЕТРЫ
+    const HEADER_HEIGHT = 200;   // высота хедера
+    const CANVAS_HEIGHT = 60;    // высота холста
+    const DOT_SPACING = 40;      // шаг между точками
+    const AMPLITUDE_MIN = 5;     
+    const AMPLITUDE_MAX = 15;
+    const FREQ_MIN = 0.03;
+    const FREQ_MAX = 0.10;
+    const LINE_WIDTH = 2;        // толщина неоновой линии
+    const DOT_RADIUS = 4;        // точки чуть толще линии
 
-    // Массив точек
     let dots = [];
     let width = 0;
     let time = 0;
 
-    // Функция масштабирования (map)
+    // mapRange для преобразования диапазонов
     function mapRange(value, inMin, inMax, outMin, outMax) {
       return (value - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
     }
@@ -360,23 +377,19 @@
     function animate() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Считаем координаты Y для каждой точки
-      // y в пределах [HEADER_HEIGHT - amplitude.. HEADER_HEIGHT + amplitude]
+      // Координаты для clip-path
       const bottomPoints = dots.map(dot => {
         const wave = dot.amplitude * Math.sin(dot.x * dot.frequency + time + dot.phase);
         const y = HEADER_HEIGHT + wave; 
         return { x: dot.x, y };
       });
 
-      // Построение polygon для clip-path:
-      // начинаем с (0,0) -> (width,0) -> bottomPoints (в обратном порядке) -> замыкаем
+      // polygon: (0% 0%) -> (100% 0%) -> bottomPoints (обратно) -> замыкание
       let polyPoints = ["0% 0%", "100% 0%"];
       for (let i = bottomPoints.length - 1; i >= 0; i--) {
         const p = bottomPoints[i];
-        // Преобразуем в проценты
+        // Преобразуем в проценты относительно HEADER_HEIGHT
         const xPerc = ((p.x / width) * 100).toFixed(2) + "%";
-        // Смещение от верхнего края хедера
-        // p.y может быть от (200 - 15) до (200 + 15) => [185..215]
         const yPerc = ((p.y / HEADER_HEIGHT) * 100).toFixed(2) + "%";
         polyPoints.push(`${xPerc} ${yPerc}`);
       }
@@ -389,12 +402,10 @@
 
       dots.forEach((dot, i) => {
         const wave = dot.amplitude * Math.sin(dot.x * dot.frequency + time + dot.phase);
-        // polyY = 200 + wave => диапазон [185..215]
+        // polyY ~ [200 - 15.. 200 + 15] => [185..215]
         const polyY = HEADER_HEIGHT + wave;
-        // Преобразуем [185..215] → [0.. CANVAS_HEIGHT]
-        // Чтобы линия точно совпадала с нижней границей
+        // Переводим [185..215] => [0..CANVAS_HEIGHT]
         const cy = mapRange(polyY, HEADER_HEIGHT - AMPLITUDE_MAX, HEADER_HEIGHT + AMPLITUDE_MAX, 0, CANVAS_HEIGHT);
-
         if (i === 0) {
           ctx.moveTo(dot.x, cy);
         } else {
@@ -403,7 +414,7 @@
       });
       ctx.stroke();
 
-      // Рисуем точки (толще, чем линия)
+      // Точки
       dots.forEach(dot => {
         const wave = dot.amplitude * Math.sin(dot.x * dot.frequency + time + dot.phase);
         const polyY = HEADER_HEIGHT + wave;
@@ -419,13 +430,13 @@
       requestAnimationFrame(animate);
     }
 
-    // Инициализация и перезапуск при ресайзе
+    // Обработка ресайза
     function onResize() {
       initDots();
     }
     window.addEventListener("resize", onResize);
 
-    // Запуск
+    // Старт
     initDots();
     animate();
   </script>
