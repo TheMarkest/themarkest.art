@@ -6,7 +6,7 @@
   <title>TheMarkest.art – Sci-Fi/Cyberpunk</title>
   <meta name="description" content="Портфолио художника, работающего в стиле sci-fi/cyberpunk с интерактивными и кинетическими скульптурами." />
 
-  <!-- Подключение фавиконок (проверьте, что файлы лежат в assets/favicon/) -->
+  <!-- Подключение фавиконок (убедитесь, что файлы лежат в assets/favicon/) -->
   <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/favicon-16x16.png">
@@ -21,7 +21,7 @@
     html { scroll-behavior: smooth; }
     body {
       font-family: "IBM Plex Sans", sans-serif;
-      background: #000;
+      background: #000; /* Всё ниже сепаратора – чисто чёрный */
       color: #fff;
       line-height: 1.5;
     }
@@ -38,23 +38,19 @@
       padding: 2rem 1rem;
     }
 
-    /* ===== ШАПКА ===== */
+    /* ===== ШАПКА (Header) – слегка серый фон ===== */
     header {
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
+      background: #555;  /* слегка серый фон */
+      padding: 1rem 0;
       text-align: center;
-      background: linear-gradient(130deg, #111, #333);
       position: relative;
     }
     /* Логотип */
-    .logo-container { margin-bottom: 1rem; }
-    .logo { width: 120px; height: auto; }
-    /* Глитч-эффект заголовка */
+    .logo-container { margin-bottom: 0.5rem; }
+    .logo { width: 100px; height: auto; }
+    /* Заголовок с глитч-эффектом */
     .glitch {
-      font-size: 3rem;
+      font-size: 2rem;
       text-transform: uppercase;
       color: #0ff;
       position: relative;
@@ -79,23 +75,23 @@
     }
     @keyframes glitch-top {
       0% { clip: rect(0, 9999px, 0, 0); }
-      15% { clip: rect(20px, 9999px, 60px, 0); transform: translate(-2px, -2px); }
+      15% { clip: rect(10px, 9999px, 40px, 0); transform: translate(-2px, -2px); }
       30% { clip: rect(0, 9999px, 0, 0); transform: translate(0, 0); }
-      45% { clip: rect(10px, 9999px, 70px, 0); transform: translate(-5px, -3px); }
+      45% { clip: rect(5px, 9999px, 50px, 0); transform: translate(-4px, -3px); }
       100% { clip: rect(0, 9999px, 0, 0); }
     }
     @keyframes glitch-bottom {
       0% { clip: rect(0, 9999px, 0, 0); }
-      15% { clip: rect(40px, 9999px, 90px, 0); transform: translate(2px, 2px); }
+      15% { clip: rect(20px, 9999px, 60px, 0); transform: translate(2px, 2px); }
       30% { clip: rect(0, 9999px, 0, 0); transform: translate(0, 0); }
-      45% { clip: rect(60px, 9999px, 90px, 0); transform: translate(5px, 3px); }
+      45% { clip: rect(15px, 9999px, 55px, 0); transform: translate(4px, 3px); }
       100% { clip: rect(0, 9999px, 0, 0); }
     }
-    .subtitle { margin-top: 1rem; font-size: 1.2rem; opacity: 0.85; }
+    .subtitle { margin-top: 0.5rem; font-size: 1rem; opacity: 0.85; }
     nav {
-      margin-top: 2rem;
+      margin-top: 0.8rem;
       display: flex;
-      gap: 2rem;
+      gap: 1.5rem;
       justify-content: center;
     }
     nav a {
@@ -105,23 +101,24 @@
     }
     nav a:hover { border-bottom: 1px solid #0ff; }
     .social-links {
-      margin-top: 2rem;
+      margin-top: 0.8rem;
       display: flex;
       gap: 1rem;
       justify-content: center;
     }
     .social-links a {
-      padding: 0.4rem 0.8rem;
+      padding: 0.3rem 0.6rem;
       background: rgba(255, 255, 255, 0.1);
       border-radius: 4px;
       font-weight: 600;
     }
     .social-links a:hover { background: rgba(0, 255, 255, 0.2); }
 
-    /* ===== СЕКЦИЯ С СЕПАРАТОРОМ ПОСЛЕ ШАПКИ ===== */
+    /* ===== Сепаратор – анимированная линия ===== */
     .separator-container {
       width: 100%;
       height: 50px;
+      /* Контейнер сепаратора располагается сразу под шапкой и имеет фон чисто черного цвета */
       background: #000;
     }
     canvas.separator {
@@ -130,9 +127,17 @@
       height: 100%;
     }
 
-    /* ===== Остальные секции ===== */
-    section#works { background: #111; padding: 4rem 0; }
-    #works h2 { text-align: center; font-size: 2rem; margin-bottom: 2rem; text-transform: uppercase; }
+    /* ===== Остальные секции – фон чисто черный ===== */
+    section {
+      background: #000;
+      padding: 4rem 0;
+    }
+    h2 {
+      text-align: center;
+      font-size: 2rem;
+      margin-bottom: 2rem;
+      text-transform: uppercase;
+    }
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -169,8 +174,6 @@
     }
     .share-buttons a:hover { background: #0cc; }
 
-    section#about { background: #000; padding: 4rem 0; }
-    #about h2 { text-align: center; font-size: 2rem; margin-bottom: 2rem; text-transform: uppercase; }
     .about-content {
       display: flex;
       flex-wrap: wrap;
@@ -202,8 +205,6 @@
       background: #111;
     }
 
-    section#contact { background: #111; padding: 4rem 0; }
-    #contact h2 { text-align: center; font-size: 2rem; margin-bottom: 2rem; text-transform: uppercase; }
     form {
       display: flex;
       flex-direction: column;
@@ -246,7 +247,6 @@
       border-radius: 4px;
     }
 
-    /* ===== ФУТЕР ===== */
     footer {
       background: #000;
       padding: 2rem 0;
@@ -254,7 +254,6 @@
       font-size: 0.9rem;
     }
 
-    /* ===== АДАПТИВНОСТЬ ===== */
     @media (max-width: 768px) {
       nav { flex-wrap: wrap; gap: 1rem; }
       .about-content { flex-direction: column; align-items: flex-start; }
@@ -263,7 +262,7 @@
 </head>
 <body>
 
-  <!-- ШАПКА -->
+  <!-- ШАПКА с меню -->
   <header id="home">
     <div class="logo-container">
       <img src="assets/logo.svg" alt="TheMarkest.art Logo" class="logo" />
@@ -281,7 +280,7 @@
     </div>
   </header>
 
-  <!-- Сепаратор под шапкой -->
+  <!-- Сепаратор – линия, отделяющая серую шапку от чёрного фона -->
   <div class="separator-container">
     <canvas id="separator-top" class="separator"></canvas>
   </div>
@@ -346,7 +345,7 @@
     </div>
   </section>
 
-  <!-- ФУТЕР -->
+  <!-- ФУТЕР с сепаратором сверху -->
   <div class="separator-container">
     <canvas id="separator-footer" class="separator"></canvas>
   </div>
@@ -369,7 +368,7 @@
       const dotSpacing = 40;  // Интервал между точками
       const speed = 0.5;
       
-      // Для каждого "участка" линии задаём случайные амплитуду и частоту
+      // Для каждой точки генерируем случайные амплитуду и частоту
       let dots = [];
       for (let x = 0; x <= width; x += dotSpacing) {
         dots.push({
@@ -419,11 +418,11 @@
       draw();
     }
     
-    // Инициализируем анимацию для верхнего и нижнего сепараторов
+    // Инициализируем анимацию сепараторов
     animateSeparator("separator-top");
     animateSeparator("separator-footer");
     
-    // Обновляем размеры канвы при изменении окна
+    // Обновление размеров канвы при изменении окна
     window.addEventListener("resize", () => {
       ["separator-top", "separator-footer"].forEach(id => {
         const canvas = document.getElementById(id);
