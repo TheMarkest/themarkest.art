@@ -118,7 +118,7 @@
     }
     .social-links a:hover { background: rgba(0, 255, 255, 0.2); }
 
-    /* ===== СЕКЦИЯ С СЕКРАТОР ПОСЛЕ ШАПКИ ===== */
+    /* ===== СЕКЦИЯ С СЕПАРАТОРОМ ПОСЛЕ ШАПКИ ===== */
     .separator-container {
       width: 100%;
       height: 50px;
@@ -302,7 +302,6 @@
             <a href="#" title="Поделиться в Telegram">Telegram</a>
           </div>
         </article>
-        <!-- Дополнительные работы можно добавить аналогичным блоком -->
       </div>
     </div>
   </section>
@@ -348,7 +347,6 @@
   </section>
 
   <!-- ФУТЕР -->
-  <!-- Сепаратор над футером -->
   <div class="separator-container">
     <canvas id="separator-footer" class="separator"></canvas>
   </div>
@@ -364,17 +362,17 @@
       const canvas = document.getElementById(canvasId);
       if (!canvas) return;
       const ctx = canvas.getContext("2d");
-      // Устанавливаем размеры канвы равными размеру элемента
       let width = canvas.width = canvas.offsetWidth;
       let height = canvas.height = canvas.offsetHeight;
       
+      // Увеличиваем интервал между точками для уменьшения их количества
       const dotRadius = 3;
-      const dotSpacing = 20;
+      const dotSpacing = 40;  // раньше было 20
       const speed = 0.5;
       const frequency = 0.05;
       const amplitude = 10;
       
-      // Инициализация точек вдоль горизонтали
+      // Инициализация точек
       let dots = [];
       for (let x = 0; x <= width; x += dotSpacing) {
         dots.push({ x: x });
@@ -383,18 +381,33 @@
       let time = 0;
       function draw() {
         ctx.clearRect(0, 0, width, height);
+        ctx.strokeStyle = "#0ff";
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        // Рисуем соединяющую линию через точки
+        dots.forEach((dot, index) => {
+          let y = height / 2 + amplitude * Math.sin(dot.x * frequency + time);
+          if(index === 0) {
+            ctx.moveTo(dot.x, y);
+          } else {
+            ctx.lineTo(dot.x, y);
+          }
+        });
+        ctx.stroke();
+        
+        // Рисуем сами точки
         ctx.fillStyle = "#0ff";
         dots.forEach(dot => {
-          // По синусоиде для "ломаной" линии
           let y = height / 2 + amplitude * Math.sin(dot.x * frequency + time);
           ctx.beginPath();
           ctx.arc(dot.x, y, dotRadius, 0, Math.PI * 2);
           ctx.fill();
         });
-        // Анимация: движение точек по горизонтали
+        
+        // Обновляем позиции точек
         dots.forEach(dot => {
           dot.x += speed;
-          if (dot.x - dotRadius > width) {
+          if(dot.x - dotRadius > width) {
             dot.x = -dotRadius;
           }
         });
@@ -404,11 +417,11 @@
       draw();
     }
     
-    // Инициализируем анимацию для обоих сепараторов
+    // Инициализируем анимацию сепараторов
     animateSeparator("separator-top");
     animateSeparator("separator-footer");
     
-    // При изменении размеров окна обновляем размеры канвы
+    // Обновление размеров канвы при изменении окна
     window.addEventListener("resize", () => {
       ["separator-top", "separator-footer"].forEach(id => {
         const canvas = document.getElementById(id);
