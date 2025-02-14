@@ -6,7 +6,7 @@
   <title>TheMarkest.art – Sci-Fi/Cyberpunk</title>
   <meta name="description" content="Портфолио художника, работающего в стиле sci-fi/cyberpunk с интерактивными и кинетическими скульптурами." />
 
-  <!-- Фавиконки -->
+  <!-- Фавиконки (убедитесь, что файлы лежат в assets/favicon/) -->
   <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/apple-touch-icon.png">
   <link rel="icon" type="image/svg+xml" href="assets/favicon/favicon.svg">
   <link rel="icon" type="image/png" sizes="96x96" href="assets/favicon/favicon-96x96.png">
@@ -15,21 +15,23 @@
   <meta name="msapplication-TileColor" content="#000000">
   <meta name="theme-color" content="#000000">
 
-  <!-- SVG-фильтр для глитч-эффекта логотипа (как в CodePen eriswhalesea) -->
+  <!-- SVG-фильтр для постоянного глитч-эффекта на логотипе (из CodePen eriswhalesea/pen/ZELPmNy) -->
   <svg xmlns="http://www.w3.org/2000/svg" style="display:none;">
     <defs>
       <filter id="glitchFilter">
-        <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="2" result="noise">
-          <animate attributeName="baseFrequency" values="0.02;0.06;0.02" dur="3s" repeatCount="indefinite" />
+        <feTurbulence type="fractalNoise" baseFrequency="0.01" numOctaves="5" result="warp">
+          <!-- Анимация изменения baseFrequency для непрерывного "жидкого" движения -->
+          <animate attributeName="baseFrequency" values="0.01;0.03;0.01" dur="6s" repeatCount="indefinite"/>
         </feTurbulence>
-        <feDisplacementMap in="SourceGraphic" in2="noise" scale="20" xChannelSelector="R" yChannelSelector="G"/>
+        <!-- scale=50 даёт сильное искажение; уменьшите до 20 или 10 при необходимости -->
+        <feDisplacementMap in="SourceGraphic" in2="warp" scale="50" xChannelSelector="R" yChannelSelector="B" />
       </filter>
     </defs>
   </svg>
 
   <style>
     /* ==========================
-       1) Эффект «старого монитора»
+       1) Эффект «старого монитора» (виньетка + скан-линии)
     ========================== */
     body::before {
       content: "";
@@ -39,8 +41,18 @@
       width: 100%; height: 100%;
       z-index: 9999;
       background:
-        radial-gradient(circle at center, rgba(0,0,0,0) 40%, rgba(0,0,0,0.7) 100%),
-        radial-gradient(circle, rgba(255,255,255,0.05) 1%, rgba(255,255,255,0) 60%);
+        /* Тёмная виньетка */
+        radial-gradient(
+          circle at center, 
+          rgba(0,0,0,0) 40%, 
+          rgba(0,0,0,0.7) 100%
+        ),
+        /* Лёгкий белый блик в центре */
+        radial-gradient(
+          circle, 
+          rgba(255,255,255,0.05) 1%, 
+          rgba(255,255,255,0) 60%
+        );
       background-blend-mode: multiply;
       animation: flicker 2.5s infinite ease-in-out alternate;
     }
@@ -85,7 +97,7 @@
     a:hover { color: #0ff; }
 
     /* ==========================
-       3) Хедер: волна + логотип/меню
+       3) Хедер (волна + логотип/меню)
     ========================== */
     header {
       position: fixed;
@@ -103,7 +115,7 @@
       position: absolute;
       top: 0; left: 0;
       width: 100%;
-      height: 120px; /* «Официальная» высота хедера */
+      height: 120px; /* «Официальная» высота шапки */
       display: flex;
       align-items: center;
       justify-content: center;
@@ -116,7 +128,7 @@
     .logo {
       width: 80px;
       height: auto;
-      /* Применяем глитч-эффект */
+      /* Применяем постоянный глитч-эффект */
       filter: url(#glitchFilter);
     }
     nav a {
@@ -127,12 +139,12 @@
 
     /* ==========================
        4) Блок обложки (Cover)
-       Занимает всю высоту экрана (без отступа)
+       Занимает всю высоту экрана
     ========================== */
     #cover {
       position: relative;
       width: 100%;
-      min-height: 100vh;
+      min-height: 100vh; /* на всю высоту экрана */
       background: url("https://picsum.photos/1600/900?grayscale") center/cover no-repeat;
       display: flex;
       align-items: center;
@@ -170,6 +182,7 @@
       margin-bottom: 2rem;
       text-transform: uppercase;
     }
+    /* Сетка (портфолио) */
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -258,7 +271,10 @@
       max-width: 500px;
       margin: 0 auto;
     }
-    form label { font-weight: 600; margin-bottom: 0.3rem; }
+    form label {
+      font-weight: 600;
+      margin-bottom: 0.3rem;
+    }
     form input, form textarea {
       padding: 0.6rem;
       border: 1px solid #333;
@@ -301,21 +317,22 @@
 
     /* ==========================
        7) Эффект появления текста (TextScramble)
-          будет запускаться при скролле через IntersectionObserver
+          (замедлен) + запуск при скролле
     ========================== */
     .scramble-text {
       display: inline-block;
-      opacity: 0;
+      opacity: 0; /* Изначально скрыт */
     }
   </style>
 </head>
 <body>
 
-  <!-- ХЕДЕР: Canvas с волной + Логотип (с глитч-эффектом) и меню -->
+  <!-- Хедер (волна + логотип с глитч-эффектом) -->
   <header>
     <canvas id="waveCanvas"></canvas>
     <div class="header-content">
       <div class="logo-container">
+        <!-- Логотип с постоянным "жидким" глитчем -->
         <img src="assets/logo.svg" alt="TheMarkest.art Logo" class="logo" />
       </div>
       <nav>
@@ -327,17 +344,15 @@
     </div>
   </header>
 
-  <!-- ОБЛОЖКА: Фоновое изображение занимает всю высоту экрана -->
+  <!-- Блок обложки (Cover) -->
   <section id="cover">
     <div class="cover-content">
       <h2>Обложка сайта</h2>
-      <p>
-        Здесь можно разместить слоган или вводную информацию о проекте.
-      </p>
+      <p>Здесь можно разместить вводную информацию о проекте.</p>
     </div>
   </section>
 
-  <!-- ОСНОВНОЙ КОНТЕНТ -->
+  <!-- Основной контент -->
   <main>
     <section id="works">
       <div class="container">
@@ -346,7 +361,7 @@
           <article class="work-item">
             <h3>Название работы 1</h3>
             <p>Год: 2023</p>
-            <p>Краткое описание концепции. Технологии, материалы и уникальные особенности.</p>
+            <p>Короткое описание концепции, технологии и материалы.</p>
             <div class="share-buttons">
               <a href="#">Facebook</a>
               <a href="#">Twitter</a>
@@ -365,13 +380,13 @@
           <div class="bio">
             <h3>Биография</h3>
             <p class="scramble-text">
-              Здесь вставьте реальный текст биографии, который появится постепенно при прокрутке.
+              Здесь вставьте реальный текст биографии, который будет постепенно появляться при скролле.
             </p>
           </div>
           <div class="artist-statement">
             <h3>Artist Statement</h3>
             <p class="scramble-text">
-              Опишите вашу философию, что вы хотите донести до зрителя. Этот текст появится с эффектом.
+              Опишите вашу философию, что вы хотите донести до зрителя. Эффект запускается при достижении зоны видимости.
             </p>
           </div>
           <div class="artist-photo">
@@ -407,10 +422,9 @@
     </div>
   </footer>
 
-  <!-- ==========================
-       Скрипт: Волна на canvas
-  ========================== -->
+  <!-- Скрипты: Волна + Scramble-текст (IntersectionObserver) -->
   <script>
+    /* === 1) Волна (canvas) === */
     const canvas = document.getElementById("waveCanvas");
     const ctx = canvas.getContext("2d");
 
@@ -455,6 +469,7 @@
         return { x: dot.x, y: BASELINE + wave };
       });
 
+      // Полигон сверху
       ctx.beginPath();
       ctx.moveTo(0, 0);
       wavePoints.forEach(p => ctx.lineTo(p.x, p.y));
@@ -463,15 +478,17 @@
       ctx.fillStyle = HEADER_BG_COLOR;
       ctx.fill();
 
+      // Неоновая линия
       ctx.beginPath();
       ctx.strokeStyle = "#0ff";
       ctx.lineWidth = LINE_WIDTH;
       wavePoints.forEach((p, i) => {
-        if (i === 0) ctx.moveTo(p.x, p.y);
+        if (i===0) ctx.moveTo(p.x, p.y);
         else ctx.lineTo(p.x, p.y);
       });
       ctx.stroke();
 
+      // Точки
       wavePoints.forEach(p => {
         ctx.beginPath();
         ctx.arc(p.x, p.y, DOT_RADIUS, 0, Math.PI * 2);
@@ -489,12 +506,9 @@
     window.addEventListener("resize", onResize);
     initDots();
     animateWave();
-  </script>
 
-  <!-- ==========================
-       Скрипт: TextScramble (эффект появления текста при скролле)
-  ========================== -->
-  <script>
+
+    /* === 2) Scramble-текст (замедленный) при скролле === */
     class TextScramble {
       constructor(el) {
         this.el = el;
@@ -503,22 +517,22 @@
       }
       setText(newText) {
         const oldText = this.el.innerText || "";
-        const length = Math.max(oldText.length, newText.length);
+        const length  = Math.max(oldText.length, newText.length);
         return new Promise(resolve => {
           const queue = [];
-          for (let i = 0; i < length; i++) {
-            const from = oldText[i] || "";
-            const to = newText[i] || "";
-            // Увеличиваем диапазон для замедления эффекта
-            const start = Math.floor(Math.random() * 40);
-            const end = start + Math.floor(Math.random() * 40);
+          for (let i=0; i<length; i++) {
+            const from  = oldText[i] || "";
+            const to    = newText[i] || "";
+            // Увеличиваем диапазон для более медленного эффекта
+            const start = Math.floor(Math.random()*40);
+            const end   = start + Math.floor(Math.random()*40);
             queue.push({ from, to, start, end, char: null });
           }
           let frame = 0;
           const update = () => {
             let output = "";
             let complete = 0;
-            for (let i = 0; i < length; i++) {
+            for (let i=0; i<length; i++) {
               let { from, to, start, end, char } = queue[i];
               if (frame >= end) {
                 complete++;
@@ -528,13 +542,13 @@
                   char = this.randomChar();
                   queue[i].char = char;
                 }
-                output += `<span class="dud">${char}</span>`;
+                output += char;
               } else {
                 output += from;
               }
             }
-            this.el.innerHTML = output;
-            if (complete === queue.length) {
+            this.el.innerText = output;
+            if (complete === length) {
               resolve();
             } else {
               requestAnimationFrame(update);
@@ -549,23 +563,28 @@
       }
     }
 
-    // Используем IntersectionObserver для запуска эффекта появления текста при скролле
+    // IntersectionObserver: эффект запускается при попадании <p> в зону видимости
     window.addEventListener('load', () => {
       const paragraphs = document.querySelectorAll('p');
       paragraphs.forEach(p => {
         p.dataset.scrambleText = p.innerText;
-        p.innerText = "";
+        p.innerText = ""; // Изначально очищаем
       });
+
       const observer = new IntersectionObserver((entries, obs) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
             const el = entry.target;
+            // Запускаем анимацию
             const fx = new TextScramble(el);
-            fx.setText(el.dataset.scrambleText);
-            obs.unobserve(el);
+            fx.setText(el.dataset.scrambleText).then(() => {
+              // После завершения убираем наблюдатель
+              obs.unobserve(el);
+            });
           }
         });
       }, { threshold: 0.2 });
+
       paragraphs.forEach(p => observer.observe(p));
     });
   </script>
