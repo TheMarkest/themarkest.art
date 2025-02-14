@@ -16,10 +16,36 @@
   <meta name="theme-color" content="#000000">
 
   <style>
-    /* ===== СБРОС И БАЗОВЫЕ СТИЛИ ===== */
+    /* ===== Эффект «старого монитора» (скан-линии, мерцание) ===== */
+    /* Взято из CodePen https://codepen.io/t0k3n/pen/ebdgNp (упрощённая версия) */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      /* Поверх всего накладываем повторяющийся радиальный градиент */
+      background: repeating-radial-gradient(
+        rgba(255,255,255,0.03) 0px, 
+        rgba(255,255,255,0.03) 2px, 
+        transparent 2px, 
+        transparent 100px
+      );
+      mix-blend-mode: lighten; 
+      opacity: 0.04; 
+      animation: flicker 2.5s infinite ease-in-out alternate;
+      z-index: 999999; /* Самый верх */
+    }
+
+    @keyframes flicker {
+      0%, 100%   { opacity: 0.04; }
+      50%        { opacity: 0.06; }
+    }
+
+    /* ===== Сброс и базовые стили ===== */
     * {
-      margin: 0;
-      padding: 0;
+      margin: 0; 
+      padding: 0; 
       box-sizing: border-box;
     }
     html {
@@ -30,6 +56,9 @@
       background: #000; /* Чёрный фон страницы */
       color: #fff;
       line-height: 1.5;
+      /* Для «монохромного» вида можно включить:
+         color: #0f0; background: #000; 
+         Но оставим классический белый на чёрном. */
     }
     a {
       color: inherit;
@@ -40,44 +69,35 @@
       color: #0ff;
     }
 
-    /* ===== ОБЩАЯ СХЕМА ШАПКИ =====
-       1) header-bg: холст + полупрозрачная заливка
-       2) header-content: лого и меню поверх неё
-    */
+    /* ===== ШАПКА ===== */
+    /* Вся шапка – это canvas + лого/меню поверх */
     header {
       position: fixed;
       top: 0; left: 0;
       width: 100%;
+      height: 160px;   /* Высота холста */
       z-index: 1000;
     }
-    /* Высота "фона" шапки – побольше, чтобы вместить амплитуду */
-    .header-bg {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%;
-      height: 160px; /* Можно увеличить, если амплитуда ещё больше */
-      pointer-events: none; /* Чтобы мышь не мешала */
-      z-index: 1000;
-    }
-    /* Внутри header-bg лежит <canvas>, где рисуем полупрозрачный фон + волну */
+
+    /* Canvas с серой заливкой и волной */
     #waveCanvas {
       display: block;
       width: 100%;
       height: 100%;
     }
 
-    /* Слой с логотипом и меню – поверх canvas */
+    /* Слой с логотипом и меню (поверх canvas) */
     .header-content {
-      position: fixed;
+      position: absolute;
       top: 0; left: 0;
       width: 100%;
-      height: 130px; /* "Официальная" высота шапки (logo + menu) */
-      z-index: 1001; /* Выше canvas */
+      height: 120px;  /* «Официальная» высота хедера */
       display: flex;
       align-items: center;
-      justify-content: center; /* Для меню по центру */
+      justify-content: center;
+      z-index: 10;    /* Выше, чем холст */
     }
-    /* Лого слева */
+    /* Логотип слева */
     .logo-container {
       position: absolute;
       left: 20px;
@@ -93,14 +113,12 @@
       color: #fff;
     }
 
-    /* ОТСТУП ДЛЯ ОСНОВНОГО КОНТЕНТА
-       130px (высота header-content) + ещё запас (например 30px),
-       т.к. холст 160px, но часть может быть "холостая" над волной */
+    /* Отступ под контент: ~160px (высота холста) */
     main {
       margin-top: 160px;
     }
 
-    /* ===== ПРИМЕР СЕКЦИЙ ===== */
+    /* ===== Пример секций ===== */
     section {
       padding: 4rem 0;
       background: #000;
@@ -157,7 +175,7 @@
       background: #0cc;
     }
 
-    /* Секция "О художнике" */
+    /* О художнике */
     .about-content {
       display: flex;
       flex-wrap: wrap;
@@ -257,13 +275,9 @@
 </head>
 <body>
 
+  <!-- ШАПКА: Canvas + Слой с логотипом и меню -->
   <header>
-    <!-- 1) Холст с полупрозрачным серым фоном и волной -->
-    <div class="header-bg">
-      <canvas id="waveCanvas"></canvas>
-    </div>
-
-    <!-- 2) Слой с логотипом и меню -->
+    <canvas id="waveCanvas"></canvas>
     <div class="header-content">
       <div class="logo-container">
         <img src="assets/logo.svg" alt="TheMarkest.art Logo" class="logo" />
@@ -276,7 +290,7 @@
     </div>
   </header>
 
-  <!-- Основной контент смещён на 160px -->
+  <!-- Основной контент, смещённый на 160px (высота холста) -->
   <main>
     <section id="works">
       <div class="container">
@@ -343,35 +357,35 @@
     </div>
   </footer>
 
-  <!-- Скрипт: рисуем полупрозрачную заливку и волну -->
+  <!-- Скрипт: рисуем полупрозрачную заливку и неоновую волну внизу -->
   <script>
     const canvas = document.getElementById("waveCanvas");
     const ctx = canvas.getContext("2d");
 
-    const BG_WIDTH = () => canvas.offsetWidth;
-    const BG_HEIGHT = () => canvas.offsetHeight;
-
-    // ПАРАМЕТРЫ ВОЛНЫ
-    const BASELINE = 130; // «нижняя граница» заливки (где волна)
-    const AMPLITUDE = 15; // ±15px
-    const DOT_SPACING = 40;
-    const FREQ_MIN = 0.03;
-    const FREQ_MAX = 0.08;
-    const LINE_WIDTH = 2;
-    const DOT_RADIUS = 4;
-
+    let width, height;
     let time = 0;
     let dots = [];
-    let width = 0, height = 0;
 
+    // ПАРАМЕТРЫ ВОЛНЫ
+    const CANVAS_HEIGHT = () => canvas.offsetHeight; 
+    const CANVAS_WIDTH  = () => canvas.offsetWidth;
+    const BASELINE      = 120;  // «Линия» в нижней части холста
+    const AMPLITUDE     = 15;   // Волна ±15 px
+    const DOT_SPACING   = 40;   // Шаг точек
+    const FREQ_MIN      = 0.03;
+    const FREQ_MAX      = 0.08;
+    const LINE_WIDTH    = 2;
+    const DOT_RADIUS    = 4;
+
+    // Создаём точки, крайние «прибиты» на уровне BASELINE
     function initDots() {
-      width = BG_WIDTH();
-      height = BG_HEIGHT();
-      canvas.width = width;
+      width  = CANVAS_WIDTH();
+      height = CANVAS_HEIGHT();
+      canvas.width  = width;
       canvas.height = height;
       dots = [];
 
-      // Левая «прибитая» точка (x=0,y=BASELINE)
+      // Левая точка
       dots.push({ x: 0, pinned: true });
 
       // Промежуточные точки
@@ -384,16 +398,14 @@
         });
       }
 
-      // Правая «прибитая» точка (x=width,y=BASELINE)
+      // Правая точка
       dots.push({ x: width, pinned: true });
     }
 
     function animate() {
       ctx.clearRect(0, 0, width, height);
 
-      // Собираем координаты волны
-      // pinned => y=BASELINE
-      // иначе => y=BASELINE + sin(...)
+      // Волна: pinned => y=BASELINE, иначе => BASELINE + sin(...)
       const wavePoints = dots.map(dot => {
         if (dot.pinned) {
           return { x: dot.x, y: BASELINE };
@@ -403,30 +415,22 @@
         }
       });
 
-      // 1) РИСУЕМ ПОЛУПРОЗРАЧНУЮ ЗАЛИВКУ
-      // Идея: от (0,0) до (width,0), потом волна (в прямом порядке),
-      //       затем опускаемся до (width,height) и (0,height).
-      // Всё, что выше волны, будет залито серым, а ниже волны – прозрачно.
+      // 1) Рисуем полупрозрачную заливку СВЕРХУ ДО волны
+      //    От (0,0) → (width,0) → wavePoints → closePath
       ctx.beginPath();
       ctx.moveTo(0, 0);
       ctx.lineTo(width, 0);
-
-      wavePoints.forEach((p) => {
-        ctx.lineTo(p.x, p.y);
-      });
-
-      ctx.lineTo(width, height);
-      ctx.lineTo(0, height);
+      wavePoints.forEach(p => ctx.lineTo(p.x, p.y));
       ctx.closePath();
 
-      ctx.fillStyle = "rgba(85, 85, 85, 0.8)"; // Полупрозрачный серый
+      // Полупрозрачный серый цвет
+      ctx.fillStyle = "rgba(85, 85, 85, 0.8)";
       ctx.fill();
 
-      // 2) РИСУЕМ НЕОНОВУЮ ЛИНИЮ ПОВЕРХ ЗАЛИВКИ
+      // 2) Рисуем неоновую линию по тем же точкам
       ctx.beginPath();
       ctx.strokeStyle = "#0ff";
       ctx.lineWidth = LINE_WIDTH;
-
       wavePoints.forEach((p, i) => {
         if (i === 0) {
           ctx.moveTo(p.x, p.y);
@@ -436,8 +440,8 @@
       });
       ctx.stroke();
 
-      // 3) ТОЛСТЫЕ ТОЧКИ
-      wavePoints.forEach((p) => {
+      // 3) Точки (толще линии)
+      wavePoints.forEach(p => {
         ctx.beginPath();
         ctx.arc(p.x, p.y, DOT_RADIUS, 0, Math.PI * 2);
         ctx.fillStyle = "#0ff";
@@ -448,12 +452,13 @@
       requestAnimationFrame(animate);
     }
 
+    // При ресайзе пересчитываем точки
     function onResize() {
       initDots();
     }
     window.addEventListener("resize", onResize);
 
-    // Запуск
+    // Старт
     initDots();
     animate();
   </script>
