@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>TheMarkest.art – Sci-Fi/Cyberpunk</title>
   <meta name="description" content="Портфолио художника, работающего в стиле sci-fi/cyberpunk с интерактивными и кинетическими скульптурами." />
 
-  <!-- Фавиконки – проверьте пути к файлам в assets/favicon/ -->
+  <!-- Фавиконки – проверьте пути к файлам -->
   <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/favicon-16x16.png">
@@ -16,9 +16,15 @@
   <meta name="theme-color" content="#000000">
 
   <style>
-    /* ===== Сброс и базовые настройки ===== */
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
+    /* Сброс и базовые настройки */
+    * {
+      margin: 0; 
+      padding: 0; 
+      box-sizing: border-box;
+    }
+    html {
+      scroll-behavior: smooth;
+    }
     body {
       font-family: "IBM Plex Sans", sans-serif;
       background: #000;
@@ -30,37 +36,32 @@
       text-decoration: none;
       transition: color 0.3s;
     }
-    a:hover { color: #0ff; }
-    .container {
-      width: 90%;
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 2rem 1rem;
+    a:hover {
+      color: #0ff;
     }
 
-    /* ===== HEADER – фиксирован вверху, серый фон ===== */
+    /* Хедер фиксирован сверху */
     header#header {
       position: fixed;
-      top: 0;
-      left: 0;
+      top: 0; left: 0;
       width: 100%;
-      background: #555; /* слегка серый фон */
-      height: 120px;
+      height: 200px;       /* Фиксированная высота хедера */
+      background: #555;    /* Серый фон */
       z-index: 1000;
-      overflow: hidden;
+      overflow: hidden;    /* Важно для clip-path */
     }
-    /* Логотип в левом верхнем углу */
+
+    /* Логотип слева, меню по центру */
     .logo-container {
       position: absolute;
-      left: 20px;
       top: 50%;
+      left: 20px;
       transform: translateY(-50%);
     }
     .logo {
       width: 100px;
       height: auto;
     }
-    /* Меню – пункты по центру */
     .menu-container {
       display: flex;
       justify-content: center;
@@ -72,26 +73,26 @@
       font-size: 1.2rem;
       color: #fff;
     }
-    /* Социальные ссылки можно при необходимости разместить справа, но в данном примере они не показаны */
 
-    /* ===== Сепаратор в виде канвы с точками – нижняя граница header ===== */
-    .header-separator {
+    /* Canvas для неоновой линии */
+    .header-line {
       position: absolute;
       bottom: 0;
       left: 0;
       width: 100%;
-      height: 50px;
-      pointer-events: none;
+      height: 60px;      /* Высота области под линию */
+      pointer-events: none; /* Чтобы мышь не мешала */
     }
 
-    /* ===== Основной контент ===== */
+    /* Основной контент – отступ сверху под хедер (200px) + под канву (60px) */
     main {
-      /* Отступ сверху равен высоте header + сепаратор (120px + 50px = 170px) */
-      margin-top: 170px;
+      margin-top: 260px;
     }
+
+    /* Пример секций */
     section {
-      background: #000;
       padding: 4rem 0;
+      background: #000;
     }
     h2 {
       text-align: center;
@@ -99,6 +100,7 @@
       margin-bottom: 2rem;
       text-transform: uppercase;
     }
+    /* Пример сетки для портфолио */
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -117,8 +119,15 @@
       transform: scale(1.02);
       box-shadow: 0 0 8px #0ff;
     }
-    .work-item h3 { margin-bottom: 0.5rem; font-size: 1.2rem; }
-    .work-item p { font-size: 0.95rem; opacity: 0.9; margin-bottom: 0.5rem; }
+    .work-item h3 {
+      margin-bottom: 0.5rem;
+      font-size: 1.2rem;
+    }
+    .work-item p {
+      font-size: 0.95rem;
+      opacity: 0.9;
+      margin-bottom: 0.5rem;
+    }
     .share-buttons {
       display: flex;
       gap: 0.5rem;
@@ -133,8 +142,11 @@
       font-size: 0.8rem;
       transition: background 0.3s;
     }
-    .share-buttons a:hover { background: #0cc; }
+    .share-buttons a:hover {
+      background: #0cc;
+    }
 
+    /* Пример для секции "О художнике" */
     .about-content {
       display: flex;
       flex-wrap: wrap;
@@ -142,9 +154,20 @@
       max-width: 1000px;
       margin: 0 auto;
     }
-    .bio, .artist-statement { flex: 1 1 300px; min-width: 300px; }
-    .bio h3, .artist-statement h3 { font-size: 1.3rem; margin-bottom: 1rem; text-transform: uppercase; }
-    .bio p, .artist-statement p { font-size: 1rem; opacity: 0.9; line-height: 1.5; }
+    .bio, .artist-statement {
+      flex: 1 1 300px;
+      min-width: 300px;
+    }
+    .bio h3, .artist-statement h3 {
+      font-size: 1.3rem;
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+    }
+    .bio p, .artist-statement p {
+      font-size: 1rem;
+      opacity: 0.9;
+      line-height: 1.5;
+    }
     .artist-photo {
       flex: 1 1 300px;
       min-width: 300px;
@@ -166,6 +189,7 @@
       background: #111;
     }
 
+    /* Форма и футер */
     form {
       display: flex;
       flex-direction: column;
@@ -173,7 +197,10 @@
       max-width: 500px;
       margin: 0 auto;
     }
-    form label { font-weight: 600; margin-bottom: 0.3rem; }
+    form label {
+      font-weight: 600;
+      margin-bottom: 0.3rem;
+    }
     form input, form textarea {
       padding: 0.6rem;
       border: 1px solid #333;
@@ -196,7 +223,9 @@
       cursor: pointer;
       transition: background 0.3s;
     }
-    form button:hover { background: #0cc; }
+    form button:hover {
+      background: #0cc;
+    }
     .contact-social {
       text-align: center;
       margin-top: 2rem;
@@ -207,7 +236,6 @@
       padding: 0.5rem 1rem;
       border-radius: 4px;
     }
-
     footer {
       background: #000;
       padding: 2rem 0;
@@ -218,11 +246,14 @@
 </head>
 <body>
 
-  <!-- HEADER: фиксированный с логотипом слева и меню по центру -->
+  <!-- Фиксированный хедер -->
   <header id="header">
+    <!-- Логотип слева -->
     <div class="logo-container">
       <img src="assets/logo.svg" alt="TheMarkest.art Logo" class="logo" />
     </div>
+
+    <!-- Меню по центру -->
     <div class="menu-container">
       <nav>
         <a href="#works">Портфолио</a>
@@ -230,11 +261,12 @@
         <a href="#contact">Контакты</a>
       </nav>
     </div>
-    <!-- Анимированная граница с точками -->
-    <canvas id="header-separator" class="header-separator"></canvas>
+
+    <!-- Canvas для рисования неоновой линии и точек -->
+    <canvas id="header-line" class="header-line"></canvas>
   </header>
 
-  <!-- Основной контент (отступ сверху, чтобы не перекрывался фиксированным header) -->
+  <!-- Основное содержимое, с отступом сверху (margin-top: 260px в CSS) -->
   <main>
     <section id="works">
       <div class="container">
@@ -245,12 +277,13 @@
             <p>Год: 2023</p>
             <p>Краткое описание концепции. Технологии, материалы и уникальные особенности.</p>
             <div class="share-buttons">
-              <a href="#" title="Поделиться в Facebook">Facebook</a>
-              <a href="#" title="Поделиться в Twitter">Twitter</a>
-              <a href="#" title="Поделиться в Instagram">Instagram</a>
-              <a href="#" title="Поделиться в Telegram">Telegram</a>
+              <a href="#">Facebook</a>
+              <a href="#">Twitter</a>
+              <a href="#">Instagram</a>
+              <a href="#">Telegram</a>
             </div>
           </article>
+          <!-- Дополнительные работы... -->
         </div>
       </div>
     </section>
@@ -300,80 +333,102 @@
     </div>
   </footer>
 
-  <!-- ===== JavaScript: Анимация сепаратора в header ===== -->
+  <!-- Скрипт анимации: и полигон (clip-path) для серого фона, и линия на canvas -->
   <script>
-    function animateSeparator(canvasId) {
-      const canvas = document.getElementById(canvasId);
-      if (!canvas) return;
-      const ctx = canvas.getContext("2d");
-      let width = canvas.width = canvas.offsetWidth;
-      let height = canvas.height = canvas.offsetHeight;
-      
-      const dotRadius = 3;
-      const dotSpacing = 40; // интервал между точками
-      const speed = 0.5;
-      
-      // Для каждой точки генерируем случайные амплитуду и частоту
-      let dots = [];
+    const header = document.getElementById("header");
+    const canvas = document.getElementById("header-line");
+    const ctx = canvas.getContext("2d");
+
+    // Параметры
+    const headerHeight = 200;
+    const lineCanvasHeight = 60; 
+    const dotSpacing = 40; 
+    const amplitudeMin = 5;
+    const amplitudeMax = 15;
+    const freqMin = 0.03;
+    const freqMax = 0.1;
+
+    // Массив точек (x, amplitude, frequency, phase)
+    let dots = [];
+    let width = 0;
+    let time = 0;
+
+    // Инициализация точек
+    function initDots() {
+      width = header.offsetWidth;
+      // Настраиваем размеры canvas
+      canvas.width = width;
+      canvas.height = lineCanvasHeight;
+      dots = [];
       for (let x = 0; x <= width; x += dotSpacing) {
         dots.push({
           x: x,
-          amplitude: 5 + Math.random() * 10,    // амплитуда от 5 до 15 px
-          frequency: 0.03 + Math.random() * 0.07  // частота от 0.03 до 0.1
+          amplitude: amplitudeMin + Math.random() * (amplitudeMax - amplitudeMin),
+          frequency: freqMin + Math.random() * (freqMax - freqMin),
+          phase: Math.random() * Math.PI * 2 // фаза для разнообразия
         });
       }
-      
-      let time = 0;
-      function draw() {
-        ctx.clearRect(0, 0, width, height);
-        
-        // Рисуем соединяющую линию между точками
-        ctx.strokeStyle = "#0ff";
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        dots.forEach((dot, index) => {
-          let y = height / 2 + dot.amplitude * Math.sin(dot.x * dot.frequency + time);
-          if (index === 0) {
-            ctx.moveTo(dot.x, y);
-          } else {
-            ctx.lineTo(dot.x, y);
-          }
-        });
-        ctx.stroke();
-        
-        // Рисуем сами точки
-        ctx.fillStyle = "#0ff";
-        dots.forEach(dot => {
-          let y = height / 2 + dot.amplitude * Math.sin(dot.x * dot.frequency + time);
-          ctx.beginPath();
-          ctx.arc(dot.x, y, dotRadius, 0, Math.PI * 2);
-          ctx.fill();
-        });
-        
-        // Обновляем положение точек по горизонтали
-        dots.forEach(dot => {
-          dot.x += speed;
-          if (dot.x - dotRadius > width) {
-            dot.x = -dotRadius;
-          }
-        });
-        time += 0.1;
-        requestAnimationFrame(draw);
-      }
-      draw();
     }
-    
-    // Инициализируем анимацию сепаратора для header
-    animateSeparator("header-separator");
-    
-    // Обновление размеров канвы при изменении окна
-    window.addEventListener("resize", () => {
-      const canvas = document.getElementById("header-separator");
-      if (canvas) {
-        canvas.width = canvas.offsetWidth;
-        canvas.height = canvas.offsetHeight;
+
+    // Анимация
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Формируем точки нижней границы (для clip-path)
+      const bottomPoints = dots.map(dot => {
+        const y = headerHeight + dot.amplitude * Math.sin(dot.x * dot.frequency + time + dot.phase);
+        return { x: dot.x, y };
+      });
+
+      // clip-path: начинаем с (0,0) → (width,0) → все точки (справа налево) → назад
+      let polyPoints = ["0% 0%", "100% 0%"];
+      for (let i = bottomPoints.length - 1; i >= 0; i--) {
+        const p = bottomPoints[i];
+        const xPerc = ((p.x / width) * 100).toFixed(2) + "%";
+        // y относительно headerHeight
+        // Но так как мы рисуем «ниже» 0, y может быть > headerHeight
+        const yPerc = ((p.y / headerHeight) * 100).toFixed(2) + "%";
+        polyPoints.push(`${xPerc} ${yPerc}`);
       }
-    });
+
+      // Обновляем clip-path для серого фона хедера
+      header.style.clipPath = `polygon(${polyPoints.join(", ")})`;
+
+      // Теперь рисуем неоновую линию поверх на canvas
+      // Высота canvas = lineCanvasHeight, нам нужно «спроецировать» точки на canvas
+      // Допустим, 0 на canvas = верх canvas, а y=0 на clipPath = bottom header
+      // Чтобы «дополнить» высоту, сделаем смещение (y - headerHeight) + lineCanvasHeight/2
+      ctx.beginPath();
+      ctx.strokeStyle = "#0ff";
+      ctx.lineWidth = 2;
+
+      dots.forEach((dot, i) => {
+        const waveY = dot.amplitude * Math.sin(dot.x * dot.frequency + time + dot.phase);
+        // Смещаем waveY так, чтобы 0 соответствовало ~середине canvas
+        // Или же можно проецировать (bottomPoints[i].y - headerHeight)
+        const cy = lineCanvasHeight / 2 + waveY;
+        const cx = dot.x;
+        if (i === 0) {
+          ctx.moveTo(cx, cy);
+        } else {
+          ctx.lineTo(cx, cy);
+        }
+      });
+      ctx.stroke();
+
+      time += 0.02; // скорость анимации
+      requestAnimationFrame(animate);
+    }
+
+    // При загрузке/resize инициализируем точки заново
+    function onResize() {
+      initDots();
+    }
+    window.addEventListener("resize", onResize);
+
+    // Запуск
+    initDots();
+    animate();
   </script>
 </body>
 </html>
