@@ -135,7 +135,7 @@
 
     /* ==========================
        4) Блок обложки (Cover)
-       занимает всю высоту экрана
+       min-height: 100vh, фон
     ========================== */
     #cover {
       position: relative;
@@ -340,7 +340,7 @@
     </div>
   </header>
 
-  <!-- Блок обложки (Cover), на всю высоту экрана -->
+  <!-- Блок обложки (Cover) -->
   <section id="cover">
     <div class="cover-content">
       <h2>Обложка сайта</h2>
@@ -421,9 +421,9 @@
     </div>
   </footer>
 
-  <!-- Скрипты: Волна + Scramble-текст «как в CodePen wagerfield» -->
+  <!-- Скрипты: Волна + Scramble-текст (запуск при скролле через IntersectionObserver) -->
   <script>
-    /* ============ 1) ВОЛНА (CANVAS) ============ */
+    /* === 1) Волна (canvas) === */
     const canvas = document.getElementById("waveCanvas");
     const ctx = canvas.getContext("2d");
 
@@ -438,7 +438,7 @@
     const LINE_WIDTH  = 2;
     const DOT_RADIUS  = 4;
     const HEADER_BG_COLOR = "rgba(85, 85, 85, 0.8)";
-    const BASELINE = 120; /* высота волны */
+    const BASELINE = 120; // высота волны
 
     function initDots() {
       width = canvas.offsetWidth;
@@ -450,7 +450,6 @@
       // Левая крайняя точка
       dots.push({ x: 0, pinned: true });
 
-      // Промежуточные точки
       for (let x = DOT_SPACING; x <= width - DOT_SPACING; x += DOT_SPACING) {
         dots.push({
           x,
@@ -477,9 +476,7 @@
       // Заливка над волной
       ctx.beginPath();
       ctx.moveTo(0, 0);
-      wavePoints.forEach(p => {
-        ctx.lineTo(p.x, p.y);
-      });
+      wavePoints.forEach(p => ctx.lineTo(p.x, p.y));
       ctx.lineTo(width, 0);
       ctx.closePath();
       ctx.fillStyle = HEADER_BG_COLOR;
@@ -498,7 +495,7 @@
       // Точки
       wavePoints.forEach(p => {
         ctx.beginPath();
-        ctx.arc(p.x, p.y, DOT_RADIUS, 0, Math.PI * 2);
+        ctx.arc(p.x, p.y, DOT_RADIUS, 0, Math.PI*2);
         ctx.fillStyle = "#0ff";
         ctx.fill();
       });
@@ -515,26 +512,14 @@
     animateWave();
 
 
-    /* ============ 2) SCRAMBLE-ТЕКСТ «КАК В CODEPEN WAGERFIELD» ============ */
-    /* 
-       Алгоритм:
-       1) Сохраняем исходный текст (oldText).
-       2) Генерируем «кадры» (start, end) для каждой буквы.
-       3) На каждом кадре (frame) случайно заменяем букву на псевдосимвол, пока не достигнем end.
-       4) Как только frame >= end, ставим финальную букву.
-       Таким образом, каждая буква «дребезжит» разное время.
-    */
+    /* === 2) Scramble-текст «как в CodePen @wagerfield», запускается при прокрутке (IntersectionObserver) === */
     const CHARS = "!<>-_\\/[]{}—=+*^?#________";
 
-    function randomChar() {
-      return CHARS[Math.floor(Math.random() * CHARS.length)];
-    }
-
-    // Возвращает Promise, чтобы можно было цеплять анимации
+    // Функция scrambleText, возвращает Promise, как в оригинальном примере
     function scrambleText(el, newText) {
       const oldText = el.innerText || "";
       const length  = Math.max(oldText.length, newText.length);
-      const promise = new Promise(resolve => {
+      return new Promise(resolve => {
         const queue = [];
         for (let i=0; i<length; i++) {
           const from  = oldText[i] || "";
@@ -556,7 +541,7 @@
             } else if (frame >= obj.start) {
               // показываем случайный символ
               if (!obj.char || Math.random() < 0.28) {
-                obj.char = randomChar();
+                obj.char = CHARS[Math.floor(Math.random()*CHARS.length)];
               }
               output += obj.char;
             } else {
@@ -574,23 +559,37 @@
         }
         requestAnimationFrame(update);
       });
-      return promise;
     }
 
-    // Применим к каждому абзацу <p> (кроме заголовков) исходный scramble
-    window.addEventListener("load", () => {
-      const paragraphs = document.querySelectorAll("p");
-      let delay = 0;
+    // Устанавливаем IntersectionObserver, чтобы запускать эффект при появлении абзацев
+    window.addEventListener('load', () => {
+      const paragraphs = document.querySelectorAll('p');
+      // Сохраняем исходный текст каждого абзаца и очищаем его
       paragraphs.forEach(p => {
-        // Сохраняем исходный текст
-        const text = p.innerText;
-        p.innerText = ""; // Сначала очистим
-        // Ставим задержку между абзацами, чтобы эффект шёл последовательно
-        setTimeout(() => {
-          scrambleText(p, text);
-        }, delay);
-        delay += 300; // 0.3s задержка между абзацами
+        // Проверим, что это не заголовок (h2, h3) — но обычно <p> не бывает заголовком
+        // Сохраняем текст в data-атрибут
+        p.dataset.scrambleText = p.innerText;
+        p.innerText = "";
       });
+
+      // Создаём IntersectionObserver
+      const observer = new IntersectionObserver((entries, obs) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const p = entry.target;
+            // Запускаем скрэблинг
+            scrambleText(p, p.dataset.scrambleText).then(() => {
+              // После окончания можно "отвязать" наблюдатель, чтобы не запускать заново
+              obs.unobserve(p);
+            });
+          }
+        });
+      }, {
+        threshold: 0.2 // абзац считается видимым при 20% вхождении
+      });
+
+      // Подключаем наблюдатель к каждому абзацу
+      paragraphs.forEach(p => observer.observe(p));
     });
   </script>
 </body>
