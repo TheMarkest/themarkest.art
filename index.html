@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>TheMarkest.art – Glitch Image (More Fragmented)</title>
-  <meta name="description" content="Портфолио художника, работающего в стиле sci-fi/cyberpunk с волной, старомониторным эффектом, TextScramble и более фрагментированным глитч-логотипом." />
+  <title>TheMarkest.art – More Random & Pixelated Glitch</title>
+  <meta name="description" content="Портфолио художника, работающего в стиле sci-fi/cyberpunk с волной, старомониторным эффектом, TextScramble и более фрагментированным пикселизированным глитч-логотипом." />
 
   <!-- Favicons (убедитесь, что файлы лежат в assets/favicon/) -->
   <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/apple-touch-icon.png">
@@ -22,7 +22,6 @@
     :root {
       --mouse-intensity: 1;
       --scroll-intensity: 1;
-      /* Произведение: динамика от мыши и скролла */
       --glitch-intensity: calc(var(--mouse-intensity) * var(--scroll-intensity));
     }
   </style>
@@ -132,13 +131,13 @@
   </style>
 
   <!-- ==========================
-       5) Glitch-Image: Более фрагментированный
+       5) Glitch-Image: пикселизация + более фрагментированные шаги
   ========================== -->
   <style>
-    /* Контейнер: логотип 312x119, выше (top:40px) */
+    /* Логотип поднимаем выше, напр. top:30px */
     .glitch-image {
       position: absolute;
-      top: 40px; /* выше, чтобы не пересекать волну */
+      top: 30px; /* выше волны */
       left: 20px;
       width: 312px;
       height: 119px;
@@ -149,6 +148,8 @@
       display: block;
       width: 100%;
       height: 100%;
+      /* Пикселизация базового слоя (если нужно) */
+      image-rendering: pixelated;
     }
     .glitch-image::before,
     .glitch-image::after {
@@ -156,49 +157,54 @@
       position: absolute;
       top: 0; left: 0;
       width: 100%; height: 100%;
+      /* Пикселизация + фон-логотип */
       background: url("assets/logo.svg") no-repeat center;
       background-size: 312px 119px;
+      image-rendering: pixelated;
       pointer-events: none;
-      /* Цветовые смещения (красный/розовый, голубой) */
       mix-blend-mode: screen;
     }
-    /* Слой before (красный) */
+    /* Слой before: красный */
     .glitch-image::before {
       filter: drop-shadow(-2px 0px #ff00c1);
       animation: glitch-anim 3s infinite linear alternate;
     }
-    /* Слой after (голубой) */
+    /* Слой after: голубой */
     .glitch-image::after {
       filter: drop-shadow(2px 0px #00fff9);
       animation: glitch-anim2 3s infinite linear alternate;
     }
-    /* Увеличиваем «фрагментированность»: больше шагов (0%,10%,20%...100%), 
-       с разными rect(...) и skew(...) */
+
+    /* БОЛЕЕ ФРАГМЕНТИРОВАННЫЕ шаги: 0%, 5%, 10%, 15% ... 100% */
     @keyframes glitch-anim {
-      0%   { clip: rect(20px,9999px,40px,0); transform: skew(-1deg); }
-      10%  { clip: rect(5px,9999px,25px,0); transform: skew(calc(-3deg * var(--glitch-intensity))); }
-      20%  { clip: rect(50px,9999px,70px,0); transform: skew(calc(2deg * var(--glitch-intensity))); }
-      30%  { clip: rect(30px,9999px,45px,0); transform: skew(calc(-2deg * var(--glitch-intensity))); }
-      40%  { clip: rect(10px,9999px,20px,0); transform: skew(calc(3deg * var(--glitch-intensity))); }
-      50%  { clip: rect(55px,9999px,65px,0); transform: skew(calc(-3deg * var(--glitch-intensity))); }
-      60%  { clip: rect(25px,9999px,40px,0); transform: skew(calc(2deg * var(--glitch-intensity))); }
-      70%  { clip: rect(40px,9999px,60px,0); transform: skew(calc(-2deg * var(--glitch-intensity))); }
-      80%  { clip: rect(15px,9999px,25px,0); transform: skew(calc(3deg * var(--glitch-intensity))); }
-      90%  { clip: rect(60px,9999px,80px,0); transform: skew(calc(-1deg * var(--glitch-intensity))); }
-      100% { clip: rect(20px,9999px,40px,0); transform: skew(-1deg); }
+      0%   { clip: rect(20px,9999px,40px,0); transform: translateX(0) skew(0deg); }
+      5%   { clip: rect(5px,9999px,25px,0); transform: translateX(calc(-8px * var(--glitch-intensity))) skew(calc(1deg * var(--glitch-intensity))); }
+      10%  { clip: rect(35px,9999px,50px,0); transform: translateX(calc(6px * var(--glitch-intensity))) skew(calc(-2deg * var(--glitch-intensity))); }
+      15%  { clip: rect(50px,9999px,70px,0); transform: translateX(calc(-4px * var(--glitch-intensity))) skew(calc(3deg * var(--glitch-intensity))); }
+      20%  { clip: rect(15px,9999px,25px,0); transform: translateX(calc(10px * var(--glitch-intensity))) skew(calc(-3deg * var(--glitch-intensity))); }
+      30%  { clip: rect(55px,9999px,75px,0); transform: translateX(calc(-10px * var(--glitch-intensity))) skew(calc(2deg * var(--glitch-intensity))); }
+      40%  { clip: rect(25px,9999px,35px,0); transform: translateX(calc(6px * var(--glitch-intensity))) skew(calc(-1deg * var(--glitch-intensity))); }
+      50%  { clip: rect(10px,9999px,20px,0); transform: translateX(calc(-2px * var(--glitch-intensity))) skew(calc(2deg * var(--glitch-intensity))); }
+      60%  { clip: rect(40px,9999px,60px,0); transform: translateX(calc(8px * var(--glitch-intensity))) skew(calc(-3deg * var(--glitch-intensity))); }
+      70%  { clip: rect(5px,9999px,15px,0); transform: translateX(calc(-8px * var(--glitch-intensity))) skew(calc(1deg * var(--glitch-intensity))); }
+      80%  { clip: rect(30px,9999px,50px,0); transform: translateX(calc(4px * var(--glitch-intensity))) skew(calc(-2deg * var(--glitch-intensity))); }
+      90%  { clip: rect(45px,9999px,65px,0); transform: translateX(calc(-6px * var(--glitch-intensity))) skew(calc(2deg * var(--glitch-intensity))); }
+      100% { clip: rect(20px,9999px,40px,0); transform: translateX(0) skew(0deg); }
     }
     @keyframes glitch-anim2 {
-      0%   { clip: rect(10px,9999px,30px,0); transform: skew(1deg); }
-      10%  { clip: rect(45px,9999px,60px,0); transform: skew(calc(-2deg * var(--glitch-intensity))); }
-      20%  { clip: rect(25px,9999px,35px,0); transform: skew(calc(3deg * var(--glitch-intensity))); }
-      30%  { clip: rect(50px,9999px,70px,0); transform: skew(calc(-3deg * var(--glitch-intensity))); }
-      40%  { clip: rect(15px,9999px,25px,0); transform: skew(calc(2deg * var(--glitch-intensity))); }
-      50%  { clip: rect(35px,9999px,50px,0); transform: skew(calc(-2deg * var(--glitch-intensity))); }
-      60%  { clip: rect(60px,9999px,80px,0); transform: skew(calc(3deg * var(--glitch-intensity))); }
-      70%  { clip: rect(20px,9999px,30px,0); transform: skew(calc(-3deg * var(--glitch-intensity))); }
-      80%  { clip: rect(5px,9999px,25px,0); transform: skew(calc(2deg * var(--glitch-intensity))); }
-      90%  { clip: rect(40px,9999px,60px,0); transform: skew(calc(-1deg * var(--glitch-intensity))); }
-      100% { clip: rect(10px,9999px,30px,0); transform: skew(1deg); }
+      0%   { clip: rect(10px,9999px,30px,0); transform: translateX(0) skew(0deg); }
+      5%   { clip: rect(50px,9999px,70px,0); transform: translateX(calc(4px * var(--glitch-intensity))) skew(calc(-2deg * var(--glitch-intensity))); }
+      10%  { clip: rect(20px,9999px,35px,0); transform: translateX(calc(-6px * var(--glitch-intensity))) skew(calc(3deg * var(--glitch-intensity))); }
+      15%  { clip: rect(35px,9999px,55px,0); transform: translateX(calc(8px * var(--glitch-intensity))) skew(calc(-1deg * var(--glitch-intensity))); }
+      20%  { clip: rect(5px,9999px,15px,0); transform: translateX(calc(-2px * var(--glitch-intensity))) skew(calc(1deg * var(--glitch-intensity))); }
+      30%  { clip: rect(60px,9999px,80px,0); transform: translateX(calc(-10px * var(--glitch-intensity))) skew(calc(3deg * var(--glitch-intensity))); }
+      40%  { clip: rect(15px,9999px,30px,0); transform: translateX(calc(2px * var(--glitch-intensity))) skew(calc(-3deg * var(--glitch-intensity))); }
+      50%  { clip: rect(45px,9999px,65px,0); transform: translateX(calc(-4px * var(--glitch-intensity))) skew(calc(2deg * var(--glitch-intensity))); }
+      60%  { clip: rect(25px,9999px,40px,0); transform: translateX(calc(8px * var(--glitch-intensity))) skew(calc(-2deg * var(--glitch-intensity))); }
+      70%  { clip: rect(10px,9999px,20px,0); transform: translateX(calc(-6px * var(--glitch-intensity))) skew(calc(1deg * var(--glitch-intensity))); }
+      80%  { clip: rect(50px,9999px,70px,0); transform: translateX(calc(10px * var(--glitch-intensity))) skew(calc(-1deg * var(--glitch-intensity))); }
+      90%  { clip: rect(30px,9999px,45px,0); transform: translateX(calc(-8px * var(--glitch-intensity))) skew(calc(2deg * var(--glitch-intensity))); }
+      100% { clip: rect(10px,9999px,30px,0); transform: translateX(0) skew(0deg); }
     }
     @keyframes glitch-skew {
       0%   { transform: skew(0deg); }
@@ -408,7 +414,7 @@
   <header>
     <canvas id="waveCanvas"></canvas>
     <div class="header-content">
-      <!-- Glitch Image (logo) с более фрагментированными ключевыми кадрами -->
+      <!-- Логотип с более фрагментированным пиксельным глитчем -->
       <div class="glitch-image">
         <img src="assets/logo.svg" alt="TheMarkest.art Logo" />
       </div>
@@ -422,7 +428,7 @@
     </div>
   </header>
 
-  <!-- COVER -->
+  <!-- COVER SECTION -->
   <section id="cover">
     <div class="cover-content">
       <h2>Обложка сайта</h2>
@@ -466,7 +472,7 @@
           <div class="artist-statement">
             <h3>Artist Statement</h3>
             <p class="scramble-text">
-              Опишите вашу философию, что вы хотите донести до зрителя.
+              Опишите вашу философию, что вы хотите донести до зрителя. Текст появится с эффектом scramble.
             </p>
           </div>
           <div class="artist-photo">
@@ -666,8 +672,7 @@
   </script>
 
   <!-- ==========================
-       Glitch Intensity Script
-       (mouse + scroll)
+       Glitch Intensity Script (mouse + scroll)
   ========================== -->
   <script>
     document.addEventListener("mousemove", e => {
