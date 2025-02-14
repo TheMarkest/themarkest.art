@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TheMarkest.art – Glitch Image by Habr tutorial</title>
-  <meta name="description" content="Портфолио художника в стиле sci-fi/cyberpunk, с волной, старомониторным эффектом, TextScramble и glitch-эффектом (как Habr) для изображения.">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>TheMarkest.art – Glitch Image (More Fragmented)</title>
+  <meta name="description" content="Портфолио художника, работающего в стиле sci-fi/cyberpunk с волной, старомониторным эффектом, TextScramble и более фрагментированным глитч-логотипом." />
 
   <!-- Favicons (убедитесь, что файлы лежат в assets/favicon/) -->
   <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/apple-touch-icon.png">
@@ -16,18 +16,19 @@
   <meta name="theme-color" content="#000000">
 
   <!-- ==========================
-       1) CSS Variables for Glitch Intensity
+       1) CSS-переменные для глитч-интенсивности
   ========================== -->
   <style>
     :root {
       --mouse-intensity: 1;
       --scroll-intensity: 1;
+      /* Произведение: динамика от мыши и скролла */
       --glitch-intensity: calc(var(--mouse-intensity) * var(--scroll-intensity));
     }
   </style>
 
   <!-- ==========================
-       2) Старомониторный эффект (Виньетка + Скан-линии)
+       2) Старомониторный эффект (виньетка + скан-линии)
   ========================== -->
   <style>
     body::before {
@@ -38,9 +39,7 @@
       width: 100%; height: 100%;
       z-index: 9999;
       background:
-        /* Усиленная виньетка (30% → 85%) */
         radial-gradient(circle at center, rgba(0,0,0,0) 30%, rgba(0,0,0,0.85) 100%),
-        /* Лёгкий блик */
         radial-gradient(circle, rgba(255,255,255,0.05) 1%, rgba(255,255,255,0) 60%);
       background-blend-mode: multiply;
       animation: flicker 2s infinite alternate;
@@ -52,7 +51,6 @@
       top: 0; left: 0;
       width: 100%; height: 100%;
       z-index: 99999;
-      /* Широкие скан-линии */
       background: repeating-linear-gradient(
         0deg,
         rgba(255,255,255,0.05) 0px,
@@ -101,14 +99,14 @@
   </style>
 
   <!-- ==========================
-       4) Хедер: Wave + Content
+       4) Хедер: Волна + Контент
   ========================== -->
   <style>
     header {
       position: fixed;
       top: 0; left: 0;
       width: 100%;
-      height: 160px;  /* Холст для волны */
+      height: 160px; /* Высота холста */
       z-index: 1000;
     }
     #waveCanvas {
@@ -120,7 +118,7 @@
       position: absolute;
       top: 0; left: 0;
       width: 100%;
-      height: 120px; /* «Официальная» высота хедера */
+      height: 120px; /* Официальная высота шапки */
       display: flex;
       align-items: center;
       justify-content: center;
@@ -134,29 +132,24 @@
   </style>
 
   <!-- ==========================
-       5) Glitch-Image «как в Habr», но для картинки
-       В статье был text + attr(data-text). Здесь – image + background
+       5) Glitch-Image: Более фрагментированный
   ========================== -->
   <style>
-    /* Контейнер .glitch-image */
+    /* Контейнер: логотип 312x119, выше (top:40px) */
     .glitch-image {
       position: absolute;
-      top: 20px; left: 20px;
-      width: 312px;  /* подгоняем под ваш логотип */
-      height: 119px; /* */
+      top: 40px; /* выше, чтобы не пересекать волну */
+      left: 20px;
+      width: 312px;
+      height: 119px;
       z-index: 2001;
-      /* Доп. анимация skew, если хотим */
       animation: glitch-skew 1s infinite linear alternate-reverse;
     }
-
-    /* Внутри .glitch-image – базовый <img>, поверх – псевдослои ::before / ::after */
     .glitch-image img {
+      display: block;
       width: 100%;
       height: 100%;
-      display: block;
     }
-
-    /* Псевдослои: каждый имеет background: url(...) тот же логотип */
     .glitch-image::before,
     .glitch-image::after {
       content: "";
@@ -164,43 +157,48 @@
       top: 0; left: 0;
       width: 100%; height: 100%;
       background: url("assets/logo.svg") no-repeat center;
-      background-size: 312px 119px; /* размер SVG */
-      overflow: hidden;
+      background-size: 312px 119px;
       pointer-events: none;
+      /* Цветовые смещения (красный/розовый, голубой) */
+      mix-blend-mode: screen;
     }
-    /* glitch-image::before – смещение влево, красный оттенок (через filter или mix-blend) */
+    /* Слой before (красный) */
     .glitch-image::before {
-      mix-blend-mode: screen;
       filter: drop-shadow(-2px 0px #ff00c1);
-      animation: glitch-anim 2s infinite steps(2, end) alternate-reverse;
-      transform: translate(calc(-2px * var(--glitch-intensity)), 0);
+      animation: glitch-anim 3s infinite linear alternate;
     }
-    /* glitch-image::after – смещение вправо, голубой оттенок */
+    /* Слой after (голубой) */
     .glitch-image::after {
-      mix-blend-mode: screen;
       filter: drop-shadow(2px 0px #00fff9);
-      animation: glitch-anim2 3s infinite steps(2, end) alternate-reverse;
-      transform: translate(calc(2px * var(--glitch-intensity)), 0);
+      animation: glitch-anim2 3s infinite linear alternate;
     }
-
-    /* Анимации: clip + transform (как в статье), steps(2,end) имитируют случайные рывки */
+    /* Увеличиваем «фрагментированность»: больше шагов (0%,10%,20%...100%), 
+       с разными rect(...) и skew(...) */
     @keyframes glitch-anim {
-      0%   { clip: rect(44px,9999px,56px,0); transform: skew(-2deg); }
-      10%  { clip: rect(60px,9999px,80px,0); transform: skew(calc(-2deg * var(--glitch-intensity))); }
-      20%  { clip: rect(30px,9999px,40px,0); transform: skew(calc(2deg * var(--glitch-intensity))); }
-      30%  { clip: rect(10px,9999px,20px,0); transform: skew(calc(-1deg * var(--glitch-intensity))); }
-      40%  { clip: rect(55px,9999px,65px,0); transform: skew(calc(3deg * var(--glitch-intensity))); }
-      50%  { clip: rect(44px,9999px,56px,0); transform: skew(calc(-2deg * var(--glitch-intensity))); }
-      100% { clip: rect(44px,9999px,56px,0); transform: skew(calc(-2deg * var(--glitch-intensity))); }
+      0%   { clip: rect(20px,9999px,40px,0); transform: skew(-1deg); }
+      10%  { clip: rect(5px,9999px,25px,0); transform: skew(calc(-3deg * var(--glitch-intensity))); }
+      20%  { clip: rect(50px,9999px,70px,0); transform: skew(calc(2deg * var(--glitch-intensity))); }
+      30%  { clip: rect(30px,9999px,45px,0); transform: skew(calc(-2deg * var(--glitch-intensity))); }
+      40%  { clip: rect(10px,9999px,20px,0); transform: skew(calc(3deg * var(--glitch-intensity))); }
+      50%  { clip: rect(55px,9999px,65px,0); transform: skew(calc(-3deg * var(--glitch-intensity))); }
+      60%  { clip: rect(25px,9999px,40px,0); transform: skew(calc(2deg * var(--glitch-intensity))); }
+      70%  { clip: rect(40px,9999px,60px,0); transform: skew(calc(-2deg * var(--glitch-intensity))); }
+      80%  { clip: rect(15px,9999px,25px,0); transform: skew(calc(3deg * var(--glitch-intensity))); }
+      90%  { clip: rect(60px,9999px,80px,0); transform: skew(calc(-1deg * var(--glitch-intensity))); }
+      100% { clip: rect(20px,9999px,40px,0); transform: skew(-1deg); }
     }
     @keyframes glitch-anim2 {
-      0%   { clip: rect(40px,9999px,60px,0); transform: skew(calc(1deg * var(--glitch-intensity))); }
-      10%  { clip: rect(70px,9999px,90px,0); transform: skew(calc(-3deg * var(--glitch-intensity))); }
-      20%  { clip: rect(20px,9999px,30px,0); transform: skew(calc(3deg * var(--glitch-intensity))); }
-      30%  { clip: rect(10px,9999px,25px,0); transform: skew(calc(-2deg * var(--glitch-intensity))); }
-      40%  { clip: rect(50px,9999px,70px,0); transform: skew(calc(4deg * var(--glitch-intensity))); }
-      50%  { clip: rect(40px,9999px,60px,0); transform: skew(calc(1deg * var(--glitch-intensity))); }
-      100% { clip: rect(40px,9999px,60px,0); transform: skew(calc(1deg * var(--glitch-intensity))); }
+      0%   { clip: rect(10px,9999px,30px,0); transform: skew(1deg); }
+      10%  { clip: rect(45px,9999px,60px,0); transform: skew(calc(-2deg * var(--glitch-intensity))); }
+      20%  { clip: rect(25px,9999px,35px,0); transform: skew(calc(3deg * var(--glitch-intensity))); }
+      30%  { clip: rect(50px,9999px,70px,0); transform: skew(calc(-3deg * var(--glitch-intensity))); }
+      40%  { clip: rect(15px,9999px,25px,0); transform: skew(calc(2deg * var(--glitch-intensity))); }
+      50%  { clip: rect(35px,9999px,50px,0); transform: skew(calc(-2deg * var(--glitch-intensity))); }
+      60%  { clip: rect(60px,9999px,80px,0); transform: skew(calc(3deg * var(--glitch-intensity))); }
+      70%  { clip: rect(20px,9999px,30px,0); transform: skew(calc(-3deg * var(--glitch-intensity))); }
+      80%  { clip: rect(5px,9999px,25px,0); transform: skew(calc(2deg * var(--glitch-intensity))); }
+      90%  { clip: rect(40px,9999px,60px,0); transform: skew(calc(-1deg * var(--glitch-intensity))); }
+      100% { clip: rect(10px,9999px,30px,0); transform: skew(1deg); }
     }
     @keyframes glitch-skew {
       0%   { transform: skew(0deg); }
@@ -410,13 +408,9 @@
   <header>
     <canvas id="waveCanvas"></canvas>
     <div class="header-content">
-
-      <!-- Глитч-изображение (Habr-подход, но для картинки).
-           .glitch-image + псевдослои ::before, ::after
-           Пример: "assets/logo.svg" размер 312x119
-      -->
+      <!-- Glitch Image (logo) с более фрагментированными ключевыми кадрами -->
       <div class="glitch-image">
-        <img src="assets/logo.svg" alt="TheMarkest Logo">
+        <img src="assets/logo.svg" alt="TheMarkest.art Logo" />
       </div>
 
       <nav>
@@ -428,7 +422,7 @@
     </div>
   </header>
 
-  <!-- COVER SECTION -->
+  <!-- COVER -->
   <section id="cover">
     <div class="cover-content">
       <h2>Обложка сайта</h2>
@@ -472,7 +466,7 @@
           <div class="artist-statement">
             <h3>Artist Statement</h3>
             <p class="scramble-text">
-              Опишите вашу философию, что вы хотите донести до зрителя. Текст появится с эффектом scramble.
+              Опишите вашу философию, что вы хотите донести до зрителя.
             </p>
           </div>
           <div class="artist-photo">
@@ -567,11 +561,8 @@
       ctx.strokeStyle = "#0ff";
       ctx.lineWidth = LINE_WIDTH;
       wavePoints.forEach((p, i) => {
-        if (i === 0) {
-          ctx.moveTo(p.x, p.y);
-        } else {
-          ctx.lineTo(p.x, p.y);
-        }
+        if (i === 0) ctx.moveTo(p.x, p.y);
+        else ctx.lineTo(p.x, p.y);
       });
       ctx.stroke();
 
