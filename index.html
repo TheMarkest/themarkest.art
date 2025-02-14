@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>TheMarkest.art – Sci-Fi/Cyberpunk</title>
   <meta name="description" content="Портфолио художника, работающего в стиле sci-fi/cyberpunk с интерактивными и кинетическими скульптурами." />
 
-  <!-- Favicons -->
+  <!-- Favicons (убедитесь, что файлы в папке assets/favicon/) -->
   <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/apple-touch-icon.png">
   <link rel="icon" type="image/svg+xml" href="assets/favicon/favicon.svg">
   <link rel="icon" type="image/png" sizes="96x96" href="assets/favicon/favicon-96x96.png">
@@ -15,7 +15,7 @@
   <meta name="msapplication-TileColor" content="#000000">
   <meta name="theme-color" content="#000000">
 
-  <!-- CSS Variables for Glitch Intensity -->
+  <!-- ============= CSS Variables for Glitch Intensity ============= -->
   <style>
     :root {
       --mouse-intensity: 1;
@@ -24,7 +24,7 @@
     }
   </style>
 
-  <!-- Old Monitor Effect (Vignette + Scanlines) -->
+  <!-- ============= Старомониторный эффект (сильная виньетка + широкие скан-линии) ============= -->
   <style>
     body::before {
       content: "";
@@ -33,6 +33,7 @@
       top: 0; left: 0;
       width: 100%; height: 100%;
       z-index: 9999;
+      /* Усиленная виньетка: от 0..30% до 0.85 */
       background:
         radial-gradient(circle at center, rgba(0,0,0,0) 30%, rgba(0,0,0,0.85) 100%),
         radial-gradient(circle, rgba(255,255,255,0.05) 1%, rgba(255,255,255,0) 60%);
@@ -46,7 +47,7 @@
       top: 0; left: 0;
       width: 100%; height: 100%;
       z-index: 99999;
-      /* Широкие скан-линии */
+      /* Широкие скан-линии: 2px полоса, 2px пропуск */
       background: repeating-linear-gradient(
         0deg,
         rgba(255,255,255,0.05) 0px,
@@ -68,7 +69,7 @@
     }
   </style>
 
-  <!-- Basic Reset & Base Styles -->
+  <!-- ============= Сброс и базовые стили ============= -->
   <style>
     * {
       margin: 0;
@@ -94,13 +95,13 @@
     }
   </style>
 
-  <!-- Header: Wave Canvas + Header Content -->
+  <!-- ============= Хедер: Canvas с волной + Слои логотипа ============= -->
   <style>
     header {
       position: fixed;
       top: 0; left: 0;
       width: 100%;
-      height: 160px; /* Высота холста под волну */
+      height: 160px; /* высота под волну */
       z-index: 1000;
     }
     #waveCanvas {
@@ -125,16 +126,15 @@
     }
   </style>
 
-  <!-- Glitch Logo Effect (Digital Glitch with smaller offset ±6px) -->
+  <!-- ============= Глитч-стиль как в defuz/pen/bGQyrdL (три слоя) ============= -->
   <style>
-    /* Лого в левом верхнем углу (10px отступ сверху и слева) */
+    /* Логотип в левом верхнем углу (10px отступ) */
     .logo-container {
       position: absolute;
       top: 10px;
       left: 10px;
     }
-
-    /* Вместо псевдоэлементов: три слоя */
+    /* Контейнер под три слоя */
     .glitch-logo {
       position: relative;
       width: 80px;
@@ -145,15 +145,18 @@
       width: 100%;
       height: auto;
     }
+    /* Два слоя: top & bottom */
     .glitch-layer {
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      opacity: 0;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
       pointer-events: none;
+      opacity: 0.8;
     }
+
+    /* Повторяем ключевые кадры defuz, но с умножением на var(--glitch-intensity) */
+    /* Пример: clip: rect(Y1, 9999px, Y2, 0); transform: translate(X, Y); */
+
     .glitch-layer.top {
       animation: glitch-top 2s infinite linear alternate;
     }
@@ -161,74 +164,62 @@
       animation: glitch-bottom 3s infinite linear alternate;
     }
 
-    /* Глитч анимация с ±6px (меньше, чем было 12px) */
     @keyframes glitch-top {
       0% {
-        clip: rect(0, 80px, 0, 0);
+        clip: rect(95px, 9999px, 42px, 0);
         transform: translate(0,0);
-        opacity: 0.8;
       }
       20% {
-        clip: rect(10px, 80px, 30px, 0);
-        transform: translate(calc(-6px * var(--glitch-intensity)), calc(-6px * var(--glitch-intensity)));
-        opacity: 1;
+        clip: rect(57px, 9999px, 33px, 0);
+        transform: translate(calc(-5px * var(--glitch-intensity)), calc(-5px * var(--glitch-intensity)));
       }
       40% {
-        clip: rect(20px, 80px, 40px, 0);
-        transform: translate(calc(6px * var(--glitch-intensity)), calc(6px * var(--glitch-intensity)));
-        opacity: 0.8;
+        clip: rect(24px, 9999px, 20px, 0);
+        transform: translate(calc(5px * var(--glitch-intensity)), calc(5px * var(--glitch-intensity)));
       }
       60% {
-        clip: rect(10px, 80px, 30px, 0);
-        transform: translate(calc(-6px * var(--glitch-intensity)), calc(6px * var(--glitch-intensity)));
-        opacity: 1;
+        clip: rect(68px, 9999px, 56px, 0);
+        transform: translate(calc(-5px * var(--glitch-intensity)), calc(5px * var(--glitch-intensity)));
       }
       80% {
-        clip: rect(20px, 80px, 40px, 0);
-        transform: translate(calc(6px * var(--glitch-intensity)), calc(-6px * var(--glitch-intensity)));
-        opacity: 0.8;
+        clip: rect(45px, 9999px, 30px, 0);
+        transform: translate(calc(5px * var(--glitch-intensity)), calc(-5px * var(--glitch-intensity)));
       }
       100% {
-        clip: rect(0, 80px, 0, 0);
+        clip: rect(95px, 9999px, 42px, 0);
         transform: translate(0,0);
-        opacity: 0.8;
       }
     }
+
     @keyframes glitch-bottom {
       0% {
-        clip: rect(0, 80px, 0, 0);
+        clip: rect(30px, 9999px, 72px, 0);
         transform: translate(0,0);
-        opacity: 0.8;
       }
       20% {
-        clip: rect(15px, 80px, 35px, 0);
-        transform: translate(calc(6px * var(--glitch-intensity)), calc(6px * var(--glitch-intensity)));
-        opacity: 1;
+        clip: rect(64px, 9999px, 44px, 0);
+        transform: translate(calc(5px * var(--glitch-intensity)), calc(5px * var(--glitch-intensity)));
       }
       40% {
-        clip: rect(5px, 80px, 25px, 0);
-        transform: translate(calc(-6px * var(--glitch-intensity)), calc(-6px * var(--glitch-intensity)));
-        opacity: 0.8;
+        clip: rect(40px, 9999px, 20px, 0);
+        transform: translate(calc(-5px * var(--glitch-intensity)), calc(-5px * var(--glitch-intensity)));
       }
       60% {
-        clip: rect(15px, 80px, 35px, 0);
-        transform: translate(calc(6px * var(--glitch-intensity)), calc(-6px * var(--glitch-intensity)));
-        opacity: 1;
+        clip: rect(60px, 9999px, 50px, 0);
+        transform: translate(calc(5px * var(--glitch-intensity)), calc(-5px * var(--glitch-intensity)));
       }
       80% {
-        clip: rect(10px, 80px, 30px, 0);
-        transform: translate(calc(-6px * var(--glitch-intensity)), calc(6px * var(--glitch-intensity)));
-        opacity: 0.8;
+        clip: rect(30px, 9999px, 40px, 0);
+        transform: translate(calc(-5px * var(--glitch-intensity)), calc(5px * var(--glitch-intensity)));
       }
       100% {
-        clip: rect(0, 80px, 0, 0);
+        clip: rect(30px, 9999px, 72px, 0);
         transform: translate(0,0);
-        opacity: 0.8;
       }
     }
   </style>
 
-  <!-- Cover Section -->
+  <!-- ============= Секция Cover ============= -->
   <style>
     #cover {
       position: relative;
@@ -259,7 +250,7 @@
     }
   </style>
 
-  <!-- Other Sections -->
+  <!-- ============= Остальные секции ============= -->
   <style>
     section {
       padding: 4rem 0;
@@ -358,7 +349,7 @@
     }
   </style>
 
-  <!-- Form and Footer -->
+  <!-- ============= Форма и футер ============= -->
   <style>
     form {
       display: flex;
@@ -414,7 +405,7 @@
     }
   </style>
 
-  <!-- TextScramble Styles -->
+  <!-- ============= TextScramble Styles ============= -->
   <style>
     .scramble-text {
       display: inline-block;
@@ -424,17 +415,18 @@
 </head>
 <body>
 
-  <!-- HEADER: Wave Canvas + Logo with Digital Glitch & smaller offset ±6px -->
+  <!-- HEADER: Волна + Глитч-логотип в стиле defuz + Меню -->
   <header>
     <canvas id="waveCanvas"></canvas>
     <div class="header-content">
+      <!-- Логотип в левом верхнем углу -->
       <div class="logo-container">
         <div class="glitch-logo">
-          <!-- Base logo -->
+          <!-- Основной слой (статичное изображение) -->
           <img src="assets/logo.svg" alt="TheMarkest.art Logo" class="logo" />
-          <!-- Two glitch layers -->
-          <img src="assets/logo.svg" alt="Glitch top layer" class="glitch-layer top" />
-          <img src="assets/logo.svg" alt="Glitch bottom layer" class="glitch-layer bottom" />
+          <!-- Два слоя для глитча -->
+          <img src="assets/logo.svg" alt="Glitch top" class="glitch-layer top" />
+          <img src="assets/logo.svg" alt="Glitch bottom" class="glitch-layer bottom" />
         </div>
       </div>
       <nav>
@@ -552,8 +544,8 @@
         dots.push({
           x,
           pinned: false,
-          freq: FREQ_MIN + Math.random() * (FREQ_MAX - FREQ_MIN),
-          phase: Math.random() * Math.PI * 2
+          freq: FREQ_MIN + Math.random()*(FREQ_MAX-FREQ_MIN),
+          phase: Math.random()*Math.PI*2
         });
       }
       dots.push({ x: width, pinned: true });
@@ -662,7 +654,9 @@
             el.dataset.scrambleText = text;
             el.innerText = "";
             const fx = new TextScramble(el);
-            fx.setText(text).then(() => { obs.unobserve(el); });
+            fx.setText(text).then(() => {
+              obs.unobserve(el);
+            });
           }
         });
       }, { threshold: 0.2 });
@@ -670,7 +664,7 @@
     });
   </script>
 
-  <!-- Glitch Intensity Update Script -->
+  <!-- Glitch Intensity Update Script (mouse + scroll) -->
   <script>
     document.addEventListener("mousemove", e => {
       let mouseIntensity = 1 + ((e.clientX / window.innerWidth) - 0.5);
