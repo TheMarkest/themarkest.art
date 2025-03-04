@@ -1,12 +1,10 @@
 <!DOCTYPE html>
 <html lang="ru">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TheMarkest.art – Glitch Image + Portrait</title>
-  <meta name="description"
-    content="Портфолио художника в стиле sci-fi/cyberpunk, с волной, старомониторным эффектом, TextScramble, пиксельным глитч-логотипом и фото художника.">
+  <meta name="description" content="Портфолио художника в стиле sci-fi/cyberpunk, с волной, старомониторным эффектом, TextScramble, пиксельным глитч-логотипом, фото художника и удобными карточками работ." />
 
   <!-- Favicons -->
   <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/apple-touch-icon.png">
@@ -17,9 +15,7 @@
   <meta name="msapplication-TileColor" content="#000000">
   <meta name="theme-color" content="#000000">
 
-  <!-- ==========================
-       1) CSS-переменные (глитч-интенсивность)
-  ========================== -->
+  <!-- 1) CSS-переменные (глитч-интенсивность) -->
   <style>
     :root {
       --mouse-intensity: 1;
@@ -28,348 +24,217 @@
     }
   </style>
 
-  <!-- ==========================
-       2) Старомониторный эффект (виньетка + скан-линии)
-  ========================== -->
+  <!-- 2) Старомониторный эффект (виньетка + скан-линии) -->
   <style>
     body::before {
       content: "";
       pointer-events: none;
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
       z-index: 9999;
       background:
-        radial-gradient(circle at center, rgba(0, 0, 0, 0) 30%, rgba(0, 0, 0, 0.85) 100%),
-        radial-gradient(circle, rgba(255, 255, 255, 0.05) 1%, rgba(255, 255, 255, 0) 60%);
+        radial-gradient(circle at center, rgba(0,0,0,0) 30%, rgba(0,0,0,0.85) 100%),
+        radial-gradient(circle, rgba(255,255,255,0.05) 1%, rgba(255,255,255,0) 60%);
       background-blend-mode: multiply;
-      animation: flicker 2s infinite alternate;
+      /* Более случайное мерцание */
+      animation: flicker 2s infinite;
     }
-
     body::after {
       content: "";
       pointer-events: none;
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
       z-index: 99999;
-      background: repeating-linear-gradient(0deg,
-          rgba(255, 255, 255, 0.05) 0px,
-          rgba(255, 255, 255, 0.05) 2px,
-          rgba(255, 255, 255, 0) 4px,
-          rgba(255, 255, 255, 0) 6px);
+      background: repeating-linear-gradient(
+        0deg,
+        rgba(255,255,255,0.05) 0px,
+        rgba(255,255,255,0.05) 2px,
+        rgba(255,255,255,0) 4px,
+        rgba(255,255,255,0) 6px
+      );
       animation: scanline 0.1s infinite steps(1);
       mix-blend-mode: lighten;
     }
-
     @keyframes flicker {
-      0% {
-        opacity: 0.02;
-      }
-
-      50% {
-        opacity: 0.25;
-      }
-
-      100% {
-        opacity: 0.02;
-      }
+      0%   { opacity: 0.02; }
+      20%  { opacity: 0.15; }
+      40%  { opacity: 0.25; }
+      60%  { opacity: 0.10; }
+      80%  { opacity: 0.20; }
+      100% { opacity: 0.02; }
     }
-
     @keyframes scanline {
-      0% {
-        transform: translateY(0);
-      }
-
-      100% {
-        transform: translateY(4px);
-      }
+      0%   { transform: translateY(0); }
+      100% { transform: translateY(4px); }
     }
   </style>
 
-  <!-- ==========================
-       3) Сброс и базовые стили
-  ========================== -->
+  <!-- 3) Сброс и базовые стили -->
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
     body {
       font-family: "IBM Plex Sans", sans-serif;
       background: #000;
       color: #fff;
       line-height: 1.5;
     }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-      transition: color 0.3s;
-    }
-
-    a:hover {
-      color: #0ff;
-    }
+    a { color: inherit; text-decoration: none; transition: color 0.3s; }
+    a:hover { color: #0ff; }
   </style>
 
-  <!-- ==========================
-       4) Хедер: Волна + Контент
-  ========================== -->
+  <!-- 4) Хедер: Волна + Контент, мобильное меню -->
   <style>
     header {
       position: fixed;
-      top: 0;
-      left: 0;
+      top: 0; left: 0;
       width: 100%;
       height: 160px;
-      /* Высота холста */
       z-index: 1000;
     }
-
     #waveCanvas {
       display: block;
       width: 100%;
       height: 100%;
     }
-
     .header-content {
       position: absolute;
-      top: 0;
-      left: 0;
+      top: 0; left: 0;
       width: 100%;
       height: 120px;
-      /* «Официальная» высота шапки */
       display: flex;
       align-items: center;
-      justify-content: center;
+      justify-content: space-between;
+      padding: 0 20px;
       z-index: 10;
     }
-
-    nav a {
-      margin: 0 15px;
-      font-size: 1.2rem;
-      color: #fff;
+    /* Лого (глитч-логотип) в левом углу */
+    .logo-container {
+      display: flex;
+      align-items: center;
+    }
+    .glitch-image {
+      width: 312px;
+      height: 119px;
+      /* На ПК лого показывается полностью, на мобильных уменьшаем */
+    }
+    /* Меню */
+    .nav-links {
+      display: flex;
+      gap: 15px;
+    }
+    /* Бургер-иконка (скрыта на ПК) */
+    .burger {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+    .burger span {
+      display: block;
+      width: 25px;
+      height: 3px;
+      background: #fff;
+      margin: 4px 0;
+    }
+    @media (max-width: 768px) {
+      .glitch-image {
+        width: 100px; /* уменьшаем лого */
+      }
+      .nav-links {
+        display: none;
+        flex-direction: column;
+        background: #000;
+        position: absolute;
+        top: 60px;
+        right: 20px;
+        padding: 10px;
+        border: 1px solid #333;
+        border-radius: 6px;
+      }
+      .burger {
+        display: block;
+      }
     }
   </style>
 
-  <!-- ==========================
-       5) Glitch-Image (с пикселизацией, ±4px, много шагов)
-  ========================== -->
+  <!-- 5) Glitch-Image (пикселизация, фрагментированность) -->
   <style>
     .glitch-image {
-      position: absolute;
-      top: 10px;
-      /* выше волны */
-      left: 20px;
-      width: 312px;
-      height: 119px;
-      z-index: 2001;
+      position: relative;
       animation: glitch-skew 1s infinite linear alternate-reverse;
+      image-rendering: pixelated;
     }
-
     .glitch-image img {
       display: block;
       width: 100%;
       height: 100%;
       image-rendering: pixelated;
     }
-
     .glitch-image::before,
     .glitch-image::after {
       content: "";
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
       background: url("assets/logo.svg") no-repeat center;
       background-size: 312px 119px;
       image-rendering: pixelated;
       pointer-events: none;
       mix-blend-mode: screen;
     }
-
     .glitch-image::before {
       filter: drop-shadow(-2px 0px #ff00c1);
       animation: glitch-anim 3s infinite linear alternate;
     }
-
     .glitch-image::after {
       filter: drop-shadow(2px 0px #00fff9);
       animation: glitch-anim2 3s infinite linear alternate;
     }
-
     @keyframes glitch-anim {
-      0% {
-        clip: rect(10px, 9999px, 20px, 0);
-        transform: translateX(0) skew(0deg);
-      }
-
-      5% {
-        clip: rect(3px, 9999px, 15px, 0);
-        transform: translateX(calc(-3px * var(--glitch-intensity))) skew(calc(1deg * var(--glitch-intensity)));
-      }
-
-      10% {
-        clip: rect(25px, 9999px, 35px, 0);
-        transform: translateX(calc(4px * var(--glitch-intensity))) skew(calc(-2deg * var(--glitch-intensity)));
-      }
-
-      15% {
-        clip: rect(18px, 9999px, 28px, 0);
-        transform: translateX(calc(-2px * var(--glitch-intensity))) skew(calc(3deg * var(--glitch-intensity)));
-      }
-
-      20% {
-        clip: rect(8px, 9999px, 18px, 0);
-        transform: translateX(calc(2px * var(--glitch-intensity))) skew(calc(-1deg * var(--glitch-intensity)));
-      }
-
-      25% {
-        clip: rect(30px, 9999px, 42px, 0);
-        transform: translateX(calc(-4px * var(--glitch-intensity))) skew(calc(2deg * var(--glitch-intensity)));
-      }
-
-      30% {
-        clip: rect(12px, 9999px, 25px, 0);
-        transform: translateX(calc(3px * var(--glitch-intensity))) skew(calc(-3deg * var(--glitch-intensity)));
-      }
-
-      40% {
-        clip: rect(5px, 9999px, 15px, 0);
-        transform: translateX(calc(-2px * var(--glitch-intensity))) skew(calc(1deg * var(--glitch-intensity)));
-      }
-
-      50% {
-        clip: rect(22px, 9999px, 35px, 0);
-        transform: translateX(calc(4px * var(--glitch-intensity))) skew(calc(-2deg * var(--glitch-intensity)));
-      }
-
-      60% {
-        clip: rect(38px, 9999px, 48px, 0);
-        transform: translateX(calc(-3px * var(--glitch-intensity))) skew(calc(3deg * var(--glitch-intensity)));
-      }
-
-      70% {
-        clip: rect(10px, 9999px, 20px, 0);
-        transform: translateX(calc(1px * var(--glitch-intensity))) skew(calc(-1deg * var(--glitch-intensity)));
-      }
-
-      80% {
-        clip: rect(28px, 9999px, 40px, 0);
-        transform: translateX(calc(-4px * var(--glitch-intensity))) skew(calc(2deg * var(--glitch-intensity)));
-      }
-
-      90% {
-        clip: rect(15px, 9999px, 25px, 0);
-        transform: translateX(calc(2px * var(--glitch-intensity))) skew(calc(-2deg * var(--glitch-intensity)));
-      }
-
-      100% {
-        clip: rect(10px, 9999px, 20px, 0);
-        transform: translateX(0) skew(0deg);
-      }
+      0%   { clip: rect(10px,9999px,20px,0); transform: translateX(0) skew(0deg); }
+      5%   { clip: rect(3px,9999px,15px,0); transform: translateX(calc(-3px * var(--glitch-intensity))) skew(calc(1deg * var(--glitch-intensity))); }
+      10%  { clip: rect(25px,9999px,35px,0); transform: translateX(calc(4px * var(--glitch-intensity))) skew(calc(-2deg * var(--glitch-intensity))); }
+      15%  { clip: rect(18px,9999px,28px,0); transform: translateX(calc(-2px * var(--glitch-intensity))) skew(calc(3deg * var(--glitch-intensity))); }
+      20%  { clip: rect(8px,9999px,18px,0); transform: translateX(calc(2px * var(--glitch-intensity))) skew(calc(-1deg * var(--glitch-intensity))); }
+      25%  { clip: rect(30px,9999px,42px,0); transform: translateX(calc(-4px * var(--glitch-intensity))) skew(calc(2deg * var(--glitch-intensity))); }
+      30%  { clip: rect(12px,9999px,25px,0); transform: translateX(calc(3px * var(--glitch-intensity))) skew(calc(-3deg * var(--glitch-intensity))); }
+      35%  { clip: rect(15px,9999px,27px,0); transform: translateX(calc(1px * var(--glitch-intensity))) skew(calc(1deg * var(--glitch-intensity))); }
+      40%  { clip: rect(5px,9999px,15px,0); transform: translateX(calc(-2px * var(--glitch-intensity))) skew(calc(1deg * var(--glitch-intensity))); }
+      50%  { clip: rect(22px,9999px,35px,0); transform: translateX(calc(4px * var(--glitch-intensity))) skew(calc(-2deg * var(--glitch-intensity))); }
+      60%  { clip: rect(38px,9999px,48px,0); transform: translateX(calc(-3px * var(--glitch-intensity))) skew(calc(3deg * var(--glitch-intensity))); }
+      70%  { clip: rect(10px,9999px,20px,0); transform: translateX(calc(1px * var(--glitch-intensity))) skew(calc(-1deg * var(--glitch-intensity))); }
+      80%  { clip: rect(28px,9999px,40px,0); transform: translateX(calc(-4px * var(--glitch-intensity))) skew(calc(2deg * var(--glitch-intensity))); }
+      90%  { clip: rect(15px,9999px,25px,0); transform: translateX(calc(2px * var(--glitch-intensity))) skew(calc(-2deg * var(--glitch-intensity))); }
+      100% { clip: rect(10px,9999px,20px,0); transform: translateX(0) skew(0deg); }
     }
-
     @keyframes glitch-anim2 {
-      0% {
-        clip: rect(5px, 9999px, 15px, 0);
-        transform: translateX(0) skew(0deg);
-      }
-
-      5% {
-        clip: rect(28px, 9999px, 40px, 0);
-        transform: translateX(calc(2px * var(--glitch-intensity))) skew(calc(-1deg * var(--glitch-intensity)));
-      }
-
-      10% {
-        clip: rect(18px, 9999px, 30px, 0);
-        transform: translateX(calc(-4px * var(--glitch-intensity))) skew(calc(2deg * var(--glitch-intensity)));
-      }
-
-      15% {
-        clip: rect(35px, 9999px, 55px, 0);
-        transform: translateX(calc(3px * var(--glitch-intensity))) skew(calc(-2deg * var(--glitch-intensity)));
-      }
-
-      20% {
-        clip: rect(12px, 9999px, 25px, 0);
-        transform: translateX(calc(-2px * var(--glitch-intensity))) skew(calc(1deg * var(--glitch-intensity)));
-      }
-
-      25% {
-        clip: rect(40px, 9999px, 55px, 0);
-        transform: translateX(calc(4px * var(--glitch-intensity))) skew(calc(-3deg * var(--glitch-intensity)));
-      }
-
-      30% {
-        clip: rect(22px, 9999px, 35px, 0);
-        transform: translateX(calc(-3px * var(--glitch-intensity))) skew(calc(2deg * var(--glitch-intensity)));
-      }
-
-      40% {
-        clip: rect(8px, 9999px, 20px, 0);
-        transform: translateX(calc(1px * var(--glitch-intensity))) skew(calc(-1deg * var(--glitch-intensity)));
-      }
-
-      50% {
-        clip: rect(30px, 9999px, 40px, 0);
-        transform: translateX(calc(-2px * var(--glitch-intensity))) skew(calc(3deg * var(--glitch-intensity)));
-      }
-
-      60% {
-        clip: rect(15px, 9999px, 25px, 0);
-        transform: translateX(calc(4px * var(--glitch-intensity))) skew(calc(-2deg * var(--glitch-intensity)));
-      }
-
-      70% {
-        clip: rect(45px, 9999px, 60px, 0);
-        transform: translateX(calc(-4px * var(--glitch-intensity))) skew(calc(1deg * var(--glitch-intensity)));
-      }
-
-      80% {
-        clip: rect(25px, 9999px, 35px, 0);
-        transform: translateX(calc(3px * var(--glitch-intensity))) skew(calc(-3deg * var(--glitch-intensity)));
-      }
-
-      90% {
-        clip: rect(5px, 9999px, 15px, 0);
-        transform: translateX(calc(-1px * var(--glitch-intensity))) skew(calc(2deg * var(--glitch-intensity)));
-      }
-
-      100% {
-        clip: rect(5px, 9999px, 15px, 0);
-        transform: translateX(0) skew(0deg);
-      }
+      0%   { clip: rect(5px,9999px,15px,0); transform: translateX(0) skew(0deg); }
+      5%   { clip: rect(28px,9999px,40px,0); transform: translateX(calc(2px * var(--glitch-intensity))) skew(calc(-1deg * var(--glitch-intensity))); }
+      10%  { clip: rect(18px,9999px,30px,0); transform: translateX(calc(-4px * var(--glitch-intensity))) skew(calc(2deg * var(--glitch-intensity))); }
+      15%  { clip: rect(35px,9999px,55px,0); transform: translateX(calc(3px * var(--glitch-intensity))) skew(calc(-2deg * var(--glitch-intensity))); }
+      20%  { clip: rect(12px,9999px,25px,0); transform: translateX(calc(-2px * var(--glitch-intensity))) skew(calc(1deg * var(--glitch-intensity))); }
+      25%  { clip: rect(40px,9999px,55px,0); transform: translateX(calc(4px * var(--glitch-intensity))) skew(calc(-3deg * var(--glitch-intensity))); }
+      30%  { clip: rect(22px,9999px,35px,0); transform: translateX(calc(-3px * var(--glitch-intensity))) skew(calc(2deg * var(--glitch-intensity))); }
+      35%  { clip: rect(12px,9999px,24px,0); transform: translateX(calc(1px * var(--glitch-intensity))) skew(calc(-1deg * var(--glitch-intensity))); }
+      40%  { clip: rect(8px,9999px,20px,0); transform: translateX(calc(1px * var(--glitch-intensity))) skew(calc(-1deg * var(--glitch-intensity))); }
+      50%  { clip: rect(30px,9999px,40px,0); transform: translateX(calc(-2px * var(--glitch-intensity))) skew(calc(3deg * var(--glitch-intensity))); }
+      60%  { clip: rect(15px,9999px,25px,0); transform: translateX(calc(4px * var(--glitch-intensity))) skew(calc(-2deg * var(--glitch-intensity))); }
+      70%  { clip: rect(45px,9999px,60px,0); transform: translateX(calc(-4px * var(--glitch-intensity))) skew(calc(1deg * var(--glitch-intensity))); }
+      80%  { clip: rect(25px,9999px,35px,0); transform: translateX(calc(3px * var(--glitch-intensity))) skew(calc(-3deg * var(--glitch-intensity))); }
+      90%  { clip: rect(5px,9999px,15px,0); transform: translateX(calc(-1px * var(--glitch-intensity))) skew(calc(2deg * var(--glitch-intensity))); }
+      100% { clip: rect(5px,9999px,15px,0); transform: translateX(0) skew(0deg); }
     }
-
     @keyframes glitch-skew {
-      0% {
-        transform: skew(0deg);
-      }
-
-      50% {
-        transform: skew(1deg);
-      }
-
-      100% {
-        transform: skew(0deg);
-      }
+      0%   { transform: skew(0deg); }
+      50%  { transform: skew(1deg); }
+      100% { transform: skew(0deg); }
     }
   </style>
 
-  <!-- Cover Section -->
+  <!-- 6) Cover Section -->
   <style>
     #cover {
       position: relative;
@@ -381,7 +246,6 @@
       justify-content: center;
       text-align: center;
     }
-
     #cover .cover-content {
       background: rgba(0, 0, 0, 0.4);
       padding: 2rem;
@@ -389,13 +253,11 @@
       max-width: 600px;
       margin: 2rem;
     }
-
     #cover .cover-content h2 {
       font-size: 2rem;
       margin-bottom: 1rem;
       text-transform: uppercase;
     }
-
     #cover .cover-content p {
       font-size: 1.1rem;
       opacity: 0.9;
@@ -403,20 +265,18 @@
     }
   </style>
 
-  <!-- Other Sections -->
+  <!-- 7) Other Sections (Карточки портфолио, About, и т.д.) -->
   <style>
     section {
       padding: 4rem 0;
       background: #000;
     }
-
     h2 {
       text-align: center;
       font-size: 2rem;
       margin-bottom: 2rem;
       text-transform: uppercase;
     }
-
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -424,7 +284,7 @@
       max-width: 1000px;
       margin: 0 auto;
     }
-
+    /* Новая карточка объекта: два блока — media и details */
     .work-item {
       display: flex;
       flex-direction: row;
@@ -435,63 +295,41 @@
       padding: 1rem;
       margin-bottom: 1rem;
     }
-
     .work-media {
       flex: 0 0 120px;
-      /* Фиксированная ширина для изображения на ПК */
     }
-
     .work-media .work-thumb {
       width: 100%;
       border-radius: 6px;
       cursor: pointer;
       image-rendering: pixelated;
     }
-
     .work-details {
       flex: 1;
     }
-
-    /* Для мобильных устройств – изображение над текстом */
     @media (max-width: 768px) {
       .work-item {
         flex-direction: column;
       }
-
       .work-media {
         width: 100%;
       }
     }
-
-    .work-media img,
-    .work-media video {
-      width: 100%;
-      border-radius: 6px;
-    }
-
-    .work-item:hover {
-      transform: scale(1.02);
-      box-shadow: 0 0 8px #0ff;
-    }
-
     .work-item h3 {
       margin-bottom: 0.5rem;
       font-size: 1.2rem;
     }
-
     .work-item p {
       font-size: 0.95rem;
       opacity: 0.9;
       margin-bottom: 0.5rem;
     }
-
     .share-buttons {
       display: flex;
       gap: 0.5rem;
       margin-top: 0.5rem;
       flex-wrap: wrap;
     }
-
     .share-buttons a {
       background: #0ff;
       color: #000;
@@ -500,11 +338,9 @@
       font-size: 0.8rem;
       transition: background 0.3s;
     }
-
     .share-buttons a:hover {
       background: #0cc;
     }
-
     .about-content {
       display: flex;
       flex-wrap: wrap;
@@ -512,27 +348,23 @@
       max-width: 1000px;
       margin: 0 auto;
     }
-
     .bio,
     .artist-statement {
       flex: 1 1 300px;
       min-width: 300px;
     }
-
     .bio h3,
     .artist-statement h3 {
       font-size: 1.3rem;
       margin-bottom: 1rem;
       text-transform: uppercase;
     }
-
     .bio p,
     .artist-statement p {
       font-size: 1rem;
       opacity: 0.9;
       line-height: 1.5;
     }
-
     .artist-photo {
       flex: 1 1 300px;
       min-width: 300px;
@@ -540,8 +372,6 @@
       align-items: center;
       justify-content: center;
     }
-
-    /* Здесь подключаем фото художника */
     .artist-photo img {
       display: block;
       max-width: 250px;
@@ -549,12 +379,11 @@
       border: 2px solid #0ff;
       border-radius: 8px;
       image-rendering: pixelated;
-      /* если хотите пикселизацию */
       filter: grayscale(100%);
     }
   </style>
 
-  <!-- Form & Footer -->
+  <!-- 8) Form & Footer -->
   <style>
     form {
       display: flex;
@@ -563,12 +392,10 @@
       max-width: 500px;
       margin: 0 auto;
     }
-
     form label {
       font-weight: 600;
       margin-bottom: 0.3rem;
     }
-
     form input,
     form textarea {
       padding: 0.6rem;
@@ -578,13 +405,11 @@
       color: #fff;
       font-family: inherit;
     }
-
     form input:focus,
     form textarea:focus {
       outline: none;
       border-color: #0ff;
     }
-
     form button {
       background: #0ff;
       color: #000;
@@ -595,33 +420,27 @@
       cursor: pointer;
       transition: background 0.3s;
     }
-
     form button:hover {
       background: #0cc;
     }
-
     .contact-social {
       text-align: center;
       margin-top: 2rem;
     }
-
     .contact-social a {
       margin: 0 0.5rem;
-      background: rgba(255, 255, 255, 0.1);
+      background: rgba(255,255,255,0.1);
       padding: 0.5rem 1rem;
       border-radius: 4px;
     }
-
     footer {
       background: #000;
       padding: 2rem 0;
       text-align: center;
       font-size: 0.9rem;
     }
-
     .modal {
       display: none;
-      /* Скрыто по умолчанию */
       position: fixed;
       z-index: 3000;
       left: 0;
@@ -631,14 +450,12 @@
       overflow: auto;
       background-color: rgba(0, 0, 0, 0.9);
     }
-
     .modal-content {
       margin: auto;
       display: block;
       max-width: 90%;
       max-height: 90%;
     }
-
     .modal-close {
       position: absolute;
       top: 20px;
@@ -648,14 +465,13 @@
       font-weight: bold;
       cursor: pointer;
     }
-
     .modal-close:hover,
     .modal-close:focus {
       color: #bbb;
     }
   </style>
 
-  <!-- TextScramble Styles -->
+  <!-- 9) TextScramble Styles -->
   <style>
     .scramble-text {
       display: inline-block;
@@ -663,24 +479,27 @@
     }
   </style>
 </head>
-
 <body>
-
   <!-- HEADER -->
   <header>
     <canvas id="waveCanvas"></canvas>
     <div class="header-content">
-      <!-- Глитч-логотип -->
-      <div class="glitch-image">
-        <img src="assets/logo.svg" alt="TheMarkest.art Logo" />
+      <div class="logo-container">
+        <div class="glitch-image">
+          <img src="assets/logo.svg" alt="TheMarkest.art Logo" />
+        </div>
       </div>
-
-      <nav>
+      <nav class="nav-links">
         <a href="#cover">Обложка</a>
         <a href="#works">Портфолио</a>
         <a href="#about">О художнике</a>
         <a href="#contact">Контакты</a>
       </nav>
+      <button class="burger">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
     </div>
   </header>
 
@@ -698,9 +517,9 @@
       <div class="container">
         <h2>Портфолио</h2>
         <div class="grid">
+          <!-- Карточка объекта портфолио -->
           <article class="work-item">
             <div class="work-media">
-              <!-- Изображение или видео (на данный момент изображение) -->
               <img src="assets/sample-work.jpg" alt="Название работы 1" class="work-thumb">
             </div>
             <div class="work-details">
@@ -715,7 +534,6 @@
               </div>
             </div>
           </article>
-
         </div>
       </div>
     </section>
@@ -733,21 +551,6 @@
               основана на принципах конструктивизма, ретрофутуризма и кибернетики, а ключевыми методами являются
               3D-печать, лазерная резка, оптические и кинетические механизмы, проекционные технологии и программируемая
               электроника.
-
-              Родился в семье хореографов, вырос между Санкт-Петербургом и Одессой, что сформировало его
-              чувствительность к пластике, композиции и сценографии. Однако вместо традиционного художественного
-              образования он выбрал путь науки, обучаясь оптико-электронике, что повлияло на его художественную
-              стратегию. Его искусство выстраивается на пересечении инженерии, эстетики и интерактивного опыта, стирая
-              границу между технологиями и человеком.
-
-              В основе его художественного языка — интертекстуальность инженерных решений, где каждое произведение
-              является не просто скульптурой, а исследовательским объектом, вовлекающим зрителя в процесс познания.
-              Художник рассматривает искусство не как инструмент передачи эмоций, а как методологию осмысления
-              реальности, создавая арт-объекты, которые обращаются к логике, анализу и критическому мышлению.
-
-              Его цель — расширение границ интерактивного искусства через развитие концепции саморефлексирующих
-              объектов. В перспективе он стремится к созданию автономных скульптурных систем, способных не только
-              реагировать на зрителя, но и формировать собственное самосознание в диалоге с окружающей средой.
             </p>
           </div>
           <div class="artist-statement">
@@ -756,21 +559,8 @@
               Я создаю скульптуры, в которых современные технологии производства встречаются с наследием инженерной
               мысли прошлого. Моё искусство — это поиск формы, структуры и материала, который отражает логику научного
               прогресса.
-
-              В своих работах я сочетаю 3D-печать, лазерную резку, цифровую обработку и традиционные ремесленные
-              техники, интегрируя их в единую художественную систему. Мне важно показать, как технологии формируют
-              эстетику и как через них можно создавать новые визуальные смыслы, выходящие за пределы привычного
-              восприятия.
-
-              Я вдохновляюсь конструктивизмом, ретрофутуризмом и инженерной эстетикой, рассматривая искусство как способ
-              взаимодействия с научным знанием. В моих скульптурах можно увидеть интертекстуальность инженерных решений,
-              где каждая деталь несёт смысл и отсылает к механике, архитектуре и оптике.
-
-              Меня интересует диалог между прошлым и будущим: как технологии меняются, но принципы остаются вечными. В
-              этом я вижу красоту — в переплетении точности, формы и замысла.
             </p>
           </div>
-          <!-- Блок с фото художника: подключаем portrait.png из папки assets -->
           <div class="artist-photo">
             <img src="assets/portrait.png" alt="Portrait of the Artist">
           </div>
@@ -803,6 +593,8 @@
       &copy; 2025 TheMarkest.art. Все права защищены.
     </div>
   </footer>
+
+  <!-- Модальное окно для полноэкранного просмотра карточки -->
   <div id="modal" class="modal">
     <span id="modal-close" class="modal-close">&times;</span>
     <img id="modal-content" class="modal-content" src="" alt="">
@@ -817,7 +609,6 @@
     let width = 0, height = 0;
     let time = 0;
     let dots = [];
-
     const AMPLITUDE = 15;
     const DOT_SPACING = 40;
     const FREQ_MIN = 0.03;
@@ -826,7 +617,6 @@
     const DOT_RADIUS = 4;
     const HEADER_BG_COLOR = "rgba(85,85,85,0.8)";
     const BASELINE = 120;
-
     function initDots() {
       width = canvas.offsetWidth;
       height = canvas.offsetHeight;
@@ -844,7 +634,6 @@
       }
       dots.push({ x: width, pinned: true });
     }
-
     function animateWave() {
       ctx.clearRect(0, 0, width, height);
       const wavePoints = dots.map(dot => {
@@ -893,16 +682,16 @@
         this.update = this.update.bind(this);
       }
       setText(newText) {
-        const oldText = this.el.innerText;
-        const length = Math.max(oldText.length, newText.length);
+        this.el.innerHTML = ""; // сразу очищаем текст
+        const oldText = "";
+        const length = newText.length;
         const promise = new Promise(resolve => this.resolve = resolve);
         this.queue = [];
         for (let i = 0; i < length; i++) {
-          const from = oldText[i] || "";
-          const to = newText[i] || "";
+          const to = newText[i];
           const start = Math.floor(Math.random() * 30);
           const end = start + Math.floor(Math.random() * 30);
-          this.queue.push({ from, to, start, end, char: null });
+          this.queue.push({ from: "", to, start, end, char: null });
         }
         cancelAnimationFrame(this.frameRequest);
         this.frame = 0;
@@ -910,6 +699,12 @@
         return promise;
       }
       update() {
+        // Если элемент вышел из вьюпорта – отменяем анимацию
+        const rect = this.el.getBoundingClientRect();
+        if(rect.bottom < 0 || rect.top > window.innerHeight) {
+          cancelAnimationFrame(this.frameRequest);
+          return;
+        }
         let output = "";
         let complete = 0;
         for (let i = 0, n = this.queue.length; i < n; i++) {
@@ -939,7 +734,6 @@
         return this.chars[Math.floor(Math.random() * this.chars.length)];
       }
     }
-
     window.addEventListener('load', () => {
       const paragraphs = document.querySelectorAll('p');
       const observer = new IntersectionObserver((entries, obs) => {
@@ -948,7 +742,7 @@
             const el = entry.target;
             const text = el.innerText;
             el.dataset.scrambleText = text;
-            el.innerText = "";
+            el.innerHTML = "";
             const fx = new TextScramble(el);
             fx.setText(text).then(() => {
               obs.unobserve(el);
@@ -984,33 +778,45 @@
     }
   </script>
 
-<script>
-  // Модальное окно для полноэкранного просмотра изображения
-  const modal = document.getElementById("modal");
-  const modalImg = document.getElementById("modal-content");
-  const modalClose = document.getElementById("modal-close");
-
-  // При клике на изображение в карточке открываем модальное окно
-  document.querySelectorAll(".work-thumb").forEach(img => {
-    img.addEventListener("click", function() {
-      modal.style.display = "block";
-      modalImg.src = this.src;
+  <!-- ==========================
+       Burger Menu Script (для мобильного меню)
+  ========================== -->
+  <script>
+    const burger = document.querySelector('.burger');
+    const navLinks = document.querySelector('.nav-links');
+    burger.addEventListener('click', () => {
+      if (getComputedStyle(navLinks).display === 'none') {
+        navLinks.style.display = 'flex';
+      } else {
+        navLinks.style.display = 'none';
+      }
     });
-  });
+  </script>
 
-  // Закрытие модального окна по клику на кнопку
-  modalClose.addEventListener("click", function() {
-    modal.style.display = "none";
-  });
+  <!-- ==========================
+       Modal Script (для полноэкранного просмотра медиа в карточках)
+  ========================== -->
+  <script>
+    const modal = document.getElementById("modal");
+    const modalImg = document.getElementById("modal-content");
+    const modalClose = document.getElementById("modal-close");
 
-  // Закрытие модального окна при клике вне изображения
-  modal.addEventListener("click", function(e) {
-    if (e.target === modal) {
+    document.querySelectorAll(".work-thumb").forEach(img => {
+      img.addEventListener("click", function() {
+        modal.style.display = "block";
+        modalImg.src = this.src;
+      });
+    });
+
+    modalClose.addEventListener("click", function() {
       modal.style.display = "none";
-    }
-  });
-</script>
+    });
 
+    modal.addEventListener("click", function(e) {
+      if (e.target === modal) {
+        modal.style.display = "none";
+      }
+    });
+  </script>
 </body>
-
 </html>
