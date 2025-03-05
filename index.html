@@ -56,14 +56,19 @@
       animation: scanline 0.15s infinite steps(1);
       mix-blend-mode: lighten;
     }
+    /* Менее резкий, более случайный flicker */
     @keyframes flicker {
-      0%   { opacity: 0.02; }
-      15%  { opacity: 0.12; }
-      30%  { opacity: 0.22; }
-      45%  { opacity: 0.1; }
-      60%  { opacity: 0.2; }
-      75%  { opacity: 0.06; }
-      100% { opacity: 0.02; }
+      0%   { opacity: 0.03; }
+      10%  { opacity: 0.06; }
+      20%  { opacity: 0.10; }
+      30%  { opacity: 0.08; }
+      40%  { opacity: 0.12; }
+      50%  { opacity: 0.07; }
+      60%  { opacity: 0.14; }
+      70%  { opacity: 0.09; }
+      80%  { opacity: 0.05; }
+      90%  { opacity: 0.11; }
+      100% { opacity: 0.03; }
     }
     @keyframes scanline {
       0%   { transform: translateY(0); }
@@ -73,23 +78,36 @@
 
   <!-- 3) Сброс и базовые стили -->
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
+    * {
+      margin: 0; 
+      padding: 0; 
+      box-sizing: border-box;
+    }
+    html {
+      scroll-behavior: smooth;
+    }
     body {
       font-family: "IBM Plex Sans", sans-serif;
       background: #000;
       color: #fff;
       line-height: 1.5;
     }
-    a { color: inherit; text-decoration: none; transition: color 0.3s; }
-    a:hover { color: #0ff; }
+    a {
+      color: inherit;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    a:hover {
+      color: #0ff;
+    }
   </style>
 
   <!-- 4) Хедер: Волна + Контент, меню на мобильных/десктопе -->
   <style>
     header {
       position: fixed;
-      top: 0; left: 0;
+      top: 0; 
+      left: 0;
       width: 100%;
       height: 160px;
       z-index: 1000;
@@ -101,16 +119,16 @@
     }
     .header-content {
       position: absolute;
-      top: 0; left: 0;
+      top: 0; 
+      left: 0;
       width: 100%;
       height: 120px;
       display: flex;
       align-items: center;
-      justify-content: center; /* По умолчанию центр на desktop */
+      justify-content: center; /* на desktop – центр */
       padding: 0 20px;
       z-index: 10;
     }
-    /* Лого-container слева, nav-links по центру (desktop), burger скрыт */
     .logo-container {
       position: absolute;
       left: 20px;
@@ -119,6 +137,11 @@
     .nav-links {
       display: flex;
       gap: 20px;
+    }
+    /* Шрифт меню крупнее */
+    .nav-links a {
+      font-size: 1.4rem;
+      color: #fff;
     }
     .burger {
       display: none;
@@ -136,10 +159,9 @@
       background: #fff;
       margin: 4px 0;
     }
-    /* Мобильная верстка */
     @media (max-width: 768px) {
       .header-content {
-        justify-content: center; /* можно и space-between, но тогда меню справа */
+        justify-content: center;
       }
       .nav-links {
         display: none; /* скрыто по умолчанию */
@@ -176,8 +198,10 @@
     .glitch-image::after {
       content: "";
       position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
+      top: 0; 
+      left: 0;
+      width: 100%; 
+      height: 100%;
       background: url("assets/logo.svg") no-repeat center;
       background-size: 312px 119px;
       image-rendering: pixelated;
@@ -246,7 +270,7 @@
       text-align: center;
     }
     #cover .cover-content {
-      background: rgba(0, 0, 0, 0.4);
+      background: rgba(0,0,0,0.4);
       padding: 2rem;
       border-radius: 8px;
       max-width: 600px;
@@ -264,7 +288,7 @@
     }
   </style>
 
-  <!-- 7) Other Sections (Карточки портфолио, About, и т.д.) -->
+  <!-- 7) Other Sections -->
   <style>
     section {
       padding: 4rem 0;
@@ -346,19 +370,16 @@
       max-width: 1000px;
       margin: 0 auto;
     }
-    .bio,
-    .artist-statement {
+    .bio, .artist-statement {
       flex: 1 1 300px;
       min-width: 300px;
     }
-    .bio h3,
-    .artist-statement h3 {
+    .bio h3, .artist-statement h3 {
       font-size: 1.3rem;
       margin-bottom: 1rem;
       text-transform: uppercase;
     }
-    .bio p,
-    .artist-statement p {
+    .bio p, .artist-statement p {
       font-size: 1rem;
       opacity: 0.9;
       line-height: 1.5;
@@ -535,7 +556,7 @@
               </div>
             </div>
           </article>
-          <!-- Можно добавлять ещё карточки -->
+          <!-- Добавляйте ещё карточки по аналогии -->
         </div>
       </div>
     </section>
@@ -678,8 +699,7 @@
         this.update = this.update.bind(this);
       }
       setText(newText) {
-        // очищаем сразу
-        this.el.innerHTML = "";
+        this.el.innerHTML = ""; // очищаем сразу
         const length = newText.length;
         const promise = new Promise(resolve => this.resolve = resolve);
         this.queue = [];
@@ -695,8 +715,8 @@
         return promise;
       }
       update() {
-        // если элемент вышел из вьюпорта – отменяем
         const rect = this.el.getBoundingClientRect();
+        // если элемент вышел из вьюпорта – отменяем
         if (rect.bottom < 0 || rect.top > window.innerHeight) {
           cancelAnimationFrame(this.frameRequest);
           return;
