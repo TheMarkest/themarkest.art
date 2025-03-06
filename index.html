@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TheMarkest.art – Glitch Image + Portrait</title>
-  <meta name="description" content="Портфолио художника в стиле sci-fi/cyberpunk, с волной, старомониторным эффектом, TextScramble, пиксельным глитч-логотипом, фото художника и удобными карточками работ." />
+  <meta name="description" content="Портфолио художника в стиле sci‑fi/cyberpunk, с волной, старомониторным эффектом, TextScramble, пиксельным глитч‑логотипом, фото художника и удобными карточками работ." />
 
   <!-- Favicons -->
   <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/apple-touch-icon.png">
@@ -289,25 +289,25 @@
       margin-bottom: 2rem;
       text-transform: uppercase;
     }
+    /* На десктопе портфолио – вертикальная раскладка на всю ширину */
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      grid-template-columns: 1fr;
       gap: 2rem;
       max-width: 1000px;
       margin: 0 auto;
     }
-    /* Карточка портфолио: два блока – work-media и work-details */
     .work-item {
       display: flex;
-      flex-direction: row;
+      flex-direction: column;
       gap: 1rem;
       background: #222;
       border: 1px solid #333;
       border-radius: 6px;
       padding: 1rem;
+      width: 100%;
       margin-bottom: 1rem;
     }
-    /* Обеспечиваем квадрат для изображения: фиксированная ширина и высота, обрезка через overflow */
     .work-media {
       flex: 0 0 120px;
       width: 120px;
@@ -326,13 +326,16 @@
       flex: 1;
     }
     @media (max-width: 768px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
       .work-item {
         flex-direction: column;
       }
       .work-media {
         width: 100%;
         height: 0;
-        padding-bottom: 100%; /* сохраняем соотношение 1:1 */
+        padding-bottom: 100%; /* квадрат */
       }
     }
     .work-item h3 {
@@ -344,52 +347,60 @@
       opacity: 0.9;
       margin-bottom: 0.5rem;
     }
-    /* Убираем блок соцсетей из карточки */
-    
+    /* Раздел "О художнике" – располагаем блоки вертикально */
     .about-content {
       display: flex;
-      flex-wrap: wrap;
+      flex-direction: column;
       gap: 2rem;
       max-width: 1000px;
       margin: 0 auto;
     }
     .bio, .artist-statement {
-      flex: 1 1 300px;
-      min-width: 300px;
+      width: 100%;
     }
     .bio h3, .artist-statement h3 {
       font-size: 1.3rem;
       margin-bottom: 1rem;
       text-transform: uppercase;
     }
-    /* Для удобного чтения: каждый блок текста — отдельная карточка */
+    /* Текстовые блоки обернуты в карточки с полупрозрачным фоном */
     .bio p, .artist-statement p {
       font-size: 1rem;
       opacity: 0.9;
       line-height: 1.5;
       white-space: pre-line;
-      background: rgba(255, 255, 255, 0.1);
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
       padding: 10px;
       border-radius: 4px;
     }
-    .artist-photo {
-      flex: 1 1 300px;
-      min-width: 300px;
+    /* Для десктопа: объединяем блоки statement и портрет в одну строку */
+    .statement-row {
       display: flex;
-      align-items: center;
-      justify-content: center;
+      flex-direction: row;
+      gap: 2rem;
+      width: 100%;
     }
-    .artist-photo img {
-      display: block;
-      max-width: 250px;
-      height: auto;
-      border: 2px solid #0ff;
-      border-radius: 8px;
-      image-rendering: pixelated;
-      filter: grayscale(100%);
+    .statement-row .artist-statement {
+      flex: 1;
     }
-    /* Для портфолио: добавьте 14 карточек, как показано ниже (пример карточки повторяется 14 раз) */
+    .statement-row .artist-photo {
+      flex: 0 0 250px;
+      align-self: flex-start;
+    }
+    @media (max-width: 768px) {
+      .statement-row {
+        flex-direction: column;
+      }
+    }
+    /* Если на десктопе нужно, можно переместить портрет выше текстов */
+    @media (min-width: 769px) {
+      .about-content {
+        flex-direction: column;
+      }
+    }
+    /* Обновлённый порядок в разделе "О художнике": 
+       Биография, затем блок с Artist Statement и портретом справа */
   </style>
 
   <!-- 8) Form & Footer -->
@@ -525,7 +536,7 @@
       <div class="container">
         <h2>Портфолио</h2>
         <div class="grid">
-          <!-- Здесь 14 карточек портфолио. Пример карточки: -->
+          <!-- 14 карточек портфолио -->
           <article class="work-item">
             <div class="work-media">
               <img src="assets/sample-work.jpg" alt="Работа 1" class="work-thumb">
@@ -536,7 +547,7 @@
               <p>Краткое описание концепции, технологий и материалов.</p>
             </div>
           </article>
-          <!-- Карточки 2-14: повторите шаблон с изменением содержимого -->
+          <!-- Повторите шаблон для карточек 2 - 14 -->
           <article class="work-item">
             <div class="work-media">
               <img src="assets/sample-work.jpg" alt="Работа 2" class="work-thumb">
@@ -675,9 +686,6 @@
       <div class="container">
         <h2>О художнике</h2>
         <div class="about-content">
-          <div class="artist-photo">
-            <img src="assets/portrait.png" alt="Portrait of the Artist">
-          </div>
           <div class="bio">
             <h3>Биография</h3>
             <p class="scramble-text">
@@ -690,9 +698,11 @@
 Однако вместо традиционного художественного образования он выбрал путь науки, обучаясь оптико-электронике, что повлияло на его художественную стратегию.
             </p>
           </div>
-          <div class="artist-statement">
-            <h3>Artist Statement</h3>
-            <p class="scramble-text">
+          <!-- Блок для artist statement и портрета -->
+          <div class="statement-row">
+            <div class="artist-statement">
+              <h3>Artist Statement</h3>
+              <p class="scramble-text">
 Я создаю скульптуры, в которых современные технологии производства встречаются с наследием инженерной мысли прошлого. 
 Моё искусство — это поиск формы, структуры и материала, отражающих логику научного прогресса.
 
@@ -705,7 +715,11 @@
 
 Меня интересует диалог между прошлым и будущим: как технологии меняются, но принципы остаются вечными. 
 В этом я вижу красоту — в переплетении точности, формы и замысла.
-            </p>
+              </p>
+            </div>
+            <div class="artist-photo">
+              <img src="assets/portrait.png" alt="Portrait of the Artist">
+            </div>
           </div>
         </div>
       </div>
