@@ -78,11 +78,7 @@
 
   <!-- 3) Сброс и базовые стили -->
   <style>
-    * {
-      margin: 0; 
-      padding: 0; 
-      box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     html { scroll-behavior: smooth; }
     body {
       font-family: "IBM Plex Sans", sans-serif;
@@ -300,7 +296,7 @@
       max-width: 1000px;
       margin: 0 auto;
     }
-    /* Карточка объекта портфолио с двумя блоками: media и details */
+    /* Карточка портфолио: два блока – work-media и work-details */
     .work-item {
       display: flex;
       flex-direction: row;
@@ -311,11 +307,17 @@
       padding: 1rem;
       margin-bottom: 1rem;
     }
+    /* Обеспечиваем квадрат для изображения: фиксированная ширина и высота, обрезка через overflow */
     .work-media {
       flex: 0 0 120px;
+      width: 120px;
+      height: 120px;
+      overflow: hidden;
     }
     .work-media .work-thumb {
       width: 100%;
+      height: 100%;
+      object-fit: cover;
       border-radius: 6px;
       cursor: pointer;
       image-rendering: pixelated;
@@ -329,6 +331,8 @@
       }
       .work-media {
         width: 100%;
+        height: 0;
+        padding-bottom: 100%; /* сохраняем соотношение 1:1 */
       }
     }
     .work-item h3 {
@@ -340,23 +344,8 @@
       opacity: 0.9;
       margin-bottom: 0.5rem;
     }
-    .share-buttons {
-      display: flex;
-      gap: 0.5rem;
-      margin-top: 0.5rem;
-      flex-wrap: wrap;
-    }
-    .share-buttons a {
-      background: #0ff;
-      color: #000;
-      padding: 0.3rem 0.6rem;
-      border-radius: 3px;
-      font-size: 0.8rem;
-      transition: background 0.3s;
-    }
-    .share-buttons a:hover {
-      background: #0cc;
-    }
+    /* Убираем блок соцсетей из карточки */
+    
     .about-content {
       display: flex;
       flex-wrap: wrap;
@@ -373,12 +362,16 @@
       margin-bottom: 1rem;
       text-transform: uppercase;
     }
-    /* Добавляем white-space для удобства чтения */
+    /* Для удобного чтения: каждый блок текста — отдельная карточка */
     .bio p, .artist-statement p {
       font-size: 1rem;
       opacity: 0.9;
       line-height: 1.5;
       white-space: pre-line;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 10px;
+      border-radius: 4px;
     }
     .artist-photo {
       flex: 1 1 300px;
@@ -396,8 +389,7 @@
       image-rendering: pixelated;
       filter: grayscale(100%);
     }
-    /* Добавляем 14 карточек в портфолио */
-    /* Пример: скопируйте шаблон .work-item 14 раз */
+    /* Для портфолио: добавьте 14 карточек, как показано ниже (пример карточки повторяется 14 раз) */
   </style>
 
   <!-- 8) Form & Footer -->
@@ -498,20 +490,19 @@
   <header>
     <canvas id="waveCanvas"></canvas>
     <div class="header-content">
-      <!-- Лого (desktop: слева, mobile: центр) -->
+      <!-- Лого (на desktop слева, на mobile центр) -->
       <div class="logo-container">
         <div class="glitch-image">
           <img src="assets/logo.svg" alt="TheMarkest.art Logo" />
         </div>
       </div>
-      <!-- Меню (desktop: по центру, mobile: скрыто, открывается бургером) -->
+      <!-- Меню (desktop: по центру, mobile: скрыто, бургер) -->
       <nav class="nav-links">
         <a href="#cover">Обложка</a>
         <a href="#works">Портфолио</a>
         <a href="#about">О художнике</a>
         <a href="#contact">Контакты</a>
       </nav>
-      <!-- Бургер (только на мобильных) -->
       <button class="burger">
         <span></span>
         <span></span>
@@ -534,8 +525,7 @@
       <div class="container">
         <h2>Портфолио</h2>
         <div class="grid">
-          <!-- Добавлены 14 карточек портфолио -->
-          <!-- Карточка 1 -->
+          <!-- Здесь 14 карточек портфолио. Пример карточки: -->
           <article class="work-item">
             <div class="work-media">
               <img src="assets/sample-work.jpg" alt="Работа 1" class="work-thumb">
@@ -544,15 +534,9 @@
               <h3>Работа 1</h3>
               <p>Год: 2023</p>
               <p>Краткое описание концепции, технологий и материалов.</p>
-              <div class="share-buttons">
-                <a href="#">Facebook</a>
-                <a href="#">Twitter</a>
-                <a href="#">Instagram</a>
-                <a href="#">Telegram</a>
-              </div>
             </div>
           </article>
-          <!-- Карточка 2 -->
+          <!-- Карточки 2-14: повторите шаблон с изменением содержимого -->
           <article class="work-item">
             <div class="work-media">
               <img src="assets/sample-work.jpg" alt="Работа 2" class="work-thumb">
@@ -561,15 +545,8 @@
               <h3>Работа 2</h3>
               <p>Год: 2023</p>
               <p>Описание работы 2.</p>
-              <div class="share-buttons">
-                <a href="#">Facebook</a>
-                <a href="#">Twitter</a>
-                <a href="#">Instagram</a>
-                <a href="#">Telegram</a>
-              </div>
             </div>
           </article>
-          <!-- Карточка 3 -->
           <article class="work-item">
             <div class="work-media">
               <img src="assets/sample-work.jpg" alt="Работа 3" class="work-thumb">
@@ -578,15 +555,8 @@
               <h3>Работа 3</h3>
               <p>Год: 2023</p>
               <p>Описание работы 3.</p>
-              <div class="share-buttons">
-                <a href="#">Facebook</a>
-                <a href="#">Twitter</a>
-                <a href="#">Instagram</a>
-                <a href="#">Telegram</a>
-              </div>
             </div>
           </article>
-          <!-- Карточка 4 -->
           <article class="work-item">
             <div class="work-media">
               <img src="assets/sample-work.jpg" alt="Работа 4" class="work-thumb">
@@ -595,15 +565,8 @@
               <h3>Работа 4</h3>
               <p>Год: 2023</p>
               <p>Описание работы 4.</p>
-              <div class="share-buttons">
-                <a href="#">Facebook</a>
-                <a href="#">Twitter</a>
-                <a href="#">Instagram</a>
-                <a href="#">Telegram</a>
-              </div>
             </div>
           </article>
-          <!-- Карточка 5 -->
           <article class="work-item">
             <div class="work-media">
               <img src="assets/sample-work.jpg" alt="Работа 5" class="work-thumb">
@@ -612,15 +575,8 @@
               <h3>Работа 5</h3>
               <p>Год: 2023</p>
               <p>Описание работы 5.</p>
-              <div class="share-buttons">
-                <a href="#">Facebook</a>
-                <a href="#">Twitter</a>
-                <a href="#">Instagram</a>
-                <a href="#">Telegram</a>
-              </div>
             </div>
           </article>
-          <!-- Карточка 6 -->
           <article class="work-item">
             <div class="work-media">
               <img src="assets/sample-work.jpg" alt="Работа 6" class="work-thumb">
@@ -629,15 +585,8 @@
               <h3>Работа 6</h3>
               <p>Год: 2023</p>
               <p>Описание работы 6.</p>
-              <div class="share-buttons">
-                <a href="#">Facebook</a>
-                <a href="#">Twitter</a>
-                <a href="#">Instagram</a>
-                <a href="#">Telegram</a>
-              </div>
             </div>
           </article>
-          <!-- Карточка 7 -->
           <article class="work-item">
             <div class="work-media">
               <img src="assets/sample-work.jpg" alt="Работа 7" class="work-thumb">
@@ -646,15 +595,8 @@
               <h3>Работа 7</h3>
               <p>Год: 2023</p>
               <p>Описание работы 7.</p>
-              <div class="share-buttons">
-                <a href="#">Facebook</a>
-                <a href="#">Twitter</a>
-                <a href="#">Instagram</a>
-                <a href="#">Telegram</a>
-              </div>
             </div>
           </article>
-          <!-- Карточка 8 -->
           <article class="work-item">
             <div class="work-media">
               <img src="assets/sample-work.jpg" alt="Работа 8" class="work-thumb">
@@ -663,15 +605,8 @@
               <h3>Работа 8</h3>
               <p>Год: 2023</p>
               <p>Описание работы 8.</p>
-              <div class="share-buttons">
-                <a href="#">Facebook</a>
-                <a href="#">Twitter</a>
-                <a href="#">Instagram</a>
-                <a href="#">Telegram</a>
-              </div>
             </div>
           </article>
-          <!-- Карточка 9 -->
           <article class="work-item">
             <div class="work-media">
               <img src="assets/sample-work.jpg" alt="Работа 9" class="work-thumb">
@@ -680,15 +615,8 @@
               <h3>Работа 9</h3>
               <p>Год: 2023</p>
               <p>Описание работы 9.</p>
-              <div class="share-buttons">
-                <a href="#">Facebook</a>
-                <a href="#">Twitter</a>
-                <a href="#">Instagram</a>
-                <a href="#">Telegram</a>
-              </div>
             </div>
           </article>
-          <!-- Карточка 10 -->
           <article class="work-item">
             <div class="work-media">
               <img src="assets/sample-work.jpg" alt="Работа 10" class="work-thumb">
@@ -697,15 +625,8 @@
               <h3>Работа 10</h3>
               <p>Год: 2023</p>
               <p>Описание работы 10.</p>
-              <div class="share-buttons">
-                <a href="#">Facebook</a>
-                <a href="#">Twitter</a>
-                <a href="#">Instagram</a>
-                <a href="#">Telegram</a>
-              </div>
             </div>
           </article>
-          <!-- Карточка 11 -->
           <article class="work-item">
             <div class="work-media">
               <img src="assets/sample-work.jpg" alt="Работа 11" class="work-thumb">
@@ -714,15 +635,8 @@
               <h3>Работа 11</h3>
               <p>Год: 2023</p>
               <p>Описание работы 11.</p>
-              <div class="share-buttons">
-                <a href="#">Facebook</a>
-                <a href="#">Twitter</a>
-                <a href="#">Instagram</a>
-                <a href="#">Telegram</a>
-              </div>
             </div>
           </article>
-          <!-- Карточка 12 -->
           <article class="work-item">
             <div class="work-media">
               <img src="assets/sample-work.jpg" alt="Работа 12" class="work-thumb">
@@ -731,15 +645,8 @@
               <h3>Работа 12</h3>
               <p>Год: 2023</p>
               <p>Описание работы 12.</p>
-              <div class="share-buttons">
-                <a href="#">Facebook</a>
-                <a href="#">Twitter</a>
-                <a href="#">Instagram</a>
-                <a href="#">Telegram</a>
-              </div>
             </div>
           </article>
-          <!-- Карточка 13 -->
           <article class="work-item">
             <div class="work-media">
               <img src="assets/sample-work.jpg" alt="Работа 13" class="work-thumb">
@@ -748,15 +655,8 @@
               <h3>Работа 13</h3>
               <p>Год: 2023</p>
               <p>Описание работы 13.</p>
-              <div class="share-buttons">
-                <a href="#">Facebook</a>
-                <a href="#">Twitter</a>
-                <a href="#">Instagram</a>
-                <a href="#">Telegram</a>
-              </div>
             </div>
           </article>
-          <!-- Карточка 14 -->
           <article class="work-item">
             <div class="work-media">
               <img src="assets/sample-work.jpg" alt="Работа 14" class="work-thumb">
@@ -765,12 +665,6 @@
               <h3>Работа 14</h3>
               <p>Год: 2023</p>
               <p>Описание работы 14.</p>
-              <div class="share-buttons">
-                <a href="#">Facebook</a>
-                <a href="#">Twitter</a>
-                <a href="#">Instagram</a>
-                <a href="#">Telegram</a>
-              </div>
             </div>
           </article>
         </div>
@@ -781,6 +675,9 @@
       <div class="container">
         <h2>О художнике</h2>
         <div class="about-content">
+          <div class="artist-photo">
+            <img src="assets/portrait.png" alt="Portrait of the Artist">
+          </div>
           <div class="bio">
             <h3>Биография</h3>
             <p class="scramble-text">
@@ -809,9 +706,6 @@
 Меня интересует диалог между прошлым и будущим: как технологии меняются, но принципы остаются вечными. 
 В этом я вижу красоту — в переплетении точности, формы и замысла.
             </p>
-          </div>
-          <div class="artist-photo">
-            <img src="assets/portrait.png" alt="Portrait of the Artist">
           </div>
         </div>
       </div>
@@ -1018,7 +912,7 @@
     }
   </script>
 
-  <!-- Burger Menu Script (для мобильного меню) -->
+  <!-- Burger Menu Script -->
   <script>
     const burger = document.querySelector('.burger');
     const navLinks = document.querySelector('.nav-links');
