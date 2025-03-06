@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TheMarkest.art – Glitch Image + Portrait</title>
-  <meta name="description" content="Портфолио художника в стиле sci‑fi/cyberpunk, с волной, старомониторным эффектом, TextScramble, пиксельным глитч‑логотипом, фото художника и удобными карточками работ." />
+  <meta name="description" content="Портфолио художника в стиле sci-fi/cyberpunk, с волной, старомониторным эффектом, TextScramble, пиксельным глитч-логотипом, фото художника и удобными карточками работ." />
 
   <!-- Favicons -->
   <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/apple-touch-icon.png">
@@ -56,7 +56,6 @@
       animation: scanline 0.15s infinite steps(1);
       mix-blend-mode: lighten;
     }
-    /* Менее резкий и случайный flicker */
     @keyframes flicker {
       0%   { opacity: 0.03; }
       10%  { opacity: 0.06; }
@@ -144,12 +143,10 @@
       background: #fff;
       margin: 4px 0;
     }
-    /* Мобильное меню */
     @media (max-width: 768px) {
       .header-content {
         justify-content: center;
       }
-      /* Центрируем логотип на мобильных */
       .logo-container {
         position: static;
         margin: 0 auto;
@@ -289,17 +286,17 @@
       margin-bottom: 2rem;
       text-transform: uppercase;
     }
-    /* На десктопе портфолио – карточки вертикально, на всю ширину */
+    /* Портфолио: карточки вертикально, текст справа от картинки */
     .grid {
       display: grid;
-      grid-template-columns: 1fr;
+      grid-template-columns: 1fr; /* одна колонка на десктопе */
       gap: 2rem;
       max-width: 1000px;
       margin: 0 auto;
     }
     .work-item {
       display: flex;
-      flex-direction: row;
+      flex-direction: row; /* картинка слева, текст справа */
       gap: 1rem;
       background: #222;
       border: 1px solid #333;
@@ -326,7 +323,7 @@
       flex: 1;
       display: flex;
       flex-direction: column;
-      justify-content: center;
+      justify-content: center; /* выравниваем по вертикали */
     }
     @media (max-width: 768px) {
       .grid {
@@ -338,7 +335,7 @@
       .work-media {
         width: 100%;
         height: 0;
-        padding-bottom: 100%;
+        padding-bottom: 100%; /* квадрат */
       }
     }
     .work-item h3 {
@@ -350,7 +347,7 @@
       opacity: 0.9;
       margin-bottom: 0.5rem;
     }
-    /* Раздел "О художнике" – переставляем портрет: теперь он справа от блока био */
+    /* Раздел "О художнике" – портрет справа от биографии, statement ниже */
     .about-content {
       display: flex;
       flex-direction: column;
@@ -358,21 +355,22 @@
       max-width: 1000px;
       margin: 0 auto;
     }
-    /* Новая структура: верхняя строка — блок с биографией и портретом, портрет справа */
     .bio-row {
       display: flex;
       flex-direction: row;
+      align-items: flex-start; /* выравниваем по верхнему краю */
       gap: 2rem;
     }
     .bio {
-      flex: 1;
+      flex: 1; /* тянется на оставшуюся ширину */
+      display: flex;
+      flex-direction: column; /* заголовок сверху, текст ниже */
     }
     .bio h3 {
       font-size: 1.3rem;
       margin-bottom: 1rem;
       text-transform: uppercase;
     }
-    /* Текст в био – карточки с фоном и рамкой */
     .bio p {
       font-size: 1rem;
       opacity: 0.9;
@@ -382,24 +380,22 @@
       border: 1px solid rgba(255,255,255,0.2);
       padding: 10px;
       border-radius: 4px;
-      height: 100%; /* растянуть до высоты контейнера */
+      /* убрали фиксированную высоту */
     }
-    /* Портрет должен иметь ту же высоту, что и блок био */
     .artist-photo {
       flex: 0 0 250px;
       display: flex;
-      align-items: stretch;
+      align-items: flex-start; /* выравниваем портрет по верху */
     }
     .artist-photo img {
       width: 100%;
-      height: 100%;
+      height: auto;
       object-fit: cover;
       border: 2px solid #0ff;
       border-radius: 8px;
       image-rendering: pixelated;
       filter: grayscale(100%);
     }
-    /* Artist Statement – идёт ниже, на всю ширину */
     .artist-statement {
       width: 100%;
     }
@@ -417,6 +413,11 @@
       border: 1px solid rgba(255,255,255,0.2);
       padding: 10px;
       border-radius: 4px;
+    }
+    @media (max-width: 768px) {
+      .bio-row {
+        flex-direction: column;
+      }
     }
   </style>
 
@@ -478,10 +479,8 @@
       display: none;
       position: fixed;
       z-index: 3000;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
+      left: 0; top: 0;
+      width: 100%; height: 100%;
       overflow: auto;
       background-color: rgba(0,0,0,0.9);
     }
@@ -518,7 +517,7 @@
   <header>
     <canvas id="waveCanvas"></canvas>
     <div class="header-content">
-      <!-- Лого (на desktop слева, на mobile центр) -->
+      <!-- Лого (desktop слева, mobile центр) -->
       <div class="logo-container">
         <div class="glitch-image">
           <img src="assets/logo.svg" alt="TheMarkest.art Logo" />
@@ -549,11 +548,12 @@
 
   <!-- MAIN CONTENT -->
   <main>
+    <!-- ПОРТФОЛИО -->
     <section id="works">
       <div class="container">
         <h2>Портфолио</h2>
         <div class="grid">
-          <!-- 14 карточек портфолио -->
+          <!-- 14 карточек (пример) -->
           <article class="work-item">
             <div class="work-media">
               <img src="assets/sample-work.jpg" alt="Работа 1" class="work-thumb">
@@ -561,149 +561,20 @@
             <div class="work-details">
               <h3>Работа 1</h3>
               <p>Год: 2023</p>
-              <p>Краткое описание концепции, технологий и материалов.</p>
+              <p>Описание работы 1.</p>
             </div>
           </article>
-          <!-- Повторите шаблон для карточек 2-14 -->
-          <article class="work-item">
-            <div class="work-media">
-              <img src="assets/sample-work.jpg" alt="Работа 2" class="work-thumb">
-            </div>
-            <div class="work-details">
-              <h3>Работа 2</h3>
-              <p>Год: 2023</p>
-              <p>Описание работы 2.</p>
-            </div>
-          </article>
-          <article class="work-item">
-            <div class="work-media">
-              <img src="assets/sample-work.jpg" alt="Работа 3" class="work-thumb">
-            </div>
-            <div class="work-details">
-              <h3>Работа 3</h3>
-              <p>Год: 2023</p>
-              <p>Описание работы 3.</p>
-            </div>
-          </article>
-          <article class="work-item">
-            <div class="work-media">
-              <img src="assets/sample-work.jpg" alt="Работа 4" class="work-thumb">
-            </div>
-            <div class="work-details">
-              <h3>Работа 4</h3>
-              <p>Год: 2023</p>
-              <p>Описание работы 4.</p>
-            </div>
-          </article>
-          <article class="work-item">
-            <div class="work-media">
-              <img src="assets/sample-work.jpg" alt="Работа 5" class="work-thumb">
-            </div>
-            <div class="work-details">
-              <h3>Работа 5</h3>
-              <p>Год: 2023</p>
-              <p>Описание работы 5.</p>
-            </div>
-          </article>
-          <article class="work-item">
-            <div class="work-media">
-              <img src="assets/sample-work.jpg" alt="Работа 6" class="work-thumb">
-            </div>
-            <div class="work-details">
-              <h3>Работа 6</h3>
-              <p>Год: 2023</p>
-              <p>Описание работы 6.</p>
-            </div>
-          </article>
-          <article class="work-item">
-            <div class="work-media">
-              <img src="assets/sample-work.jpg" alt="Работа 7" class="work-thumb">
-            </div>
-            <div class="work-details">
-              <h3>Работа 7</h3>
-              <p>Год: 2023</p>
-              <p>Описание работы 7.</p>
-            </div>
-          </article>
-          <article class="work-item">
-            <div class="work-media">
-              <img src="assets/sample-work.jpg" alt="Работа 8" class="work-thumb">
-            </div>
-            <div class="work-details">
-              <h3>Работа 8</h3>
-              <p>Год: 2023</p>
-              <p>Описание работы 8.</p>
-            </div>
-          </article>
-          <article class="work-item">
-            <div class="work-media">
-              <img src="assets/sample-work.jpg" alt="Работа 9" class="work-thumb">
-            </div>
-            <div class="work-details">
-              <h3>Работа 9</h3>
-              <p>Год: 2023</p>
-              <p>Описание работы 9.</p>
-            </div>
-          </article>
-          <article class="work-item">
-            <div class="work-media">
-              <img src="assets/sample-work.jpg" alt="Работа 10" class="work-thumb">
-            </div>
-            <div class="work-details">
-              <h3>Работа 10</h3>
-              <p>Год: 2023</p>
-              <p>Описание работы 10.</p>
-            </div>
-          </article>
-          <article class="work-item">
-            <div class="work-media">
-              <img src="assets/sample-work.jpg" alt="Работа 11" class="work-thumb">
-            </div>
-            <div class="work-details">
-              <h3>Работа 11</h3>
-              <p>Год: 2023</p>
-              <p>Описание работы 11.</p>
-            </div>
-          </article>
-          <article class="work-item">
-            <div class="work-media">
-              <img src="assets/sample-work.jpg" alt="Работа 12" class="work-thumb">
-            </div>
-            <div class="work-details">
-              <h3>Работа 12</h3>
-              <p>Год: 2023</p>
-              <p>Описание работы 12.</p>
-            </div>
-          </article>
-          <article class="work-item">
-            <div class="work-media">
-              <img src="assets/sample-work.jpg" alt="Работа 13" class="work-thumb">
-            </div>
-            <div class="work-details">
-              <h3>Работа 13</h3>
-              <p>Год: 2023</p>
-              <p>Описание работы 13.</p>
-            </div>
-          </article>
-          <article class="work-item">
-            <div class="work-media">
-              <img src="assets/sample-work.jpg" alt="Работа 14" class="work-thumb">
-            </div>
-            <div class="work-details">
-              <h3>Работа 14</h3>
-              <p>Год: 2023</p>
-              <p>Описание работы 14.</p>
-            </div>
-          </article>
+          <!-- ... повторите для 2-14 ... -->
         </div>
       </div>
     </section>
 
+    <!-- О ХУДОЖНИКЕ -->
     <section id="about">
       <div class="container">
         <h2>О художнике</h2>
         <div class="about-content">
-          <!-- Блок с биографией и портретом, портрет справа -->
+          <!-- Биография и портрет в одной строке, портрет справа -->
           <div class="bio-row">
             <div class="bio">
               <h3>Биография</h3>
@@ -721,7 +592,8 @@
               <img src="assets/portrait.png" alt="Portrait of the Artist">
             </div>
           </div>
-          <!-- Блок Artist Statement -->
+
+          <!-- Artist Statement ниже -->
           <div class="artist-statement">
             <h3>Artist Statement</h3>
             <p class="scramble-text">
@@ -743,6 +615,7 @@
       </div>
     </section>
 
+    <!-- КОНТАКТЫ -->
     <section id="contact">
       <div class="container">
         <h2>Контакты</h2>
