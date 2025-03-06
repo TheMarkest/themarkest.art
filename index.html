@@ -56,7 +56,7 @@
       animation: scanline 0.15s infinite steps(1);
       mix-blend-mode: lighten;
     }
-    /* Менее резкий, более случайный flicker */
+    /* Менее резкий и случайный flicker */
     @keyframes flicker {
       0%   { opacity: 0.03; }
       10%  { opacity: 0.06; }
@@ -83,31 +83,22 @@
       padding: 0; 
       box-sizing: border-box;
     }
-    html {
-      scroll-behavior: smooth;
-    }
+    html { scroll-behavior: smooth; }
     body {
       font-family: "IBM Plex Sans", sans-serif;
       background: #000;
       color: #fff;
       line-height: 1.5;
     }
-    a {
-      color: inherit;
-      text-decoration: none;
-      transition: color 0.3s;
-    }
-    a:hover {
-      color: #0ff;
-    }
+    a { color: inherit; text-decoration: none; transition: color 0.3s; }
+    a:hover { color: #0ff; }
   </style>
 
-  <!-- 4) Хедер: Волна + Контент, меню на мобильных/десктопе -->
+  <!-- 4) Хедер: Волна + Контент, меню -->
   <style>
     header {
       position: fixed;
-      top: 0; 
-      left: 0;
+      top: 0; left: 0;
       width: 100%;
       height: 160px;
       z-index: 1000;
@@ -119,13 +110,12 @@
     }
     .header-content {
       position: absolute;
-      top: 0; 
-      left: 0;
+      top: 0; left: 0;
       width: 100%;
       height: 120px;
       display: flex;
       align-items: center;
-      justify-content: center; /* на desktop – центр */
+      justify-content: center; /* Центр для desktop */
       padding: 0 20px;
       z-index: 10;
     }
@@ -138,7 +128,6 @@
       display: flex;
       gap: 20px;
     }
-    /* Шрифт меню крупнее */
     .nav-links a {
       font-size: 1.4rem;
       color: #fff;
@@ -159,12 +148,18 @@
       background: #fff;
       margin: 4px 0;
     }
+    /* Мобильное меню */
     @media (max-width: 768px) {
       .header-content {
         justify-content: center;
       }
+      /* Центрируем логотип на мобильных */
+      .logo-container {
+        position: static;
+        margin: 0 auto;
+      }
       .nav-links {
-        display: none; /* скрыто по умолчанию */
+        display: none;
         flex-direction: column;
         background: #000;
         position: absolute;
@@ -180,7 +175,7 @@
     }
   </style>
 
-  <!-- 5) Glitch-Image (пикселизация, ±4px, много шагов) -->
+  <!-- 5) Glitch-Image (логотип) -->
   <style>
     .glitch-image {
       width: 312px;
@@ -198,10 +193,8 @@
     .glitch-image::after {
       content: "";
       position: absolute;
-      top: 0; 
-      left: 0;
-      width: 100%; 
-      height: 100%;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
       background: url("assets/logo.svg") no-repeat center;
       background-size: 312px 119px;
       image-rendering: pixelated;
@@ -307,6 +300,7 @@
       max-width: 1000px;
       margin: 0 auto;
     }
+    /* Карточка объекта портфолио с двумя блоками: media и details */
     .work-item {
       display: flex;
       flex-direction: row;
@@ -379,10 +373,12 @@
       margin-bottom: 1rem;
       text-transform: uppercase;
     }
+    /* Добавляем white-space для удобства чтения */
     .bio p, .artist-statement p {
       font-size: 1rem;
       opacity: 0.9;
       line-height: 1.5;
+      white-space: pre-line;
     }
     .artist-photo {
       flex: 1 1 300px;
@@ -400,6 +396,8 @@
       image-rendering: pixelated;
       filter: grayscale(100%);
     }
+    /* Добавляем 14 карточек в портфолио */
+    /* Пример: скопируйте шаблон .work-item 14 раз */
   </style>
 
   <!-- 8) Form & Footer -->
@@ -415,8 +413,7 @@
       font-weight: 600;
       margin-bottom: 0.3rem;
     }
-    form input,
-    form textarea {
+    form input, form textarea {
       padding: 0.6rem;
       border: 1px solid #333;
       border-radius: 4px;
@@ -424,8 +421,7 @@
       color: #fff;
       font-family: inherit;
     }
-    form input:focus,
-    form textarea:focus {
+    form input:focus, form textarea:focus {
       outline: none;
       border-color: #0ff;
     }
@@ -467,7 +463,7 @@
       width: 100%;
       height: 100%;
       overflow: auto;
-      background-color: rgba(0, 0, 0, 0.9);
+      background-color: rgba(0,0,0,0.9);
     }
     .modal-content {
       margin: auto;
@@ -484,8 +480,7 @@
       font-weight: bold;
       cursor: pointer;
     }
-    .modal-close:hover,
-    .modal-close:focus {
+    .modal-close:hover, .modal-close:focus {
       color: #bbb;
     }
   </style>
@@ -503,20 +498,20 @@
   <header>
     <canvas id="waveCanvas"></canvas>
     <div class="header-content">
-      <!-- Лого слева -->
+      <!-- Лого (desktop: слева, mobile: центр) -->
       <div class="logo-container">
         <div class="glitch-image">
           <img src="assets/logo.svg" alt="TheMarkest.art Logo" />
         </div>
       </div>
-      <!-- Ссылки по центру (desktop), скрыты на мобильных -->
+      <!-- Меню (desktop: по центру, mobile: скрыто, открывается бургером) -->
       <nav class="nav-links">
         <a href="#cover">Обложка</a>
         <a href="#works">Портфолио</a>
         <a href="#about">О художнике</a>
         <a href="#contact">Контакты</a>
       </nav>
-      <!-- Бургер-иконка (только на мобильных) -->
+      <!-- Бургер (только на мобильных) -->
       <button class="burger">
         <span></span>
         <span></span>
@@ -529,7 +524,7 @@
   <section id="cover">
     <div class="cover-content">
       <h2>MARK BOGDANOV</h2>
-      <p>Исскуство о науке.</p>
+      <p>Искусство о науке.</p>
     </div>
   </section>
 
@@ -539,15 +534,16 @@
       <div class="container">
         <h2>Портфолио</h2>
         <div class="grid">
-          <!-- Пример карточки -->
+          <!-- Добавлены 14 карточек портфолио -->
+          <!-- Карточка 1 -->
           <article class="work-item">
             <div class="work-media">
-              <img src="assets/sample-work.jpg" alt="Название работы 1" class="work-thumb">
+              <img src="assets/sample-work.jpg" alt="Работа 1" class="work-thumb">
             </div>
             <div class="work-details">
-              <h3>Название работы 1</h3>
+              <h3>Работа 1</h3>
               <p>Год: 2023</p>
-              <p>Краткое описание концепции. Технологии, материалы и уникальные особенности.</p>
+              <p>Краткое описание концепции, технологий и материалов.</p>
               <div class="share-buttons">
                 <a href="#">Facebook</a>
                 <a href="#">Twitter</a>
@@ -556,7 +552,227 @@
               </div>
             </div>
           </article>
-          <!-- Добавляйте ещё карточки по аналогии -->
+          <!-- Карточка 2 -->
+          <article class="work-item">
+            <div class="work-media">
+              <img src="assets/sample-work.jpg" alt="Работа 2" class="work-thumb">
+            </div>
+            <div class="work-details">
+              <h3>Работа 2</h3>
+              <p>Год: 2023</p>
+              <p>Описание работы 2.</p>
+              <div class="share-buttons">
+                <a href="#">Facebook</a>
+                <a href="#">Twitter</a>
+                <a href="#">Instagram</a>
+                <a href="#">Telegram</a>
+              </div>
+            </div>
+          </article>
+          <!-- Карточка 3 -->
+          <article class="work-item">
+            <div class="work-media">
+              <img src="assets/sample-work.jpg" alt="Работа 3" class="work-thumb">
+            </div>
+            <div class="work-details">
+              <h3>Работа 3</h3>
+              <p>Год: 2023</p>
+              <p>Описание работы 3.</p>
+              <div class="share-buttons">
+                <a href="#">Facebook</a>
+                <a href="#">Twitter</a>
+                <a href="#">Instagram</a>
+                <a href="#">Telegram</a>
+              </div>
+            </div>
+          </article>
+          <!-- Карточка 4 -->
+          <article class="work-item">
+            <div class="work-media">
+              <img src="assets/sample-work.jpg" alt="Работа 4" class="work-thumb">
+            </div>
+            <div class="work-details">
+              <h3>Работа 4</h3>
+              <p>Год: 2023</p>
+              <p>Описание работы 4.</p>
+              <div class="share-buttons">
+                <a href="#">Facebook</a>
+                <a href="#">Twitter</a>
+                <a href="#">Instagram</a>
+                <a href="#">Telegram</a>
+              </div>
+            </div>
+          </article>
+          <!-- Карточка 5 -->
+          <article class="work-item">
+            <div class="work-media">
+              <img src="assets/sample-work.jpg" alt="Работа 5" class="work-thumb">
+            </div>
+            <div class="work-details">
+              <h3>Работа 5</h3>
+              <p>Год: 2023</p>
+              <p>Описание работы 5.</p>
+              <div class="share-buttons">
+                <a href="#">Facebook</a>
+                <a href="#">Twitter</a>
+                <a href="#">Instagram</a>
+                <a href="#">Telegram</a>
+              </div>
+            </div>
+          </article>
+          <!-- Карточка 6 -->
+          <article class="work-item">
+            <div class="work-media">
+              <img src="assets/sample-work.jpg" alt="Работа 6" class="work-thumb">
+            </div>
+            <div class="work-details">
+              <h3>Работа 6</h3>
+              <p>Год: 2023</p>
+              <p>Описание работы 6.</p>
+              <div class="share-buttons">
+                <a href="#">Facebook</a>
+                <a href="#">Twitter</a>
+                <a href="#">Instagram</a>
+                <a href="#">Telegram</a>
+              </div>
+            </div>
+          </article>
+          <!-- Карточка 7 -->
+          <article class="work-item">
+            <div class="work-media">
+              <img src="assets/sample-work.jpg" alt="Работа 7" class="work-thumb">
+            </div>
+            <div class="work-details">
+              <h3>Работа 7</h3>
+              <p>Год: 2023</p>
+              <p>Описание работы 7.</p>
+              <div class="share-buttons">
+                <a href="#">Facebook</a>
+                <a href="#">Twitter</a>
+                <a href="#">Instagram</a>
+                <a href="#">Telegram</a>
+              </div>
+            </div>
+          </article>
+          <!-- Карточка 8 -->
+          <article class="work-item">
+            <div class="work-media">
+              <img src="assets/sample-work.jpg" alt="Работа 8" class="work-thumb">
+            </div>
+            <div class="work-details">
+              <h3>Работа 8</h3>
+              <p>Год: 2023</p>
+              <p>Описание работы 8.</p>
+              <div class="share-buttons">
+                <a href="#">Facebook</a>
+                <a href="#">Twitter</a>
+                <a href="#">Instagram</a>
+                <a href="#">Telegram</a>
+              </div>
+            </div>
+          </article>
+          <!-- Карточка 9 -->
+          <article class="work-item">
+            <div class="work-media">
+              <img src="assets/sample-work.jpg" alt="Работа 9" class="work-thumb">
+            </div>
+            <div class="work-details">
+              <h3>Работа 9</h3>
+              <p>Год: 2023</p>
+              <p>Описание работы 9.</p>
+              <div class="share-buttons">
+                <a href="#">Facebook</a>
+                <a href="#">Twitter</a>
+                <a href="#">Instagram</a>
+                <a href="#">Telegram</a>
+              </div>
+            </div>
+          </article>
+          <!-- Карточка 10 -->
+          <article class="work-item">
+            <div class="work-media">
+              <img src="assets/sample-work.jpg" alt="Работа 10" class="work-thumb">
+            </div>
+            <div class="work-details">
+              <h3>Работа 10</h3>
+              <p>Год: 2023</p>
+              <p>Описание работы 10.</p>
+              <div class="share-buttons">
+                <a href="#">Facebook</a>
+                <a href="#">Twitter</a>
+                <a href="#">Instagram</a>
+                <a href="#">Telegram</a>
+              </div>
+            </div>
+          </article>
+          <!-- Карточка 11 -->
+          <article class="work-item">
+            <div class="work-media">
+              <img src="assets/sample-work.jpg" alt="Работа 11" class="work-thumb">
+            </div>
+            <div class="work-details">
+              <h3>Работа 11</h3>
+              <p>Год: 2023</p>
+              <p>Описание работы 11.</p>
+              <div class="share-buttons">
+                <a href="#">Facebook</a>
+                <a href="#">Twitter</a>
+                <a href="#">Instagram</a>
+                <a href="#">Telegram</a>
+              </div>
+            </div>
+          </article>
+          <!-- Карточка 12 -->
+          <article class="work-item">
+            <div class="work-media">
+              <img src="assets/sample-work.jpg" alt="Работа 12" class="work-thumb">
+            </div>
+            <div class="work-details">
+              <h3>Работа 12</h3>
+              <p>Год: 2023</p>
+              <p>Описание работы 12.</p>
+              <div class="share-buttons">
+                <a href="#">Facebook</a>
+                <a href="#">Twitter</a>
+                <a href="#">Instagram</a>
+                <a href="#">Telegram</a>
+              </div>
+            </div>
+          </article>
+          <!-- Карточка 13 -->
+          <article class="work-item">
+            <div class="work-media">
+              <img src="assets/sample-work.jpg" alt="Работа 13" class="work-thumb">
+            </div>
+            <div class="work-details">
+              <h3>Работа 13</h3>
+              <p>Год: 2023</p>
+              <p>Описание работы 13.</p>
+              <div class="share-buttons">
+                <a href="#">Facebook</a>
+                <a href="#">Twitter</a>
+                <a href="#">Instagram</a>
+                <a href="#">Telegram</a>
+              </div>
+            </div>
+          </article>
+          <!-- Карточка 14 -->
+          <article class="work-item">
+            <div class="work-media">
+              <img src="assets/sample-work.jpg" alt="Работа 14" class="work-thumb">
+            </div>
+            <div class="work-details">
+              <h3>Работа 14</h3>
+              <p>Год: 2023</p>
+              <p>Описание работы 14.</p>
+              <div class="share-buttons">
+                <a href="#">Facebook</a>
+                <a href="#">Twitter</a>
+                <a href="#">Instagram</a>
+                <a href="#">Telegram</a>
+              </div>
+            </div>
+          </article>
         </div>
       </div>
     </section>
@@ -568,25 +784,30 @@
           <div class="bio">
             <h3>Биография</h3>
             <p class="scramble-text">
-              Марк Богданов — медиа-художник и скульптор, работающий в жанре кинетического искусства и интерактивной инсталляции. В своих работах он сочетает новые медиа, цифровые технологии и классические материалы, создавая объектно-пространственные композиции, которые трансформируют восприятие зрителя. Его практика основана на принципах конструктивизма, ретрофутуризма и кибернетики, а ключевыми методами являются 3D-печать, лазерная резка, оптические и кинетические механизмы, проекционные технологии и программируемая электроника.
+Марк Богданов — медиа-художник и скульптор, работающий в жанре кинетического искусства и интерактивной инсталляции. 
+В своих работах он сочетает новые медиа, цифровые технологии и классические материалы, создавая объектно-пространственные композиции, 
+которые трансформируют восприятие зрителя. Его практика основана на принципах конструктивизма, ретрофутуризма и кибернетики, 
+а ключевыми методами являются 3D-печать, лазерная резка, оптические и кинетические механизмы, проекционные технологии и программируемая электроника.
 
-Родился в семье хореографов, вырос между Санкт-Петербургом и Одессой, что сформировало его чувствительность к пластике, композиции и сценографии. Однако вместо традиционного художественного образования он выбрал путь науки, обучаясь оптико-электронике, что повлияло на его художественную стратегию. Его искусство выстраивается на пересечении инженерии, эстетики и интерактивного опыта, стирая границу между технологиями и человеком.
-
-В основе его художественного языка — интертекстуальность инженерных решений, где каждое произведение является не просто скульптурой, а исследовательским объектом, вовлекающим зрителя в процесс познания. Художник рассматривает искусство не как инструмент передачи эмоций, а как методологию осмысления реальности, создавая арт-объекты, которые обращаются к логике, анализу и критическому мышлению.
-
-Его цель — расширение границ интерактивного искусства через развитие концепции саморефлексирующих объектов. В перспективе он стремится к созданию автономных скульптурных систем, способных не только реагировать на зрителя, но и формировать собственное самосознание в диалоге с окружающей средой.
+Родился в семье хореографов, вырос между Санкт-Петербургом и Одессой, что сформировало его чувствительность к пластике, композиции и сценографии. 
+Однако вместо традиционного художественного образования он выбрал путь науки, обучаясь оптико-электронике, что повлияло на его художественную стратегию.
             </p>
           </div>
           <div class="artist-statement">
             <h3>Artist Statement</h3>
             <p class="scramble-text">
-              Я создаю скульптуры, в которых современные технологии производства встречаются с наследием инженерной мысли прошлого. Моё искусство — это поиск формы, структуры и материала, который отражает логику научного прогресса.
+Я создаю скульптуры, в которых современные технологии производства встречаются с наследием инженерной мысли прошлого. 
+Моё искусство — это поиск формы, структуры и материала, отражающих логику научного прогресса.
 
-В своих работах я сочетаю 3D-печать, лазерную резку, цифровую обработку и традиционные ремесленные техники, интегрируя их в единую художественную систему. Мне важно показать, как технологии формируют эстетику и как через них можно создавать новые визуальные смыслы, выходящие за пределы привычного восприятия.
+В своих работах я сочетаю 3D-печать, лазерную резку, цифровую обработку и традиционные ремесленные техники, 
+интегрируя их в единую художественную систему. Мне важно показать, как технологии формируют эстетику и 
+как через них можно создавать новые визуальные смыслы, выходящие за пределы привычного восприятия.
 
-Я вдохновляюсь конструктивизмом, ретрофутуризмом и инженерной эстетикой, рассматривая искусство как способ взаимодействия с научным знанием. В моих скульптурах можно увидеть интертекстуальность инженерных решений, где каждая деталь несёт смысл и отсылает к механике, архитектуре и оптике.
+Я вдохновляюсь конструктивизмом, ретрофутуризмом и инженерной эстетикой, рассматривая искусство как способ взаимодействия с научным знанием. 
+В моих скульптурах можно увидеть интертекстуальность инженерных решений, где каждая деталь несёт смысл и отсылает к механике, архитектуре и оптике.
 
-Меня интересует диалог между прошлым и будущим: как технологии меняются, но принципы остаются вечными. В этом я вижу красоту — в переплетении точности, формы и замысла.
+Меня интересует диалог между прошлым и будущим: как технологии меняются, но принципы остаются вечными. 
+В этом я вижу красоту — в переплетении точности, формы и замысла.
             </p>
           </div>
           <div class="artist-photo">
@@ -643,7 +864,6 @@
     const DOT_RADIUS = 4;
     const HEADER_BG_COLOR = "rgba(85,85,85,0.8)";
     const BASELINE = 120;
-
     function initDots() {
       width = canvas.offsetWidth;
       height = canvas.offsetHeight;
@@ -655,13 +875,12 @@
         dots.push({
           x,
           pinned: false,
-          freq: FREQ_MIN + Math.random()*(FREQ_MAX-FREQ_MIN),
-          phase: Math.random()*Math.PI*2
+          freq: FREQ_MIN + Math.random() * (FREQ_MAX - FREQ_MIN),
+          phase: Math.random() * Math.PI * 2
         });
       }
       dots.push({ x: width, pinned: true });
     }
-
     function animateWave() {
       ctx.clearRect(0, 0, width, height);
       const wavePoints = dots.map(dot => {
@@ -686,17 +905,14 @@
       ctx.stroke();
       wavePoints.forEach(p => {
         ctx.beginPath();
-        ctx.arc(p.x, p.y, DOT_RADIUS, 0, Math.PI*2);
+        ctx.arc(p.x, p.y, DOT_RADIUS, 0, Math.PI * 2);
         ctx.fillStyle = "#0ff";
         ctx.fill();
       });
       time += 0.02;
       requestAnimationFrame(animateWave);
     }
-
-    function onResize() {
-      initDots();
-    }
+    function onResize() { initDots(); }
     window.addEventListener("resize", onResize);
     initDots();
     animateWave();
@@ -711,7 +927,7 @@
         this.update = this.update.bind(this);
       }
       setText(newText) {
-        this.el.innerHTML = ""; // очищаем сразу
+        this.el.innerHTML = "";
         const length = newText.length;
         const promise = new Promise(resolve => this.resolve = resolve);
         this.queue = [];
@@ -728,7 +944,6 @@
       }
       update() {
         const rect = this.el.getBoundingClientRect();
-        // если элемент вышел из вьюпорта – отменяем
         if (rect.bottom < 0 || rect.top > window.innerHeight) {
           cancelAnimationFrame(this.frameRequest);
           return;
@@ -762,7 +977,6 @@
         return this.chars[Math.floor(Math.random() * this.chars.length)];
       }
     }
-
     window.addEventListener('load', () => {
       const paragraphs = document.querySelectorAll('.scramble-text');
       const observer = new IntersectionObserver((entries, obs) => {
@@ -822,7 +1036,6 @@
     const modal = document.getElementById("modal");
     const modalImg = document.getElementById("modal-content");
     const modalClose = document.getElementById("modal-close");
-
     document.querySelectorAll(".work-thumb").forEach(img => {
       img.addEventListener("click", function() {
         modal.style.display = "block";
