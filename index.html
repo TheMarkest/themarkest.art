@@ -289,7 +289,7 @@
       margin-bottom: 2rem;
       text-transform: uppercase;
     }
-    /* На десктопе портфолио – вертикальная раскладка на всю ширину */
+    /* На десктопе портфолио – карточки вертикально, на всю ширину */
     .grid {
       display: grid;
       grid-template-columns: 1fr;
@@ -299,7 +299,7 @@
     }
     .work-item {
       display: flex;
-      flex-direction: column;
+      flex-direction: row;
       gap: 1rem;
       background: #222;
       border: 1px solid #333;
@@ -324,6 +324,9 @@
     }
     .work-details {
       flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
     @media (max-width: 768px) {
       .grid {
@@ -335,7 +338,7 @@
       .work-media {
         width: 100%;
         height: 0;
-        padding-bottom: 100%; /* квадрат */
+        padding-bottom: 100%;
       }
     }
     .work-item h3 {
@@ -347,7 +350,7 @@
       opacity: 0.9;
       margin-bottom: 0.5rem;
     }
-    /* Раздел "О художнике" – располагаем блоки вертикально */
+    /* Раздел "О художнике" – переставляем портрет: теперь он справа от блока био */
     .about-content {
       display: flex;
       flex-direction: column;
@@ -355,16 +358,57 @@
       max-width: 1000px;
       margin: 0 auto;
     }
-    .bio, .artist-statement {
-      width: 100%;
+    /* Новая структура: верхняя строка — блок с биографией и портретом, портрет справа */
+    .bio-row {
+      display: flex;
+      flex-direction: row;
+      gap: 2rem;
     }
-    .bio h3, .artist-statement h3 {
+    .bio {
+      flex: 1;
+    }
+    .bio h3 {
       font-size: 1.3rem;
       margin-bottom: 1rem;
       text-transform: uppercase;
     }
-    /* Текстовые блоки обернуты в карточки с полупрозрачным фоном */
-    .bio p, .artist-statement p {
+    /* Текст в био – карточки с фоном и рамкой */
+    .bio p {
+      font-size: 1rem;
+      opacity: 0.9;
+      line-height: 1.5;
+      white-space: pre-line;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      padding: 10px;
+      border-radius: 4px;
+      height: 100%; /* растянуть до высоты контейнера */
+    }
+    /* Портрет должен иметь ту же высоту, что и блок био */
+    .artist-photo {
+      flex: 0 0 250px;
+      display: flex;
+      align-items: stretch;
+    }
+    .artist-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border: 2px solid #0ff;
+      border-radius: 8px;
+      image-rendering: pixelated;
+      filter: grayscale(100%);
+    }
+    /* Artist Statement – идёт ниже, на всю ширину */
+    .artist-statement {
+      width: 100%;
+    }
+    .artist-statement h3 {
+      font-size: 1.3rem;
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+    }
+    .artist-statement p {
       font-size: 1rem;
       opacity: 0.9;
       line-height: 1.5;
@@ -374,33 +418,6 @@
       padding: 10px;
       border-radius: 4px;
     }
-    /* Для десктопа: объединяем блоки statement и портрет в одну строку */
-    .statement-row {
-      display: flex;
-      flex-direction: row;
-      gap: 2rem;
-      width: 100%;
-    }
-    .statement-row .artist-statement {
-      flex: 1;
-    }
-    .statement-row .artist-photo {
-      flex: 0 0 250px;
-      align-self: flex-start;
-    }
-    @media (max-width: 768px) {
-      .statement-row {
-        flex-direction: column;
-      }
-    }
-    /* Если на десктопе нужно, можно переместить портрет выше текстов */
-    @media (min-width: 769px) {
-      .about-content {
-        flex-direction: column;
-      }
-    }
-    /* Обновлённый порядок в разделе "О художнике": 
-       Биография, затем блок с Artist Statement и портретом справа */
   </style>
 
   <!-- 8) Form & Footer -->
@@ -547,7 +564,7 @@
               <p>Краткое описание концепции, технологий и материалов.</p>
             </div>
           </article>
-          <!-- Повторите шаблон для карточек 2 - 14 -->
+          <!-- Повторите шаблон для карточек 2-14 -->
           <article class="work-item">
             <div class="work-media">
               <img src="assets/sample-work.jpg" alt="Работа 2" class="work-thumb">
@@ -686,9 +703,11 @@
       <div class="container">
         <h2>О художнике</h2>
         <div class="about-content">
-          <div class="bio">
-            <h3>Биография</h3>
-            <p class="scramble-text">
+          <!-- Блок с биографией и портретом, портрет справа -->
+          <div class="bio-row">
+            <div class="bio">
+              <h3>Биография</h3>
+              <p class="scramble-text">
 Марк Богданов — медиа-художник и скульптор, работающий в жанре кинетического искусства и интерактивной инсталляции. 
 В своих работах он сочетает новые медиа, цифровые технологии и классические материалы, создавая объектно-пространственные композиции, 
 которые трансформируют восприятие зрителя. Его практика основана на принципах конструктивизма, ретрофутуризма и кибернетики, 
@@ -696,13 +715,16 @@
 
 Родился в семье хореографов, вырос между Санкт-Петербургом и Одессой, что сформировало его чувствительность к пластике, композиции и сценографии. 
 Однако вместо традиционного художественного образования он выбрал путь науки, обучаясь оптико-электронике, что повлияло на его художественную стратегию.
-            </p>
+              </p>
+            </div>
+            <div class="artist-photo">
+              <img src="assets/portrait.png" alt="Portrait of the Artist">
+            </div>
           </div>
-          <!-- Блок для artist statement и портрета -->
-          <div class="statement-row">
-            <div class="artist-statement">
-              <h3>Artist Statement</h3>
-              <p class="scramble-text">
+          <!-- Блок Artist Statement -->
+          <div class="artist-statement">
+            <h3>Artist Statement</h3>
+            <p class="scramble-text">
 Я создаю скульптуры, в которых современные технологии производства встречаются с наследием инженерной мысли прошлого. 
 Моё искусство — это поиск формы, структуры и материала, отражающих логику научного прогресса.
 
@@ -715,11 +737,7 @@
 
 Меня интересует диалог между прошлым и будущим: как технологии меняются, но принципы остаются вечными. 
 В этом я вижу красоту — в переплетении точности, формы и замысла.
-              </p>
-            </div>
-            <div class="artist-photo">
-              <img src="assets/portrait.png" alt="Portrait of the Artist">
-            </div>
+            </p>
           </div>
         </div>
       </div>
