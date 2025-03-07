@@ -400,7 +400,6 @@
       display: flex;
       flex-direction: row;
       gap: 2rem;
-      /* возвращаем портрет к квадрату */
     }
     .bio {
       flex: 1;
@@ -423,10 +422,9 @@
       border-radius: 4px;
     }
     .artist-photo {
-      /* фиксированный квадрат 250x250 */
       width: 250px;
       height: 250px;
-      flex: 0 0 auto; /* не растягиваем */
+      flex: 0 0 auto;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -464,7 +462,7 @@
       }
       .artist-photo {
         width: 100%;
-        height: auto; /* на мобильном пусть растягивается */
+        height: auto;
       }
       .artist-photo img {
         height: auto;
@@ -793,7 +791,7 @@
       ctx.stroke();
       wavePoints.forEach(p => {
         ctx.beginPath();
-        ctx.arc(p.x, p.y, DOT_RADIUS, 0, Math.PI * 2);
+        ctx.arc(p.x, p.y, DOT_RADIUS, 0, Math.PI*2);
         ctx.fillStyle = "#0ff";
         ctx.fill();
       });
@@ -987,13 +985,9 @@
       }, 10000);
     }
 
-    // Уменьшаем интервал до 5 секунд, чтобы проще проверить
+    // Каждые 5 секунд генерируем цитату, без всяких условий
     setInterval(() => {
-      const coverHeight = document.getElementById('cover').offsetHeight;
-      // Если хотите, чтобы цитаты были всегда, уберите это условие
-      if (window.scrollY > coverHeight) {
-        spawnQuote();
-      }
+      spawnQuote();
     }, 5000);
   </script>
 </body>
