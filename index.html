@@ -564,8 +564,9 @@
 
   <!-- 11) Стили для плавающих цитат -->
   <style>
+    /* Делаем position: fixed, чтобы цитаты появлялись в зоне экрана (вьюпорта) */
     .floating-quote {
-      position: absolute;
+      position: fixed;
       z-index: 100000; /* выше, чем body::after (99999) */
       color: rgba(255,255,255,0.3);
       font-style: italic;
@@ -576,6 +577,9 @@
         0 0 4px #0ff;
       animation: quoteFlicker 10s linear forwards;
       transform: translate(-50%, -50%);
+      /* Чтобы не выходить за границы по ширине */
+      max-width: 30vw;
+      word-wrap: break-word;
     }
     @keyframes quoteFlicker {
       0% {
@@ -760,7 +764,7 @@
         dots.push({
           x,
           pinned: false,
-          freq: FREQ_MIN + Math.random()*(FREQ_MAX - FREQ_MIN),
+          freq: FREQ_MIN + Math.random() * (FREQ_MAX - FREQ_MIN),
           phase: Math.random() * Math.PI * 2
         });
       }
@@ -834,6 +838,7 @@
       }
       update() {
         const rect = this.el.getBoundingClientRect();
+        // Если элемент вышел из вьюпорта, отменяем анимацию
         if (rect.bottom < 0 || rect.top > window.innerHeight) {
           cancelAnimationFrame(this.frameRequest);
           return;
@@ -971,9 +976,9 @@
       div.className = 'floating-quote';
       div.textContent = quote;
 
-      // Случайная позиция
-      const x = 10 + Math.random() * 80;
-      const y = 30 + Math.random() * 60;
+      // Случайная позиция (5%-95% по X, 10%-90% по Y)
+      const x = 5 + Math.random() * 90;
+      const y = 10 + Math.random() * 80;
       div.style.left = x + '%';
       div.style.top = y + '%';
 
@@ -985,7 +990,7 @@
       }, 10000);
     }
 
-    // Каждые 5 секунд генерируем цитату, без всяких условий
+    // Каждые 5 секунд генерируем цитату, без ограничений
     setInterval(() => {
       spawnQuote();
     }, 5000);
