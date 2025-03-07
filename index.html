@@ -2,9 +2,9 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>TheMarkest.art – Glitch Image + Portrait</title>
-  <meta name="description" content="Портфолио художника в стиле sci‑fi/cyberpunk, с волной, старомониторным эффектом, TextScramble, пиксельным глитч‑логотипом, фото художника и удобными карточками работ." />
+  <meta name="description" content="Портфолио художника в стиле sci-fi/cyberpunk, с волной, старомониторным эффектом, TextScramble, пиксельным глитч-логотипом, фото художника и удобными карточками работ." />
 
   <!-- Favicons -->
   <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/apple-touch-icon.png">
@@ -32,7 +32,7 @@
       position: fixed;
       top: 0; left: 0;
       width: 100%; height: 100%;
-      z-index: 9999;
+      z-index: 9999; /* Большое значение */
       background:
         radial-gradient(circle at center, rgba(0,0,0,0) 30%, rgba(0,0,0,0.85) 100%),
         radial-gradient(circle, rgba(255,255,255,0.05) 1%, rgba(255,255,255,0) 60%);
@@ -45,7 +45,7 @@
       position: fixed;
       top: 0; left: 0;
       width: 100%; height: 100%;
-      z-index: 99999;
+      z-index: 99999; /* Очень большое значение */
       background: repeating-linear-gradient(
         0deg,
         rgba(255,255,255,0.05) 0px,
@@ -85,8 +85,14 @@
       color: #fff;
       line-height: 1.5;
     }
-    a { color: inherit; text-decoration: none; transition: color 0.3s; }
-    a:hover { color: #0ff; }
+    a {
+      color: inherit;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    a:hover {
+      color: #0ff;
+    }
   </style>
 
   <!-- 4) Хедер: Волна + Контент, меню -->
@@ -110,7 +116,7 @@
       height: 120px;
       display: flex;
       align-items: center;
-      justify-content: center; /* Центр для desktop */
+      justify-content: center;
       padding: 0 20px;
       z-index: 10;
     }
@@ -144,8 +150,13 @@
       margin: 4px 0;
     }
     @media (max-width: 768px) {
-      .header-content { justify-content: center; }
-      .logo-container { position: static; margin: 0 auto; }
+      .header-content {
+        justify-content: center;
+      }
+      .logo-container {
+        position: static;
+        margin: 0 auto;
+      }
       .nav-links {
         display: none;
         flex-direction: column;
@@ -157,11 +168,13 @@
         border: 1px solid #333;
         border-radius: 6px;
       }
-      .burger { display: block; }
+      .burger {
+        display: block;
+      }
     }
   </style>
 
-  <!-- 5) Мерцающие заголовки (уменьшена интенсивность свечения) -->
+  <!-- 5) Мерцающие заголовки (снижена интенсивность) -->
   <style>
     h1, h2, h3 {
       animation: heading-glow 3s infinite alternate;
@@ -314,14 +327,14 @@
     /* Портфолио: карточки вертикально, текст справа от картинки */
     .grid {
       display: grid;
-      grid-template-columns: 1fr; /* одна колонка на десктопе */
+      grid-template-columns: 1fr;
       gap: 2rem;
       max-width: 1000px;
       margin: 0 auto;
     }
     .work-item {
       display: flex;
-      flex-direction: row; /* текст справа от изображения */
+      flex-direction: row;
       gap: 1rem;
       background: #222;
       border: 1px solid #333;
@@ -356,7 +369,7 @@
       .work-media {
         width: 100%;
         height: 0;
-        padding-bottom: 100%; /* квадрат */
+        padding-bottom: 100%;
       }
     }
     @media (min-width: 769px) {
@@ -371,7 +384,7 @@
       opacity: 0.9;
       margin-bottom: 0.5rem;
     }
-    /* Раздел "О художнике" – блок с биографией и портретом */
+    /* Раздел "О художнике": портрет справа от биографии */
     .about-content {
       display: flex;
       flex-direction: column;
@@ -438,7 +451,9 @@
       border-radius: 4px;
     }
     @media (max-width: 768px) {
-      .bio-row { flex-direction: column; }
+      .bio-row {
+        flex-direction: column;
+      }
     }
   </style>
 
@@ -535,7 +550,7 @@
   <style>
     .floating-quote {
       position: absolute;
-      z-index: 5; /* Добавлено, чтобы цитаты отображались поверх фона */
+      z-index: 100000; /* Чтобы перекрыть body::after с z-index=99999 */
       color: rgba(255,255,255,0.3);
       font-style: italic;
       font-size: 1.1rem;
@@ -609,7 +624,7 @@
       <div class="container">
         <h2>Портфолио</h2>
         <div class="grid">
-          <!-- 14 карточек портфолио (пример одной, повторите для карточек 2-14) -->
+          <!-- Пример карточки (добавьте 2-14) -->
           <article class="work-item">
             <div class="work-media">
               <img src="assets/sample-work.jpg" alt="Работа 1" class="work-thumb">
@@ -620,7 +635,7 @@
               <p>Описание работы 1.</p>
             </div>
           </article>
-          <!-- ... карточки 2-14 ... -->
+          <!-- ... остальные карточки ... -->
         </div>
       </div>
     </section>
@@ -716,6 +731,7 @@
     const DOT_RADIUS = 4;
     const HEADER_BG_COLOR = "rgba(85,85,85,0.8)";
     const BASELINE = 120;
+
     function initDots() {
       width = canvas.offsetWidth;
       height = canvas.offsetHeight;
@@ -733,6 +749,7 @@
       }
       dots.push({ x: width, pinned: true });
     }
+
     function animateWave() {
       ctx.clearRect(0, 0, width, height);
       const wavePoints = dots.map(dot => {
@@ -757,14 +774,18 @@
       ctx.stroke();
       wavePoints.forEach(p => {
         ctx.beginPath();
-        ctx.arc(p.x, p.y, DOT_RADIUS, 0, Math.PI * 2);
+        ctx.arc(p.x, p.y, DOT_RADIUS, 0, Math.PI*2);
         ctx.fillStyle = "#0ff";
         ctx.fill();
       });
       time += 0.02;
       requestAnimationFrame(animateWave);
     }
-    function onResize() { initDots(); }
+
+    function onResize() {
+      initDots();
+    }
+
     window.addEventListener("resize", onResize);
     initDots();
     animateWave();
@@ -829,6 +850,7 @@
         return this.chars[Math.floor(Math.random() * this.chars.length)];
       }
     }
+
     window.addEventListener('load', () => {
       const paragraphs = document.querySelectorAll('.scramble-text');
       const observer = new IntersectionObserver((entries, obs) => {
@@ -855,6 +877,7 @@
       document.documentElement.style.setProperty("--mouse-intensity", mouseIntensity);
       updateGlitchIntensity();
     });
+
     window.addEventListener("scroll", () => {
       let scrollY = window.scrollY;
       let docHeight = document.documentElement.scrollHeight - window.innerHeight;
@@ -862,6 +885,7 @@
       document.documentElement.style.setProperty("--scroll-intensity", scrollIntensity);
       updateGlitchIntensity();
     });
+
     function updateGlitchIntensity() {
       const mouse = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--mouse-intensity"));
       const scroll = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--scroll-intensity"));
@@ -874,6 +898,7 @@
   <script>
     const burger = document.querySelector('.burger');
     const navLinks = document.querySelector('.nav-links');
+
     burger.addEventListener('click', () => {
       if (getComputedStyle(navLinks).display === 'none') {
         navLinks.style.display = 'flex';
@@ -888,15 +913,18 @@
     const modal = document.getElementById("modal");
     const modalImg = document.getElementById("modal-content");
     const modalClose = document.getElementById("modal-close");
+
     document.querySelectorAll(".work-thumb").forEach(img => {
       img.addEventListener("click", function() {
         modal.style.display = "block";
         modalImg.src = this.src;
       });
     });
+
     modalClose.addEventListener("click", function() {
       modal.style.display = "none";
     });
+
     modal.addEventListener("click", function(e) {
       if (e.target === modal) {
         modal.style.display = "none";
@@ -906,6 +934,7 @@
 
   <!-- Random Quotes Script -->
   <script>
+    // Список цитат
     const quotes = [
       "«Прогресс — наш лучший друг.» (Норберт Винер)",
       "«Мы не можем предвидеть будущее, но мы можем изобрести его.» (Норберт Винер)",
@@ -918,18 +947,28 @@
       "«Книга — это музей, оживший и доступный каждому.» (Стругацкие)",
       "«Кто не рискует, тот не пьёт шампанского.» (русская пословица)"
     ];
+
     function spawnQuote() {
       const quote = quotes[Math.floor(Math.random() * quotes.length)];
       const div = document.createElement('div');
       div.className = 'floating-quote';
       div.textContent = quote;
+
+      // Случайная позиция
       const x = 10 + Math.random() * 80;
       const y = 30 + Math.random() * 60;
       div.style.left = x + '%';
       div.style.top = y + '%';
+
       document.body.appendChild(div);
-      setTimeout(() => { div.remove(); }, 10000);
+
+      // Удаляем через 10 секунд
+      setTimeout(() => {
+        div.remove();
+      }, 10000);
     }
+
+    // Вызываем каждые 15 секунд, если пользователь прокрутил страницу ниже обложки
     setInterval(() => {
       const coverHeight = document.getElementById('cover').offsetHeight;
       if (window.scrollY > coverHeight) {
@@ -937,42 +976,5 @@
       }
     }, 15000);
   </script>
-  <style>
-    .floating-quote {
-      position: absolute;
-      z-index: 5;
-      color: rgba(255,255,255,0.3);
-      font-style: italic;
-      font-size: 1.1rem;
-      pointer-events: none;
-      text-shadow:
-        0 0 2px #0ff,
-        0 0 4px #0ff;
-      animation: quoteFlicker 10s linear forwards;
-      transform: translate(-50%, -50%);
-    }
-    @keyframes quoteFlicker {
-      0% {
-        opacity: 0;
-        transform: translate(-50%, -50%) scale(1) rotate(0deg);
-      }
-      10% {
-        opacity: 0.7;
-        transform: translate(-50%, -50%) scale(1.02) rotate(1deg);
-      }
-      50% {
-        opacity: 0.5;
-        transform: translate(-50%, -50%) scale(1.06) rotate(-2deg);
-      }
-      80% {
-        opacity: 0.3;
-        transform: translate(-50%, -50%) scale(1.1) rotate(0deg);
-      }
-      100% {
-        opacity: 0;
-        transform: translate(-50%, -50%) scale(1.15) rotate(0deg);
-      }
-    }
-  </style>
 </body>
 </html>
