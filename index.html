@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TheMarkest.art – Glitch Image + Portrait</title>
-  <meta name="description" content="Портфолио художника в стиле sci-fi/cyberpunk, с волной, старомониторным эффектом, TextScramble, пиксельным глитч-логотипом, фото художника и удобными карточками работ." />
+  <meta name="description" content="Портфолио художника в стиле sci‑fi/cyberpunk, с волной, старомониторным эффектом, TextScramble, пиксельным глитч‑логотипом, фото художника и удобными карточками работ." />
 
   <!-- Favicons -->
   <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/apple-touch-icon.png">
@@ -144,13 +144,8 @@
       margin: 4px 0;
     }
     @media (max-width: 768px) {
-      .header-content {
-        justify-content: center;
-      }
-      .logo-container {
-        position: static;
-        margin: 0 auto;
-      }
+      .header-content { justify-content: center; }
+      .logo-container { position: static; margin: 0 auto; }
       .nav-links {
         display: none;
         flex-direction: column;
@@ -162,19 +157,49 @@
         border: 1px solid #333;
         border-radius: 6px;
       }
-      .burger {
-        display: block;
+      .burger { display: block; }
+    }
+  </style>
+
+  <!-- 5) Мерцающие заголовки -->
+  <style>
+    h1, h2, h3 {
+      animation: heading-glow 3s infinite alternate;
+      text-shadow:
+        0 0 2px #0ff,
+        0 0 4px #0ff,
+        0 0 6px #0ff;
+    }
+    @keyframes heading-glow {
+      0% {
+        text-shadow:
+          0 0 2px #0ff,
+          0 0 4px #0ff,
+          0 0 6px #0ff;
+      }
+      50% {
+        text-shadow:
+          0 0 5px #0ff,
+          0 0 8px #0ff,
+          0 0 10px #0ff;
+      }
+      100% {
+        text-shadow:
+          0 0 2px #0ff,
+          0 0 4px #0ff,
+          0 0 6px #0ff;
       }
     }
   </style>
 
-  <!-- 5) Glitch-Image (логотип) -->
+  <!-- 6) Glitch-Image (логотип) -->
   <style>
     .glitch-image {
       width: 312px;
       height: 119px;
       animation: glitch-skew 1s infinite linear alternate-reverse;
       image-rendering: pixelated;
+      position: relative;
     }
     .glitch-image img {
       display: block;
@@ -243,7 +268,7 @@
     }
   </style>
 
-  <!-- 6) Cover Section -->
+  <!-- 7) Cover Section -->
   <style>
     #cover {
       position: relative;
@@ -274,7 +299,7 @@
     }
   </style>
 
-  <!-- 7) Other Sections -->
+  <!-- 8) Other Sections -->
   <style>
     section {
       padding: 4rem 0;
@@ -289,14 +314,14 @@
     /* Портфолио: карточки вертикально, текст справа от картинки */
     .grid {
       display: grid;
-      grid-template-columns: 1fr; /* одна колонка на десктопе */
+      grid-template-columns: 1fr;
       gap: 2rem;
       max-width: 1000px;
       margin: 0 auto;
     }
     .work-item {
       display: flex;
-      flex-direction: row; /* картинка слева, текст справа */
+      flex-direction: row; /* на десктопе текст справа от изображения */
       gap: 1rem;
       background: #222;
       border: 1px solid #333;
@@ -311,7 +336,7 @@
       height: 120px;
       overflow: hidden;
     }
-    .work-media .work-thumb {
+    .work-thumb {
       width: 100%;
       height: 100%;
       object-fit: cover;
@@ -323,19 +348,21 @@
       flex: 1;
       display: flex;
       flex-direction: column;
-      justify-content: center; /* выравниваем по вертикали */
+      justify-content: center;
     }
     @media (max-width: 768px) {
-      .grid {
-        grid-template-columns: 1fr;
-      }
-      .work-item {
-        flex-direction: column;
-      }
+      .grid { grid-template-columns: 1fr; }
+      .work-item { flex-direction: column; }
       .work-media {
         width: 100%;
         height: 0;
-        padding-bottom: 100%; /* квадрат */
+        padding-bottom: 100%;
+      }
+    }
+    /* Принудительно для десктопа: если вдруг переопределение, то */
+    @media (min-width: 769px) {
+      .work-item {
+        flex-direction: row;
       }
     }
     .work-item h3 {
@@ -347,7 +374,7 @@
       opacity: 0.9;
       margin-bottom: 0.5rem;
     }
-    /* Раздел "О художнике" – портрет справа от биографии, statement ниже */
+    /* Раздел "О художнике" – перестановка: портрет теперь справа от блока био */
     .about-content {
       display: flex;
       flex-direction: column;
@@ -358,13 +385,13 @@
     .bio-row {
       display: flex;
       flex-direction: row;
-      align-items: flex-start; /* выравниваем по верхнему краю */
+      align-items: stretch; /* выравниваем по высоте */
       gap: 2rem;
     }
     .bio {
-      flex: 1; /* тянется на оставшуюся ширину */
+      flex: 1;
       display: flex;
-      flex-direction: column; /* заголовок сверху, текст ниже */
+      flex-direction: column;
     }
     .bio h3 {
       font-size: 1.3rem;
@@ -380,16 +407,15 @@
       border: 1px solid rgba(255,255,255,0.2);
       padding: 10px;
       border-radius: 4px;
-      /* убрали фиксированную высоту */
     }
     .artist-photo {
       flex: 0 0 250px;
       display: flex;
-      align-items: flex-start; /* выравниваем портрет по верху */
+      align-items: stretch; /* растягиваем, чтобы совпадала высота с .bio */
     }
     .artist-photo img {
       width: 100%;
-      height: auto;
+      height: 100%;
       object-fit: cover;
       border: 2px solid #0ff;
       border-radius: 8px;
@@ -421,7 +447,7 @@
     }
   </style>
 
-  <!-- 8) Form & Footer -->
+  <!-- 9) Form & Footer -->
   <style>
     form {
       display: flex;
@@ -456,9 +482,7 @@
       cursor: pointer;
       transition: background 0.3s;
     }
-    form button:hover {
-      background: #0cc;
-    }
+    form button:hover { background: #0cc; }
     .contact-social {
       text-align: center;
       margin-top: 2rem;
@@ -504,7 +528,7 @@
     }
   </style>
 
-  <!-- 9) TextScramble Styles -->
+  <!-- 10) TextScramble Styles -->
   <style>
     .scramble-text {
       display: inline-block;
@@ -517,13 +541,11 @@
   <header>
     <canvas id="waveCanvas"></canvas>
     <div class="header-content">
-      <!-- Лого (desktop слева, mobile центр) -->
       <div class="logo-container">
         <div class="glitch-image">
           <img src="assets/logo.svg" alt="TheMarkest.art Logo" />
         </div>
       </div>
-      <!-- Меню (desktop: по центру, mobile: скрыто, бургер) -->
       <nav class="nav-links">
         <a href="#cover">Обложка</a>
         <a href="#works">Портфолио</a>
@@ -548,12 +570,12 @@
 
   <!-- MAIN CONTENT -->
   <main>
-    <!-- ПОРТФОЛИО -->
+    <!-- Портфолио -->
     <section id="works">
       <div class="container">
         <h2>Портфолио</h2>
         <div class="grid">
-          <!-- 14 карточек (пример) -->
+          <!-- 14 карточек портфолио (пример одной, повторите для 2-14) -->
           <article class="work-item">
             <div class="work-media">
               <img src="assets/sample-work.jpg" alt="Работа 1" class="work-thumb">
@@ -564,17 +586,16 @@
               <p>Описание работы 1.</p>
             </div>
           </article>
-          <!-- ... повторите для 2-14 ... -->
+          <!-- ... карточки 2-14 ... -->
         </div>
       </div>
     </section>
 
-    <!-- О ХУДОЖНИКЕ -->
+    <!-- О художнике -->
     <section id="about">
       <div class="container">
         <h2>О художнике</h2>
         <div class="about-content">
-          <!-- Биография и портрет в одной строке, портрет справа -->
           <div class="bio-row">
             <div class="bio">
               <h3>Биография</h3>
@@ -592,8 +613,6 @@
               <img src="assets/portrait.png" alt="Portrait of the Artist">
             </div>
           </div>
-
-          <!-- Artist Statement ниже -->
           <div class="artist-statement">
             <h3>Artist Statement</h3>
             <p class="scramble-text">
@@ -615,7 +634,7 @@
       </div>
     </section>
 
-    <!-- КОНТАКТЫ -->
+    <!-- Контакты -->
     <section id="contact">
       <div class="container">
         <h2>Контакты</h2>
@@ -850,5 +869,76 @@
       }
     });
   </script>
+
+  <!-- Random Quotes Script -->
+  <script>
+    // Список цитат по теме
+    const quotes = [
+      "«Прогресс — наш лучший друг.» (Норберт Винер)",
+      "«Мы не можем предвидеть будущее, но мы можем изобрести его.» (Норберт Винер)",
+      "«Счастье для всех, даром, и пусть никто не уйдет обиженным!» (Стругацкие)",
+      "«Наука не знает страны, потому что знание принадлежит человечеству.» (Луи Пастер)",
+      "«Да, человек смертен, но это было ещё полбеды. Плохо то, что он иногда внезапно смертен.» (Булгаков)",
+      "«Дайте мне точку опоры, и я переверну Землю!» (Архимед)",
+      "«Математика — это язык, на котором говорят все науки.» (Галилей)",
+      "«Проблема будущего — это проблема коммуникации человека и машины.» (Норберт Винер)",
+      "«Книга — это музей, оживший и доступный каждому.» (Стругацкие)",
+      "«Кто не рискует, тот не пьёт шампанского.» (русская пословица)"
+    ];
+    function spawnQuote() {
+      const quote = quotes[Math.floor(Math.random() * quotes.length)];
+      const div = document.createElement('div');
+      div.className = 'floating-quote';
+      div.textContent = quote;
+      const x = 10 + Math.random() * 80;
+      const y = 30 + Math.random() * 60;
+      div.style.left = x + '%';
+      div.style.top = y + '%';
+      document.body.appendChild(div);
+      setTimeout(() => { div.remove(); }, 10000);
+    }
+    setInterval(() => {
+      const coverHeight = document.getElementById('cover').offsetHeight;
+      if (window.scrollY > coverHeight) {
+        spawnQuote();
+      }
+    }, 15000);
+  </script>
+  <style>
+    .floating-quote {
+      position: absolute;
+      color: rgba(255,255,255,0.3);
+      font-style: italic;
+      font-size: 1.1rem;
+      pointer-events: none;
+      text-shadow:
+        0 0 2px #0ff,
+        0 0 4px #0ff;
+      animation: quoteFlicker 10s linear forwards;
+      transform: translate(-50%, -50%);
+    }
+    @keyframes quoteFlicker {
+      0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(1) rotate(0deg);
+      }
+      10% {
+        opacity: 0.7;
+        transform: translate(-50%, -50%) scale(1.02) rotate(1deg);
+      }
+      50% {
+        opacity: 0.5;
+        transform: translate(-50%, -50%) scale(1.06) rotate(-2deg);
+      }
+      80% {
+        opacity: 0.3;
+        transform: translate(-50%, -50%) scale(1.1) rotate(0deg);
+      }
+      100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(1.15) rotate(0deg);
+      }
+    }
+  </style>
 </body>
 </html>
