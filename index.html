@@ -32,7 +32,7 @@
       position: fixed;
       top: 0; left: 0;
       width: 100%; height: 100%;
-      z-index: 9999; /* Большое значение */
+      z-index: 9999;
       background:
         radial-gradient(circle at center, rgba(0,0,0,0) 30%, rgba(0,0,0,0.85) 100%),
         radial-gradient(circle, rgba(255,255,255,0.05) 1%, rgba(255,255,255,0) 60%);
@@ -45,7 +45,7 @@
       position: fixed;
       top: 0; left: 0;
       width: 100%; height: 100%;
-      z-index: 99999; /* Очень большое значение */
+      z-index: 99999;
       background: repeating-linear-gradient(
         0deg,
         rgba(255,255,255,0.05) 0px,
@@ -77,8 +77,12 @@
 
   <!-- 3) Сброс и базовые стили -->
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
+    * {
+      margin: 0; padding: 0; box-sizing: border-box;
+    }
+    html {
+      scroll-behavior: smooth;
+    }
     body {
       font-family: "IBM Plex Sans", sans-serif;
       background: #000;
@@ -174,7 +178,7 @@
     }
   </style>
 
-  <!-- 5) Мерцающие заголовки (снижена интенсивность) -->
+  <!-- 5) Мерцающие заголовки (сниженная интенсивность) -->
   <style>
     h1, h2, h3 {
       animation: heading-glow 3s infinite alternate;
@@ -324,7 +328,7 @@
       margin-bottom: 2rem;
       text-transform: uppercase;
     }
-    /* Портфолио: карточки вертикально, текст справа от картинки */
+    /* Портфолио */
     .grid {
       display: grid;
       grid-template-columns: 1fr;
@@ -384,7 +388,7 @@
       opacity: 0.9;
       margin-bottom: 0.5rem;
     }
-    /* Раздел "О художнике": портрет справа от биографии */
+    /* О художнике */
     .about-content {
       display: flex;
       flex-direction: column;
@@ -395,8 +399,8 @@
     .bio-row {
       display: flex;
       flex-direction: row;
-      align-items: stretch; /* выравниваем блоки по высоте */
       gap: 2rem;
+      /* возвращаем портрет к квадрату */
     }
     .bio {
       flex: 1;
@@ -419,9 +423,13 @@
       border-radius: 4px;
     }
     .artist-photo {
-      flex: 0 0 250px;
+      /* фиксированный квадрат 250x250 */
+      width: 250px;
+      height: 250px;
+      flex: 0 0 auto; /* не растягиваем */
       display: flex;
-      align-items: stretch;
+      align-items: center;
+      justify-content: center;
     }
     .artist-photo img {
       width: 100%;
@@ -453,6 +461,13 @@
     @media (max-width: 768px) {
       .bio-row {
         flex-direction: column;
+      }
+      .artist-photo {
+        width: 100%;
+        height: auto; /* на мобильном пусть растягивается */
+      }
+      .artist-photo img {
+        height: auto;
       }
     }
   </style>
@@ -492,7 +507,9 @@
       cursor: pointer;
       transition: background 0.3s;
     }
-    form button:hover { background: #0cc; }
+    form button:hover {
+      background: #0cc;
+    }
     .contact-social {
       text-align: center;
       margin-top: 2rem;
@@ -514,7 +531,8 @@
       position: fixed;
       z-index: 3000;
       left: 0; top: 0;
-      width: 100%; height: 100%;
+      width: 100%;
+      height: 100%;
       overflow: auto;
       background-color: rgba(0,0,0,0.9);
     }
@@ -550,7 +568,7 @@
   <style>
     .floating-quote {
       position: absolute;
-      z-index: 100000; /* Чтобы перекрыть body::after с z-index=99999 */
+      z-index: 100000; /* выше, чем body::after (99999) */
       color: rgba(255,255,255,0.3);
       font-style: italic;
       font-size: 1.1rem;
@@ -635,7 +653,7 @@
               <p>Описание работы 1.</p>
             </div>
           </article>
-          <!-- ... остальные карточки ... -->
+          <!-- ... карточки 2-14 ... -->
         </div>
       </div>
     </section>
@@ -658,6 +676,7 @@
 Однако вместо традиционного художественного образования он выбрал путь науки, обучаясь оптико-электронике, что повлияло на его художественную стратегию.
               </p>
             </div>
+            <!-- Квадратный портрет -->
             <div class="artist-photo">
               <img src="assets/portrait.png" alt="Portrait of the Artist">
             </div>
@@ -743,7 +762,7 @@
         dots.push({
           x,
           pinned: false,
-          freq: FREQ_MIN + Math.random() * (FREQ_MAX - FREQ_MIN),
+          freq: FREQ_MIN + Math.random()*(FREQ_MAX - FREQ_MIN),
           phase: Math.random() * Math.PI * 2
         });
       }
@@ -774,7 +793,7 @@
       ctx.stroke();
       wavePoints.forEach(p => {
         ctx.beginPath();
-        ctx.arc(p.x, p.y, DOT_RADIUS, 0, Math.PI*2);
+        ctx.arc(p.x, p.y, DOT_RADIUS, 0, Math.PI * 2);
         ctx.fillStyle = "#0ff";
         ctx.fill();
       });
@@ -968,13 +987,14 @@
       }, 10000);
     }
 
-    // Вызываем каждые 15 секунд, если пользователь прокрутил страницу ниже обложки
+    // Уменьшаем интервал до 5 секунд, чтобы проще проверить
     setInterval(() => {
       const coverHeight = document.getElementById('cover').offsetHeight;
+      // Если хотите, чтобы цитаты были всегда, уберите это условие
       if (window.scrollY > coverHeight) {
         spawnQuote();
       }
-    }, 15000);
+    }, 5000);
   </script>
 </body>
 </html>
