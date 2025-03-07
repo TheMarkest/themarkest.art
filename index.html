@@ -161,33 +161,33 @@
     }
   </style>
 
-  <!-- 5) Мерцающие заголовки -->
+  <!-- 5) Мерцающие заголовки (уменьшена интенсивность свечения) -->
   <style>
     h1, h2, h3 {
       animation: heading-glow 3s infinite alternate;
       text-shadow:
+        0 0 1px #0ff,
         0 0 2px #0ff,
-        0 0 4px #0ff,
-        0 0 6px #0ff;
+        0 0 3px #0ff;
     }
     @keyframes heading-glow {
       0% {
         text-shadow:
+          0 0 1px #0ff,
           0 0 2px #0ff,
-          0 0 4px #0ff,
-          0 0 6px #0ff;
+          0 0 3px #0ff;
       }
       50% {
         text-shadow:
-          0 0 5px #0ff,
-          0 0 8px #0ff,
-          0 0 10px #0ff;
+          0 0 2px #0ff,
+          0 0 3px #0ff,
+          0 0 4px #0ff;
       }
       100% {
         text-shadow:
+          0 0 1px #0ff,
           0 0 2px #0ff,
-          0 0 4px #0ff,
-          0 0 6px #0ff;
+          0 0 3px #0ff;
       }
     }
   </style>
@@ -314,14 +314,14 @@
     /* Портфолио: карточки вертикально, текст справа от картинки */
     .grid {
       display: grid;
-      grid-template-columns: 1fr;
+      grid-template-columns: 1fr; /* одна колонка на десктопе */
       gap: 2rem;
       max-width: 1000px;
       margin: 0 auto;
     }
     .work-item {
       display: flex;
-      flex-direction: row; /* на десктопе текст справа от изображения */
+      flex-direction: row; /* текст справа от изображения */
       gap: 1rem;
       background: #222;
       border: 1px solid #333;
@@ -356,14 +356,11 @@
       .work-media {
         width: 100%;
         height: 0;
-        padding-bottom: 100%;
+        padding-bottom: 100%; /* квадрат */
       }
     }
-    /* Принудительно для десктопа: если вдруг переопределение, то */
     @media (min-width: 769px) {
-      .work-item {
-        flex-direction: row;
-      }
+      .work-item { flex-direction: row; }
     }
     .work-item h3 {
       margin-bottom: 0.5rem;
@@ -374,7 +371,7 @@
       opacity: 0.9;
       margin-bottom: 0.5rem;
     }
-    /* Раздел "О художнике" – перестановка: портрет теперь справа от блока био */
+    /* Раздел "О художнике" – блок с биографией и портретом */
     .about-content {
       display: flex;
       flex-direction: column;
@@ -385,7 +382,7 @@
     .bio-row {
       display: flex;
       flex-direction: row;
-      align-items: stretch; /* выравниваем по высоте */
+      align-items: stretch; /* выравниваем блоки по высоте */
       gap: 2rem;
     }
     .bio {
@@ -411,7 +408,7 @@
     .artist-photo {
       flex: 0 0 250px;
       display: flex;
-      align-items: stretch; /* растягиваем, чтобы совпадала высота с .bio */
+      align-items: stretch;
     }
     .artist-photo img {
       width: 100%;
@@ -441,9 +438,7 @@
       border-radius: 4px;
     }
     @media (max-width: 768px) {
-      .bio-row {
-        flex-direction: column;
-      }
+      .bio-row { flex-direction: column; }
     }
   </style>
 
@@ -535,6 +530,45 @@
       opacity: 0;
     }
   </style>
+
+  <!-- 11) Стили для плавающих цитат -->
+  <style>
+    .floating-quote {
+      position: absolute;
+      z-index: 5; /* Добавлено, чтобы цитаты отображались поверх фона */
+      color: rgba(255,255,255,0.3);
+      font-style: italic;
+      font-size: 1.1rem;
+      pointer-events: none;
+      text-shadow:
+        0 0 2px #0ff,
+        0 0 4px #0ff;
+      animation: quoteFlicker 10s linear forwards;
+      transform: translate(-50%, -50%);
+    }
+    @keyframes quoteFlicker {
+      0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(1) rotate(0deg);
+      }
+      10% {
+        opacity: 0.7;
+        transform: translate(-50%, -50%) scale(1.02) rotate(1deg);
+      }
+      50% {
+        opacity: 0.5;
+        transform: translate(-50%, -50%) scale(1.06) rotate(-2deg);
+      }
+      80% {
+        opacity: 0.3;
+        transform: translate(-50%, -50%) scale(1.1) rotate(0deg);
+      }
+      100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(1.15) rotate(0deg);
+      }
+    }
+  </style>
 </head>
 <body>
   <!-- HEADER -->
@@ -575,7 +609,7 @@
       <div class="container">
         <h2>Портфолио</h2>
         <div class="grid">
-          <!-- 14 карточек портфолио (пример одной, повторите для 2-14) -->
+          <!-- 14 карточек портфолио (пример одной, повторите для карточек 2-14) -->
           <article class="work-item">
             <div class="work-media">
               <img src="assets/sample-work.jpg" alt="Работа 1" class="work-thumb">
@@ -872,7 +906,6 @@
 
   <!-- Random Quotes Script -->
   <script>
-    // Список цитат по теме
     const quotes = [
       "«Прогресс — наш лучший друг.» (Норберт Винер)",
       "«Мы не можем предвидеть будущее, но мы можем изобрести его.» (Норберт Винер)",
@@ -907,6 +940,7 @@
   <style>
     .floating-quote {
       position: absolute;
+      z-index: 5;
       color: rgba(255,255,255,0.3);
       font-style: italic;
       font-size: 1.1rem;
