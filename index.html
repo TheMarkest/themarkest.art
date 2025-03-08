@@ -562,12 +562,11 @@
     }
   </style>
 
-  <!-- 11) Стили для плавающих цитат -->
+  <!-- 11) Стили для плавающих цитат (без качания) -->
   <style>
-    /* Цитаты теперь position: absolute, чтобы скроллились вместе со страницей */
     .floating-quote {
-      position: absolute; /* вместо fixed */
-      z-index: 1; /* можно поставить 0, если хотите под текстом */
+      position: absolute;
+      z-index: 1;
       color: rgba(255,255,255,0.3);
       font-style: italic;
       font-size: 1.1rem;
@@ -589,27 +588,13 @@
       margin-top: 0.3em;
       opacity: 0.7; /* чуть бледнее */
     }
+    /* Убираем качание: оставляем лишь плавное появление/исчезновение */
     @keyframes quoteFlicker {
-      0% {
-        opacity: 0;
-        transform: translate(-50%, -50%) scale(1) rotate(0deg);
-      }
-      10% {
-        opacity: 0.7;
-        transform: translate(-50%, -50%) scale(1.02) rotate(1deg);
-      }
-      50% {
-        opacity: 0.5;
-        transform: translate(-50%, -50%) scale(1.06) rotate(-2deg);
-      }
-      80% {
-        opacity: 0.3;
-        transform: translate(-50%, -50%) scale(1.1) rotate(0deg);
-      }
-      100% {
-        opacity: 0;
-        transform: translate(-50%, -50%) scale(1.15) rotate(0deg);
-      }
+      0%   { opacity: 0; }
+      10%  { opacity: 0.7; }
+      50%  { opacity: 0.5; }
+      80%  { opacity: 0.3; }
+      100% { opacity: 0; }
     }
   </style>
 </head>
@@ -820,7 +805,7 @@
     animateWave();
   </script>
 
-  <!-- TextScramble + IntersectionObserver -->
+  <!-- TextScramble (без прерывания при скролле) -->
   <script>
     class TextScramble {
       constructor(el) {
@@ -845,11 +830,7 @@
         return promise;
       }
       update() {
-        const rect = this.el.getBoundingClientRect();
-        if (rect.bottom < 0 || rect.top > window.innerHeight) {
-          cancelAnimationFrame(this.frameRequest);
-          return;
-        }
+        // Убираем проверку вьюпорта, чтобы не обрывать анимацию
         let output = "";
         let complete = 0;
         for (let i = 0, n = this.queue.length; i < n; i++) {
@@ -882,20 +863,12 @@
 
     window.addEventListener('load', () => {
       const paragraphs = document.querySelectorAll('.scramble-text');
-      const observer = new IntersectionObserver((entries, obs) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            const el = entry.target;
-            const text = el.textContent;
-            el.textContent = "";
-            const fx = new TextScramble(el);
-            fx.setText(text).then(() => {
-              obs.unobserve(el);
-            });
-          }
-        });
-      }, { threshold: 0.2 });
-      paragraphs.forEach(p => observer.observe(p));
+      paragraphs.forEach(el => {
+        const text = el.textContent;
+        el.textContent = "";
+        const fx = new TextScramble(el);
+        fx.setText(text);
+      });
     });
   </script>
 
@@ -961,7 +934,7 @@
     });
   </script>
 
-  <!-- Random Quotes Script (ABSOLUTE + author on separate line) -->
+  <!-- Random Quotes Script -->
   <script>
     // Массив объектов: text и author
     const quotes = [
@@ -979,35 +952,29 @@
 
     function spawnQuote() {
       const q = quotes[Math.floor(Math.random() * quotes.length)];
-
-      // Создаем div с нужной структурой (две строки)
+      // Создаем div с двумя строками
       const div = document.createElement('div');
       div.className = 'floating-quote';
       div.innerHTML = `
         <span class="quote-text">${q.text}</span>
         <span class="quote-author">${q.author}</span>
       `;
-
       // Получаем размеры документа
       const docWidth = document.documentElement.scrollWidth;
       const docHeight = document.documentElement.scrollHeight;
-
-      // Случайная позиция: 5%..95% по ширине, 10%..90% по высоте
+      // Случайная позиция (5–95% по ширине, 10–90% по высоте)
       const x = 0.05 * docWidth + Math.random() * (0.9 * docWidth);
       const y = 0.1 * docHeight + Math.random() * (0.8 * docHeight);
-
       div.style.left = x + 'px';
       div.style.top  = y + 'px';
-
       document.body.appendChild(div);
-
       // Удаляем через 10 секунд
       setTimeout(() => {
         div.remove();
       }, 10000);
     }
 
-    // Каждые 5 секунд генерируем цитату
+    // Генерируем цитату каждые 5 секунд
     setInterval(() => {
       spawnQuote();
     }, 5000);
