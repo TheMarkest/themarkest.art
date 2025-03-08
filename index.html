@@ -564,10 +564,10 @@
 
   <!-- 11) Стили для плавающих цитат -->
   <style>
-    /* Делаем position: fixed, чтобы цитаты появлялись в зоне экрана (вьюпорта) */
+    /* Цитаты теперь position: absolute, чтобы скроллились вместе со страницей */
     .floating-quote {
-      position: fixed;
-      z-index: 100000; /* выше, чем body::after (99999) */
+      position: absolute; /* вместо fixed */
+      z-index: 1; /* можно поставить 0, если хотите под текстом */
       color: rgba(255,255,255,0.3);
       font-style: italic;
       font-size: 1.1rem;
@@ -577,9 +577,17 @@
         0 0 4px #0ff;
       animation: quoteFlicker 10s linear forwards;
       transform: translate(-50%, -50%);
-      /* Чтобы не выходить за границы по ширине */
       max-width: 30vw;
       word-wrap: break-word;
+    }
+    .floating-quote .quote-text {
+      display: block;
+    }
+    .floating-quote .quote-author {
+      display: block;
+      margin-left: 1.5em; /* небольшой отступ */
+      margin-top: 0.3em;
+      opacity: 0.7; /* чуть бледнее */
     }
     @keyframes quoteFlicker {
       0% {
@@ -764,8 +772,8 @@
         dots.push({
           x,
           pinned: false,
-          freq: FREQ_MIN + Math.random() * (FREQ_MAX - FREQ_MIN),
-          phase: Math.random() * Math.PI * 2
+          freq: FREQ_MIN + Math.random()*(FREQ_MAX - FREQ_MIN),
+          phase: Math.random()*Math.PI*2
         });
       }
       dots.push({ x: width, pinned: true });
@@ -838,7 +846,6 @@
       }
       update() {
         const rect = this.el.getBoundingClientRect();
-        // Если элемент вышел из вьюпорта, отменяем анимацию
         if (rect.bottom < 0 || rect.top > window.innerHeight) {
           cancelAnimationFrame(this.frameRequest);
           return;
@@ -954,33 +961,43 @@
     });
   </script>
 
-  <!-- Random Quotes Script -->
+  <!-- Random Quotes Script (ABSOLUTE + author on separate line) -->
   <script>
-    // Список цитат
+    // Массив объектов: text и author
     const quotes = [
-      "«Прогресс — наш лучший друг.» (Норберт Винер)",
-      "«Мы не можем предвидеть будущее, но мы можем изобрести его.» (Норберт Винер)",
-      "«Счастье для всех, даром, и пусть никто не уйдет обиженным!» (Стругацкие)",
-      "«Наука не знает страны, потому что знание принадлежит человечеству.» (Луи Пастер)",
-      "«Да, человек смертен, но это было ещё полбеды. Плохо то, что он иногда внезапно смертен.» (Булгаков)",
-      "«Дайте мне точку опоры, и я переверну Землю!» (Архимед)",
-      "«Математика — это язык, на котором говорят все науки.» (Галилей)",
-      "«Проблема будущего — это проблема коммуникации человека и машины.» (Норберт Винер)",
-      "«Книга — это музей, оживший и доступный каждому.» (Стругацкие)",
-      "«Кто не рискует, тот не пьёт шампанского.» (русская пословица)"
+      { text: "Прогресс — наш лучший друг.", author: "Норберт Винер" },
+      { text: "Мы не можем предвидеть будущее, но мы можем изобрести его.", author: "Норберт Винер" },
+      { text: "Счастье для всех, даром, и пусть никто не уйдет обиженным!", author: "Стругацкие" },
+      { text: "Наука не знает страны, потому что знание принадлежит человечеству.", author: "Луи Пастер" },
+      { text: "Да, человек смертен, но это было ещё полбеды. Плохо то, что он иногда внезапно смертен.", author: "Михаил Булгаков" },
+      { text: "Дайте мне точку опоры, и я переверну Землю!", author: "Архимед" },
+      { text: "Математика — это язык, на котором говорят все науки.", author: "Галилей" },
+      { text: "Проблема будущего — это проблема коммуникации человека и машины.", author: "Норберт Винер" },
+      { text: "Книга — это музей, оживший и доступный каждому.", author: "Стругацкие" },
+      { text: "Кто не рискует, тот не пьёт шампанского.", author: "русская пословица" }
     ];
 
     function spawnQuote() {
-      const quote = quotes[Math.floor(Math.random() * quotes.length)];
+      const q = quotes[Math.floor(Math.random() * quotes.length)];
+
+      // Создаем div с нужной структурой (две строки)
       const div = document.createElement('div');
       div.className = 'floating-quote';
-      div.textContent = quote;
+      div.innerHTML = `
+        <span class="quote-text">${q.text}</span>
+        <span class="quote-author">${q.author}</span>
+      `;
 
-      // Случайная позиция (5%-95% по X, 10%-90% по Y)
-      const x = 5 + Math.random() * 90;
-      const y = 10 + Math.random() * 80;
-      div.style.left = x + '%';
-      div.style.top = y + '%';
+      // Получаем размеры документа
+      const docWidth = document.documentElement.scrollWidth;
+      const docHeight = document.documentElement.scrollHeight;
+
+      // Случайная позиция: 5%..95% по ширине, 10%..90% по высоте
+      const x = 0.05 * docWidth + Math.random() * (0.9 * docWidth);
+      const y = 0.1 * docHeight + Math.random() * (0.8 * docHeight);
+
+      div.style.left = x + 'px';
+      div.style.top  = y + 'px';
 
       document.body.appendChild(div);
 
@@ -990,7 +1007,7 @@
       }, 10000);
     }
 
-    // Каждые 5 секунд генерируем цитату, без ограничений
+    // Каждые 5 секунд генерируем цитату
     setInterval(() => {
       spawnQuote();
     }, 5000);
