@@ -353,13 +353,16 @@
       height: 120px;
       overflow: hidden;
     }
-    .work-thumb {
+    /* Картинка загружается последней */
+    .work-media img {
       width: 100%;
       height: 100%;
       object-fit: cover;
       border-radius: 6px;
       cursor: pointer;
       image-rendering: pixelated;
+      loading: lazy;        /* <-- загружать в последнюю очередь */
+      decoding: async;      /* <-- не блокировать парсинг */
     }
     .work-details {
       flex: 1;
@@ -437,6 +440,8 @@
       border-radius: 8px;
       image-rendering: pixelated;
       filter: grayscale(100%);
+      loading: lazy;   /* <-- загружать в последнюю очередь */
+      decoding: async;
     }
     .artist-statement {
       width: 100%;
@@ -556,13 +561,11 @@
 
   <!-- 10) TextScramble Styles -->
   <style>
-    .scramble-text {
-      display: inline-block;
-      opacity: 0;
-    }
+    /* Заголовки, меню и т.п. исключаем, потому что
+       нам нужно применять эффект к обычным текстовым блокам. */
   </style>
 
-  <!-- 11) Стили для плавающих цитат (без качания) -->
+  <!-- 11) Стили для плавающих цитат -->
   <style>
     .floating-quote {
       position: absolute;
@@ -584,11 +587,10 @@
     }
     .floating-quote .quote-author {
       display: block;
-      margin-left: 1.5em; /* небольшой отступ */
+      margin-left: 1.5em;
       margin-top: 0.3em;
-      opacity: 0.7; /* чуть бледнее */
+      opacity: 0.7;
     }
-    /* Убираем качание: оставляем лишь плавное появление/исчезновение */
     @keyframes quoteFlicker {
       0%   { opacity: 0; }
       10%  { opacity: 0.7; }
@@ -637,10 +639,10 @@
       <div class="container">
         <h2>Портфолио</h2>
         <div class="grid">
-          <!-- Пример карточки (добавьте 2-14) -->
+          <!-- Пример карточки -->
           <article class="work-item">
             <div class="work-media">
-              <img src="assets/sample-work.jpg" alt="Работа 1" class="work-thumb">
+              <img src="assets/sample-work.jpg" alt="Работа 1" class="work-thumb" />
             </div>
             <div class="work-details">
               <h3>Работа 1</h3>
@@ -648,7 +650,7 @@
               <p>Описание работы 1.</p>
             </div>
           </article>
-          <!-- ... карточки 2-14 ... -->
+          <!-- ... остальные карточки ... -->
         </div>
       </div>
     </section>
@@ -661,7 +663,7 @@
           <div class="bio-row">
             <div class="bio">
               <h3>Биография</h3>
-              <p class="scramble-text">
+              <p>
 Марк Богданов — медиа-художник и скульптор, работающий в жанре кинетического искусства и интерактивной инсталляции. 
 В своих работах он сочетает новые медиа, цифровые технологии и классические материалы, создавая объектно-пространственные композиции, 
 которые трансформируют восприятие зрителя. Его практика основана на принципах конструктивизма, ретрофутуризма и кибернетики, 
@@ -673,12 +675,12 @@
             </div>
             <!-- Квадратный портрет -->
             <div class="artist-photo">
-              <img src="assets/portrait.png" alt="Portrait of the Artist">
+              <img src="assets/portrait.png" alt="Portrait of the Artist" />
             </div>
           </div>
           <div class="artist-statement">
             <h3>Artist Statement</h3>
-            <p class="scramble-text">
+            <p>
 Я создаю скульптуры, в которых современные технологии производства встречаются с наследием инженерной мысли прошлого. 
 Моё искусство — это поиск формы, структуры и материала, отражающих логику научного прогресса.
 
@@ -805,7 +807,7 @@
     animateWave();
   </script>
 
-  <!-- TextScramble (без прерывания при скролле) -->
+  <!-- TextScramble (применяем ко всем текстовым узлам кроме заголовков/меню) -->
   <script>
     class TextScramble {
       constructor(el) {
@@ -830,7 +832,6 @@
         return promise;
       }
       update() {
-        // Убираем проверку вьюпорта, чтобы не обрывать анимацию
         let output = "";
         let complete = 0;
         for (let i = 0, n = this.queue.length; i < n; i++) {
@@ -861,12 +862,21 @@
       }
     }
 
-    window.addEventListener('load', () => {
-      const paragraphs = document.querySelectorAll('.scramble-text');
-      paragraphs.forEach(el => {
-        const text = el.textContent;
-        el.textContent = "";
-        const fx = new TextScramble(el);
+    // При загрузке DOM применяем эффект ко всем p, li, blockquote (исключая h1,h2,h3,nav, etc.)
+    document.addEventListener('DOMContentLoaded', () => {
+      // Выбираем все p, li, blockquote, НО исключаем заголовки/ссылки меню
+      const textNodes = document.querySelectorAll(`
+        p:not(h1 p):not(h2 p):not(h3 p),
+        li:not(nav li):not(.nav-links li),
+        blockquote
+      `);
+
+      textNodes.forEach(node => {
+        const text = node.textContent;
+        // Если текста мало или это пусто — пропускаем
+        if (!text || text.trim().length === 0) return;
+        // Запускаем эффект
+        const fx = new TextScramble(node);
         fx.setText(text);
       });
     });
@@ -934,9 +944,8 @@
     });
   </script>
 
-  <!-- Random Quotes Script -->
+  <!-- Random Quotes Script (без качания) -->
   <script>
-    // Массив объектов: text и author
     const quotes = [
       { text: "Прогресс — наш лучший друг.", author: "Норберт Винер" },
       { text: "Мы не можем предвидеть будущее, но мы можем изобрести его.", author: "Норберт Винер" },
@@ -952,29 +961,25 @@
 
     function spawnQuote() {
       const q = quotes[Math.floor(Math.random() * quotes.length)];
-      // Создаем div с двумя строками
       const div = document.createElement('div');
       div.className = 'floating-quote';
       div.innerHTML = `
         <span class="quote-text">${q.text}</span>
         <span class="quote-author">${q.author}</span>
       `;
-      // Получаем размеры документа
+      // Позиция на странице
       const docWidth = document.documentElement.scrollWidth;
       const docHeight = document.documentElement.scrollHeight;
-      // Случайная позиция (5–95% по ширине, 10–90% по высоте)
       const x = 0.05 * docWidth + Math.random() * (0.9 * docWidth);
       const y = 0.1 * docHeight + Math.random() * (0.8 * docHeight);
       div.style.left = x + 'px';
       div.style.top  = y + 'px';
       document.body.appendChild(div);
-      // Удаляем через 10 секунд
       setTimeout(() => {
         div.remove();
       }, 10000);
     }
 
-    // Генерируем цитату каждые 5 секунд
     setInterval(() => {
       spawnQuote();
     }, 5000);
