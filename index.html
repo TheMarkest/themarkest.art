@@ -77,26 +77,16 @@
 
   <!-- 3) Сброс и базовые стили -->
   <style>
-    * {
-      margin: 0; padding: 0; box-sizing: border-box;
-    }
-    html {
-      scroll-behavior: smooth;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
     body {
       font-family: "IBM Plex Sans", sans-serif;
       background: #000;
       color: #fff;
       line-height: 1.5;
     }
-    a {
-      color: inherit;
-      text-decoration: none;
-      transition: color 0.3s;
-    }
-    a:hover {
-      color: #0ff;
-    }
+    a { color: inherit; text-decoration: none; transition: color 0.3s; }
+    a:hover { color: #0ff; }
   </style>
 
   <!-- 4) Хедер: Волна + Контент, меню -->
@@ -154,13 +144,8 @@
       margin: 4px 0;
     }
     @media (max-width: 768px) {
-      .header-content {
-        justify-content: center;
-      }
-      .logo-container {
-        position: static;
-        margin: 0 auto;
-      }
+      .header-content { justify-content: center; }
+      .logo-container { position: static; margin: 0 auto; }
       .nav-links {
         display: none;
         flex-direction: column;
@@ -172,9 +157,7 @@
         border: 1px solid #333;
         border-radius: 6px;
       }
-      .burger {
-        display: block;
-      }
+      .burger { display: block; }
     }
   </style>
 
@@ -182,30 +165,12 @@
   <style>
     h1, h2, h3 {
       animation: heading-glow 3s infinite alternate;
-      text-shadow:
-        0 0 1px #0ff,
-        0 0 2px #0ff,
-        0 0 3px #0ff;
+      text-shadow: 0 0 1px #0ff, 0 0 2px #0ff, 0 0 3px #0ff;
     }
     @keyframes heading-glow {
-      0% {
-        text-shadow:
-          0 0 1px #0ff,
-          0 0 2px #0ff,
-          0 0 3px #0ff;
-      }
-      50% {
-        text-shadow:
-          0 0 2px #0ff,
-          0 0 3px #0ff,
-          0 0 4px #0ff;
-      }
-      100% {
-        text-shadow:
-          0 0 1px #0ff,
-          0 0 2px #0ff,
-          0 0 3px #0ff;
-      }
+      0% { text-shadow: 0 0 1px #0ff, 0 0 2px #0ff, 0 0 3px #0ff; }
+      50% { text-shadow: 0 0 2px #0ff, 0 0 3px #0ff, 0 0 4px #0ff; }
+      100% { text-shadow: 0 0 1px #0ff, 0 0 2px #0ff, 0 0 3px #0ff; }
     }
   </style>
 
@@ -245,42 +210,42 @@
       animation: glitch-anim2 3s infinite linear alternate;
     }
     @keyframes glitch-anim {
-      0%   { clip: rect(10px,9999px,20px,0); transform: translateX(0) skew(0deg); }
-      5%   { clip: rect(3px,9999px,15px,0); transform: translateX(calc(-3px * var(--glitch-intensity))) skew(calc(1deg * var(--glitch-intensity))); }
-      10%  { clip: rect(25px,9999px,35px,0); transform: translateX(calc(4px * var(--glitch-intensity))) skew(calc(-2deg * var(--glitch-intensity))); }
-      15%  { clip: rect(18px,9999px,28px,0); transform: translateX(calc(-2px * var(--glitch-intensity))) skew(calc(3deg * var(--glitch-intensity))); }
-      20%  { clip: rect(8px,9999px,18px,0); transform: translateX(calc(2px * var(--glitch-intensity))) skew(calc(-1deg * var(--glitch-intensity))); }
-      25%  { clip: rect(30px,9999px,42px,0); transform: translateX(calc(-4px * var(--glitch-intensity))) skew(calc(2deg * var(--glitch-intensity))); }
-      30%  { clip: rect(12px,9999px,25px,0); transform: translateX(calc(3px * var(--glitch-intensity))) skew(calc(-3deg * var(--glitch-intensity))); }
-      35%  { clip: rect(15px,9999px,27px,0); transform: translateX(calc(1px * var(--glitch-intensity))) skew(calc(1deg * var(--glitch-intensity))); }
-      40%  { clip: rect(5px,9999px,15px,0); transform: translateX(calc(-2px * var(--glitch-intensity))) skew(calc(1deg * var(--glitch-intensity))); }
-      50%  { clip: rect(22px,9999px,35px,0); transform: translateX(calc(4px * var(--glitch-intensity))) skew(calc(-2deg * var(--glitch-intensity))); }
-      60%  { clip: rect(38px,9999px,48px,0); transform: translateX(calc(-3px * var(--glitch-intensity))) skew(calc(3deg * var(--glitch-intensity))); }
-      70%  { clip: rect(10px,9999px,20px,0); transform: translateX(calc(1px * var(--glitch-intensity))) skew(calc(-1deg * var(--glitch-intensity))); }
-      80%  { clip: rect(28px,9999px,40px,0); transform: translateX(calc(-4px * var(--glitch-intensity))) skew(calc(2deg * var(--glitch-intensity))); }
-      90%  { clip: rect(15px,9999px,25px,0); transform: translateX(calc(2px * var(--glitch-intensity))) skew(calc(-2deg * var(--glitch-intensity))); }
+      0% { clip: rect(10px,9999px,20px,0); transform: translateX(0) skew(0deg); }
+      5% { clip: rect(3px,9999px,15px,0); transform: translateX(calc(-3px * var(--glitch-intensity))) skew(calc(1deg * var(--glitch-intensity))); }
+      10% { clip: rect(25px,9999px,35px,0); transform: translateX(calc(4px * var(--glitch-intensity))) skew(calc(-2deg * var(--glitch-intensity))); }
+      15% { clip: rect(18px,9999px,28px,0); transform: translateX(calc(-2px * var(--glitch-intensity))) skew(calc(3deg * var(--glitch-intensity))); }
+      20% { clip: rect(8px,9999px,18px,0); transform: translateX(calc(2px * var(--glitch-intensity))) skew(calc(-1deg * var(--glitch-intensity))); }
+      25% { clip: rect(30px,9999px,42px,0); transform: translateX(calc(-4px * var(--glitch-intensity))) skew(calc(2deg * var(--glitch-intensity))); }
+      30% { clip: rect(12px,9999px,25px,0); transform: translateX(calc(3px * var(--glitch-intensity))) skew(calc(-3deg * var(--glitch-intensity))); }
+      35% { clip: rect(15px,9999px,27px,0); transform: translateX(calc(1px * var(--glitch-intensity))) skew(calc(1deg * var(--glitch-intensity))); }
+      40% { clip: rect(5px,9999px,15px,0); transform: translateX(calc(-2px * var(--glitch-intensity))) skew(calc(1deg * var(--glitch-intensity))); }
+      50% { clip: rect(22px,9999px,35px,0); transform: translateX(calc(4px * var(--glitch-intensity))) skew(calc(-2deg * var(--glitch-intensity))); }
+      60% { clip: rect(38px,9999px,48px,0); transform: translateX(calc(-3px * var(--glitch-intensity))) skew(calc(3deg * var(--glitch-intensity))); }
+      70% { clip: rect(10px,9999px,20px,0); transform: translateX(calc(1px * var(--glitch-intensity))) skew(calc(-1deg * var(--glitch-intensity))); }
+      80% { clip: rect(28px,9999px,40px,0); transform: translateX(calc(-4px * var(--glitch-intensity))) skew(calc(2deg * var(--glitch-intensity))); }
+      90% { clip: rect(15px,9999px,25px,0); transform: translateX(calc(2px * var(--glitch-intensity))) skew(calc(-2deg * var(--glitch-intensity))); }
       100% { clip: rect(10px,9999px,20px,0); transform: translateX(0) skew(0deg); }
     }
     @keyframes glitch-anim2 {
-      0%   { clip: rect(5px,9999px,15px,0); transform: translateX(0) skew(0deg); }
-      5%   { clip: rect(28px,9999px,40px,0); transform: translateX(calc(2px * var(--glitch-intensity))) skew(calc(-1deg * var(--glitch-intensity))); }
-      10%  { clip: rect(18px,9999px,30px,0); transform: translateX(calc(-4px * var(--glitch-intensity))) skew(calc(2deg * var(--glitch-intensity))); }
-      15%  { clip: rect(35px,9999px,55px,0); transform: translateX(calc(3px * var(--glitch-intensity))) skew(calc(-2deg * var(--glitch-intensity))); }
-      20%  { clip: rect(12px,9999px,25px,0); transform: translateX(calc(-2px * var(--glitch-intensity))) skew(calc(1deg * var(--glitch-intensity))); }
-      25%  { clip: rect(40px,9999px,55px,0); transform: translateX(calc(4px * var(--glitch-intensity))) skew(calc(-3deg * var(--glitch-intensity))); }
-      30%  { clip: rect(22px,9999px,35px,0); transform: translateX(calc(-3px * var(--glitch-intensity))) skew(calc(2deg * var(--glitch-intensity))); }
-      35%  { clip: rect(12px,9999px,24px,0); transform: translateX(calc(1px * var(--glitch-intensity))) skew(calc(-1deg * var(--glitch-intensity))); }
-      40%  { clip: rect(8px,9999px,20px,0); transform: translateX(calc(1px * var(--glitch-intensity))) skew(calc(-1deg * var(--glitch-intensity))); }
-      50%  { clip: rect(30px,9999px,40px,0); transform: translateX(calc(-2px * var(--glitch-intensity))) skew(calc(3deg * var(--glitch-intensity))); }
-      60%  { clip: rect(15px,9999px,25px,0); transform: translateX(calc(4px * var(--glitch-intensity))) skew(calc(-2deg * var(--glitch-intensity))); }
-      70%  { clip: rect(45px,9999px,60px,0); transform: translateX(calc(-4px * var(--glitch-intensity))) skew(calc(1deg * var(--glitch-intensity))); }
-      80%  { clip: rect(25px,9999px,35px,0); transform: translateX(calc(3px * var(--glitch-intensity))) skew(calc(-3deg * var(--glitch-intensity))); }
-      90%  { clip: rect(5px,9999px,15px,0); transform: translateX(calc(-1px * var(--glitch-intensity))) skew(calc(2deg * var(--glitch-intensity))); }
+      0% { clip: rect(5px,9999px,15px,0); transform: translateX(0) skew(0deg); }
+      5% { clip: rect(28px,9999px,40px,0); transform: translateX(calc(2px * var(--glitch-intensity))) skew(calc(-1deg * var(--glitch-intensity))); }
+      10% { clip: rect(18px,9999px,30px,0); transform: translateX(calc(-4px * var(--glitch-intensity))) skew(calc(2deg * var(--glitch-intensity))); }
+      15% { clip: rect(35px,9999px,55px,0); transform: translateX(calc(3px * var(--glitch-intensity))) skew(calc(-2deg * var(--glitch-intensity))); }
+      20% { clip: rect(12px,9999px,25px,0); transform: translateX(calc(-2px * var(--glitch-intensity))) skew(calc(1deg * var(--glitch-intensity))); }
+      25% { clip: rect(40px,9999px,55px,0); transform: translateX(calc(4px * var(--glitch-intensity))) skew(calc(-3deg * var(--glitch-intensity))); }
+      30% { clip: rect(22px,9999px,35px,0); transform: translateX(calc(-3px * var(--glitch-intensity))) skew(calc(2deg * var(--glitch-intensity))); }
+      35% { clip: rect(12px,9999px,24px,0); transform: translateX(calc(1px * var(--glitch-intensity))) skew(calc(-1deg * var(--glitch-intensity))); }
+      40% { clip: rect(8px,9999px,20px,0); transform: translateX(calc(1px * var(--glitch-intensity))) skew(calc(-1deg * var(--glitch-intensity))); }
+      50% { clip: rect(30px,9999px,40px,0); transform: translateX(calc(-2px * var(--glitch-intensity))) skew(calc(3deg * var(--glitch-intensity))); }
+      60% { clip: rect(15px,9999px,25px,0); transform: translateX(calc(4px * var(--glitch-intensity))) skew(calc(-2deg * var(--glitch-intensity))); }
+      70% { clip: rect(45px,9999px,60px,0); transform: translateX(calc(-4px * var(--glitch-intensity))) skew(calc(1deg * var(--glitch-intensity))); }
+      80% { clip: rect(25px,9999px,35px,0); transform: translateX(calc(3px * var(--glitch-intensity))) skew(calc(-3deg * var(--glitch-intensity))); }
+      90% { clip: rect(5px,9999px,15px,0); transform: translateX(calc(-1px * var(--glitch-intensity))) skew(calc(2deg * var(--glitch-intensity))); }
       100% { clip: rect(5px,9999px,15px,0); transform: translateX(0) skew(0deg); }
     }
     @keyframes glitch-skew {
-      0%   { transform: skew(0deg); }
-      50%  { transform: skew(1deg); }
+      0% { transform: skew(0deg); }
+      50% { transform: skew(1deg); }
       100% { transform: skew(0deg); }
     }
   </style>
@@ -353,16 +318,15 @@
       height: 120px;
       overflow: hidden;
     }
-    /* Картинка загружается последней */
-    .work-media img {
+    .work-thumb {
       width: 100%;
       height: 100%;
       object-fit: cover;
       border-radius: 6px;
       cursor: pointer;
       image-rendering: pixelated;
-      loading: lazy;        /* <-- загружать в последнюю очередь */
-      decoding: async;      /* <-- не блокировать парсинг */
+      loading: lazy;
+      decoding: async;
     }
     .work-details {
       flex: 1;
@@ -440,7 +404,7 @@
       border-radius: 8px;
       image-rendering: pixelated;
       filter: grayscale(100%);
-      loading: lazy;   /* <-- загружать в последнюю очередь */
+      loading: lazy;
       decoding: async;
     }
     .artist-statement {
@@ -462,16 +426,9 @@
       border-radius: 4px;
     }
     @media (max-width: 768px) {
-      .bio-row {
-        flex-direction: column;
-      }
-      .artist-photo {
-        width: 100%;
-        height: auto;
-      }
-      .artist-photo img {
-        height: auto;
-      }
+      .bio-row { flex-direction: column; }
+      .artist-photo { width: 100%; height: auto; }
+      .artist-photo img { height: auto; }
     }
   </style>
 
@@ -484,10 +441,7 @@
       max-width: 500px;
       margin: 0 auto;
     }
-    form label {
-      font-weight: 600;
-      margin-bottom: 0.3rem;
-    }
+    form label { font-weight: 600; margin-bottom: 0.3rem; }
     form input, form textarea {
       padding: 0.6rem;
       border: 1px solid #333;
@@ -510,9 +464,7 @@
       cursor: pointer;
       transition: background 0.3s;
     }
-    form button:hover {
-      background: #0cc;
-    }
+    form button:hover { background: #0cc; }
     .contact-social {
       text-align: center;
       margin-top: 2rem;
@@ -554,15 +506,12 @@
       font-weight: bold;
       cursor: pointer;
     }
-    .modal-close:hover, .modal-close:focus {
-      color: #bbb;
-    }
+    .modal-close:hover, .modal-close:focus { color: #bbb; }
   </style>
 
   <!-- 10) TextScramble Styles -->
   <style>
-    /* Заголовки, меню и т.п. исключаем, потому что
-       нам нужно применять эффект к обычным текстовым блокам. */
+    /* Эффект применяется к элементам с классом .scramble-text */
   </style>
 
   <!-- 11) Стили для плавающих цитат -->
@@ -574,17 +523,13 @@
       font-style: italic;
       font-size: 1.1rem;
       pointer-events: none;
-      text-shadow:
-        0 0 2px #0ff,
-        0 0 4px #0ff;
+      text-shadow: 0 0 2px #0ff, 0 0 4px #0ff;
       animation: quoteFlicker 10s linear forwards;
       transform: translate(-50%, -50%);
       max-width: 30vw;
       word-wrap: break-word;
     }
-    .floating-quote .quote-text {
-      display: block;
-    }
+    .floating-quote .quote-text { display: block; }
     .floating-quote .quote-author {
       display: block;
       margin-left: 1.5em;
@@ -639,10 +584,10 @@
       <div class="container">
         <h2>Портфолио</h2>
         <div class="grid">
-          <!-- Пример карточки -->
+          <!-- Пример карточки (добавьте карточки 2-14) -->
           <article class="work-item">
             <div class="work-media">
-              <img src="assets/sample-work.jpg" alt="Работа 1" class="work-thumb" />
+              <img src="assets/sample-work.jpg" alt="Работа 1" class="work-thumb" loading="lazy" decoding="async" />
             </div>
             <div class="work-details">
               <h3>Работа 1</h3>
@@ -650,7 +595,6 @@
               <p>Описание работы 1.</p>
             </div>
           </article>
-          <!-- ... остальные карточки ... -->
         </div>
       </div>
     </section>
@@ -663,7 +607,7 @@
           <div class="bio-row">
             <div class="bio">
               <h3>Биография</h3>
-              <p>
+              <p class="scramble-text">
 Марк Богданов — медиа-художник и скульптор, работающий в жанре кинетического искусства и интерактивной инсталляции. 
 В своих работах он сочетает новые медиа, цифровые технологии и классические материалы, создавая объектно-пространственные композиции, 
 которые трансформируют восприятие зрителя. Его практика основана на принципах конструктивизма, ретрофутуризма и кибернетики, 
@@ -673,14 +617,13 @@
 Однако вместо традиционного художественного образования он выбрал путь науки, обучаясь оптико-электронике, что повлияло на его художественную стратегию.
               </p>
             </div>
-            <!-- Квадратный портрет -->
             <div class="artist-photo">
-              <img src="assets/portrait.png" alt="Portrait of the Artist" />
+              <img src="assets/portrait.png" alt="Portrait of the Artist" loading="lazy" decoding="async" />
             </div>
           </div>
           <div class="artist-statement">
             <h3>Artist Statement</h3>
-            <p>
+            <p class="scramble-text">
 Я создаю скульптуры, в которых современные технологии производства встречаются с наследием инженерной мысли прошлого. 
 Моё искусство — это поиск формы, структуры и материала, отражающих логику научного прогресса.
 
@@ -747,7 +690,6 @@
     const DOT_RADIUS = 4;
     const HEADER_BG_COLOR = "rgba(85,85,85,0.8)";
     const BASELINE = 120;
-
     function initDots() {
       width = canvas.offsetWidth;
       height = canvas.offsetHeight;
@@ -765,7 +707,6 @@
       }
       dots.push({ x: width, pinned: true });
     }
-
     function animateWave() {
       ctx.clearRect(0, 0, width, height);
       const wavePoints = dots.map(dot => {
@@ -797,17 +738,13 @@
       time += 0.02;
       requestAnimationFrame(animateWave);
     }
-
-    function onResize() {
-      initDots();
-    }
-
+    function onResize() { initDots(); }
     window.addEventListener("resize", onResize);
     initDots();
     animateWave();
   </script>
 
-  <!-- TextScramble (применяем ко всем текстовым узлам кроме заголовков/меню) -->
+  <!-- TextScramble + IntersectionObserver (эффект запускается, когда элемент пересекает нижние 10% вьюпорта) -->
   <script>
     class TextScramble {
       constructor(el) {
@@ -862,23 +799,26 @@
       }
     }
 
-    // При загрузке DOM применяем эффект ко всем p, li, blockquote (исключая h1,h2,h3,nav, etc.)
     document.addEventListener('DOMContentLoaded', () => {
-      // Выбираем все p, li, blockquote, НО исключаем заголовки/ссылки меню
-      const textNodes = document.querySelectorAll(`
-        p:not(h1 p):not(h2 p):not(h3 p),
-        li:not(nav li):not(.nav-links li),
-        blockquote
-      `);
-
-      textNodes.forEach(node => {
-        const text = node.textContent;
-        // Если текста мало или это пусто — пропускаем
-        if (!text || text.trim().length === 0) return;
-        // Запускаем эффект
-        const fx = new TextScramble(node);
-        fx.setText(text);
-      });
+      const scrambleElements = document.querySelectorAll('.scramble-text');
+      const observerOptions = {
+        root: null,
+        rootMargin: "0px 0px -10% 0px",
+        threshold: 0
+      };
+      const observer = new IntersectionObserver((entries, obs) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const el = entry.target;
+            const text = el.textContent;
+            el.textContent = "";
+            const fx = new TextScramble(el);
+            fx.setText(text);
+            obs.unobserve(el);
+          }
+        });
+      }, observerOptions);
+      scrambleElements.forEach(el => observer.observe(el));
     });
   </script>
 
@@ -889,7 +829,6 @@
       document.documentElement.style.setProperty("--mouse-intensity", mouseIntensity);
       updateGlitchIntensity();
     });
-
     window.addEventListener("scroll", () => {
       let scrollY = window.scrollY;
       let docHeight = document.documentElement.scrollHeight - window.innerHeight;
@@ -897,7 +836,6 @@
       document.documentElement.style.setProperty("--scroll-intensity", scrollIntensity);
       updateGlitchIntensity();
     });
-
     function updateGlitchIntensity() {
       const mouse = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--mouse-intensity"));
       const scroll = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--scroll-intensity"));
@@ -910,7 +848,6 @@
   <script>
     const burger = document.querySelector('.burger');
     const navLinks = document.querySelector('.nav-links');
-
     burger.addEventListener('click', () => {
       if (getComputedStyle(navLinks).display === 'none') {
         navLinks.style.display = 'flex';
@@ -925,18 +862,15 @@
     const modal = document.getElementById("modal");
     const modalImg = document.getElementById("modal-content");
     const modalClose = document.getElementById("modal-close");
-
     document.querySelectorAll(".work-thumb").forEach(img => {
       img.addEventListener("click", function() {
         modal.style.display = "block";
         modalImg.src = this.src;
       });
     });
-
     modalClose.addEventListener("click", function() {
       modal.style.display = "none";
     });
-
     modal.addEventListener("click", function(e) {
       if (e.target === modal) {
         modal.style.display = "none";
@@ -944,7 +878,7 @@
     });
   </script>
 
-  <!-- Random Quotes Script (без качания) -->
+  <!-- Random Quotes Script (скроллится вместе со страницей, автор на отдельной строке) -->
   <script>
     const quotes = [
       { text: "Прогресс — наш лучший друг.", author: "Норберт Винер" },
@@ -958,7 +892,6 @@
       { text: "Книга — это музей, оживший и доступный каждому.", author: "Стругацкие" },
       { text: "Кто не рискует, тот не пьёт шампанского.", author: "русская пословица" }
     ];
-
     function spawnQuote() {
       const q = quotes[Math.floor(Math.random() * quotes.length)];
       const div = document.createElement('div');
@@ -967,7 +900,6 @@
         <span class="quote-text">${q.text}</span>
         <span class="quote-author">${q.author}</span>
       `;
-      // Позиция на странице
       const docWidth = document.documentElement.scrollWidth;
       const docHeight = document.documentElement.scrollHeight;
       const x = 0.05 * docWidth + Math.random() * (0.9 * docWidth);
@@ -975,11 +907,8 @@
       div.style.left = x + 'px';
       div.style.top  = y + 'px';
       document.body.appendChild(div);
-      setTimeout(() => {
-        div.remove();
-      }, 10000);
+      setTimeout(() => { div.remove(); }, 10000);
     }
-
     setInterval(() => {
       spawnQuote();
     }, 5000);
