@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>TheMarkest.art – Glitch Image + Portrait</title>
-  <meta name="description" content="Портфолио художника в стиле sci‑fi/cyberpunk, с волной, старомониторным эффектом, TextScramble, пиксельным глитч‑логотипом, фото художника и удобными карточками работ." />
+  <meta name="description" content="Портфолио художника в стиле sci-fi/cyberpunk, с волной, старомониторным эффектом, TextScramble, пиксельным глитч-логотипом, фото художника и удобными карточками работ." />
 
   <!-- Favicons -->
   <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/apple-touch-icon.png">
@@ -77,16 +77,28 @@
 
   <!-- 3) Сброс и базовые стили -->
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    html {
+      scroll-behavior: smooth;
+    }
     body {
       font-family: "IBM Plex Sans", sans-serif;
       background: #000;
       color: #fff;
       line-height: 1.5;
     }
-    a { color: inherit; text-decoration: none; transition: color 0.3s; }
-    a:hover { color: #0ff; }
+    a {
+      color: inherit;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    a:hover {
+      color: #0ff;
+    }
   </style>
 
   <!-- 4) Хедер: Волна + Контент, меню -->
@@ -144,8 +156,13 @@
       margin: 4px 0;
     }
     @media (max-width: 768px) {
-      .header-content { justify-content: center; }
-      .logo-container { position: static; margin: 0 auto; }
+      .header-content {
+        justify-content: center;
+      }
+      .logo-container {
+        position: static;
+        margin: 0 auto;
+      }
       .nav-links {
         display: none;
         flex-direction: column;
@@ -157,7 +174,9 @@
         border: 1px solid #333;
         border-radius: 6px;
       }
-      .burger { display: block; }
+      .burger {
+        display: block;
+      }
     }
   </style>
 
@@ -168,9 +187,15 @@
       text-shadow: 0 0 1px #0ff, 0 0 2px #0ff, 0 0 3px #0ff;
     }
     @keyframes heading-glow {
-      0% { text-shadow: 0 0 1px #0ff, 0 0 2px #0ff, 0 0 3px #0ff; }
-      50% { text-shadow: 0 0 2px #0ff, 0 0 3px #0ff, 0 0 4px #0ff; }
-      100% { text-shadow: 0 0 1px #0ff, 0 0 2px #0ff, 0 0 3px #0ff; }
+      0% {
+        text-shadow: 0 0 1px #0ff, 0 0 2px #0ff, 0 0 3px #0ff;
+      }
+      50% {
+        text-shadow: 0 0 2px #0ff, 0 0 3px #0ff, 0 0 4px #0ff;
+      }
+      100% {
+        text-shadow: 0 0 1px #0ff, 0 0 2px #0ff, 0 0 3px #0ff;
+      }
     }
   </style>
 
@@ -210,38 +235,128 @@
       animation: glitch-anim2 3s infinite linear alternate;
     }
     @keyframes glitch-anim {
-      0%   { clip: rect(10px,9999px,20px,0); transform: translateX(0) skew(0deg); }
-      5%   { clip: rect(3px,9999px,15px,0); transform: translateX(calc(-3px * var(--glitch-intensity))) skew(calc(1deg * var(--glitch-intensity))); }
-      10%  { clip: rect(25px,9999px,35px,0); transform: translateX(calc(4px * var(--glitch-intensity))) skew(calc(-2deg * var(--glitch-intensity))); }
-      15%  { clip: rect(18px,9999px,28px,0); transform: translateX(calc(-2px * var(--glitch-intensity))) skew(calc(3deg * var(--glitch-intensity))); }
-      20%  { clip: rect(8px,9999px,18px,0); transform: translateX(calc(2px * var(--glitch-intensity))) skew(calc(-1deg * var(--glitch-intensity))); }
-      25%  { clip: rect(30px,9999px,42px,0); transform: translateX(calc(-4px * var(--glitch-intensity))) skew(calc(2deg * var(--glitch-intensity))); }
-      30%  { clip: rect(12px,9999px,25px,0); transform: translateX(calc(3px * var(--glitch-intensity))) skew(calc(-3deg * var(--glitch-intensity))); }
-      35%  { clip: rect(15px,9999px,27px,0); transform: translateX(calc(1px * var(--glitch-intensity))) skew(calc(1deg * var(--glitch-intensity))); }
-      40%  { clip: rect(5px,9999px,15px,0); transform: translateX(calc(-2px * var(--glitch-intensity))) skew(calc(1deg * var(--glitch-intensity))); }
-      50%  { clip: rect(22px,9999px,35px,0); transform: translateX(calc(4px * var(--glitch-intensity))) skew(calc(-2deg * var(--glitch-intensity))); }
-      60%  { clip: rect(38px,9999px,48px,0); transform: translateX(calc(-3px * var(--glitch-intensity))) skew(calc(3deg * var(--glitch-intensity))); }
-      70%  { clip: rect(10px,9999px,20px,0); transform: translateX(calc(1px * var(--glitch-intensity))) skew(calc(-1deg * var(--glitch-intensity))); }
-      80%  { clip: rect(28px,9999px,40px,0); transform: translateX(calc(-4px * var(--glitch-intensity))) skew(calc(2deg * var(--glitch-intensity))); }
-      90%  { clip: rect(15px,9999px,25px,0); transform: translateX(calc(2px * var(--glitch-intensity))) skew(calc(-2deg * var(--glitch-intensity))); }
-      100% { clip: rect(10px,9999px,20px,0); transform: translateX(0) skew(0deg); }
+      0% {
+        clip: rect(10px,9999px,20px,0);
+        transform: translateX(0) skew(0deg);
+      }
+      5% {
+        clip: rect(3px,9999px,15px,0);
+        transform: translateX(calc(-3px * var(--glitch-intensity))) skew(calc(1deg * var(--glitch-intensity)));
+      }
+      10% {
+        clip: rect(25px,9999px,35px,0);
+        transform: translateX(calc(4px * var(--glitch-intensity))) skew(calc(-2deg * var(--glitch-intensity)));
+      }
+      15% {
+        clip: rect(18px,9999px,28px,0);
+        transform: translateX(calc(-2px * var(--glitch-intensity))) skew(calc(3deg * var(--glitch-intensity)));
+      }
+      20% {
+        clip: rect(8px,9999px,18px,0);
+        transform: translateX(calc(2px * var(--glitch-intensity))) skew(calc(-1deg * var(--glitch-intensity)));
+      }
+      25% {
+        clip: rect(30px,9999px,42px,0);
+        transform: translateX(calc(-4px * var(--glitch-intensity))) skew(calc(2deg * var(--glitch-intensity)));
+      }
+      30% {
+        clip: rect(12px,9999px,25px,0);
+        transform: translateX(calc(3px * var(--glitch-intensity))) skew(calc(-3deg * var(--glitch-intensity)));
+      }
+      35% {
+        clip: rect(15px,9999px,27px,0);
+        transform: translateX(calc(1px * var(--glitch-intensity))) skew(calc(1deg * var(--glitch-intensity)));
+      }
+      40% {
+        clip: rect(5px,9999px,15px,0);
+        transform: translateX(calc(-2px * var(--glitch-intensity))) skew(calc(1deg * var(--glitch-intensity)));
+      }
+      50% {
+        clip: rect(22px,9999px,35px,0);
+        transform: translateX(calc(4px * var(--glitch-intensity))) skew(calc(-2deg * var(--glitch-intensity)));
+      }
+      60% {
+        clip: rect(38px,9999px,48px,0);
+        transform: translateX(calc(-3px * var(--glitch-intensity))) skew(calc(3deg * var(--glitch-intensity)));
+      }
+      70% {
+        clip: rect(10px,9999px,20px,0);
+        transform: translateX(calc(1px * var(--glitch-intensity))) skew(calc(-1deg * var(--glitch-intensity)));
+      }
+      80% {
+        clip: rect(28px,9999px,40px,0);
+        transform: translateX(calc(-4px * var(--glitch-intensity))) skew(calc(2deg * var(--glitch-intensity)));
+      }
+      90% {
+        clip: rect(15px,9999px,25px,0);
+        transform: translateX(calc(2px * var(--glitch-intensity))) skew(calc(-2deg * var(--glitch-intensity)));
+      }
+      100% {
+        clip: rect(10px,9999px,20px,0);
+        transform: translateX(0) skew(0deg);
+      }
     }
     @keyframes glitch-anim2 {
-      0%   { clip: rect(5px,9999px,15px,0); transform: translateX(0) skew(0deg); }
-      5%   { clip: rect(28px,9999px,40px,0); transform: translateX(calc(2px * var(--glitch-intensity))) skew(calc(-1deg * var(--glitch-intensity))); }
-      10%  { clip: rect(18px,9999px,30px,0); transform: translateX(calc(-4px * var(--glitch-intensity))) skew(calc(2deg * var(--glitch-intensity))); }
-      15%  { clip: rect(35px,9999px,55px,0); transform: translateX(calc(3px * var(--glitch-intensity))) skew(calc(-2deg * var(--glitch-intensity))); }
-      20%  { clip: rect(12px,9999px,25px,0); transform: translateX(calc(-2px * var(--glitch-intensity))) skew(calc(1deg * var(--glitch-intensity))); }
-      25%  { clip: rect(40px,9999px,55px,0); transform: translateX(calc(4px * var(--glitch-intensity))) skew(calc(-3deg * var(--glitch-intensity))); }
-      30%  { clip: rect(22px,9999px,35px,0); transform: translateX(calc(-3px * var(--glitch-intensity))) skew(calc(2deg * var(--glitch-intensity))); }
-      35%  { clip: rect(12px,9999px,24px,0); transform: translateX(calc(1px * var(--glitch-intensity))) skew(calc(-1deg * var(--glitch-intensity))); }
-      40%  { clip: rect(8px,9999px,20px,0); transform: translateX(calc(1px * var(--glitch-intensity))) skew(calc(-1deg * var(--glitch-intensity))); }
-      50%  { clip: rect(30px,9999px,40px,0); transform: translateX(calc(-2px * var(--glitch-intensity))) skew(calc(3deg * var(--glitch-intensity))); }
-      60%  { clip: rect(15px,9999px,25px,0); transform: translateX(calc(4px * var(--glitch-intensity))) skew(calc(-2deg * var(--glitch-intensity))); }
-      70%  { clip: rect(45px,9999px,60px,0); transform: translateX(calc(-4px * var(--glitch-intensity))) skew(calc(1deg * var(--glitch-intensity))); }
-      80%  { clip: rect(25px,9999px,35px,0); transform: translateX(calc(3px * var(--glitch-intensity))) skew(calc(-3deg * var(--glitch-intensity))); }
-      90%  { clip: rect(5px,9999px,15px,0); transform: translateX(calc(-1px * var(--glitch-intensity))) skew(calc(2deg * var(--glitch-intensity))); }
-      100% { clip: rect(5px,9999px,15px,0); transform: translateX(0) skew(0deg); }
+      0% {
+        clip: rect(5px,9999px,15px,0);
+        transform: translateX(0) skew(0deg);
+      }
+      5% {
+        clip: rect(28px,9999px,40px,0);
+        transform: translateX(calc(2px * var(--glitch-intensity))) skew(calc(-1deg * var(--glitch-intensity)));
+      }
+      10% {
+        clip: rect(18px,9999px,30px,0);
+        transform: translateX(calc(-4px * var(--glitch-intensity))) skew(calc(2deg * var(--glitch-intensity)));
+      }
+      15% {
+        clip: rect(35px,9999px,55px,0);
+        transform: translateX(calc(3px * var(--glitch-intensity))) skew(calc(-2deg * var(--glitch-intensity)));
+      }
+      20% {
+        clip: rect(12px,9999px,25px,0);
+        transform: translateX(calc(-2px * var(--glitch-intensity))) skew(calc(1deg * var(--glitch-intensity)));
+      }
+      25% {
+        clip: rect(40px,9999px,55px,0);
+        transform: translateX(calc(4px * var(--glitch-intensity))) skew(calc(-3deg * var(--glitch-intensity)));
+      }
+      30% {
+        clip: rect(22px,9999px,35px,0);
+        transform: translateX(calc(-3px * var(--glitch-intensity))) skew(calc(2deg * var(--glitch-intensity)));
+      }
+      35% {
+        clip: rect(12px,9999px,24px,0);
+        transform: translateX(calc(1px * var(--glitch-intensity))) skew(calc(-1deg * var(--glitch-intensity)));
+      }
+      40% {
+        clip: rect(8px,9999px,20px,0);
+        transform: translateX(calc(1px * var(--glitch-intensity))) skew(calc(-1deg * var(--glitch-intensity)));
+      }
+      50% {
+        clip: rect(30px,9999px,40px,0);
+        transform: translateX(calc(-2px * var(--glitch-intensity))) skew(calc(3deg * var(--glitch-intensity)));
+      }
+      60% {
+        clip: rect(15px,9999px,25px,0);
+        transform: translateX(calc(4px * var(--glitch-intensity))) skew(calc(-2deg * var(--glitch-intensity)));
+      }
+      70% {
+        clip: rect(45px,9999px,60px,0);
+        transform: translateX(calc(-4px * var(--glitch-intensity))) skew(calc(1deg * var(--glitch-intensity)));
+      }
+      80% {
+        clip: rect(25px,9999px,35px,0);
+        transform: translateX(calc(3px * var(--glitch-intensity))) skew(calc(-3deg * var(--glitch-intensity)));
+      }
+      90% {
+        clip: rect(5px,9999px,15px,0);
+        transform: translateX(calc(-1px * var(--glitch-intensity))) skew(calc(2deg * var(--glitch-intensity)));
+      }
+      100% {
+        clip: rect(5px,9999px,15px,0);
+        transform: translateX(0) skew(0deg);
+      }
     }
     @keyframes glitch-skew {
       0%   { transform: skew(0deg); }
@@ -335,8 +450,12 @@
       justify-content: center;
     }
     @media (max-width: 768px) {
-      .grid { grid-template-columns: 1fr; }
-      .work-item { flex-direction: column; }
+      .grid {
+        grid-template-columns: 1fr;
+      }
+      .work-item {
+        flex-direction: column;
+      }
       .work-media {
         width: 100%;
         height: 0;
@@ -344,7 +463,9 @@
       }
     }
     @media (min-width: 769px) {
-      .work-item { flex-direction: row; }
+      .work-item {
+        flex-direction: row;
+      }
     }
     .work-item h3 {
       margin-bottom: 0.5rem;
@@ -426,9 +547,16 @@
       border-radius: 4px;
     }
     @media (max-width: 768px) {
-      .bio-row { flex-direction: column; }
-      .artist-photo { width: 100%; height: auto; }
-      .artist-photo img { height: auto; }
+      .bio-row {
+        flex-direction: column;
+      }
+      .artist-photo {
+        width: 100%;
+        height: auto;
+      }
+      .artist-photo img {
+        height: auto;
+      }
     }
   </style>
 
@@ -441,8 +569,12 @@
       max-width: 500px;
       margin: 0 auto;
     }
-    form label { font-weight: 600; margin-bottom: 0.3rem; }
-    form input, form textarea {
+    form label {
+      font-weight: 600;
+      margin-bottom: 0.3rem;
+    }
+    form input,
+    form textarea {
       padding: 0.6rem;
       border: 1px solid #333;
       border-radius: 4px;
@@ -450,7 +582,11 @@
       color: #fff;
       font-family: inherit;
     }
-    form input:focus, form textarea:focus { outline: none; border-color: #0ff; }
+    form input:focus,
+    form textarea:focus {
+      outline: none;
+      border-color: #0ff;
+    }
     form button {
       background: #0ff;
       color: #000;
@@ -461,7 +597,9 @@
       cursor: pointer;
       transition: background 0.3s;
     }
-    form button:hover { background: #0cc; }
+    form button:hover {
+      background: #0cc;
+    }
     .contact-social {
       text-align: center;
       margin-top: 2rem;
@@ -503,7 +641,10 @@
       font-weight: bold;
       cursor: pointer;
     }
-    .modal-close:hover, .modal-close:focus { color: #bbb; }
+    .modal-close:hover,
+    .modal-close:focus {
+      color: #bbb;
+    }
   </style>
 
   <!-- 10) TextScramble Styles -->
@@ -526,7 +667,9 @@
       max-width: 30vw;
       word-wrap: break-word;
     }
-    .floating-quote .quote-text { display: block; }
+    .floating-quote .quote-text {
+      display: block;
+    }
     .floating-quote .quote-author {
       display: block;
       margin-left: 1.5em;
@@ -680,6 +823,7 @@
     const DOT_RADIUS = 4;
     const HEADER_BG_COLOR = "rgba(85,85,85,0.8)";
     const BASELINE = 120;
+
     function initDots() {
       width = canvas.offsetWidth;
       height = canvas.offsetHeight;
@@ -697,6 +841,7 @@
       }
       dots.push({ x: width, pinned: true });
     }
+
     function animateWave() {
       ctx.clearRect(0, 0, width, height);
       const wavePoints = dots.map(dot => {
@@ -711,6 +856,7 @@
       ctx.closePath();
       ctx.fillStyle = HEADER_BG_COLOR;
       ctx.fill();
+
       ctx.beginPath();
       ctx.strokeStyle = "#0ff";
       ctx.lineWidth = LINE_WIDTH;
@@ -719,6 +865,7 @@
         else ctx.lineTo(p.x, p.y);
       });
       ctx.stroke();
+
       wavePoints.forEach(p => {
         ctx.beginPath();
         ctx.arc(p.x, p.y, DOT_RADIUS, 0, Math.PI*2);
@@ -728,7 +875,11 @@
       time += 0.02;
       requestAnimationFrame(animateWave);
     }
-    function onResize() { initDots(); }
+
+    function onResize() {
+      initDots();
+    }
+
     window.addEventListener("resize", onResize);
     initDots();
     animateWave();
@@ -852,15 +1003,18 @@
     const modal = document.getElementById("modal");
     const modalImg = document.getElementById("modal-content");
     const modalClose = document.getElementById("modal-close");
+
     document.querySelectorAll(".work-thumb").forEach(img => {
       img.addEventListener("click", function() {
         modal.style.display = "block";
         modalImg.src = this.src;
       });
     });
+
     modalClose.addEventListener("click", function() {
       modal.style.display = "none";
     });
+
     modal.addEventListener("click", function(e) {
       if (e.target === modal) {
         modal.style.display = "none";
@@ -868,9 +1022,8 @@
     });
   </script>
 
-  <!-- CSV-Генерация карточек портфолио с обработкой пустых полей -->
+  <!-- CSV-Генерация карточек портфолио с выводом пути к изображению в консоль -->
   <script>
-    // Функция очистки значения: удаляет окружающие кавычки и пробелы
     function sanitize(val) {
       if (!val) return "";
       return val.replace(/^"+|"+$/g, "").trim();
@@ -887,131 +1040,121 @@
           const container = document.getElementById("portfolio-container");
 
           data.forEach(item => {
-  // Для отладки: смотрим, какой URL картинки приходит
-  console.log("Image URL from CSV:", item.image);
+            // Выводим в консоль путь к изображению, чтобы проверить
+            console.log("Image URL from CSV:", item.image);
 
-  // Проверяем, что хотя бы одно поле не пустое
-  const allEmpty = Object.values(item).every(val => {
-    if (typeof val === "string") return val.trim() === "";
-    return !val;
-  });
-  if (allEmpty) return; // пропускаем полностью пустые строки
+            // Пропускаем полностью пустые строки
+            const allEmpty = Object.values(item).every(val => {
+              if (typeof val === "string") return val.trim() === "";
+              return !val;
+            });
+            if (allEmpty) return;
 
-  // Создаем карточку
-  const article = document.createElement("article");
-  article.className = "work-item";
+            // Создаём карточку
+            const article = document.createElement("article");
+            article.className = "work-item";
 
-  // Блок с медиа
-  const media = document.createElement("div");
-  media.className = "work-media";
+            // Медиа
+            const media = document.createElement("div");
+            media.className = "work-media";
 
-  // Функция "sanitize": убирает пробелы и лишние кавычки по краям
-  function sanitize(val) {
-    if (!val) return "";
-    return val.replace(/^"+|"+$/g, "").trim();
-  }
+            const imageVal = sanitize(item.image);
 
-  const imageVal = sanitize(item.image);
+            let mediaElement;
+            // Если заканчивается на .mp4 → видео
+            if (imageVal && /\.mp4$/i.test(imageVal)) {
+              mediaElement = document.createElement("video");
+              mediaElement.src = imageVal;
+              mediaElement.setAttribute("controls", "controls");
 
-  let mediaElement;
-  // Если image заканчивается на .mp4 → это видео
-  if (imageVal && /\.mp4$/i.test(imageVal)) {
-    mediaElement = document.createElement("video");
-    mediaElement.src = imageVal;
-    mediaElement.setAttribute("controls", "controls");
+              const altMedia = sanitize(item.altmedia);
+              if (altMedia) {
+                mediaElement.setAttribute("poster", altMedia);
+              }
+              mediaElement.setAttribute("loading", "lazy");
+              mediaElement.setAttribute("decoding", "async");
 
-    const altMedia = sanitize(item.altmedia);
-    if (altMedia !== "") {
-      mediaElement.setAttribute("poster", altMedia);
-    }
-    mediaElement.setAttribute("loading", "lazy");
-    mediaElement.setAttribute("decoding", "async");
-  }
-  // Если imageVal непустое (и не .mp4) → обычная картинка
-  else if (imageVal) {
-    mediaElement = document.createElement("img");
-    mediaElement.src = imageVal;
-    mediaElement.alt = sanitize(item.title) || "Изображение работы";
-    mediaElement.className = "work-thumb";
-    mediaElement.setAttribute("loading", "lazy");
-    mediaElement.setAttribute("decoding", "async");
-  }
-  // Иначе создаём плейсхолдер (логотип)
-  else {
-    // Обёртка для плейсхолдера: квадратная рамка
-    const placeholderDiv = document.createElement("div");
-    placeholderDiv.style.width = "100%";
-    placeholderDiv.style.height = "100%";
-    placeholderDiv.style.position = "relative";
-    placeholderDiv.style.border = "2px solid #777"; 
-    placeholderDiv.style.backgroundColor = "#333";  // Тёмно-серый фон
+            } else if (imageVal) {
+              // Обычное изображение
+              mediaElement = document.createElement("img");
+              mediaElement.src = imageVal;
+              mediaElement.alt = sanitize(item.title) || "Изображение работы";
+              mediaElement.className = "work-thumb";
+              mediaElement.setAttribute("loading", "lazy");
+              mediaElement.setAttribute("decoding", "async");
 
-    // Сам логотип внутри плейсхолдера, меньшего размера, по центру
-    const placeholderImg = document.createElement("img");
-    placeholderImg.src = "assets/logo.svg";
-    placeholderImg.alt = "Placeholder";
-    placeholderImg.style.filter = "grayscale(100%)";
-    placeholderImg.style.width = "50%";
-    placeholderImg.style.height = "50%";
-    placeholderImg.style.position = "absolute";
-    placeholderImg.style.top = "50%";
-    placeholderImg.style.left = "50%";
-    placeholderImg.style.transform = "translate(-50%, -50%)";
+            } else {
+              // Плейсхолдер
+              const placeholderDiv = document.createElement("div");
+              placeholderDiv.style.width = "100%";
+              placeholderDiv.style.height = "100%";
+              placeholderDiv.style.position = "relative";
+              placeholderDiv.style.border = "2px solid #777";
+              placeholderDiv.style.backgroundColor = "#333";
 
-    placeholderDiv.appendChild(placeholderImg);
-    mediaElement = placeholderDiv;
-  }
+              const placeholderImg = document.createElement("img");
+              placeholderImg.src = "assets/logo.svg";
+              placeholderImg.alt = "Placeholder";
+              placeholderImg.style.filter = "grayscale(100%)";
+              placeholderImg.style.width = "50%";
+              placeholderImg.style.height = "50%";
+              placeholderImg.style.position = "absolute";
+              placeholderImg.style.top = "50%";
+              placeholderImg.style.left = "50%";
+              placeholderImg.style.transform = "translate(-50%, -50%)";
 
-  media.appendChild(mediaElement);
+              placeholderDiv.appendChild(placeholderImg);
+              mediaElement = placeholderDiv;
+            }
 
-  // Блок с деталями
-  const details = document.createElement("div");
-  details.className = "work-details";
+            media.appendChild(mediaElement);
 
-  const title = sanitize(item.title) || "Без названия";
-  const year = sanitize(item.year) || "—";
-  const desc = sanitize(item.description) || "";
-  const materials = sanitize(item.materials) || "—";
-  const status = sanitize(item.status) || "—";
+            // Детали
+            const details = document.createElement("div");
+            details.className = "work-details";
 
-  const h3 = document.createElement("h3");
-  h3.textContent = title;
+            const title = sanitize(item.title) || "Без названия";
+            const year = sanitize(item.year) || "—";
+            const desc = sanitize(item.description) || "";
+            const materials = sanitize(item.materials) || "—";
+            const status = sanitize(item.status) || "—";
 
-  const pYear = document.createElement("p");
-  pYear.textContent = "Год: " + year;
+            const h3 = document.createElement("h3");
+            h3.textContent = title;
 
-  const pDesc = document.createElement("p");
-  pDesc.textContent = desc;
+            const pYear = document.createElement("p");
+            pYear.textContent = "Год: " + year;
 
-  const pMaterials = document.createElement("p");
-  pMaterials.textContent = "Материалы: " + materials;
+            const pDesc = document.createElement("p");
+            pDesc.textContent = desc;
 
-  const pStatus = document.createElement("p");
-  pStatus.textContent = "Статус: " + status;
+            const pMaterials = document.createElement("p");
+            pMaterials.textContent = "Материалы: " + materials;
 
-  details.appendChild(h3);
-  details.appendChild(pYear);
-  details.appendChild(pDesc);
-  details.appendChild(pMaterials);
-  details.appendChild(pStatus);
+            const pStatus = document.createElement("p");
+            pStatus.textContent = "Статус: " + status;
 
-  // Кнопка (если btnname/btnlink заданы)
-  const btnName = sanitize(item.btnname);
-  const btnLink = sanitize(item.btnlink);
-  if (btnName !== "" && btnLink !== "") {
-    const btn = document.createElement("a");
-    btn.textContent = btnName;
-    btn.href = btnLink;
-    btn.className = "work-button";
-    btn.target = "_blank";
-    details.appendChild(btn);
-  }
+            details.appendChild(h3);
+            details.appendChild(pYear);
+            details.appendChild(pDesc);
+            details.appendChild(pMaterials);
+            details.appendChild(pStatus);
 
-  article.appendChild(media);
-  article.appendChild(details);
-  container.appendChild(article);
-});
+            const btnName = sanitize(item.btnname);
+            const btnLink = sanitize(item.btnlink);
+            if (btnName !== "" && btnLink !== "") {
+              const btn = document.createElement("a");
+              btn.textContent = btnName;
+              btn.href = btnLink;
+              btn.className = "work-button";
+              btn.target = "_blank";
+              details.appendChild(btn);
+            }
 
+            article.appendChild(media);
+            article.appendChild(details);
+            container.appendChild(article);
+          });
         }
       });
     });
