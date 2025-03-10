@@ -868,8 +868,14 @@
     });
   </script>
 
-  <!-- CSV-Генерация карточек портфолио с новыми полями и проверкой пустых строк -->
+  <!-- CSV-Генерация карточек портфолио с обработкой пустых полей -->
   <script>
+    // Функция очистки значения: удаляет окружающие кавычки и пробелы
+    function sanitize(val) {
+      if (!val) return "";
+      return val.replace(/^"+|"+$/g, "").trim();
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
       Papa.parse("artportfolio.csv", {
         download: true,
@@ -881,14 +887,12 @@
           const container = document.getElementById("portfolio-container");
 
           data.forEach(item => {
-            // Проверяем, что хотя бы одно поле не пустое (trim() если значение строковое)
+            // Проверяем, что хотя бы одно поле не пустое
             const allEmpty = Object.values(item).every(val => {
-              if (typeof val === "string") {
-                return val.trim() === "";
-              }
+              if (typeof val === "string") return sanitize(val) === "";
               return !val;
             });
-            if(allEmpty) return; // пропускаем строки, полностью заполненные пустыми значениями
+            if(allEmpty) return; // пропускаем полностью пустые строки
 
             // Создаем карточку
             const article = document.createElement("article");
@@ -898,32 +902,35 @@
             const media = document.createElement("div");
             media.className = "work-media";
             let mediaElement;
-            // Проверяем, есть ли значение в поле image
-            const imageVal = item.image ? item.image.trim() : "";
+            const imageVal = sanitize(item.image);
             if (imageVal && /\.mp4$/i.test(imageVal)) {
+              // Если это видео
               mediaElement = document.createElement("video");
               mediaElement.src = imageVal;
               mediaElement.setAttribute("controls", "controls");
-              // Используем altmedia если задан, иначе пустая строка
-              const altMedia = item.altmedia ? item.altmedia.trim() : "";
+              const altMedia = sanitize(item.altmedia);
               if (altMedia !== "") {
                 mediaElement.setAttribute("poster", altMedia);
               }
               mediaElement.setAttribute("loading", "lazy");
               mediaElement.setAttribute("decoding", "async");
             } else if(imageVal) {
+              // Если значение не пустое и не видео, создаем изображение
               mediaElement = document.createElement("img");
               mediaElement.src = imageVal;
-              mediaElement.alt = item.title ? item.title : "";
+              mediaElement.alt = sanitize(item.title) || "Изображение работы";
               mediaElement.className = "work-thumb";
               mediaElement.setAttribute("loading", "lazy");
               mediaElement.setAttribute("decoding", "async");
             } else {
-              // Если поле image пустое, создаем пустой placeholder
-              mediaElement = document.createElement("div");
-              mediaElement.style.width = "100%";
-              mediaElement.style.height = "100%";
-              mediaElement.style.backgroundColor = "#333";
+              // Если поле image пустое, используем логотип как placeholder (с применённой серой стилизацией)
+              mediaElement = document.createElement("img");
+              mediaElement.src = "assets/logo.svg";
+              mediaElement.alt = "Placeholder";
+              mediaElement.className = "work-thumb";
+              mediaElement.style.filter = "grayscale(100%)";
+              mediaElement.setAttribute("loading", "lazy");
+              mediaElement.setAttribute("decoding", "async");
             }
             media.appendChild(mediaElement);
 
@@ -931,25 +938,20 @@
             const details = document.createElement("div");
             details.className = "work-details";
 
-            // Заголовок
             const h3 = document.createElement("h3");
-            h3.textContent = item.title ? item.title.trim() : "Без названия";
+            h3.textContent = sanitize(item.title) || "Без названия";
 
-            // Год
             const pYear = document.createElement("p");
-            pYear.textContent = "Год: " + (item.year ? item.year.trim() : "—");
+            pYear.textContent = "Год: " + (sanitize(item.year) || "—");
 
-            // Описание
             const pDesc = document.createElement("p");
-            pDesc.textContent = item.description ? item.description.trim() : "";
+            pDesc.textContent = sanitize(item.description) || "";
 
-            // Материалы
             const pMaterials = document.createElement("p");
-            pMaterials.textContent = "Материалы: " + (item.materials ? item.materials.trim() : "—");
+            pMaterials.textContent = "Материалы: " + (sanitize(item.materials) || "—");
 
-            // Статус
             const pStatus = document.createElement("p");
-            pStatus.textContent = "Статус: " + (item.status ? item.status.trim() : "—");
+            pStatus.textContent = "Статус: " + (sanitize(item.status) || "—");
 
             details.appendChild(h3);
             details.appendChild(pYear);
@@ -957,17 +959,15 @@
             details.appendChild(pMaterials);
             details.appendChild(pStatus);
 
-            // Если заданы кнопка, добавляем ее
-            if(item.btnname && item.btnlink && item.btnname.trim() !== "" && item.btnlink.trim() !== ""){
+            if(sanitize(item.btnname) !== "" && sanitize(item.btnlink) !== ""){
               const btn = document.createElement("a");
-              btn.textContent = item.btnname.trim();
-              btn.href = item.btnlink.trim();
+              btn.textContent = sanitize(item.btnname);
+              btn.href = sanitize(item.btnlink);
               btn.className = "work-button";
               btn.target = "_blank";
               details.appendChild(btn);
             }
 
-            // Собираем карточку
             article.appendChild(media);
             article.appendChild(details);
             container.appendChild(article);
