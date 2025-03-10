@@ -868,72 +868,105 @@
     });
   </script>
 
-  <!-- CSV-Генерация карточек портфолио с новыми полями -->
+  <!-- CSV-Генерация карточек портфолио с новыми полями и проверкой пустых строк -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       Papa.parse("artportfolio.csv", {
         download: true,
         header: true,
+        skipEmptyLines: true,
         complete: function(results) {
+          console.log("CSV parse results:", results.data);
           const data = results.data;
           const container = document.getElementById("portfolio-container");
+
           data.forEach(item => {
+            // Проверяем, что хотя бы одно поле не пустое (trim() если значение строковое)
+            const allEmpty = Object.values(item).every(val => {
+              if (typeof val === "string") {
+                return val.trim() === "";
+              }
+              return !val;
+            });
+            if(allEmpty) return; // пропускаем строки, полностью заполненные пустыми значениями
+
             // Создаем карточку
             const article = document.createElement("article");
             article.className = "work-item";
 
-            // Блок с медиа. Если поле image содержит ".mp4" – создаем видео, иначе изображение.
+            // Блок с медиа.
             const media = document.createElement("div");
             media.className = "work-media";
             let mediaElement;
-            if (/\.mp4$/i.test(item.image.trim())) {
+            // Проверяем, есть ли значение в поле image
+            const imageVal = item.image ? item.image.trim() : "";
+            if (imageVal && /\.mp4$/i.test(imageVal)) {
               mediaElement = document.createElement("video");
-              mediaElement.src = item.image.trim();
+              mediaElement.src = imageVal;
               mediaElement.setAttribute("controls", "controls");
-              if(item.altmedia && item.altmedia.trim() !== ""){
-                mediaElement.setAttribute("poster", item.altmedia.trim());
+              // Используем altmedia если задан, иначе пустая строка
+              const altMedia = item.altmedia ? item.altmedia.trim() : "";
+              if (altMedia !== "") {
+                mediaElement.setAttribute("poster", altMedia);
               }
               mediaElement.setAttribute("loading", "lazy");
               mediaElement.setAttribute("decoding", "async");
-            } else {
+            } else if(imageVal) {
               mediaElement = document.createElement("img");
-              mediaElement.src = item.image.trim();
-              mediaElement.alt = item.title;
+              mediaElement.src = imageVal;
+              mediaElement.alt = item.title ? item.title : "";
               mediaElement.className = "work-thumb";
               mediaElement.setAttribute("loading", "lazy");
               mediaElement.setAttribute("decoding", "async");
+            } else {
+              // Если поле image пустое, создаем пустой placeholder
+              mediaElement = document.createElement("div");
+              mediaElement.style.width = "100%";
+              mediaElement.style.height = "100%";
+              mediaElement.style.backgroundColor = "#333";
             }
             media.appendChild(mediaElement);
 
             // Блок с деталями
             const details = document.createElement("div");
             details.className = "work-details";
+
+            // Заголовок
             const h3 = document.createElement("h3");
-            h3.textContent = item.title;
+            h3.textContent = item.title ? item.title.trim() : "Без названия";
+
+            // Год
             const pYear = document.createElement("p");
-            pYear.textContent = "Год: " + item.year;
+            pYear.textContent = "Год: " + (item.year ? item.year.trim() : "—");
+
+            // Описание
             const pDesc = document.createElement("p");
-            pDesc.textContent = item.description;
-            // Новый блок: материалы
+            pDesc.textContent = item.description ? item.description.trim() : "";
+
+            // Материалы
             const pMaterials = document.createElement("p");
-            pMaterials.textContent = "Материалы: " + item.materials;
-            // Новый блок: статус
+            pMaterials.textContent = "Материалы: " + (item.materials ? item.materials.trim() : "—");
+
+            // Статус
             const pStatus = document.createElement("p");
-            pStatus.textContent = "Статус: " + item.status;
+            pStatus.textContent = "Статус: " + (item.status ? item.status.trim() : "—");
+
             details.appendChild(h3);
             details.appendChild(pYear);
             details.appendChild(pDesc);
             details.appendChild(pMaterials);
             details.appendChild(pStatus);
+
             // Если заданы кнопка, добавляем ее
-            if(item.btnname && item.btnlink){
+            if(item.btnname && item.btnlink && item.btnname.trim() !== "" && item.btnlink.trim() !== ""){
               const btn = document.createElement("a");
-              btn.textContent = item.btnname;
-              btn.href = item.btnlink;
+              btn.textContent = item.btnname.trim();
+              btn.href = item.btnlink.trim();
               btn.className = "work-button";
               btn.target = "_blank";
               details.appendChild(btn);
             }
+
             // Собираем карточку
             article.appendChild(media);
             article.appendChild(details);
