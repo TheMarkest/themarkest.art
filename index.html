@@ -887,91 +887,131 @@
           const container = document.getElementById("portfolio-container");
 
           data.forEach(item => {
-            // Проверяем, что хотя бы одно поле не пустое
-            const allEmpty = Object.values(item).every(val => {
-              if (typeof val === "string") return sanitize(val) === "";
-              return !val;
-            });
-            if(allEmpty) return; // пропускаем полностью пустые строки
+  // Для отладки: смотрим, какой URL картинки приходит
+  console.log("Image URL from CSV:", item.image);
 
-            // Создаем карточку
-            const article = document.createElement("article");
-            article.className = "work-item";
+  // Проверяем, что хотя бы одно поле не пустое
+  const allEmpty = Object.values(item).every(val => {
+    if (typeof val === "string") return val.trim() === "";
+    return !val;
+  });
+  if (allEmpty) return; // пропускаем полностью пустые строки
 
-            // Блок с медиа.
-            const media = document.createElement("div");
-            media.className = "work-media";
-            let mediaElement;
-            const imageVal = sanitize(item.image);
-            if (imageVal && /\.mp4$/i.test(imageVal)) {
-              // Если это видео
-              mediaElement = document.createElement("video");
-              mediaElement.src = imageVal;
-              mediaElement.setAttribute("controls", "controls");
-              const altMedia = sanitize(item.altmedia);
-              if (altMedia !== "") {
-                mediaElement.setAttribute("poster", altMedia);
-              }
-              mediaElement.setAttribute("loading", "lazy");
-              mediaElement.setAttribute("decoding", "async");
-            } else if(imageVal) {
-              // Если значение не пустое и не видео, создаем изображение
-              mediaElement = document.createElement("img");
-              mediaElement.src = imageVal;
-              mediaElement.alt = sanitize(item.title) || "Изображение работы";
-              mediaElement.className = "work-thumb";
-              mediaElement.setAttribute("loading", "lazy");
-              mediaElement.setAttribute("decoding", "async");
-            } else {
-              // Если поле image пустое, используем логотип как placeholder (с применённой серой стилизацией)
-              mediaElement = document.createElement("img");
-              mediaElement.src = "assets/logo.svg";
-              mediaElement.alt = "Placeholder";
-              mediaElement.className = "work-thumb";
-              mediaElement.style.filter = "grayscale(100%)";
-              mediaElement.setAttribute("loading", "lazy");
-              mediaElement.setAttribute("decoding", "async");
-            }
-            media.appendChild(mediaElement);
+  // Создаем карточку
+  const article = document.createElement("article");
+  article.className = "work-item";
 
-            // Блок с деталями
-            const details = document.createElement("div");
-            details.className = "work-details";
+  // Блок с медиа
+  const media = document.createElement("div");
+  media.className = "work-media";
 
-            const h3 = document.createElement("h3");
-            h3.textContent = sanitize(item.title) || "Без названия";
+  // Функция "sanitize": убирает пробелы и лишние кавычки по краям
+  function sanitize(val) {
+    if (!val) return "";
+    return val.replace(/^"+|"+$/g, "").trim();
+  }
 
-            const pYear = document.createElement("p");
-            pYear.textContent = "Год: " + (sanitize(item.year) || "—");
+  const imageVal = sanitize(item.image);
 
-            const pDesc = document.createElement("p");
-            pDesc.textContent = sanitize(item.description) || "";
+  let mediaElement;
+  // Если image заканчивается на .mp4 → это видео
+  if (imageVal && /\.mp4$/i.test(imageVal)) {
+    mediaElement = document.createElement("video");
+    mediaElement.src = imageVal;
+    mediaElement.setAttribute("controls", "controls");
 
-            const pMaterials = document.createElement("p");
-            pMaterials.textContent = "Материалы: " + (sanitize(item.materials) || "—");
+    const altMedia = sanitize(item.altmedia);
+    if (altMedia !== "") {
+      mediaElement.setAttribute("poster", altMedia);
+    }
+    mediaElement.setAttribute("loading", "lazy");
+    mediaElement.setAttribute("decoding", "async");
+  }
+  // Если imageVal непустое (и не .mp4) → обычная картинка
+  else if (imageVal) {
+    mediaElement = document.createElement("img");
+    mediaElement.src = imageVal;
+    mediaElement.alt = sanitize(item.title) || "Изображение работы";
+    mediaElement.className = "work-thumb";
+    mediaElement.setAttribute("loading", "lazy");
+    mediaElement.setAttribute("decoding", "async");
+  }
+  // Иначе создаём плейсхолдер (логотип)
+  else {
+    // Обёртка для плейсхолдера: квадратная рамка
+    const placeholderDiv = document.createElement("div");
+    placeholderDiv.style.width = "100%";
+    placeholderDiv.style.height = "100%";
+    placeholderDiv.style.position = "relative";
+    placeholderDiv.style.border = "2px solid #777"; 
+    placeholderDiv.style.backgroundColor = "#333";  // Тёмно-серый фон
 
-            const pStatus = document.createElement("p");
-            pStatus.textContent = "Статус: " + (sanitize(item.status) || "—");
+    // Сам логотип внутри плейсхолдера, меньшего размера, по центру
+    const placeholderImg = document.createElement("img");
+    placeholderImg.src = "assets/logo.svg";
+    placeholderImg.alt = "Placeholder";
+    placeholderImg.style.filter = "grayscale(100%)";
+    placeholderImg.style.width = "50%";
+    placeholderImg.style.height = "50%";
+    placeholderImg.style.position = "absolute";
+    placeholderImg.style.top = "50%";
+    placeholderImg.style.left = "50%";
+    placeholderImg.style.transform = "translate(-50%, -50%)";
 
-            details.appendChild(h3);
-            details.appendChild(pYear);
-            details.appendChild(pDesc);
-            details.appendChild(pMaterials);
-            details.appendChild(pStatus);
+    placeholderDiv.appendChild(placeholderImg);
+    mediaElement = placeholderDiv;
+  }
 
-            if(sanitize(item.btnname) !== "" && sanitize(item.btnlink) !== ""){
-              const btn = document.createElement("a");
-              btn.textContent = sanitize(item.btnname);
-              btn.href = sanitize(item.btnlink);
-              btn.className = "work-button";
-              btn.target = "_blank";
-              details.appendChild(btn);
-            }
+  media.appendChild(mediaElement);
 
-            article.appendChild(media);
-            article.appendChild(details);
-            container.appendChild(article);
-          });
+  // Блок с деталями
+  const details = document.createElement("div");
+  details.className = "work-details";
+
+  const title = sanitize(item.title) || "Без названия";
+  const year = sanitize(item.year) || "—";
+  const desc = sanitize(item.description) || "";
+  const materials = sanitize(item.materials) || "—";
+  const status = sanitize(item.status) || "—";
+
+  const h3 = document.createElement("h3");
+  h3.textContent = title;
+
+  const pYear = document.createElement("p");
+  pYear.textContent = "Год: " + year;
+
+  const pDesc = document.createElement("p");
+  pDesc.textContent = desc;
+
+  const pMaterials = document.createElement("p");
+  pMaterials.textContent = "Материалы: " + materials;
+
+  const pStatus = document.createElement("p");
+  pStatus.textContent = "Статус: " + status;
+
+  details.appendChild(h3);
+  details.appendChild(pYear);
+  details.appendChild(pDesc);
+  details.appendChild(pMaterials);
+  details.appendChild(pStatus);
+
+  // Кнопка (если btnname/btnlink заданы)
+  const btnName = sanitize(item.btnname);
+  const btnLink = sanitize(item.btnlink);
+  if (btnName !== "" && btnLink !== "") {
+    const btn = document.createElement("a");
+    btn.textContent = btnName;
+    btn.href = btnLink;
+    btn.className = "work-button";
+    btn.target = "_blank";
+    details.appendChild(btn);
+  }
+
+  article.appendChild(media);
+  article.appendChild(details);
+  container.appendChild(article);
+});
+
         }
       });
     });
