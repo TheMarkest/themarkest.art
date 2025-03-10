@@ -328,6 +328,21 @@
       loading: lazy;
       decoding: async;
     }
+    /* Плейсхолдер для медиа */
+    .placeholder-logo {
+      width: 100%;
+      height: 100%;
+      border: 2px solid #777;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 6px;
+      background: #333;
+    }
+    .placeholder-logo img {
+      width: 40%; /* Логотип меньше */
+      filter: grayscale(100%);
+    }
     .work-details {
       flex: 1;
       display: flex;
@@ -711,6 +726,7 @@
       ctx.closePath();
       ctx.fillStyle = HEADER_BG_COLOR;
       ctx.fill();
+
       ctx.beginPath();
       ctx.strokeStyle = "#0ff";
       ctx.lineWidth = LINE_WIDTH;
@@ -719,6 +735,7 @@
         else ctx.lineTo(p.x, p.y);
       });
       ctx.stroke();
+
       wavePoints.forEach(p => {
         ctx.beginPath();
         ctx.arc(p.x, p.y, DOT_RADIUS, 0, Math.PI*2);
@@ -852,15 +869,18 @@
     const modal = document.getElementById("modal");
     const modalImg = document.getElementById("modal-content");
     const modalClose = document.getElementById("modal-close");
+
     document.querySelectorAll(".work-thumb").forEach(img => {
       img.addEventListener("click", function() {
         modal.style.display = "block";
         modalImg.src = this.src;
       });
     });
+
     modalClose.addEventListener("click", function() {
       modal.style.display = "none";
     });
+
     modal.addEventListener("click", function(e) {
       if (e.target === modal) {
         modal.style.display = "none";
@@ -868,9 +888,8 @@
     });
   </script>
 
-  <!-- CSV-Генерация карточек портфолио с обработкой пустых полей -->
+  <!-- CSV-Генерация карточек портфолио с обработкой пустых полей и плейсхолдером -->
   <script>
-    // Функция очистки значения: удаляет окружающие кавычки и пробелы
     function sanitize(val) {
       if (!val) return "";
       return val.replace(/^"+|"+$/g, "").trim();
@@ -887,134 +906,126 @@
           const container = document.getElementById("portfolio-container");
 
           data.forEach(item => {
-  // Для отладки: смотрим, какой URL картинки приходит
-  console.log("Image URL from CSV:", item.image);
+            console.log("Image URL from CSV:", item.image);
+            const allEmpty = Object.values(item).every(val => {
+              if (typeof val === "string") return val.trim() === "";
+              return !val;
+            });
+            if(allEmpty) return;
 
-  // Проверяем, что хотя бы одно поле не пустое
-  const allEmpty = Object.values(item).every(val => {
-    if (typeof val === "string") return val.trim() === "";
-    return !val;
-  });
-  if (allEmpty) return; // пропускаем полностью пустые строки
+            const article = document.createElement("article");
+            article.className = "work-item";
 
-  // Создаем карточку
-  const article = document.createElement("article");
-  article.className = "work-item";
+            const media = document.createElement("div");
+            media.className = "work-media";
 
-  // Блок с медиа
-  const media = document.createElement("div");
-  media.className = "work-media";
+            const imageVal = sanitize(item.image);
+            let mediaElement;
+            if (imageVal && /\.mp4$/i.test(imageVal)) {
+              mediaElement = document.createElement("video");
+              mediaElement.src = imageVal;
+              mediaElement.setAttribute("controls", "controls");
+              const altMedia = sanitize(item.altmedia);
+              if (altMedia) {
+                mediaElement.setAttribute("poster", altMedia);
+              }
+              mediaElement.setAttribute("loading", "lazy");
+              mediaElement.setAttribute("decoding", "async");
+            } else if(imageVal) {
+              mediaElement = document.createElement("img");
+              mediaElement.src = imageVal;
+              mediaElement.alt = sanitize(item.title) || "Изображение работы";
+              mediaElement.className = "work-thumb";
+              mediaElement.setAttribute("loading", "lazy");
+              mediaElement.setAttribute("decoding", "async");
+            } else {
+              const placeholderDiv = document.createElement("div");
+              placeholderDiv.className = "placeholder-logo";
+              const placeholderImg = document.createElement("img");
+              placeholderImg.src = "assets/logo.svg";
+              placeholderImg.alt = "Placeholder";
+              placeholderDiv.appendChild(placeholderImg);
+              mediaElement = placeholderDiv;
+            }
 
-  // Функция "sanitize": убирает пробелы и лишние кавычки по краям
-  function sanitize(val) {
-    if (!val) return "";
-    return val.replace(/^"+|"+$/g, "").trim();
-  }
+            media.appendChild(mediaElement);
 
-  const imageVal = sanitize(item.image);
+            const details = document.createElement("div");
+            details.className = "work-details";
 
-  let mediaElement;
-  // Если image заканчивается на .mp4 → это видео
-  if (imageVal && /\.mp4$/i.test(imageVal)) {
-    mediaElement = document.createElement("video");
-    mediaElement.src = imageVal;
-    mediaElement.setAttribute("controls", "controls");
+            const h3 = document.createElement("h3");
+            h3.textContent = sanitize(item.title) || "Без названия";
 
-    const altMedia = sanitize(item.altmedia);
-    if (altMedia !== "") {
-      mediaElement.setAttribute("poster", altMedia);
-    }
-    mediaElement.setAttribute("loading", "lazy");
-    mediaElement.setAttribute("decoding", "async");
-  }
-  // Если imageVal непустое (и не .mp4) → обычная картинка
-  else if (imageVal) {
-    mediaElement = document.createElement("img");
-    mediaElement.src = imageVal;
-    mediaElement.alt = sanitize(item.title) || "Изображение работы";
-    mediaElement.className = "work-thumb";
-    mediaElement.setAttribute("loading", "lazy");
-    mediaElement.setAttribute("decoding", "async");
-  }
-  // Иначе создаём плейсхолдер (логотип)
-  else {
-    // Обёртка для плейсхолдера: квадратная рамка
-    const placeholderDiv = document.createElement("div");
-    placeholderDiv.style.width = "100%";
-    placeholderDiv.style.height = "100%";
-    placeholderDiv.style.position = "relative";
-    placeholderDiv.style.border = "2px solid #777"; 
-    placeholderDiv.style.backgroundColor = "#333";  // Тёмно-серый фон
+            const pYear = document.createElement("p");
+            pYear.textContent = "Год: " + (sanitize(item.year) || "—");
 
-    // Сам логотип внутри плейсхолдера, меньшего размера, по центру
-    const placeholderImg = document.createElement("img");
-    placeholderImg.src = "assets/logo.svg";
-    placeholderImg.alt = "Placeholder";
-    placeholderImg.style.filter = "grayscale(100%)";
-    placeholderImg.style.width = "50%";
-    placeholderImg.style.height = "50%";
-    placeholderImg.style.position = "absolute";
-    placeholderImg.style.top = "50%";
-    placeholderImg.style.left = "50%";
-    placeholderImg.style.transform = "translate(-50%, -50%)";
+            const pDesc = document.createElement("p");
+            pDesc.textContent = sanitize(item.description) || "";
 
-    placeholderDiv.appendChild(placeholderImg);
-    mediaElement = placeholderDiv;
-  }
+            const pMaterials = document.createElement("p");
+            pMaterials.textContent = "Материалы: " + (sanitize(item.materials) || "—");
 
-  media.appendChild(mediaElement);
+            const pStatus = document.createElement("p");
+            pStatus.textContent = "Статус: " + (sanitize(item.status) || "—");
 
-  // Блок с деталями
-  const details = document.createElement("div");
-  details.className = "work-details";
+            details.appendChild(h3);
+            details.appendChild(pYear);
+            details.appendChild(pDesc);
+            details.appendChild(pMaterials);
+            details.appendChild(pStatus);
 
-  const title = sanitize(item.title) || "Без названия";
-  const year = sanitize(item.year) || "—";
-  const desc = sanitize(item.description) || "";
-  const materials = sanitize(item.materials) || "—";
-  const status = sanitize(item.status) || "—";
+            const btnName = sanitize(item.btnname);
+            const btnLink = sanitize(item.btnlink);
+            if (btnName !== "" && btnLink !== "") {
+              const btn = document.createElement("a");
+              btn.textContent = btnName;
+              btn.href = btnLink;
+              btn.className = "work-button";
+              btn.target = "_blank";
+              details.appendChild(btn);
+            }
 
-  const h3 = document.createElement("h3");
-  h3.textContent = title;
-
-  const pYear = document.createElement("p");
-  pYear.textContent = "Год: " + year;
-
-  const pDesc = document.createElement("p");
-  pDesc.textContent = desc;
-
-  const pMaterials = document.createElement("p");
-  pMaterials.textContent = "Материалы: " + materials;
-
-  const pStatus = document.createElement("p");
-  pStatus.textContent = "Статус: " + status;
-
-  details.appendChild(h3);
-  details.appendChild(pYear);
-  details.appendChild(pDesc);
-  details.appendChild(pMaterials);
-  details.appendChild(pStatus);
-
-  // Кнопка (если btnname/btnlink заданы)
-  const btnName = sanitize(item.btnname);
-  const btnLink = sanitize(item.btnlink);
-  if (btnName !== "" && btnLink !== "") {
-    const btn = document.createElement("a");
-    btn.textContent = btnName;
-    btn.href = btnLink;
-    btn.className = "work-button";
-    btn.target = "_blank";
-    details.appendChild(btn);
-  }
-
-  article.appendChild(media);
-  article.appendChild(details);
-  container.appendChild(article);
-});
-
+            article.appendChild(media);
+            article.appendChild(details);
+            container.appendChild(article);
+          });
         }
       });
     });
+  </script>
+
+  <!-- Скрипт для плавающих цитат -->
+  <script>
+    const quotes = [
+      { text: "Прогресс — наш лучший друг.", author: "Норберт Винер" },
+      { text: "Мы не можем предвидеть будущее, но мы можем изобрести его.", author: "Норберт Винер" },
+      { text: "Счастье для всех, даром, и пусть никто не уйдет обиженным!", author: "Стругацкие" },
+      { text: "Наука не знает страны, потому что знание принадлежит человечеству.", author: "Луи Пастер" },
+      { text: "Да, человек смертен, но это было ещё полбеды. Плохо то, что он иногда внезапно смертен.", author: "Михаил Булгаков" },
+      { text: "Дайте мне точку опоры, и я переверну Землю!", author: "Архимед" },
+      { text: "Математика — это язык, на котором говорят все науки.", author: "Галилей" },
+      { text: "Проблема будущего — это проблема коммуникации человека и машины.", author: "Норберт Винер" },
+      { text: "Книга — это музей, оживший и доступный каждому.", author: "Стругацкие" },
+      { text: "Кто не рискует, тот не пьёт шампанского.", author: "русская пословица" }
+    ];
+    function spawnQuote() {
+      const q = quotes[Math.floor(Math.random() * quotes.length)];
+      const div = document.createElement('div');
+      div.className = 'floating-quote';
+      div.innerHTML = `
+        <span class="quote-text">${q.text}</span>
+        <span class="quote-author">${q.author}</span>
+      `;
+      const docWidth = document.documentElement.scrollWidth;
+      const docHeight = document.documentElement.scrollHeight;
+      const x = 0.05 * docWidth + Math.random() * (0.9 * docWidth);
+      const y = 0.1 * docHeight + Math.random() * (0.8 * docHeight);
+      div.style.left = x + 'px';
+      div.style.top  = y + 'px';
+      document.body.appendChild(div);
+      setTimeout(() => { div.remove(); }, 10000);
+    }
+    setInterval(spawnQuote, 5000);
   </script>
 </body>
 </html>
