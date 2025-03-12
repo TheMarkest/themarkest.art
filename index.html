@@ -327,6 +327,7 @@
       image-rendering: pixelated;
       loading: lazy;
       decoding: async;
+      filter: grayscale(100%);
     }
     /* Плейсхолдер для медиа */
     .placeholder-logo {
@@ -510,12 +511,14 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      max-width: 90%;
-      max-height: 90%;
+      max-width: 90vw;
+      max-height: 90vh;
     }
     .modal-media {
       max-width: 100%;
       max-height: 100%;
+      object-fit: contain;
+      filter: none;
     }
     .modal-close {
       position: absolute;
@@ -879,12 +882,11 @@
     const modalContent = document.getElementById("modal-content");
     const modalClose = document.getElementById("modal-close");
 
-    // Используем делегирование для динамически созданных элементов
+    // Делегирование клика по контейнеру карточек
     document.getElementById("portfolio-container").addEventListener("click", function(e) {
       let target = e.target;
       if (target.classList.contains("work-thumb")) {
         modal.style.display = "block";
-        // Очистка предыдущего содержимого
         modalContent.innerHTML = "";
         if (target.tagName.toLowerCase() === "img") {
           let img = document.createElement("img");
@@ -893,9 +895,17 @@
           modalContent.appendChild(img);
         } else if (target.tagName.toLowerCase() === "video") {
           let video = document.createElement("video");
-          video.src = target.src;
+          // Если видео содержит вложенный <source>, используем его значение
+          const sourceEl = target.querySelector("source");
+          if(sourceEl) {
+            video.src = sourceEl.src;
+            video.type = sourceEl.type;
+          } else {
+            video.src = target.src;
+          }
           video.controls = true;
           video.autoplay = true;
+          video.playsInline = true;
           video.className = "modal-media";
           modalContent.appendChild(video);
         }
@@ -948,15 +958,18 @@
             const mediaId = sanitize(item.mediaid);
             let mediaElement;
             if (mediaId) {
-              // Если mediaid уже содержит точку – проверяем расширение
               if (mediaId.includes(".")) {
                 const ext = mediaId.substring(mediaId.lastIndexOf(".")).toLowerCase();
                 if (ext === ".mp4" || ext === ".webm") {
                   mediaElement = document.createElement("video");
-                  mediaElement.src = "assets/" + mediaId;
                   mediaElement.setAttribute("controls", "controls");
                   mediaElement.setAttribute("loading", "lazy");
                   mediaElement.setAttribute("decoding", "async");
+                  mediaElement.classList.add("work-thumb");
+                  let source = document.createElement("source");
+                  source.src = "assets/" + mediaId;
+                  source.type = (ext === ".mp4" ? "video/mp4" : "video/webm");
+                  mediaElement.appendChild(source);
                 } else {
                   mediaElement = document.createElement("img");
                   mediaElement.src = "assets/" + mediaId;
@@ -966,7 +979,7 @@
                   mediaElement.setAttribute("decoding", "async");
                 }
               } else {
-                // Если расширения нет – сначала пробуем форматы изображений, затем видео
+                // Если расширения нет – сначала пробуем изображения, затем видео
                 const imageExtensions = [".jpg", ".jpeg", ".png", ".gif", ".svg"];
                 const videoExtensions = [".mp4", ".webm"];
                 let extList = imageExtensions.concat(videoExtensions);
@@ -993,10 +1006,6 @@
                   mediaElement.onerror = null;
                 };
                 tryNext();
-              }
-              // Для видео добавляем класс для обработки клика в модальном окне
-              if (mediaElement.tagName.toLowerCase() === "video") {
-                mediaElement.classList.add("work-thumb");
               }
             } else {
               const placeholderDiv = document.createElement("div");
