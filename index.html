@@ -531,7 +531,7 @@
     }
     .modal-close:hover, .modal-close:focus { color: #bbb; }
 
-    /* Кнопка с рамкой, если есть в карточке */
+    /* Кнопка с рамкой */
     .work-button {
       display: inline-block;
       margin-top: 0.5rem;
@@ -553,6 +553,10 @@
   <!-- 10) TextScramble Styles -->
   <style>
     /* Эффект применяется к элементам с классом .scramble-text */
+    .dud {
+      color: #0ff;
+      opacity: 0.8;
+    }
   </style>
 
   <!-- 11) Стили для плавающих цитат -->
@@ -641,7 +645,7 @@
           <div class="bio-row">
             <div class="bio">
               <h3>Биография</h3>
-              <p class="scramble-text">
+              <p>
 Марк Богданов — медиа-художник и скульптор, работающий в жанре кинетического искусства и интерактивной инсталляции. 
 В своих работах он сочетает новые медиа, цифровые технологии и классические материалы, создавая объектно-пространственные композиции, 
 которые трансформируют восприятие зрителя. Его практика основана на принципах конструктивизма, ретрофутуризма и кибернетики, 
@@ -657,7 +661,7 @@
           </div>
           <div class="artist-statement">
             <h3>Artist Statement</h3>
-            <p class="scramble-text">
+            <p>
 Я создаю скульптуры, в которых современные технологии производства встречаются с наследием инженерной мысли прошлого. 
 Моё искусство — это поиск формы, структуры и материала, отражающих логику научного прогресса.
 
@@ -836,7 +840,25 @@
       }
     }
 
+    // 1) Автоматически добавляем .scramble-text ко всем элементам, которые:
+    //    - не являются заголовками (h1-h6), кнопками, ссылками и т.п.
+    //    - содержат текст
     document.addEventListener('DOMContentLoaded', () => {
+      const allEls = document.querySelectorAll('body *');
+      allEls.forEach(el => {
+        const tag = el.tagName.toLowerCase();
+        // исключаем заголовки, кнопки, ссылки и т.п.
+        if (
+          !['h1','h2','h3','h4','h5','h6','button','a'].includes(tag) &&
+          !el.classList.contains('work-button') && // кнопка в карточке
+          el.children.length === 0 && // нет вложенных тегов
+          el.textContent.trim().length > 0 // есть текст
+        ) {
+          el.classList.add('scramble-text');
+        }
+      });
+
+      // 2) Запускаем IntersectionObserver для .scramble-text
       const scrambleElements = document.querySelectorAll('.scramble-text');
       const observerOptions = {
         root: null,
@@ -1039,25 +1061,22 @@
             const details = document.createElement("div");
             details.className = "work-details";
 
-            // Заголовок без scramble
+            // Заголовок (не скрамблим)
             const h3 = document.createElement("h3");
             h3.textContent = sanitize(item.title) || "Без названия";
 
-            // Параграфы с scramble-эффектом
+            // Остальные тексты (год, описание и т.д.) просто выводим в <p>.
+            // (Они автоматически получат scramble-т.к. мы назначаем класс при загрузке)
             const pYear = document.createElement("p");
-            pYear.classList.add("scramble-text");
             pYear.textContent = "Год: " + (sanitize(item.year) || "—");
 
             const pDesc = document.createElement("p");
-            pDesc.classList.add("scramble-text");
             pDesc.textContent = sanitize(item.description) || "";
 
             const pMaterials = document.createElement("p");
-            pMaterials.classList.add("scramble-text");
             pMaterials.textContent = "Материалы: " + (sanitize(item.materials) || "—");
 
             const pStatus = document.createElement("p");
-            pStatus.classList.add("scramble-text");
             pStatus.textContent = "Статус: " + (sanitize(item.status) || "—");
 
             details.appendChild(h3);
