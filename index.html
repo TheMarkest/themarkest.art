@@ -530,6 +530,24 @@
       cursor: pointer;
     }
     .modal-close:hover, .modal-close:focus { color: #bbb; }
+
+    /* Кнопка с рамкой, если есть в карточке */
+    .work-button {
+      display: inline-block;
+      margin-top: 0.5rem;
+      padding: 0.4rem 0.8rem;
+      border: 1px solid #0ff;
+      color: #0ff;
+      text-transform: uppercase;
+      transition: background 0.3s, color 0.3s;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+    .work-button:hover {
+      background: #0ff;
+      color: #000;
+    }
   </style>
 
   <!-- 10) TextScramble Styles -->
@@ -895,7 +913,6 @@
           modalContent.appendChild(img);
         } else if (target.tagName.toLowerCase() === "video") {
           let video = document.createElement("video");
-          // Если видео содержит вложенный <source>, используем его значение
           const sourceEl = target.querySelector("source");
           if(sourceEl) {
             video.src = sourceEl.src;
@@ -1022,19 +1039,25 @@
             const details = document.createElement("div");
             details.className = "work-details";
 
+            // Заголовок без scramble
             const h3 = document.createElement("h3");
             h3.textContent = sanitize(item.title) || "Без названия";
 
+            // Параграфы с scramble-эффектом
             const pYear = document.createElement("p");
+            pYear.classList.add("scramble-text");
             pYear.textContent = "Год: " + (sanitize(item.year) || "—");
 
             const pDesc = document.createElement("p");
+            pDesc.classList.add("scramble-text");
             pDesc.textContent = sanitize(item.description) || "";
 
             const pMaterials = document.createElement("p");
+            pMaterials.classList.add("scramble-text");
             pMaterials.textContent = "Материалы: " + (sanitize(item.materials) || "—");
 
             const pStatus = document.createElement("p");
+            pStatus.classList.add("scramble-text");
             pStatus.textContent = "Статус: " + (sanitize(item.status) || "—");
 
             details.appendChild(h3);
@@ -1049,7 +1072,7 @@
               const btn = document.createElement("a");
               btn.textContent = btnName;
               btn.href = btnLink;
-              btn.className = "work-button";
+              btn.className = "work-button"; // кнопка с рамочкой
               btn.target = "_blank";
               details.appendChild(btn);
             }
