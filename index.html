@@ -301,15 +301,21 @@
       max-width: 1000px;
       margin: 0 auto;
     }
-    /* Эффект появления карточки */
+    /* Эффект появления карточки с дерганьем (jitter) */
     .work-item {
       opacity: 0;
       transform: translateY(20px);
-      transition: opacity 0.5s ease-out, transform 0.5s ease-out;
     }
     .work-item.visible {
-      opacity: 1;
-      transform: translateY(0);
+      animation: jitterFadeIn 0.8s ease-out forwards;
+    }
+    @keyframes jitterFadeIn {
+      0% { opacity: 0; transform: translateY(20px) translateX(-5px); }
+      20% { opacity: 0.5; transform: translateY(10px) translateX(5px); }
+      40% { opacity: 0.7; transform: translateY(5px) translateX(-3px); }
+      60% { opacity: 0.85; transform: translateY(2px) translateX(3px); }
+      80% { opacity: 0.95; transform: translateY(-1px) translateX(-1px); }
+      100% { opacity: 1; transform: translateY(0) translateX(0); }
     }
     .work-item {
       display: flex;
@@ -795,7 +801,7 @@
     animateWave();
   </script>
 
-  <!-- TextScramble + IntersectionObserver для текста (за исключением заголовков и кнопок) -->
+  <!-- TextScramble + IntersectionObserver для текста (кроме заголовков и кнопок) -->
   <script>
     class TextScramble {
       constructor(el) {
@@ -864,7 +870,7 @@
       });
     }, { root: null, rootMargin: "0px 0px -10% 0px", threshold: 0.1 });
 
-    // Автоматически назначаем scramble для уже существующих элементов (например, в биографии)
+    // Для уже существующих элементов (например, в биографии) запускаем наблюдение
     document.addEventListener('DOMContentLoaded', () => {
       document.querySelectorAll('.scramble-text').forEach(el => {
         scrambleObserver.observe(el);
@@ -872,12 +878,18 @@
     });
   </script>
 
-  <!-- Наблюдатель для эффекта появления карточек портфолио -->
+  <!-- Наблюдатель для эффекта появления карточек портфолио с задержкой для запуска scramble -->
   <script>
     const cardObserver = new IntersectionObserver((entries, obs) => {
       entries.forEach(entry => {
         if(entry.isIntersecting){
           entry.target.classList.add('visible');
+          // Запускаем scramble эффект с задержкой 2000 мс
+          setTimeout(() => {
+            entry.target.querySelectorAll('.scramble-text').forEach(el => {
+              scrambleObserver.observe(el);
+            });
+          }, 2000);
           obs.unobserve(entry.target);
         }
       });
@@ -1044,7 +1056,7 @@
             const h3 = document.createElement("h3");
             h3.textContent = sanitize(item.title) || "Без названия";
 
-            // Остальные поля: выводим заголовок поля, а значение оборачиваем в span с классом scramble-text
+            // Остальные поля: выводим заголовок и оборачиваем значение в span с классом scramble-text
             const pYear = document.createElement("p");
             pYear.innerHTML = "Год: <span class='scramble-text'>" + (sanitize(item.year) || "—") + "</span>";
 
@@ -1078,34 +1090,33 @@
             article.appendChild(details);
             container.appendChild(article);
 
-            // Запускаем наблюдение за появлением карточки (fade-in)
+            // Запускаем наблюдение за появлением карточки (fade-in jitter)
             cardObserver.observe(article);
-            // Запускаем scramble-эффект для новых элементов внутри карточки
-            article.querySelectorAll('.scramble-text').forEach(el => {
-              scrambleObserver.observe(el);
-            });
           });
         }
       });
     });
   </script>
 
+  <!-- Загрузка цитат из quote.csv -->
+  <script>
+    let quotesArray = [];
+    Papa.parse("quote.csv", {
+      download: true,
+      header: true,
+      skipEmptyLines: true,
+      complete: function(results) {
+        quotesArray = results.data;
+      }
+    });
+  </script>
+
   <!-- Скрипт для плавающих цитат -->
   <script>
-    const quotes = [
-      { text: "Прогресс — наш лучший друг.", author: "Норберт Винер" },
-      { text: "Мы не можем предвидеть будущее, но мы можем изобрести его.", author: "Норберт Винер" },
-      { text: "Счастье для всех, даром, и пусть никто не уйдет обиженным!", author: "Стругацкие" },
-      { text: "Наука не знает страны, потому что знание принадлежит человечеству.", author: "Луи Пастер" },
-      { text: "Да, человек смертен, но это было ещё полбеды. Плохо то, что он иногда внезапно смертен.", author: "Михаил Булгаков" },
-      { text: "Дайте мне точку опоры, и я переверну Землю!", author: "Архимед" },
-      { text: "Математика — это язык, на котором говорят все науки.", author: "Галилей" },
-      { text: "Проблема будущего — это проблема коммуникации человека и машины.", author: "Норберт Винер" },
-      { text: "Книга — это музей, оживший и доступный каждому.", author: "Стругацкие" },
-      { text: "Кто не рискует, тот не пьёт шампанского.", author: "русская пословица" }
-    ];
     function spawnQuote() {
-      const q = quotes[Math.floor(Math.random() * quotes.length)];
+      // Если цитаты ещё не загружены, используем временный вариант
+      if(quotesArray.length === 0) return;
+      const q = quotesArray[Math.floor(Math.random() * quotesArray.length)];
       const div = document.createElement('div');
       div.className = 'floating-quote';
       div.innerHTML = `
