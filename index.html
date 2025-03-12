@@ -340,7 +340,7 @@
       background: #333;
     }
     .placeholder-logo img {
-      width: 40%; /* Логотип меньше */
+      width: 40%;
       filter: grayscale(100%);
     }
     .work-details {
@@ -895,6 +895,35 @@
       return val.replace(/^"+|"+$/g, "").trim();
     }
 
+    // Функция для загрузки изображения из assets по mediaid с перебором расширений
+    function loadAssetImage(mediaId, imgElement) {
+      if (mediaId.includes(".")) {
+        imgElement.onerror = null;
+        imgElement.onload = null;
+        imgElement.src = "assets/" + mediaId;
+        return;
+      }
+      const extensions = [".jpg", ".jpeg", ".png", ".gif", ".svg"];
+      let index = 0;
+      function tryNext() {
+        if (index >= extensions.length) {
+          imgElement.onerror = null;
+          imgElement.src = "assets/logo.svg";
+          return;
+        }
+        let url = "assets/" + mediaId + extensions[index];
+        index++;
+        imgElement.src = url;
+      }
+      imgElement.onerror = function() {
+        tryNext();
+      };
+      imgElement.onload = function() {
+        imgElement.onerror = null;
+      };
+      tryNext();
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
       Papa.parse("artportfolio.csv", {
         download: true,
@@ -906,7 +935,6 @@
           const container = document.getElementById("portfolio-container");
 
           data.forEach(item => {
-            console.log("Image URL from CSV:", item.image);
             const allEmpty = Object.values(item).every(val => {
               if (typeof val === "string") return val.trim() === "";
               return !val;
@@ -919,21 +947,11 @@
             const media = document.createElement("div");
             media.className = "work-media";
 
-            const imageVal = sanitize(item.image);
+            const mediaId = sanitize(item.mediaid);
             let mediaElement;
-            if (imageVal && /\.mp4$/i.test(imageVal)) {
-              mediaElement = document.createElement("video");
-              mediaElement.src = imageVal;
-              mediaElement.setAttribute("controls", "controls");
-              const altMedia = sanitize(item.altmedia);
-              if (altMedia) {
-                mediaElement.setAttribute("poster", altMedia);
-              }
-              mediaElement.setAttribute("loading", "lazy");
-              mediaElement.setAttribute("decoding", "async");
-            } else if(imageVal) {
+            if (mediaId) {
               mediaElement = document.createElement("img");
-              mediaElement.src = imageVal;
+              loadAssetImage(mediaId, mediaElement);
               mediaElement.alt = sanitize(item.title) || "Изображение работы";
               mediaElement.className = "work-thumb";
               mediaElement.setAttribute("loading", "lazy");
