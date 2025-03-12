@@ -299,15 +299,15 @@
       margin-bottom: 2rem;
       text-transform: uppercase;
     }
-    /* Сетка портфолио */
+    /* Сетка портфолио – одна колонка */
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      grid-template-columns: 1fr;
       gap: 2rem;
       max-width: 1000px;
       margin: 0 auto;
     }
-    /* Карточка портфолио – плавное появление */
+    /* Карточка портфолио */
     .work-item {
       opacity: 0;
       transform: translateY(20px);
@@ -319,6 +319,8 @@
       border: 1px solid #333;
       border-radius: 6px;
       padding: 1rem;
+      width: 100%;
+      margin-bottom: 1rem;
     }
     .work-item.visible {
       opacity: 1;
@@ -341,7 +343,6 @@
       decoding: async;
       filter: grayscale(100%);
     }
-    /* Плейсхолдер для медиа */
     .placeholder-logo {
       width: 100%;
       height: 100%;
@@ -362,6 +363,18 @@
       flex-direction: column;
       justify-content: center;
     }
+    @media (max-width: 768px) {
+      .grid { grid-template-columns: 1fr; }
+      .work-item { flex-direction: column; }
+      .work-media {
+        width: 100%;
+        height: 0;
+        padding-bottom: 100%;
+      }
+    }
+    @media (min-width: 769px) {
+      .work-item { flex-direction: row; }
+    }
     .work-item h3 {
       margin-bottom: 0.5rem;
       font-size: 1.2rem;
@@ -371,7 +384,6 @@
       opacity: 0.9;
       margin-bottom: 0.5rem;
     }
-    /* О художнике */
     .about-content {
       display: flex;
       flex-direction: column;
@@ -494,7 +506,6 @@
       text-align: center;
       font-size: 0.9rem;
     }
-    /* Модальное окно */
     .modal {
       display: none;
       position: fixed;
@@ -505,7 +516,6 @@
       overflow: auto;
       background-color: rgba(0,0,0,0.9);
     }
-    /* Контейнер для медиа внутри модального окна */
     .modal-content {
       margin: auto;
       display: flex;
@@ -530,8 +540,6 @@
       cursor: pointer;
     }
     .modal-close:hover, .modal-close:focus { color: #bbb; }
-
-    /* Кнопка с рамкой */
     .work-button {
       display: inline-block;
       margin-top: 0.5rem;
@@ -783,13 +791,13 @@
     animateWave();
   </script>
 
-  <!-- Автоматическая установка scramble-text для всех текстовых элементов (кроме заголовков, кнопок, ссылок и цитат) -->
+  <!-- Автоматическая установка scramble-text для всего текста (кроме заголовков, кнопок, ссылок и цитат) -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const allEls = document.querySelectorAll('body *');
       allEls.forEach(el => {
         const tag = el.tagName.toLowerCase();
-        // Исключаем заголовки, кнопки, ссылки и элементы цитат
+        // Исключаем заголовки, кнопки, ссылки, элементы внутри floating-quote
         if (
           !['h1','h2','h3','h4','h5','h6','button','a'].includes(tag) &&
           !el.closest('.floating-quote') &&
@@ -807,7 +815,7 @@
     });
   </script>
 
-  <!-- TextScramble + IntersectionObserver для текста (исключая заголовки и кнопки) -->
+  <!-- TextScramble + IntersectionObserver -->
   <script>
     class TextScramble {
       constructor(el) {
@@ -866,7 +874,6 @@
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           const el = entry.target;
-          // Используем значение из data-text, если оно задано, иначе оригинальный текст
           const original = el.getAttribute('data-text') || el.textContent;
           el.textContent = "";
           const fx = new TextScramble(el);
@@ -883,7 +890,7 @@
       entries.forEach(entry => {
         if(entry.isIntersecting){
           entry.target.classList.add('visible');
-          // Запускаем scramble эффект для вложенных элементов через 500 мс (уменьшена задержка)
+          // Запускаем scramble эффект для вложенных элементов через 500 мс
           setTimeout(() => {
             entry.target.querySelectorAll('.scramble-text').forEach(el => {
               scrambleObserver.observe(el);
@@ -1051,11 +1058,11 @@
             const details = document.createElement("div");
             details.className = "work-details";
 
-            // Заголовок выводим сразу (без эффекта)
+            // Заголовок без эффекта
             const h3 = document.createElement("h3");
             h3.textContent = sanitize(item.title) || "Без названия";
 
-            // Остальные поля: заголовок и значение (значение выводится как тире с data-text)
+            // Остальные поля: заголовок + значение (value = "-"), data-text = original
             const pYear = document.createElement("p");
             pYear.innerHTML = "Год: <span class='scramble-text' data-text='" + (sanitize(item.year) || "—") + "'>-</span>";
 
@@ -1089,7 +1096,7 @@
             article.appendChild(details);
             container.appendChild(article);
 
-            // Запускаем наблюдение за появлением карточки (с задержкой 500 мс для запуска scramble)
+            // Запускаем наблюдатель появления карточки
             cardObserver.observe(article);
           });
         }
