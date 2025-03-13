@@ -332,13 +332,13 @@
       height: 120px;
       overflow: hidden;
     }
-    /* Убираем padding-bottom для мобильных, оставляем фикс. высоту */
+    /* На мобильных – миниатюры всегда квадратные (aspect-ratio) */
     @media (max-width: 768px) {
       .grid { grid-template-columns: 1fr; }
       .work-item { flex-direction: column; }
       .work-media {
         width: 100%;
-        height: 120px;
+        aspect-ratio: 1 / 1;
       }
     }
     .work-thumb {
@@ -497,13 +497,13 @@
       text-align: center;
       font-size: 0.9rem;
     }
-    /* Модальное окно с отступом сверху, чтобы виден был хедер */
+    /* Модальное окно: оставляем отступ сверху, чтобы шапка оставалась видимой */
     .modal {
       display: none;
       position: fixed;
       z-index: 3000;
       left: 0;
-      top: 160px; /* <-- оставляем шапку видимой */
+      top: 160px; /* высота шапки */
       width: 100%;
       height: calc(100% - 160px);
       overflow: auto;
@@ -786,23 +786,18 @@
 
   <!-- Функция для вычисления итоговой высоты карточки -->
   <script>
-    // Создаём временный клон карточки, подставляем конечный текст (data-text),
-    // измеряем высоту, проставляем min-height, удаляем клон.
     function measureCardHeight(article) {
       const clone = article.cloneNode(true);
-      // Заменяем в клоне символ "-" на полный текст
       clone.querySelectorAll(".scramble-text").forEach(el => {
         const txt = el.getAttribute("data-text") || el.textContent;
         el.textContent = txt;
       });
-      // Ставим абсолютное позиционирование, скрываем, чтобы не мешал вёрстке
       clone.style.position = "absolute";
       clone.style.visibility = "hidden";
       clone.style.zIndex = "-9999";
       document.body.appendChild(clone);
       const h = clone.offsetHeight;
       document.body.removeChild(clone);
-      // Возвращаем высоту
       return h;
     }
   </script>
@@ -813,7 +808,6 @@
       const allEls = document.querySelectorAll('body *');
       allEls.forEach(el => {
         const tag = el.tagName.toLowerCase();
-        // Исключаем заголовки, кнопки, ссылки, элементы внутри floating-quote
         if (
           !['h1','h2','h3','h4','h5','h6','button','a'].includes(tag) &&
           !el.closest('.floating-quote') &&
@@ -824,14 +818,13 @@
           el.classList.add('scramble-text');
         }
       });
-      // Запускаем наблюдение для уже назначенных scramble-text
       document.querySelectorAll('.scramble-text').forEach(el => {
         scrambleObserver.observe(el);
       });
     });
   </script>
 
-  <!-- TextScramble + IntersectionObserver -->
+  <!-- TextScramble + IntersectionObserver для текста -->
   <script>
     class TextScramble {
       constructor(el) {
@@ -885,7 +878,6 @@
         return this.chars[Math.floor(Math.random() * this.chars.length)];
       }
     }
-    // Наблюдатель для элементов с классом scramble-text
     const scrambleObserver = new IntersectionObserver((entries, obs) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -906,20 +898,15 @@
       entries.forEach(entry => {
         if(entry.isIntersecting){
           const article = entry.target;
-          // Перед тем как карточка станет "visible",
-          // вычисляем её финальную высоту (с учётом будущего текста)
+          // Рассчитываем итоговую высоту карточки заранее
           const finalHeight = measureCardHeight(article);
           article.style.minHeight = finalHeight + "px";
-
-          // Затем делаем видимой
           article.classList.add('visible');
-
-          // Запускаем scramble для вложенных элементов через 500 мс
           setTimeout(() => {
             article.querySelectorAll('.scramble-text').forEach(el => {
               scrambleObserver.observe(el);
             });
-          }, 500);
+          }, 500); // задержка 500 мс
           obs.unobserve(article);
         }
       });
@@ -991,24 +978,6 @@
     function sanitize(val) {
       if (!val) return "";
       return val.replace(/^"+|"+$/g, "").trim();
-    }
-
-    // Функция вычисления высоты карточки (описана выше)
-    function measureCardHeight(article) {
-      const clone = article.cloneNode(true);
-      // Заменяем в клоне все .scramble-text на полное содержимое
-      clone.querySelectorAll(".scramble-text").forEach(el => {
-        const txt = el.getAttribute("data-text") || el.textContent;
-        el.textContent = txt;
-      });
-      // Ставим offscreen
-      clone.style.position = "absolute";
-      clone.style.visibility = "hidden";
-      clone.style.zIndex = "-9999";
-      document.body.appendChild(clone);
-      const h = clone.offsetHeight;
-      document.body.removeChild(clone);
-      return h;
     }
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -1104,7 +1073,7 @@
             const h3 = document.createElement("h3");
             h3.textContent = sanitize(item.title) || "Без названия";
 
-            // Остальные поля: заголовок + значение (value = "-"), data-text = original
+            // Остальные поля: заголовок + значение (первоначально отображается "-", оригинальный текст в data-text)
             const pYear = document.createElement("p");
             pYear.innerHTML = "Год: <span class='scramble-text' data-text='" + (sanitize(item.year) || "—") + "'>-</span>";
 
@@ -1138,7 +1107,11 @@
             article.appendChild(details);
             container.appendChild(article);
 
-            // Подключаем наблюдатель появления карточки
+            // Сразу вычисляем итоговую высоту карточки и устанавливаем min-height, чтобы избежать дерганья при TextScramble
+            const finalHeight = measureCardHeight(article);
+            article.style.minHeight = finalHeight + "px";
+
+            // Запускаем наблюдатель появления карточки
             cardObserver.observe(article);
           });
         }
@@ -1180,6 +1153,19 @@
       setTimeout(() => { div.remove(); }, 10000);
     }
     setInterval(spawnQuote, 5000);
+  </script>
+
+  <!-- Burger Menu Script -->
+  <script>
+    const burger = document.querySelector('.burger');
+    const navLinks = document.querySelector('.nav-links');
+    burger.addEventListener('click', () => {
+      if (getComputedStyle(navLinks).display === 'none') {
+        navLinks.style.display = 'flex';
+      } else {
+        navLinks.style.display = 'none';
+      }
+    });
   </script>
 </body>
 </html>
