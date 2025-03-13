@@ -332,13 +332,24 @@
       height: 120px;
       overflow: hidden;
     }
-    /* На мобильных – миниатюры всегда квадратные (aspect-ratio) */
+    /* На мобильных – миниатюры квадратные с использованием padding-bottom */
     @media (max-width: 768px) {
       .grid { grid-template-columns: 1fr; }
       .work-item { flex-direction: column; }
       .work-media {
         width: 100%;
-        aspect-ratio: 1 / 1;
+        height: 0;
+        padding-bottom: 100%;
+        position: relative;
+      }
+      .work-thumb,
+      .placeholder-logo {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
       }
     }
     .work-thumb {
@@ -497,7 +508,7 @@
       text-align: center;
       font-size: 0.9rem;
     }
-    /* Модальное окно: оставляем отступ сверху, чтобы шапка оставалась видимой */
+    /* Модальное окно – оставляем шапку видимой */
     .modal {
       display: none;
       position: fixed;
@@ -898,15 +909,15 @@
       entries.forEach(entry => {
         if(entry.isIntersecting){
           const article = entry.target;
-          // Рассчитываем итоговую высоту карточки заранее
+          // Рассчитываем итоговую высоту карточки и фиксируем её, чтобы избежать дерганья
           const finalHeight = measureCardHeight(article);
-          article.style.minHeight = finalHeight + "px";
+          article.style.height = finalHeight + "px";
           article.classList.add('visible');
           setTimeout(() => {
             article.querySelectorAll('.scramble-text').forEach(el => {
               scrambleObserver.observe(el);
             });
-          }, 500); // задержка 500 мс
+          }, 500);
           obs.unobserve(article);
         }
       });
@@ -1069,11 +1080,9 @@
             const details = document.createElement("div");
             details.className = "work-details";
 
-            // Заголовок без эффекта
             const h3 = document.createElement("h3");
             h3.textContent = sanitize(item.title) || "Без названия";
 
-            // Остальные поля: заголовок + значение (первоначально отображается "-", оригинальный текст в data-text)
             const pYear = document.createElement("p");
             pYear.innerHTML = "Год: <span class='scramble-text' data-text='" + (sanitize(item.year) || "—") + "'>-</span>";
 
@@ -1107,11 +1116,10 @@
             article.appendChild(details);
             container.appendChild(article);
 
-            // Сразу вычисляем итоговую высоту карточки и устанавливаем min-height, чтобы избежать дерганья при TextScramble
+            // Вычисляем итоговую высоту карточки и фиксируем её, чтобы избежать изменения размеров
             const finalHeight = measureCardHeight(article);
-            article.style.minHeight = finalHeight + "px";
+            article.style.height = finalHeight + "px";
 
-            // Запускаем наблюдатель появления карточки
             cardObserver.observe(article);
           });
         }
