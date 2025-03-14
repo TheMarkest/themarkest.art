@@ -87,7 +87,6 @@
     }
     a { color: inherit; text-decoration: none; transition: color 0.3s; }
     a:hover { color: #0ff; }
-    /* Вспомогательный контейнер */
     .container {
       max-width: 1200px;
       margin: 0 auto;
@@ -332,7 +331,7 @@
       height: 120px;
       overflow: hidden;
     }
-    /* На мобильных – миниатюры квадратные с использованием padding-bottom */
+    /* На мобильных – миниатюры квадратные */
     @media (max-width: 768px) {
       .grid { grid-template-columns: 1fr; }
       .work-item { flex-direction: column; }
@@ -508,31 +507,47 @@
       text-align: center;
       font-size: 0.9rem;
     }
-    /* Модальное окно – оставляем шапку видимой */
+    /* Полноэкранное модальное окно */
     .modal {
       display: none;
       position: fixed;
       z-index: 3000;
       left: 0;
-      top: 160px; /* высота шапки */
+      top: 0;
       width: 100%;
-      height: calc(100% - 160px);
+      height: 100%;
+      background-color: rgba(0,0,0,0.95);
       overflow: auto;
-      background-color: rgba(0,0,0,0.9);
     }
+    /* flex-контейнер под всё содержимое (заголовок + медиа) */
     .modal-content {
-      margin: auto;
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      height: 100%;
+      position: relative;
+    }
+    /* Тёмная панель сверху с заголовком */
+    .modal-title-bar {
+      background: #000;
+      color: #fff;
+      text-align: center;
+      padding: 1rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      border-bottom: 1px solid #333;
+    }
+    /* Область под изображение/видео */
+    .modal-media-wrapper {
+      flex: 1;
       display: flex;
       align-items: center;
       justify-content: center;
-      max-width: 90vw;
-      max-height: 90vh;
     }
     .modal-media {
       max-width: 100%;
       max-height: 100%;
-      object-fit: contain;
-      filter: none;
+      object-fit: contain; /* чёрные поля вокруг */
     }
     .modal-close {
       position: absolute;
@@ -544,6 +559,7 @@
       cursor: pointer;
     }
     .modal-close:hover, .modal-close:focus { color: #bbb; }
+
     .work-button {
       display: inline-block;
       margin-top: 0.5rem;
@@ -721,7 +737,13 @@
   <!-- Модальное окно для полноэкранного просмотра медиа -->
   <div id="modal" class="modal">
     <span id="modal-close" class="modal-close">&times;</span>
-    <div id="modal-content" class="modal-content"></div>
+    <!-- Вся структура содержимого внутри .modal-content -->
+    <div id="modal-content" class="modal-content">
+      <!-- Заголовок работы -->
+      <div id="modal-title-bar" class="modal-title-bar"></div>
+      <!-- Контейнер для изображения/видео -->
+      <div id="modal-media-wrapper" class="modal-media-wrapper"></div>
+    </div>
   </div>
 
   <!-- Wave Animation Script -->
@@ -909,7 +931,6 @@
       entries.forEach(entry => {
         if(entry.isIntersecting){
           const article = entry.target;
-          // Рассчитываем итоговую высоту карточки и фиксируем её, чтобы избежать дерганья
           const finalHeight = measureCardHeight(article);
           article.style.height = finalHeight + "px";
           article.classList.add('visible');
@@ -940,19 +961,38 @@
   <!-- Модальное окно: обработка кликов с делегированием -->
   <script>
     const modal = document.getElementById("modal");
-    const modalContent = document.getElementById("modal-content");
     const modalClose = document.getElementById("modal-close");
+    const modalContent = document.getElementById("modal-content");
+    const modalTitleBar = document.getElementById("modal-title-bar");
+    const modalMediaWrapper = document.getElementById("modal-media-wrapper");
 
     document.getElementById("portfolio-container").addEventListener("click", function(e) {
       let target = e.target;
       if (target.classList.contains("work-thumb")) {
+        // Находим заголовок работы
+        const article = target.closest(".work-item");
+        let titleText = "";
+        if (article) {
+          const titleEl = article.querySelector("h3");
+          if (titleEl) {
+            titleText = titleEl.textContent.trim();
+          }
+        }
+        // Устанавливаем заголовок в модалку
+        modalTitleBar.textContent = titleText || "Без названия";
+
+        // Очищаем контейнер для медиа
+        modalMediaWrapper.innerHTML = "";
+
+        // Открываем модалку
         modal.style.display = "block";
-        modalContent.innerHTML = "";
+
+        // Вставляем нужное медиа (картинку или видео)
         if (target.tagName.toLowerCase() === "img") {
           let img = document.createElement("img");
           img.src = target.src;
           img.className = "modal-media";
-          modalContent.appendChild(img);
+          modalMediaWrapper.appendChild(img);
         } else if (target.tagName.toLowerCase() === "video") {
           let video = document.createElement("video");
           const sourceEl = target.querySelector("source");
@@ -966,20 +1006,22 @@
           video.autoplay = true;
           video.playsInline = true;
           video.className = "modal-media";
-          modalContent.appendChild(video);
+          modalMediaWrapper.appendChild(video);
         }
       }
     });
 
     modalClose.addEventListener("click", function() {
       modal.style.display = "none";
-      modalContent.innerHTML = "";
+      modalMediaWrapper.innerHTML = "";
+      modalTitleBar.textContent = "";
     });
 
     modal.addEventListener("click", function(e) {
       if (e.target === modal) {
         modal.style.display = "none";
-        modalContent.innerHTML = "";
+        modalMediaWrapper.innerHTML = "";
+        modalTitleBar.textContent = "";
       }
     });
   </script>
@@ -1116,10 +1158,7 @@
             article.appendChild(details);
             container.appendChild(article);
 
-            // Вычисляем итоговую высоту карточки и фиксируем её, чтобы избежать изменения размеров
-            const finalHeight = measureCardHeight(article);
-            article.style.height = finalHeight + "px";
-
+            // При появлении карточки (IntersectionObserver) фиксируем высоту и запускаем TextScramble
             cardObserver.observe(article);
           });
         }
