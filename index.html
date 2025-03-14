@@ -331,7 +331,6 @@
       height: 120px;
       overflow: hidden;
     }
-    /* На мобильных – миниатюры квадратные */
     @media (max-width: 768px) {
       .grid { grid-template-columns: 1fr; }
       .work-item { flex-direction: column; }
@@ -507,7 +506,7 @@
       text-align: center;
       font-size: 0.9rem;
     }
-    /* Полноэкранное модальное окно */
+    /* Модальное окно – во весь экран, с чёрным фоном */
     .modal {
       display: none;
       position: fixed;
@@ -519,7 +518,7 @@
       background-color: rgba(0,0,0,0.95);
       overflow: auto;
     }
-    /* flex-контейнер под всё содержимое (заголовок + медиа) */
+    /* Контейнер под заголовок + медиа */
     .modal-content {
       display: flex;
       flex-direction: column;
@@ -527,7 +526,7 @@
       height: 100%;
       position: relative;
     }
-    /* Тёмная панель сверху с заголовком */
+    /* Заголовок (title) */
     .modal-title-bar {
       background: #000;
       color: #fff;
@@ -537,7 +536,7 @@
       text-transform: uppercase;
       border-bottom: 1px solid #333;
     }
-    /* Область под изображение/видео */
+    /* Медиа по центру */
     .modal-media-wrapper {
       flex: 1;
       display: flex;
@@ -547,8 +546,9 @@
     .modal-media {
       max-width: 100%;
       max-height: 100%;
-      object-fit: contain; /* чёрные поля вокруг */
+      object-fit: contain;
     }
+    /* Кнопка-закрытие – крестик */
     .modal-close {
       position: absolute;
       top: 20px;
@@ -558,8 +558,9 @@
       font-weight: bold;
       cursor: pointer;
     }
-    .modal-close:hover, .modal-close:focus { color: #bbb; }
-
+    .modal-close:hover, .modal-close:focus {
+      color: #bbb;
+    }
     .work-button {
       display: inline-block;
       margin-top: 0.5rem;
@@ -736,12 +737,11 @@
 
   <!-- Модальное окно для полноэкранного просмотра медиа -->
   <div id="modal" class="modal">
-    <span id="modal-close" class="modal-close">&times;</span>
-    <!-- Вся структура содержимого внутри .modal-content -->
+    <!-- ВНИМАНИЕ: ЗАМЕНА СИМВОЛА НА КРЕСТИК &#10005; -->
+    <span id="modal-close" class="modal-close">&#10005;</span>
+    <!-- Контейнер под заголовок + медиа -->
     <div id="modal-content" class="modal-content">
-      <!-- Заголовок работы -->
       <div id="modal-title-bar" class="modal-title-bar"></div>
-      <!-- Контейнер для изображения/видео -->
       <div id="modal-media-wrapper" class="modal-media-wrapper"></div>
     </div>
   </div>
@@ -969,7 +969,7 @@
     document.getElementById("portfolio-container").addEventListener("click", function(e) {
       let target = e.target;
       if (target.classList.contains("work-thumb")) {
-        // Находим заголовок работы
+        // Находим заголовок работы (h3)
         const article = target.closest(".work-item");
         let titleText = "";
         if (article) {
@@ -1158,7 +1158,7 @@
             article.appendChild(details);
             container.appendChild(article);
 
-            // При появлении карточки (IntersectionObserver) фиксируем высоту и запускаем TextScramble
+            // Фиксируем высоту карточки и запускаем TextScramble при появлении
             cardObserver.observe(article);
           });
         }
