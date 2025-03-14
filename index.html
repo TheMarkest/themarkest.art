@@ -306,7 +306,6 @@
       max-width: 1000px;
       margin: 0 auto;
     }
-    /* Карточка портфолио */
     .work-item {
       opacity: 0;
       transform: translateY(20px);
@@ -506,7 +505,7 @@
       text-align: center;
       font-size: 0.9rem;
     }
-    /* Модальное окно – во весь экран, с чёрным фоном */
+    /* Полноэкранное модальное окно */
     .modal {
       display: none;
       position: fixed;
@@ -516,7 +515,7 @@
       width: 100%;
       height: 100%;
       background-color: rgba(0,0,0,0.95);
-      overflow: auto;
+      overflow: hidden; /* без прокрутки */
     }
     /* Контейнер под заголовок + медиа */
     .modal-content {
@@ -525,9 +524,11 @@
       width: 100%;
       height: 100%;
       position: relative;
+      overflow: hidden; /* без вертикального скролла */
     }
     /* Заголовок (title) */
     .modal-title-bar {
+      flex: 0 0 auto;
       background: #000;
       color: #fff;
       text-align: center;
@@ -535,28 +536,33 @@
       font-weight: bold;
       text-transform: uppercase;
       border-bottom: 1px solid #333;
+      position: relative;
+      z-index: 1;
     }
-    /* Медиа по центру */
+    /* Медиа по центру, растягивается */
     .modal-media-wrapper {
-      flex: 1;
+      flex: 1 1 auto;
       display: flex;
       align-items: center;
       justify-content: center;
+      overflow: hidden;
     }
     .modal-media {
       max-width: 100%;
       max-height: 100%;
       object-fit: contain;
     }
-    /* Кнопка-закрытие – крестик */
+    /* Кнопка-закрытие (крестик) внутри заголовка */
     .modal-close {
       position: absolute;
-      top: 20px;
-      right: 35px;
+      top: 50%;
+      right: 1rem;
+      transform: translateY(-50%);
       color: #f1f1f1;
-      font-size: 40px;
+      font-size: 36px;
       font-weight: bold;
       cursor: pointer;
+      z-index: 2;
     }
     .modal-close:hover, .modal-close:focus {
       color: #bbb;
@@ -737,11 +743,13 @@
 
   <!-- Модальное окно для полноэкранного просмотра медиа -->
   <div id="modal" class="modal">
-    <!-- ВНИМАНИЕ: ЗАМЕНА СИМВОЛА НА КРЕСТИК &#10005; -->
-    <span id="modal-close" class="modal-close">&#10005;</span>
-    <!-- Контейнер под заголовок + медиа -->
+    <!-- Крестик: &#10005; -->
     <div id="modal-content" class="modal-content">
-      <div id="modal-title-bar" class="modal-title-bar"></div>
+      <div id="modal-title-bar" class="modal-title-bar">
+        <span id="modal-close" class="modal-close">&#10005;</span>
+        <!-- Заголовок работы будет вставляться в JS -->
+        <span id="modal-title-text"></span>
+      </div>
       <div id="modal-media-wrapper" class="modal-media-wrapper"></div>
     </div>
   </div>
@@ -817,7 +825,7 @@
     animateWave();
   </script>
 
-  <!-- Функция для вычисления итоговой высоты карточки -->
+  <!-- measureCardHeight -->
   <script>
     function measureCardHeight(article) {
       const clone = article.cloneNode(true);
@@ -835,7 +843,7 @@
     }
   </script>
 
-  <!-- Автоматическая установка scramble-text для всего текста (кроме заголовков, кнопок, ссылок и цитат) -->
+  <!-- Автоматическая установка scramble-text -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const allEls = document.querySelectorAll('body *');
@@ -857,7 +865,7 @@
     });
   </script>
 
-  <!-- TextScramble + IntersectionObserver для текста -->
+  <!-- TextScramble + IntersectionObserver -->
   <script>
     class TextScramble {
       constructor(el) {
@@ -925,7 +933,7 @@
     }, { root: null, rootMargin: "0px 0px -10% 0px", threshold: 0.1 });
   </script>
 
-  <!-- Наблюдатель для появления карточек портфолио -->
+  <!-- Наблюдатель для появления карточек -->
   <script>
     const cardObserver = new IntersectionObserver((entries, obs) => {
       entries.forEach(entry => {
@@ -958,18 +966,19 @@
     });
   </script>
 
-  <!-- Модальное окно: обработка кликов с делегированием -->
+  <!-- Модальное окно -->
   <script>
     const modal = document.getElementById("modal");
-    const modalClose = document.getElementById("modal-close");
     const modalContent = document.getElementById("modal-content");
     const modalTitleBar = document.getElementById("modal-title-bar");
+    const modalTitleText = document.getElementById("modal-title-text");
     const modalMediaWrapper = document.getElementById("modal-media-wrapper");
+    const modalClose = document.getElementById("modal-close");
 
     document.getElementById("portfolio-container").addEventListener("click", function(e) {
       let target = e.target;
       if (target.classList.contains("work-thumb")) {
-        // Находим заголовок работы (h3)
+        // Находим заголовок работы
         const article = target.closest(".work-item");
         let titleText = "";
         if (article) {
@@ -978,16 +987,14 @@
             titleText = titleEl.textContent.trim();
           }
         }
-        // Устанавливаем заголовок в модалку
-        modalTitleBar.textContent = titleText || "Без названия";
-
-        // Очищаем контейнер для медиа
+        // Устанавливаем заголовок
+        modalTitleText.textContent = titleText || "Без названия";
+        // Очищаем контейнер
         modalMediaWrapper.innerHTML = "";
-
         // Открываем модалку
         modal.style.display = "block";
 
-        // Вставляем нужное медиа (картинку или видео)
+        // Вставляем нужное медиа
         if (target.tagName.toLowerCase() === "img") {
           let img = document.createElement("img");
           img.src = target.src;
@@ -1014,14 +1021,14 @@
     modalClose.addEventListener("click", function() {
       modal.style.display = "none";
       modalMediaWrapper.innerHTML = "";
-      modalTitleBar.textContent = "";
+      modalTitleText.textContent = "";
     });
 
     modal.addEventListener("click", function(e) {
       if (e.target === modal) {
         modal.style.display = "none";
         modalMediaWrapper.innerHTML = "";
-        modalTitleBar.textContent = "";
+        modalTitleText.textContent = "";
       }
     });
   </script>
