@@ -912,10 +912,21 @@
     animateWave();
   </script>
 
-  <!-- measureCardHeight – теперь упрощён: берём scrollHeight -->
+  <!-- measureCardHeight – теперь с использованием scrollHeight -->
   <script>
     function measureCardHeight(article) {
-      return article.scrollHeight;
+      const clone = article.cloneNode(true);
+      clone.querySelectorAll(".scramble-text").forEach(el => {
+        const txt = el.getAttribute("data-text") || el.textContent;
+        el.textContent = txt;
+      });
+      clone.style.position = "absolute";
+      clone.style.visibility = "hidden";
+      clone.style.zIndex = "-9999";
+      document.body.appendChild(clone);
+      const h = clone.scrollHeight;
+      document.body.removeChild(clone);
+      return h;
     }
   </script>
 
