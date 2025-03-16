@@ -211,7 +211,7 @@
       .burger {
         display: block;
       }
-      /* При адаптиве можно скорректировать положение переключателя */
+      /* Корректировка положения переключателя на мобильных */
       .language-switcher {
         right: 20px;
         top: 70px;
@@ -941,27 +941,10 @@
     animateWave();
   </script>
 
-  <!-- measureCardHeight -->
-  <script>
-    function measureCardHeight(article) {
-      const clone = article.cloneNode(true);
-      clone.querySelectorAll(".scramble-text").forEach(el => {
-        const txt = el.getAttribute("data-text") || el.textContent;
-        el.textContent = txt;
-      });
-      clone.style.position = "absolute";
-      clone.style.visibility = "hidden";
-      clone.style.zIndex = "-9999";
-      document.body.appendChild(clone);
-      const h = clone.offsetHeight;
-      document.body.removeChild(clone);
-      return h;
-    }
-  </script>
-
-  <!-- Автоматическая установка scramble-text -->
+  <!-- Фиксирование высоты для блоков с текстскремблом -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
+      // Автоматически добавляем класс scramble-text, если его нет
       const allEls = document.querySelectorAll('body *');
       allEls.forEach(el => {
         const tag = el.tagName.toLowerCase();
@@ -975,8 +958,19 @@
           el.classList.add('scramble-text');
         }
       });
+      // Для каждого элемента с текстскремблом вычисляем и фиксируем высоту
       document.querySelectorAll('.scramble-text').forEach(el => {
-        scrambleObserver.observe(el);
+         const originalText = el.getAttribute('data-text') || el.textContent;
+         const clone = el.cloneNode(true);
+         clone.textContent = originalText;
+         clone.style.position = "absolute";
+         clone.style.visibility = "hidden";
+         clone.style.height = "auto";
+         clone.style.whiteSpace = "normal";
+         document.body.appendChild(clone);
+         const measuredHeight = clone.offsetHeight;
+         document.body.removeChild(clone);
+         el.style.height = measuredHeight + "px";
       });
     });
   </script>
@@ -1055,7 +1049,20 @@
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           const article = entry.target;
-          const finalHeight = measureCardHeight(article);
+          const finalHeight = (function(article) {
+            const clone = article.cloneNode(true);
+            clone.querySelectorAll(".scramble-text").forEach(el => {
+              const txt = el.getAttribute("data-text") || el.textContent;
+              el.textContent = txt;
+            });
+            clone.style.position = "absolute";
+            clone.style.visibility = "hidden";
+            clone.style.zIndex = "-9999";
+            document.body.appendChild(clone);
+            const h = clone.offsetHeight;
+            document.body.removeChild(clone);
+            return h;
+          })(article);
           article.style.height = finalHeight + "px";
           article.classList.add('visible');
           setTimeout(() => {
@@ -1297,19 +1304,6 @@
       setTimeout(() => { div.remove(); }, 10000);
     }
     setInterval(spawnQuote, 5000);
-  </script>
-
-  <!-- Burger Menu Script (дублирующий код, оставлен для совместимости) -->
-  <script>
-    const burger = document.querySelector('.burger');
-    const navLinks = document.querySelector('.nav-links');
-    burger.addEventListener('click', () => {
-      if (getComputedStyle(navLinks).display === 'none') {
-        navLinks.style.display = 'flex';
-      } else {
-        navLinks.style.display = 'none';
-      }
-    });
   </script>
 </body>
 </html>
