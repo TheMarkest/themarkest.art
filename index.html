@@ -634,6 +634,13 @@
       background: #0ff;
       color: #000;
     }
+    /* Новое правило: если кнопка находится в блоке с изображением, она занимает всю ширину */
+    .work-media .work-button {
+      display: block;
+      width: 100%;
+      text-align: center;
+      margin-top: 0.5rem;
+    }
   </style>
 
   <!-- 10) TextScramble Styles -->
@@ -1203,7 +1210,8 @@
               btn.href = btnLink;
               btn.className = "work-button";
               btn.target = "_blank";
-              details.appendChild(btn);
+              // Перемещаем кнопку под картинку, внутри блока media
+              media.appendChild(btn);
             }
             article.appendChild(media);
             article.appendChild(details);
