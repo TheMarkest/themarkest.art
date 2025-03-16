@@ -15,8 +15,8 @@
   <meta name="msapplication-TileColor" content="#000000">
   <meta name="theme-color" content="#000000">
 
-  <!-- Подключаем шрифт Russo One (ретрофутуристичный, поддерживающий кириллицу и латиницу) -->
-  <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet">
+  <!-- Подключаем шрифт Exo 2 (гармоничный для кириллицы и латиницы) -->
+  <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;700&display=swap" rel="stylesheet">
 
   <!-- 1) CSS-переменные (глитч-интенсивность) -->
   <style>
@@ -91,7 +91,7 @@
       scroll-behavior: smooth;
     }
     body {
-      font-family: 'Russo One', sans-serif;
+      font-family: 'Exo 2', sans-serif;
       background: #000;
       color: #fff;
       line-height: 1.5;
@@ -370,6 +370,7 @@
       border-radius: 6px;
       padding: 1rem;
       width: 100%;
+      /* Используем grid для позиционирования элементов */
     }
     @media (min-width: 768px) {
       .work-item {
@@ -912,7 +913,7 @@
     animateWave();
   </script>
 
-  <!-- measureCardHeight – теперь с использованием scrollHeight -->
+  <!-- measureCardHeight -->
   <script>
     function measureCardHeight(article) {
       const clone = article.cloneNode(true);
@@ -924,7 +925,7 @@
       clone.style.visibility = "hidden";
       clone.style.zIndex = "-9999";
       document.body.appendChild(clone);
-      const h = clone.scrollHeight;
+      const h = clone.offsetHeight;
       document.body.removeChild(clone);
       return h;
     }
