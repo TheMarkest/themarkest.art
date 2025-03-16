@@ -1,12 +1,10 @@
 <!DOCTYPE html>
 <html lang="ru">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TheMarkest.art – Glitch Image + Portrait</title>
-  <meta name="description"
-    content="Портфолио художника в стиле sci‑fi/cyberpunk, с волной, старомониторным эффектом, TextScramble, пиксельным глитч‑логотипом, фото художника и удобными карточками работ." />
+  <meta name="description" content="Портфолио художника в стиле sci‑fi/cyberpunk, с волной, старомониторным эффектом, TextScramble, пиксельным глитч‑логотипом, фото художника и удобными карточками работ." />
 
   <!-- Favicons -->
   <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/apple-touch-icon.png">
@@ -16,6 +14,9 @@
   <link rel="manifest" href="assets/favicon/site.webmanifest">
   <meta name="msapplication-TileColor" content="#000000">
   <meta name="theme-color" content="#000000">
+
+  <!-- Подключаем шрифт Orbitron (ретрофутуристичный, поддерживает кириллицу и латиницу) -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
 
   <!-- 1) CSS-переменные (глитч-интенсивность) -->
   <style>
@@ -43,7 +44,6 @@
       background-blend-mode: multiply;
       animation: flicker 10s infinite;
     }
-
     body::after {
       content: "";
       pointer-events: none;
@@ -61,61 +61,22 @@
       animation: scanline 0.15s infinite steps(1);
       mix-blend-mode: lighten;
     }
-
     @keyframes flicker {
-      0% {
-        opacity: 0.03;
-      }
-
-      10% {
-        opacity: 0.06;
-      }
-
-      20% {
-        opacity: 0.10;
-      }
-
-      30% {
-        opacity: 0.08;
-      }
-
-      40% {
-        opacity: 0.12;
-      }
-
-      50% {
-        opacity: 0.07;
-      }
-
-      60% {
-        opacity: 0.14;
-      }
-
-      70% {
-        opacity: 0.09;
-      }
-
-      80% {
-        opacity: 0.05;
-      }
-
-      90% {
-        opacity: 0.11;
-      }
-
-      100% {
-        opacity: 0.03;
-      }
+      0% { opacity: 0.03; }
+      10% { opacity: 0.06; }
+      20% { opacity: 0.10; }
+      30% { opacity: 0.08; }
+      40% { opacity: 0.12; }
+      50% { opacity: 0.07; }
+      60% { opacity: 0.14; }
+      70% { opacity: 0.09; }
+      80% { opacity: 0.05; }
+      90% { opacity: 0.11; }
+      100% { opacity: 0.03; }
     }
-
     @keyframes scanline {
-      0% {
-        transform: translateY(0);
-      }
-
-      100% {
-        transform: translateY(4px);
-      }
+      0% { transform: translateY(0); }
+      100% { transform: translateY(4px); }
     }
   </style>
 
@@ -126,28 +87,23 @@
       padding: 0;
       box-sizing: border-box;
     }
-
     html {
       scroll-behavior: smooth;
     }
-
     body {
-      font-family: "IBM Plex Sans", sans-serif;
+      font-family: 'Orbitron', sans-serif;
       background: #000;
       color: #fff;
       line-height: 1.5;
     }
-
     a {
       color: inherit;
       text-decoration: none;
       transition: color 0.3s;
     }
-
     a:hover {
       color: #0ff;
     }
-
     .container {
       max-width: 1200px;
       margin: 0 auto;
@@ -155,7 +111,7 @@
     }
   </style>
 
-  <!-- 4) Хедер: Волна + Контент, меню -->
+  <!-- 4) Хедер: Волна + Контент, меню, переключатель языка -->
   <style>
     header {
       position: fixed;
@@ -165,13 +121,11 @@
       height: 160px;
       z-index: 1000;
     }
-
     #waveCanvas {
       display: block;
       width: 100%;
       height: 100%;
     }
-
     .header-content {
       position: absolute;
       top: 0;
@@ -184,23 +138,41 @@
       padding: 0 20px;
       z-index: 10;
     }
-
     .logo-container {
       position: absolute;
       left: 20px;
       top: 10px;
     }
-
     .nav-links {
       display: flex;
       gap: 20px;
     }
-
     .nav-links a {
       font-size: 1.4rem;
       color: #fff;
     }
-
+    /* Переключатель языка */
+    .language-switcher {
+      position: absolute;
+      right: 80px;
+      top: 20px;
+      display: flex;
+      gap: 10px;
+    }
+    .language-switcher button {
+      background: transparent;
+      border: 1px solid #0ff;
+      color: #0ff;
+      padding: 5px 10px;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 0.9rem;
+      transition: background 0.3s, color 0.3s;
+    }
+    .language-switcher button:hover {
+      background: #0ff;
+      color: #000;
+    }
     .burger {
       display: none;
       background: none;
@@ -210,7 +182,6 @@
       right: 20px;
       top: 20px;
     }
-
     .burger span {
       display: block;
       width: 25px;
@@ -218,17 +189,14 @@
       background: #fff;
       margin: 4px 0;
     }
-
     @media (max-width: 768px) {
       .header-content {
         justify-content: center;
       }
-
       .logo-container {
         position: static;
         margin: 0 auto;
       }
-
       .nav-links {
         display: none;
         flex-direction: column;
@@ -240,34 +208,27 @@
         border: 1px solid #333;
         border-radius: 6px;
       }
-
       .burger {
         display: block;
+      }
+      /* При адаптиве можно скорректировать положение переключателя */
+      .language-switcher {
+        right: 20px;
+        top: 70px;
       }
     }
   </style>
 
   <!-- 5) Мерцающие заголовки (сниженная интенсивность) -->
   <style>
-    h1,
-    h2,
-    h3 {
+    h1, h2, h3 {
       animation: heading-glow 3s infinite alternate;
       text-shadow: 0 0 1px #0ff, 0 0 2px #0ff, 0 0 3px #0ff;
     }
-
     @keyframes heading-glow {
-      0% {
-        text-shadow: 0 0 1px #0ff, 0 0 2px #0ff, 0 0 3px #0ff;
-      }
-
-      50% {
-        text-shadow: 0 0 2px #0ff, 0 0 3px #0ff, 0 0 4px #0ff;
-      }
-
-      100% {
-        text-shadow: 0 0 1px #0ff, 0 0 2px #0ff, 0 0 3px #0ff;
-      }
+      0% { text-shadow: 0 0 1px #0ff, 0 0 2px #0ff, 0 0 3px #0ff; }
+      50% { text-shadow: 0 0 2px #0ff, 0 0 3px #0ff, 0 0 4px #0ff; }
+      100% { text-shadow: 0 0 1px #0ff, 0 0 2px #0ff, 0 0 3px #0ff; }
     }
   </style>
 
@@ -280,14 +241,12 @@
       image-rendering: pixelated;
       position: relative;
     }
-
     .glitch-image img {
       display: block;
       width: 100%;
       height: 100%;
       image-rendering: pixelated;
     }
-
     .glitch-image::before,
     .glitch-image::after {
       content: "";
@@ -302,183 +261,52 @@
       pointer-events: none;
       mix-blend-mode: screen;
     }
-
     .glitch-image::before {
       filter: drop-shadow(-2px 0px #ff00c1);
       animation: glitch-anim 3s infinite linear alternate;
     }
-
     .glitch-image::after {
       filter: drop-shadow(2px 0px #00fff9);
       animation: glitch-anim2 3s infinite linear alternate;
     }
-
     @keyframes glitch-anim {
-      0% {
-        clip: rect(10px, 9999px, 20px, 0);
-        transform: translateX(0) skew(0deg);
-      }
-
-      5% {
-        clip: rect(3px, 9999px, 15px, 0);
-        transform: translateX(calc(-3px * var(--glitch-intensity))) skew(calc(1deg * var(--glitch-intensity)));
-      }
-
-      10% {
-        clip: rect(25px, 9999px, 35px, 0);
-        transform: translateX(calc(4px * var(--glitch-intensity))) skew(calc(-2deg * var(--glitch-intensity)));
-      }
-
-      15% {
-        clip: rect(18px, 9999px, 28px, 0);
-        transform: translateX(calc(-2px * var(--glitch-intensity))) skew(calc(3deg * var(--glitch-intensity)));
-      }
-
-      20% {
-        clip: rect(8px, 9999px, 18px, 0);
-        transform: translateX(calc(2px * var(--glitch-intensity))) skew(calc(-1deg * var(--glitch-intensity)));
-      }
-
-      25% {
-        clip: rect(30px, 9999px, 42px, 0);
-        transform: translateX(calc(-4px * var(--glitch-intensity))) skew(calc(2deg * var(--glitch-intensity)));
-      }
-
-      30% {
-        clip: rect(12px, 9999px, 25px, 0);
-        transform: translateX(calc(3px * var(--glitch-intensity))) skew(calc(-3deg * var(--glitch-intensity)));
-      }
-
-      35% {
-        clip: rect(15px, 9999px, 27px, 0);
-        transform: translateX(calc(1px * var(--glitch-intensity))) skew(calc(1deg * var(--glitch-intensity)));
-      }
-
-      40% {
-        clip: rect(5px, 9999px, 15px, 0);
-        transform: translateX(calc(-2px * var(--glitch-intensity))) skew(calc(1deg * var(--glitch-intensity)));
-      }
-
-      50% {
-        clip: rect(22px, 9999px, 35px, 0);
-        transform: translateX(calc(4px * var(--glitch-intensity))) skew(calc(-2deg * var(--glitch-intensity)));
-      }
-
-      60% {
-        clip: rect(38px, 9999px, 48px, 0);
-        transform: translateX(calc(-3px * var(--glitch-intensity))) skew(calc(3deg * var(--glitch-intensity)));
-      }
-
-      70% {
-        clip: rect(10px, 9999px, 20px, 0);
-        transform: translateX(calc(1px * var(--glitch-intensity))) skew(calc(-1deg * var(--glitch-intensity)));
-      }
-
-      80% {
-        clip: rect(28px, 9999px, 40px, 0);
-        transform: translateX(calc(-4px * var(--glitch-intensity))) skew(calc(2deg * var(--glitch-intensity)));
-      }
-
-      90% {
-        clip: rect(15px, 9999px, 25px, 0);
-        transform: translateX(calc(2px * var(--glitch-intensity))) skew(calc(-2deg * var(--glitch-intensity)));
-      }
-
-      100% {
-        clip: rect(10px, 9999px, 20px, 0);
-        transform: translateX(0) skew(0deg);
-      }
+      0% { clip: rect(10px, 9999px, 20px, 0); transform: translateX(0) skew(0deg); }
+      5% { clip: rect(3px, 9999px, 15px, 0); transform: translateX(calc(-3px * var(--glitch-intensity))) skew(calc(1deg * var(--glitch-intensity))); }
+      10% { clip: rect(25px, 9999px, 35px, 0); transform: translateX(calc(4px * var(--glitch-intensity))) skew(calc(-2deg * var(--glitch-intensity))); }
+      15% { clip: rect(18px, 9999px, 28px, 0); transform: translateX(calc(-2px * var(--glitch-intensity))) skew(calc(3deg * var(--glitch-intensity))); }
+      20% { clip: rect(8px, 9999px, 18px, 0); transform: translateX(calc(2px * var(--glitch-intensity))) skew(calc(-1deg * var(--glitch-intensity))); }
+      25% { clip: rect(30px, 9999px, 42px, 0); transform: translateX(calc(-4px * var(--glitch-intensity))) skew(calc(2deg * var(--glitch-intensity))); }
+      30% { clip: rect(12px, 9999px, 25px, 0); transform: translateX(calc(3px * var(--glitch-intensity))) skew(calc(-3deg * var(--glitch-intensity))); }
+      35% { clip: rect(15px, 9999px, 27px, 0); transform: translateX(calc(1px * var(--glitch-intensity))) skew(calc(1deg * var(--glitch-intensity))); }
+      40% { clip: rect(5px, 9999px, 15px, 0); transform: translateX(calc(-2px * var(--glitch-intensity))) skew(calc(1deg * var(--glitch-intensity))); }
+      50% { clip: rect(22px, 9999px, 35px, 0); transform: translateX(calc(4px * var(--glitch-intensity))) skew(calc(-2deg * var(--glitch-intensity))); }
+      60% { clip: rect(38px, 9999px, 48px, 0); transform: translateX(calc(-3px * var(--glitch-intensity))) skew(calc(3deg * var(--glitch-intensity))); }
+      70% { clip: rect(10px, 9999px, 20px, 0); transform: translateX(calc(1px * var(--glitch-intensity))) skew(calc(-1deg * var(--glitch-intensity))); }
+      80% { clip: rect(28px, 9999px, 40px, 0); transform: translateX(calc(-4px * var(--glitch-intensity))) skew(calc(2deg * var(--glitch-intensity))); }
+      90% { clip: rect(15px, 9999px, 25px, 0); transform: translateX(calc(2px * var(--glitch-intensity))) skew(calc(-2deg * var(--glitch-intensity))); }
+      100% { clip: rect(10px, 9999px, 20px, 0); transform: translateX(0) skew(0deg); }
     }
-
     @keyframes glitch-anim2 {
-      0% {
-        clip: rect(5px, 9999px, 15px, 0);
-        transform: translateX(0) skew(0deg);
-      }
-
-      5% {
-        clip: rect(28px, 9999px, 40px, 0);
-        transform: translateX(calc(2px * var(--glitch-intensity))) skew(calc(-1deg * var(--glitch-intensity)));
-      }
-
-      10% {
-        clip: rect(18px, 9999px, 30px, 0);
-        transform: translateX(calc(-4px * var(--glitch-intensity))) skew(calc(2deg * var(--glitch-intensity)));
-      }
-
-      15% {
-        clip: rect(35px, 9999px, 55px, 0);
-        transform: translateX(calc(3px * var(--glitch-intensity))) skew(calc(-2deg * var(--glitch-intensity)));
-      }
-
-      20% {
-        clip: rect(12px, 9999px, 25px, 0);
-        transform: translateX(calc(-2px * var(--glitch-intensity))) skew(calc(1deg * var(--glitch-intensity)));
-      }
-
-      25% {
-        clip: rect(40px, 9999px, 55px, 0);
-        transform: translateX(calc(4px * var(--glitch-intensity))) skew(calc(-3deg * var(--glitch-intensity)));
-      }
-
-      30% {
-        clip: rect(22px, 9999px, 35px, 0);
-        transform: translateX(calc(-3px * var(--glitch-intensity))) skew(calc(2deg * var(--glitch-intensity)));
-      }
-
-      35% {
-        clip: rect(12px, 9999px, 24px, 0);
-        transform: translateX(calc(1px * var(--glitch-intensity))) skew(calc(-1deg * var(--glitch-intensity)));
-      }
-
-      40% {
-        clip: rect(8px, 9999px, 20px, 0);
-        transform: translateX(calc(1px * var(--glitch-intensity))) skew(calc(-1deg * var(--glitch-intensity)));
-      }
-
-      50% {
-        clip: rect(30px, 9999px, 40px, 0);
-        transform: translateX(calc(-2px * var(--glitch-intensity))) skew(calc(3deg * var(--glitch-intensity)));
-      }
-
-      60% {
-        clip: rect(15px, 9999px, 25px, 0);
-        transform: translateX(calc(4px * var(--glitch-intensity))) skew(calc(-2deg * var(--glitch-intensity)));
-      }
-
-      70% {
-        clip: rect(45px, 9999px, 60px, 0);
-        transform: translateX(calc(-4px * var(--glitch-intensity))) skew(calc(1deg * var(--glitch-intensity)));
-      }
-
-      80% {
-        clip: rect(25px, 9999px, 35px, 0);
-        transform: translateX(calc(3px * var(--glitch-intensity))) skew(calc(-3deg * var(--glitch-intensity)));
-      }
-
-      90% {
-        clip: rect(5px, 9999px, 15px, 0);
-        transform: translateX(calc(-1px * var(--glitch-intensity))) skew(calc(2deg * var(--glitch-intensity)));
-      }
-
-      100% {
-        clip: rect(5px, 9999px, 15px, 0);
-        transform: translateX(0) skew(0deg);
-      }
+      0% { clip: rect(5px, 9999px, 15px, 0); transform: translateX(0) skew(0deg); }
+      5% { clip: rect(28px, 9999px, 40px, 0); transform: translateX(calc(2px * var(--glitch-intensity))) skew(calc(-1deg * var(--glitch-intensity))); }
+      10% { clip: rect(18px, 9999px, 30px, 0); transform: translateX(calc(-4px * var(--glitch-intensity))) skew(calc(2deg * var(--glitch-intensity))); }
+      15% { clip: rect(35px, 9999px, 55px, 0); transform: translateX(calc(3px * var(--glitch-intensity))) skew(calc(-2deg * var(--glitch-intensity))); }
+      20% { clip: rect(12px, 9999px, 25px, 0); transform: translateX(calc(-2px * var(--glitch-intensity))) skew(calc(1deg * var(--glitch-intensity))); }
+      25% { clip: rect(40px, 9999px, 55px, 0); transform: translateX(calc(4px * var(--glitch-intensity))) skew(calc(-3deg * var(--glitch-intensity))); }
+      30% { clip: rect(22px, 9999px, 35px, 0); transform: translateX(calc(-3px * var(--glitch-intensity))) skew(calc(2deg * var(--glitch-intensity))); }
+      35% { clip: rect(12px, 9999px, 24px, 0); transform: translateX(calc(1px * var(--glitch-intensity))) skew(calc(-1deg * var(--glitch-intensity))); }
+      40% { clip: rect(8px, 9999px, 20px, 0); transform: translateX(calc(1px * var(--glitch-intensity))) skew(calc(-1deg * var(--glitch-intensity))); }
+      50% { clip: rect(30px, 9999px, 40px, 0); transform: translateX(calc(-2px * var(--glitch-intensity))) skew(calc(3deg * var(--glitch-intensity))); }
+      60% { clip: rect(15px, 9999px, 25px, 0); transform: translateX(calc(4px * var(--glitch-intensity))) skew(calc(-2deg * var(--glitch-intensity))); }
+      70% { clip: rect(45px, 9999px, 60px, 0); transform: translateX(calc(-4px * var(--glitch-intensity))) skew(calc(1deg * var(--glitch-intensity))); }
+      80% { clip: rect(25px, 9999px, 35px, 0); transform: translateX(calc(3px * var(--glitch-intensity))) skew(calc(-3deg * var(--glitch-intensity))); }
+      90% { clip: rect(5px, 9999px, 15px, 0); transform: translateX(calc(-1px * var(--glitch-intensity))) skew(calc(2deg * var(--glitch-intensity))); }
+      100% { clip: rect(5px, 9999px, 15px, 0); transform: translateX(0) skew(0deg); }
     }
-
     @keyframes glitch-skew {
-      0% {
-        transform: skew(0deg);
-      }
-
-      50% {
-        transform: skew(1deg);
-      }
-
-      100% {
-        transform: skew(0deg);
-      }
+      0% { transform: skew(0deg); }
+      50% { transform: skew(1deg); }
+      100% { transform: skew(0deg); }
     }
   </style>
 
@@ -494,7 +322,6 @@
       justify-content: center;
       text-align: center;
     }
-
     #cover .cover-content {
       background: rgba(0, 0, 0, 0.4);
       padding: 2rem;
@@ -502,13 +329,11 @@
       max-width: 600px;
       margin: 2rem;
     }
-
     #cover .cover-content h2 {
       font-size: 2rem;
       margin-bottom: 1rem;
       text-transform: uppercase;
     }
-
     #cover .cover-content p {
       font-size: 1.1rem;
       opacity: 0.9;
@@ -522,14 +347,12 @@
       padding: 4rem 0;
       background: #000;
     }
-
     h2 {
       text-align: center;
       font-size: 2rem;
       margin-bottom: 2rem;
       text-transform: uppercase;
     }
-
     /* Сетка портфолио – одна колонка */
     .grid {
       display: grid;
@@ -538,7 +361,6 @@
       max-width: 1000px;
       margin: 0 auto;
     }
-
     .work-item {
       opacity: 0;
       transform: translateY(20px);
@@ -553,35 +375,29 @@
       width: 100%;
       margin-bottom: 1rem;
     }
-
     .work-item.visible {
       opacity: 1;
       transform: translateY(0);
     }
-
     .work-media {
       flex: 0 0 120px;
       width: 120px;
       height: 120px;
       overflow: hidden;
     }
-
     @media (max-width: 768px) {
       .grid {
         grid-template-columns: 1fr;
       }
-
       .work-item {
         flex-direction: column;
       }
-
       .work-media {
         width: 100%;
         height: 0;
         padding-bottom: 100%;
         position: relative;
       }
-
       .work-thumb,
       .placeholder-logo {
         position: absolute;
@@ -592,7 +408,6 @@
         object-fit: cover;
       }
     }
-
     .work-thumb {
       width: 100%;
       height: 100%;
@@ -604,7 +419,6 @@
       decoding: async;
       filter: grayscale(100%);
     }
-
     .placeholder-logo {
       width: 100%;
       height: 100%;
@@ -615,30 +429,25 @@
       border-radius: 6px;
       background: #333;
     }
-
     .placeholder-logo img {
       width: 40%;
       filter: grayscale(100%);
     }
-
     .work-details {
       flex: 1;
       display: flex;
       flex-direction: column;
       justify-content: center;
     }
-
     .work-item h3 {
       margin-bottom: 0.5rem;
       font-size: 1.2rem;
     }
-
     .work-item p {
       font-size: 0.95rem;
       opacity: 0.9;
       margin-bottom: 0.5rem;
     }
-
     .about-content {
       display: flex;
       flex-direction: column;
@@ -646,25 +455,21 @@
       max-width: 1000px;
       margin: 0 auto;
     }
-
     .bio-row {
       display: flex;
       flex-direction: row;
       gap: 2rem;
     }
-
     .bio {
       flex: 1;
       display: flex;
       flex-direction: column;
     }
-
     .bio h3 {
       font-size: 1.3rem;
       margin-bottom: 1rem;
       text-transform: uppercase;
     }
-
     .bio p {
       font-size: 1rem;
       opacity: 0.9;
@@ -675,7 +480,6 @@
       padding: 10px;
       border-radius: 4px;
     }
-
     .artist-photo {
       width: 250px;
       height: 250px;
@@ -684,7 +488,6 @@
       align-items: center;
       justify-content: center;
     }
-
     .artist-photo img {
       width: 100%;
       height: 100%;
@@ -696,17 +499,14 @@
       loading: lazy;
       decoding: async;
     }
-
     .artist-statement {
       width: 100%;
     }
-
     .artist-statement h3 {
       font-size: 1.3rem;
       margin-bottom: 1rem;
       text-transform: uppercase;
     }
-
     .artist-statement p {
       font-size: 1rem;
       opacity: 0.9;
@@ -717,17 +517,14 @@
       padding: 10px;
       border-radius: 4px;
     }
-
     @media (max-width: 768px) {
       .bio-row {
         flex-direction: column;
       }
-
       .artist-photo {
         width: 100%;
         height: auto;
       }
-
       .artist-photo img {
         height: auto;
       }
@@ -743,12 +540,10 @@
       max-width: 500px;
       margin: 0 auto;
     }
-
     form label {
       font-weight: 600;
       margin-bottom: 0.3rem;
     }
-
     form input,
     form textarea {
       padding: 0.6rem;
@@ -758,13 +553,11 @@
       color: #fff;
       font-family: inherit;
     }
-
     form input:focus,
     form textarea:focus {
       outline: none;
       border-color: #0ff;
     }
-
     form button {
       background: #0ff;
       color: #000;
@@ -775,23 +568,19 @@
       cursor: pointer;
       transition: background 0.3s;
     }
-
     form button:hover {
       background: #0cc;
     }
-
     .contact-social {
       text-align: center;
       margin-top: 2rem;
     }
-
     footer {
       background: #000;
       padding: 2rem 0;
       text-align: center;
       font-size: 0.9rem;
     }
-
     /* Полноэкранное модальное окно */
     .modal {
       display: none;
@@ -803,9 +592,7 @@
       height: 100%;
       background-color: rgba(0, 0, 0, 0.95);
       overflow: hidden;
-      /* без прокрутки */
     }
-
     /* Контейнер под заголовок + медиа */
     .modal-content {
       display: flex;
@@ -814,9 +601,7 @@
       height: 100%;
       position: relative;
       overflow: hidden;
-      /* без вертикального скролла */
     }
-
     /* Заголовок (title) */
     .modal-title-bar {
       flex: 0 0 auto;
@@ -830,7 +615,6 @@
       position: relative;
       z-index: 1;
     }
-
     /* Медиа по центру, растягивается */
     .modal-media-wrapper {
       flex: 1 1 auto;
@@ -839,13 +623,11 @@
       justify-content: center;
       overflow: hidden;
     }
-
     .modal-media {
       max-width: 100%;
       max-height: 100%;
       object-fit: contain;
     }
-
     /* New styles for contact buttons */
     .contact-buttons {
       display: grid;
@@ -853,7 +635,6 @@
       gap: 1rem;
       margin-top: 2rem;
     }
-
     .contact-button {
       display: block;
       text-align: center;
@@ -865,12 +646,10 @@
       font-weight: 600;
       transition: background 0.3s, color 0.3s;
     }
-
     .contact-button:hover {
       background: #0ff;
       color: #000;
     }
-
     /* Кнопка-закрытие (крестик) внутри заголовка */
     .modal-close {
       position: absolute;
@@ -883,12 +662,10 @@
       cursor: pointer;
       z-index: 2;
     }
-
     .modal-close:hover,
     .modal-close:focus {
       color: #bbb;
     }
-
     .work-button {
       display: inline-block;
       margin-top: 0.5rem;
@@ -901,7 +678,6 @@
       font-size: 0.9rem;
       font-weight: 600;
     }
-
     .work-button:hover {
       background: #0ff;
       color: #000;
@@ -931,45 +707,27 @@
       max-width: 30vw;
       word-wrap: break-word;
     }
-
     .floating-quote .quote-text {
       display: block;
     }
-
     .floating-quote .quote-author {
       display: block;
       margin-left: 1.5em;
       margin-top: 0.3em;
       opacity: 0.7;
     }
-
     @keyframes quoteFlicker {
-      0% {
-        opacity: 0;
-      }
-
-      10% {
-        opacity: 0.7;
-      }
-
-      50% {
-        opacity: 0.5;
-      }
-
-      80% {
-        opacity: 0.3;
-      }
-
-      100% {
-        opacity: 0;
-      }
+      0% { opacity: 0; }
+      10% { opacity: 0.7; }
+      50% { opacity: 0.5; }
+      80% { opacity: 0.3; }
+      100% { opacity: 0; }
     }
   </style>
 
   <!-- Подключаем Papa Parse для CSV -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
 </head>
-
 <body>
   <!-- HEADER -->
   <header>
@@ -986,6 +744,13 @@
         <a href="#about">О художнике</a>
         <a href="#contact">Контакты</a>
       </nav>
+      <!-- Переключатель языка -->
+      <div class="language-switcher">
+        <button>EN</button>
+        <button>RU</button>
+        <button>KZ</button>
+        <button>UA</button>
+      </div>
       <button class="burger">
         <span></span>
         <span></span>
@@ -1086,7 +851,6 @@
         </div>
       </div>
     </section>
-
   </main>
 
   <footer>
@@ -1097,11 +861,9 @@
 
   <!-- Модальное окно для полноэкранного просмотра медиа -->
   <div id="modal" class="modal">
-    <!-- Крестик: &#10005; -->
     <div id="modal-content" class="modal-content">
       <div id="modal-title-bar" class="modal-title-bar">
         <span id="modal-close" class="modal-close">&#10005;</span>
-        <!-- Заголовок работы будет вставляться в JS -->
         <span id="modal-title-text"></span>
       </div>
       <div id="modal-media-wrapper" class="modal-media-wrapper"></div>
@@ -1328,11 +1090,9 @@
     const modalTitleText = document.getElementById("modal-title-text");
     const modalMediaWrapper = document.getElementById("modal-media-wrapper");
     const modalClose = document.getElementById("modal-close");
-
     document.getElementById("portfolio-container").addEventListener("click", function (e) {
       let target = e.target;
       if (target.classList.contains("work-thumb")) {
-        // Находим заголовок работы
         const article = target.closest(".work-item");
         let titleText = "";
         if (article) {
@@ -1341,14 +1101,9 @@
             titleText = titleEl.textContent.trim();
           }
         }
-        // Устанавливаем заголовок
         modalTitleText.textContent = titleText || "Без названия";
-        // Очищаем контейнер
         modalMediaWrapper.innerHTML = "";
-        // Открываем модалку
         modal.style.display = "block";
-
-        // Вставляем нужное медиа
         if (target.tagName.toLowerCase() === "img") {
           let img = document.createElement("img");
           img.src = target.src;
@@ -1371,13 +1126,11 @@
         }
       }
     });
-
     modalClose.addEventListener("click", function () {
       modal.style.display = "none";
       modalMediaWrapper.innerHTML = "";
       modalTitleText.textContent = "";
     });
-
     modal.addEventListener("click", function (e) {
       if (e.target === modal) {
         modal.style.display = "none";
@@ -1393,7 +1146,6 @@
       if (!val) return "";
       return val.replace(/^"+|"+$/g, "").trim();
     }
-
     document.addEventListener('DOMContentLoaded', () => {
       Papa.parse("artportfolio.csv", {
         download: true,
@@ -1403,20 +1155,16 @@
           console.log("CSV parse results:", results.data);
           const data = results.data;
           const container = document.getElementById("portfolio-container");
-
           data.forEach(item => {
             const allEmpty = Object.values(item).every(val => {
               if (typeof val === "string") return val.trim() === "";
               return !val;
             });
             if (allEmpty) return;
-
             const article = document.createElement("article");
             article.className = "work-item";
-
             const media = document.createElement("div");
             media.className = "work-media";
-
             const mediaId = sanitize(item.mediaid);
             let mediaElement;
             if (mediaId) {
@@ -1477,33 +1225,24 @@
               placeholderDiv.appendChild(placeholderImg);
               mediaElement = placeholderDiv;
             }
-
             media.appendChild(mediaElement);
-
             const details = document.createElement("div");
             details.className = "work-details";
-
             const h3 = document.createElement("h3");
             h3.textContent = sanitize(item.title) || "Без названия";
-
             const pYear = document.createElement("p");
             pYear.innerHTML = "Год: <span class='scramble-text' data-text='" + (sanitize(item.year) || "—") + "'>-</span>";
-
             const pDesc = document.createElement("p");
             pDesc.innerHTML = "Описание: <span class='scramble-text' data-text='" + (sanitize(item.description) || "") + "'>-</span>";
-
             const pMaterials = document.createElement("p");
             pMaterials.innerHTML = "Материалы: <span class='scramble-text' data-text='" + (sanitize(item.materials) || "—") + "'>-</span>";
-
             const pStatus = document.createElement("p");
             pStatus.innerHTML = "Статус: <span class='scramble-text' data-text='" + (sanitize(item.status) || "—") + "'>-</span>";
-
             details.appendChild(h3);
             details.appendChild(pYear);
             details.appendChild(pDesc);
             details.appendChild(pMaterials);
             details.appendChild(pStatus);
-
             const btnName = sanitize(item.btnname);
             const btnLink = sanitize(item.btnlink);
             if (btnName !== "" && btnLink !== "") {
@@ -1514,12 +1253,9 @@
               btn.target = "_blank";
               details.appendChild(btn);
             }
-
             article.appendChild(media);
             article.appendChild(details);
             container.appendChild(article);
-
-            // Фиксируем высоту карточки и запускаем TextScramble при появлении
             cardObserver.observe(article);
           });
         }
@@ -1563,7 +1299,7 @@
     setInterval(spawnQuote, 5000);
   </script>
 
-  <!-- Burger Menu Script -->
+  <!-- Burger Menu Script (дублирующий код, оставлен для совместимости) -->
   <script>
     const burger = document.querySelector('.burger');
     const navLinks = document.querySelector('.nav-links');
@@ -1576,5 +1312,4 @@
     });
   </script>
 </body>
-
 </html>
