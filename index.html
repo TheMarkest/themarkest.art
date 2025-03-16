@@ -374,7 +374,8 @@
       padding: 1rem;
       width: 100%;
       margin-bottom: 1rem;
-      overflow: hidden;
+      /* Высота будет задаваться при появлении, чтобы не прыгала */
+      overflow: hidden; /* чтобы при анимации не было сдвигов */
     }
     .work-item.visible {
       opacity: 1;
@@ -788,7 +789,27 @@
           <div class="bio-row">
             <div class="bio">
               <h3>Биография</h3>
-              <p class="scramble-text" data-text="Марк Богданов — медиа-художник и скульптор, работающий на стыке искусства, науки и технологий. В своих произведениях он исследует влияние технического прогресса на эстетику, форму и восприятие объектов. Используя современные методы производства — 3D-печать, лазерную резку, цифровую обработку, а также традиционные ремесленные техники, он создаёт скульптуры и арт-объекты, в которых соединяются прошлое и будущее, искусство и инженерия. Родившись в семье хореографов, он с детства находился в среде искусства, наблюдая за процессом его создания — от академической подготовки до профессионального становления. Вдохновляясь сценографией, пластикой движений и ритмической структурой композиции, он в то же время всегда тяготел к техническим наукам. Образование в сфере оптико-электроники сформировало его особый взгляд на искусство — не как на средство выражения эмоций, а как инструмент исследования реальности, отражающий структурные закономерности мира. В своих работах он обращается к конструктивизму, ретрофутуризму и эстетике инженерных форм, рассматривая искусство как способ осмысления научного знания. Он стремится не просто фиксировать образы, а выявлять внутренние принципы их организации, перекладывая идеи математики, физики и архитектуры в материальные структуры. Основной интерес художника — это диалог технологий и искусства, исследование того, как новые методы производства изменяют не только материальный мир, но и саму природу художественного восприятия.">
+              <p>
+                Марк Богданов — медиа-художник и скульптор, работающий на стыке искусства, науки и технологий. В своих
+                произведениях он исследует влияние технического прогресса на эстетику, форму и восприятие объектов.
+                Используя современные методы производства — 3D-печать, лазерную резку, цифровую обработку, а также
+                традиционные ремесленные техники, он создаёт скульптуры и арт-объекты, в которых соединяются прошлое и
+                будущее, искусство и инженерия.
+
+                Родившись в семье хореографов, он с детства находился в среде искусства, наблюдая за процессом его
+                создания — от академической подготовки до профессионального становления. Вдохновляясь сценографией,
+                пластикой движений и ритмической структурой композиции, он в то же время всегда тяготел к техническим
+                наукам. Образование в сфере оптико-электроники сформировало его особый взгляд на искусство — не как на
+                средство выражения эмоций, а как инструмент исследования реальности, отражающий структурные
+                закономерности мира.
+
+                В своих работах он обращается к конструктивизму, ретрофутуризму и эстетике инженерных форм, рассматривая
+                искусство как способ осмысления научного знания. Он стремится не просто фиксировать образы, а выявлять
+                внутренние принципы их организации, перекладывая идеи математики, физики и архитектуры в материальные
+                структуры.
+
+                Основной интерес художника — это диалог технологий и искусства, исследование того, как новые методы
+                производства изменяют не только материальный мир, но и саму природу художественного восприятия.
               </p>
             </div>
             <div class="artist-photo">
@@ -797,7 +818,23 @@
           </div>
           <div class="artist-statement">
             <h3>Artist Statement</h3>
-            <p class="scramble-text" data-text="Я создаю скульптуры, в которых современные технологии производства встречаются с наследием инженерной мысли прошлого. Моё искусство — это поиск формы, структуры и материала, отражающих логику научного прогресса. В своих работах я сочетаю 3D-печать, лазерную резку, цифровую обработку и традиционные ремесленные техники, интегрируя их в единую художественную систему. Мне важно показать, как технологии формируют эстетику и как через них можно создавать новые визуальные смыслы, выходящие за пределы привычного восприятия. Я вдохновляюсь конструктивизмом, ретрофутуризмом и инженерной эстетикой, рассматривая искусство как способ взаимодействия с научным знанием. В моих скульптурах можно увидеть интертекстуальность инженерных решений, где каждая деталь несёт смысл и отсылает к механике, архитектуре и оптике. Меня интересует диалог между прошлым и будущим: как технологии меняются, но принципы остаются вечными.">
+            <p>
+              Я создаю скульптуры, в которых современные технологии производства встречаются с наследием инженерной
+              мысли прошлого.
+              Моё искусство — это поиск формы, структуры и материала, отражающих логику научного прогресса.
+
+              В своих работах я сочетаю 3D-печать, лазерную резку, цифровую обработку и традиционные ремесленные
+              техники,
+              интегрируя их в единую художественную систему. Мне важно показать, как технологии формируют эстетику и
+              как через них можно создавать новые визуальные смыслы, выходящие за пределы привычного восприятия.
+
+              Я вдохновляюсь конструктивизмом, ретрофутуризмом и инженерной эстетикой, рассматривая искусство как способ
+              взаимодействия с научным знанием.
+              В моих скульптурах можно увидеть интертекстуальность инженерных решений, где каждая деталь несёт смысл и
+              отсылает к механике, архитектуре и оптике.
+
+              Меня интересует диалог между прошлым и будущим: как технологии меняются, но принципы остаются вечными.
+              В этом я вижу красоту — в переплетении точности, формы и замысла.
             </p>
           </div>
         </div>
@@ -917,6 +954,7 @@
         quotesArray = results.data;
       }
     });
+
     function spawnQuote() {
       if (!quotesArray.length) return;
       const q = quotesArray[Math.floor(Math.random() * quotesArray.length)];
@@ -926,6 +964,7 @@
         <span class="quote-text">${q.text}</span>
         <span class="quote-author">${q.author}</span>
       `;
+      // Случайно по всей высоте/ширине документа
       const docWidth = document.documentElement.scrollWidth;
       const docHeight = document.documentElement.scrollHeight;
       const x = 0.05 * docWidth + Math.random() * (0.9 * docWidth);
@@ -935,6 +974,7 @@
       document.body.appendChild(div);
       setTimeout(() => { div.remove(); }, 10000);
     }
+    // Каждые 5 секунд появляется новая цитата
     setInterval(spawnQuote, 5000);
   </script>
 
@@ -1007,10 +1047,12 @@
     }
   </script>
 
-  <!-- Функция измерения высоты карточки (с финальным текстом) -->
+  <!-- measureCardHeight: вычисляет высоту карточки с конечным (не заскрембленным) текстом -->
   <script>
     function measureCardHeight(article) {
+      // Клонируем
       const clone = article.cloneNode(true);
+      // Во всех .scramble-text ставим финальный текст
       clone.querySelectorAll('.scramble-text').forEach(el => {
         const finalText = el.getAttribute('data-text') || el.textContent;
         el.textContent = finalText;
@@ -1026,41 +1068,19 @@
     }
   </script>
 
-  <!-- Фиксация высоты для элементов с классом .scramble-text -->
-  <script>
-    function fixScrambleHeight(el) {
-      const originalText = el.getAttribute('data-text') || el.textContent;
-      const clone = el.cloneNode(true);
-      clone.innerHTML = originalText;
-      const style = window.getComputedStyle(el);
-      clone.style.position = 'absolute';
-      clone.style.visibility = 'hidden';
-      clone.style.zIndex = '-9999';
-      clone.style.top = '0';
-      clone.style.left = '-9999px';
-      clone.style.width = style.width;
-      clone.style.fontSize = style.fontSize;
-      clone.style.fontFamily = style.fontFamily;
-      clone.style.fontWeight = style.fontWeight;
-      clone.style.lineHeight = style.lineHeight;
-      clone.style.whiteSpace = style.whiteSpace;
-      document.body.appendChild(clone);
-      const measuredHeight = clone.offsetHeight;
-      document.body.removeChild(clone);
-      el.style.height = measuredHeight + 'px';
-    }
-  </script>
-
   <!-- IntersectionObservers -->
   <script>
-    // Observer для карточек портфолио (фиксирует высоту карточки и запускает TextScramble внутри неё)
+    // 1) Наблюдатель для анимированного появления карточек (и фиксации их высоты)
     const cardObserver = new IntersectionObserver((entries, obs) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           const article = entry.target;
+          // Измеряем финальную высоту
           const finalHeight = measureCardHeight(article);
           article.style.height = finalHeight + 'px';
+          // Плавное появление
           article.classList.add('visible');
+          // Запускаем TextScramble внутри карточки
           article.querySelectorAll('.scramble-text').forEach(el => {
             scrambleObserver.observe(el);
           });
@@ -1069,13 +1089,15 @@
       });
     }, { threshold: 0.1 });
 
-    // Observer для остальных элементов с текстом (TextScramble)
+    // 2) Наблюдатель для TextScramble (для всех прочих элементов)
     const scrambleObserver = new IntersectionObserver((entries, obs) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           const el = entry.target;
           const original = el.getAttribute('data-text') || el.textContent;
+          // Очищаем
           el.textContent = "";
+          // Запускаем анимацию
           const fx = new TextScramble(el);
           fx.setText(original);
           obs.unobserve(el);
@@ -1084,9 +1106,10 @@
     }, { root: null, rootMargin: "0px 0px -10% 0px", threshold: 0.1 });
   </script>
 
-  <!-- Автоматическое добавление класса .scramble-text -->
+  <!-- Авто-добавление класса .scramble-text -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
+      // 1) Добавляем .scramble-text ко всем элементам, кроме h1–h6, button, a, .floating-quote
       const allEls = document.querySelectorAll('body *');
       allEls.forEach(el => {
         const tag = el.tagName.toLowerCase();
@@ -1098,16 +1121,11 @@
           !el.classList.contains('scramble-text')
         ) {
           el.classList.add('scramble-text');
-          if (!el.dataset.text) {
-            el.dataset.text = el.textContent.trim();
-          }
-          // Скрываем текст до запуска анимации
-          el.textContent = "";
-          // Фиксируем высоту заранее
-          fixScrambleHeight(el);
         }
       });
-      // Для элементов не внутри карточек портфолио запускаем observer
+
+      // 2) Изначально подключаем все scramble-элементы, кроме тех, что внутри .work-item (их обрабатывает cardObserver)
+      //    Но если элемент находится в .work-item, мы дадим cardObserver сам запустить скрамбл при появлении.
       document.querySelectorAll('.scramble-text').forEach(el => {
         if (!el.closest('.work-item')) {
           scrambleObserver.observe(el);
@@ -1149,6 +1167,7 @@
             let mediaElement;
             if (mediaId) {
               if (mediaId.includes(".")) {
+                // Если есть расширение
                 const ext = mediaId.substring(mediaId.lastIndexOf(".")).toLowerCase();
                 if (ext === ".mp4" || ext === ".webm") {
                   mediaElement = document.createElement("video");
@@ -1169,6 +1188,7 @@
                   mediaElement.setAttribute("decoding", "async");
                 }
               } else {
+                // Если расширение не указано, перебираем
                 const imageExtensions = [".jpg", ".jpeg", ".png", ".gif", ".svg"];
                 const videoExtensions = [".mp4", ".webm"];
                 let extList = imageExtensions.concat(videoExtensions);
@@ -1178,6 +1198,7 @@
                 mediaElement.className = "work-thumb";
                 mediaElement.setAttribute("loading", "lazy");
                 mediaElement.setAttribute("decoding", "async");
+
                 function tryNext() {
                   if (attempt >= extList.length) {
                     mediaElement.onerror = null;
@@ -1197,6 +1218,7 @@
                 tryNext();
               }
             } else {
+              // Пустое mediaid => заглушка
               const placeholderDiv = document.createElement("div");
               placeholderDiv.className = "placeholder-logo";
               const placeholderImg = document.createElement("img");
@@ -1232,6 +1254,7 @@
             details.appendChild(pMaterials);
             details.appendChild(pStatus);
 
+            // Кнопка (если есть)
             const btnName = sanitize(item.btnname);
             const btnLink = sanitize(item.btnlink);
             if (btnName !== "" && btnLink !== "") {
@@ -1247,11 +1270,12 @@
             article.appendChild(details);
             container.appendChild(article);
 
-            // Observer для карточки (фиксирует высоту и запускает TextScramble)
+            // Подключаем карточку к cardObserver (для вычисления высоты + fade-in + запуск scramble)
             cardObserver.observe(article);
           });
         }
       });
+    });
   </script>
 
 </body>
