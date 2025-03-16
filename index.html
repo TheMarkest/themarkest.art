@@ -374,8 +374,6 @@
       padding: 1rem;
       width: 100%;
       margin-bottom: 1rem;
-      /* Высота будет задаваться при появлении, чтобы не прыгала */
-      overflow: hidden; /* чтобы при анимации не было сдвигов */
     }
     .work-item.visible {
       opacity: 1;
@@ -943,7 +941,7 @@
     animateWave();
   </script>
 
-  <!-- Цитаты (quote.csv) -->
+  <!-- Загрузка цитат из quote.csv -->
   <script>
     let quotesArray = [];
     Papa.parse("quote.csv", {
@@ -954,9 +952,12 @@
         quotesArray = results.data;
       }
     });
+  </script>
 
+  <!-- Скрипт для плавающих цитат -->
+  <script>
     function spawnQuote() {
-      if (!quotesArray.length) return;
+      if (quotesArray.length === 0) return;
       const q = quotesArray[Math.floor(Math.random() * quotesArray.length)];
       const div = document.createElement('div');
       div.className = 'floating-quote';
@@ -964,17 +965,16 @@
         <span class="quote-text">${q.text}</span>
         <span class="quote-author">${q.author}</span>
       `;
-      // Случайно по всей высоте/ширине документа
       const docWidth = document.documentElement.scrollWidth;
       const docHeight = document.documentElement.scrollHeight;
       const x = 0.05 * docWidth + Math.random() * (0.9 * docWidth);
-      const y = 0.05 * docHeight + Math.random() * (0.9 * docHeight);
+      const y = 0.1 * docHeight + Math.random() * (0.8 * docHeight);
       div.style.left = x + 'px';
       div.style.top = y + 'px';
       document.body.appendChild(div);
       setTimeout(() => { div.remove(); }, 10000);
     }
-    // Каждые 5 секунд появляется новая цитата
+    // Каждые 5 секунд спавним новую цитату
     setInterval(spawnQuote, 5000);
   </script>
 
@@ -991,7 +991,7 @@
     });
   </script>
 
-  <!-- TextScramble -->
+  <!-- TextScramble + IntersectionObserver -->
   <script>
     class TextScramble {
       constructor(el) {
@@ -1045,57 +1045,14 @@
         return this.chars[Math.floor(Math.random() * this.chars.length)];
       }
     }
-  </script>
 
-  <!-- measureCardHeight: вычисляет высоту карточки с конечным (не заскрембленным) текстом -->
-  <script>
-    function measureCardHeight(article) {
-      // Клонируем
-      const clone = article.cloneNode(true);
-      // Во всех .scramble-text ставим финальный текст
-      clone.querySelectorAll('.scramble-text').forEach(el => {
-        const finalText = el.getAttribute('data-text') || el.textContent;
-        el.textContent = finalText;
-      });
-      clone.style.position = 'absolute';
-      clone.style.visibility = 'hidden';
-      clone.style.zIndex = '-9999';
-      clone.style.height = 'auto';
-      document.body.appendChild(clone);
-      const h = clone.offsetHeight;
-      document.body.removeChild(clone);
-      return h;
-    }
-  </script>
-
-  <!-- IntersectionObservers -->
-  <script>
-    // 1) Наблюдатель для анимированного появления карточек (и фиксации их высоты)
-    const cardObserver = new IntersectionObserver((entries, obs) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          const article = entry.target;
-          // Измеряем финальную высоту
-          const finalHeight = measureCardHeight(article);
-          article.style.height = finalHeight + 'px';
-          // Плавное появление
-          article.classList.add('visible');
-          // Запускаем TextScramble внутри карточки
-          article.querySelectorAll('.scramble-text').forEach(el => {
-            scrambleObserver.observe(el);
-          });
-          obs.unobserve(article);
-        }
-      });
-    }, { threshold: 0.1 });
-
-    // 2) Наблюдатель для TextScramble (для всех прочих элементов)
+    // Запускаем скрамбл, когда элемент появляется в зоне видимости
     const scrambleObserver = new IntersectionObserver((entries, obs) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           const el = entry.target;
           const original = el.getAttribute('data-text') || el.textContent;
-          // Очищаем
+          // Стираем текущий текст
           el.textContent = "";
           // Запускаем анимацию
           const fx = new TextScramble(el);
@@ -1106,31 +1063,115 @@
     }, { root: null, rootMargin: "0px 0px -10% 0px", threshold: 0.1 });
   </script>
 
-  <!-- Авто-добавление класса .scramble-text -->
+  <!-- Функция для фиксации высоты (применяем только к коротким элементам, но НЕ к абзацам .bio/.artist-statement) -->
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      // 1) Добавляем .scramble-text ко всем элементам, кроме h1–h6, button, a, .floating-quote
-      const allEls = document.querySelectorAll('body *');
-      allEls.forEach(el => {
-        const tag = el.tagName.toLowerCase();
-        if (
-          !['h1','h2','h3','h4','h5','h6','button','a'].includes(tag) &&
-          !el.closest('.floating-quote') &&
-          el.children.length === 0 &&
-          el.textContent.trim().length > 0 &&
-          !el.classList.contains('scramble-text')
-        ) {
-          el.classList.add('scramble-text');
-        }
-      });
+    function fixScrambleHeight(el) {
+      // Если это абзац внутри .bio или .artist-statement, НЕ фиксируем высоту:
+      if (
+        el.tagName.toLowerCase() === 'p' &&
+        (el.closest('.bio') || el.closest('.artist-statement'))
+      ) {
+        return;
+      }
 
-      // 2) Изначально подключаем все scramble-элементы, кроме тех, что внутри .work-item (их обрабатывает cardObserver)
-      //    Но если элемент находится в .work-item, мы дадим cardObserver сам запустить скрамбл при появлении.
-      document.querySelectorAll('.scramble-text').forEach(el => {
-        if (!el.closest('.work-item')) {
-          scrambleObserver.observe(el);
+      // Создаем клон, чтобы измерить реальную высоту
+      const originalText = el.getAttribute('data-text') || el.textContent;
+      const clone = el.cloneNode(true);
+      clone.innerHTML = originalText;
+
+      // Копируем ключевые стили
+      const style = window.getComputedStyle(el);
+      clone.style.position = 'absolute';
+      clone.style.visibility = 'hidden';
+      clone.style.zIndex = '-9999';
+      clone.style.top = '0';
+      clone.style.left = '-9999px';
+      clone.style.width = style.width;
+      clone.style.fontSize = style.fontSize;
+      clone.style.fontFamily = style.fontFamily;
+      clone.style.fontWeight = style.fontWeight;
+      clone.style.lineHeight = style.lineHeight;
+      clone.style.whiteSpace = style.whiteSpace;
+
+      document.body.appendChild(clone);
+      const measuredHeight = clone.offsetHeight;
+      document.body.removeChild(clone);
+
+      // Устанавливаем эту высоту на элемент, чтобы исключить "прыжок"
+      el.style.height = measuredHeight + 'px';
+    }
+  </script>
+
+  <!-- Наблюдатель для появления карточек (fade-in) -->
+  <script>
+    const cardObserver = new IntersectionObserver((entries, obs) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const article = entry.target;
+          article.classList.add('visible');
+          obs.unobserve(article);
         }
       });
+    }, { threshold: 0.1 });
+  </script>
+
+  <!-- Модальное окно (портфолио) -->
+  <script>
+    const modal = document.getElementById("modal");
+    const modalMediaWrapper = document.getElementById("modal-media-wrapper");
+    const modalTitleText = document.getElementById("modal-title-text");
+    const modalClose = document.getElementById("modal-close");
+
+    document.getElementById("portfolio-container").addEventListener("click", function (e) {
+      let target = e.target;
+      if (target.classList.contains("work-thumb")) {
+        const article = target.closest(".work-item");
+        let titleText = "";
+        if (article) {
+          const titleEl = article.querySelector("h3");
+          if (titleEl) {
+            titleText = titleEl.textContent.trim();
+          }
+        }
+        modalTitleText.textContent = titleText || "Без названия";
+        modalMediaWrapper.innerHTML = "";
+        modal.style.display = "block";
+
+        // Определяем, что за элемент: img или video
+        if (target.tagName.toLowerCase() === "img") {
+          let img = document.createElement("img");
+          img.src = target.src;
+          img.className = "modal-media";
+          modalMediaWrapper.appendChild(img);
+        } else if (target.tagName.toLowerCase() === "video") {
+          let video = document.createElement("video");
+          const sourceEl = target.querySelector("source");
+          if (sourceEl) {
+            video.src = sourceEl.src;
+            video.type = sourceEl.type;
+          } else {
+            video.src = target.src;
+          }
+          video.controls = true;
+          video.autoplay = true;
+          video.playsInline = true;
+          video.className = "modal-media";
+          modalMediaWrapper.appendChild(video);
+        }
+      }
+    });
+
+    modalClose.addEventListener("click", function () {
+      modal.style.display = "none";
+      modalMediaWrapper.innerHTML = "";
+      modalTitleText.textContent = "";
+    });
+    modal.addEventListener("click", function (e) {
+      if (e.target === modal) {
+        modal.style.display = "none";
+        modalMediaWrapper.innerHTML = "";
+        modalTitleText.textContent = "";
+      }
     });
   </script>
 
@@ -1141,13 +1182,16 @@
       return val.replace(/^"+|"+$/g, "").trim();
     }
     document.addEventListener('DOMContentLoaded', () => {
+      // 1) Загружаем CSV с работами
       Papa.parse("artportfolio.csv", {
         download: true,
         header: true,
         skipEmptyLines: true,
         complete: function (results) {
+          console.log("CSV parse results:", results.data);
           const data = results.data;
           const container = document.getElementById("portfolio-container");
+
           data.forEach(item => {
             const allEmpty = Object.values(item).every(val => {
               if (typeof val === "string") return val.trim() === "";
@@ -1167,7 +1211,7 @@
             let mediaElement;
             if (mediaId) {
               if (mediaId.includes(".")) {
-                // Если есть расширение
+                // Если есть расширение, проверяем видео или изображение
                 const ext = mediaId.substring(mediaId.lastIndexOf(".")).toLowerCase();
                 if (ext === ".mp4" || ext === ".webm") {
                   mediaElement = document.createElement("video");
@@ -1188,7 +1232,7 @@
                   mediaElement.setAttribute("decoding", "async");
                 }
               } else {
-                // Если расширение не указано, перебираем
+                // Если расширение не указано, пытаемся найти подходящее
                 const imageExtensions = [".jpg", ".jpeg", ".png", ".gif", ".svg"];
                 const videoExtensions = [".mp4", ".webm"];
                 let extList = imageExtensions.concat(videoExtensions);
@@ -1218,7 +1262,7 @@
                 tryNext();
               }
             } else {
-              // Пустое mediaid => заглушка
+              // Если mediaid пустое, ставим заглушку
               const placeholderDiv = document.createElement("div");
               placeholderDiv.className = "placeholder-logo";
               const placeholderImg = document.createElement("img");
@@ -1237,16 +1281,16 @@
             h3.textContent = sanitize(item.title) || "Без названия";
 
             const pYear = document.createElement("p");
-            pYear.innerHTML = `Год: <span class="scramble-text" data-text="${sanitize(item.year)||'—'}">-</span>`;
+            pYear.innerHTML = "Год: <span class='scramble-text' data-text='" + (sanitize(item.year) || "—") + "'>-</span>";
 
             const pDesc = document.createElement("p");
-            pDesc.innerHTML = `Описание: <span class="scramble-text" data-text="${sanitize(item.description)||''}">-</span>`;
+            pDesc.innerHTML = "Описание: <span class='scramble-text' data-text='" + (sanitize(item.description) || "") + "'>-</span>";
 
             const pMaterials = document.createElement("p");
-            pMaterials.innerHTML = `Материалы: <span class="scramble-text" data-text="${sanitize(item.materials)||'—'}">-</span>`;
+            pMaterials.innerHTML = "Материалы: <span class='scramble-text' data-text='" + (sanitize(item.materials) || "—") + "'>-</span>";
 
             const pStatus = document.createElement("p");
-            pStatus.innerHTML = `Статус: <span class="scramble-text" data-text="${sanitize(item.status)||'—'}">-</span>`;
+            pStatus.innerHTML = "Статус: <span class='scramble-text' data-text='" + (sanitize(item.status) || "—") + "'>-</span>";
 
             details.appendChild(h3);
             details.appendChild(pYear);
@@ -1270,8 +1314,15 @@
             article.appendChild(details);
             container.appendChild(article);
 
-            // Подключаем карточку к cardObserver (для вычисления высоты + fade-in + запуск scramble)
+            // Добавляем к observer для fade-in
             cardObserver.observe(article);
+          });
+
+          // После создания карточек фиксируем высоту и вешаем TextScramble на новые элементы
+          const newScrambleEls = container.querySelectorAll('.scramble-text');
+          newScrambleEls.forEach(el => {
+            fixScrambleHeight(el);
+            scrambleObserver.observe(el);
           });
         }
       });
