@@ -1002,7 +1002,7 @@
     }, { threshold: 0.1 });
   </script>
 
-  <!-- Скрипт для установки фиксированной высоты блоков биографии и statement -->
+  <!-- Скрипт для установки мин. высоты блоков биографии и statement -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       function setInitialHeight(el) {
@@ -1016,7 +1016,6 @@
         const height = clone.offsetHeight;
         document.body.removeChild(clone);
         el.style.minHeight = height + 'px';
-        el.style.height = height + 'px';
       }
       const bioP = document.querySelector('.bio p.scramble-text');
       const statementP = document.querySelector('.artist-statement p.scramble-text');
@@ -1216,6 +1215,7 @@
           });
         }
       });
+    });
   </script>
 
   <!-- Загрузка цитат из quote.csv -->
