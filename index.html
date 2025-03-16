@@ -1002,10 +1002,10 @@
     }, { threshold: 0.1 });
   </script>
 
-  <!-- Скрипт для установки мин. высоты блоков биографии и statement -->
+  <!-- Скрипт для установки фиксированной высоты блоков биографии и statement -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      function setInitialHeight(el) {
+      function setFixedHeight(el) {
         const original = el.getAttribute('data-text');
         const clone = el.cloneNode();
         clone.style.visibility = 'hidden';
@@ -1015,12 +1015,12 @@
         document.body.appendChild(clone);
         const height = clone.offsetHeight;
         document.body.removeChild(clone);
-        el.style.minHeight = height + 'px';
+        el.style.height = height + 'px';
       }
       const bioP = document.querySelector('.bio p.scramble-text');
       const statementP = document.querySelector('.artist-statement p.scramble-text');
-      if (bioP) setInitialHeight(bioP);
-      if (statementP) setInitialHeight(statementP);
+      if (bioP) setFixedHeight(bioP);
+      if (statementP) setFixedHeight(statementP);
     });
   </script>
 
