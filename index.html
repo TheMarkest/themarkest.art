@@ -15,8 +15,8 @@
   <meta name="msapplication-TileColor" content="#000000">
   <meta name="theme-color" content="#000000">
 
-  <!-- Подключаем шрифт Exo 2 (гармоничный для кириллицы и латиницы) -->
-  <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;700&display=swap" rel="stylesheet">
+  <!-- Подключаем шрифт Orbitron (ретрофутуристичный, поддерживает кириллицу и латиницу) -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
 
   <!-- 1) CSS-переменные (глитч-интенсивность) -->
   <style>
@@ -91,7 +91,7 @@
       scroll-behavior: smooth;
     }
     body {
-      font-family: 'Exo 2', sans-serif;
+      font-family: 'Orbitron', sans-serif;
       background: #000;
       color: #fff;
       line-height: 1.5;
@@ -353,61 +353,45 @@
       margin-bottom: 2rem;
       text-transform: uppercase;
     }
-    /* Сетка портфолио – карточки через Grid */
+    /* Сетка портфолио – одна колонка */
     .grid {
       display: grid;
+      grid-template-columns: 1fr;
       gap: 2rem;
       max-width: 1000px;
       margin: 0 auto;
     }
-    /* Новые стили карточек портфолио */
     .work-item {
       opacity: 0;
       transform: translateY(20px);
       transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+      display: flex;
+      flex-direction: row;
+      gap: 1rem;
       background: #222;
       border: 1px solid #333;
       border-radius: 6px;
       padding: 1rem;
       width: 100%;
-      /* Используем grid для позиционирования элементов */
+      margin-bottom: 1rem;
     }
-    @media (min-width: 768px) {
-      .work-item {
-        display: grid;
-        grid-template-columns: 120px auto;
-        grid-template-rows: auto auto;
-        grid-template-areas:
-          "media details"
-          "button details";
-        gap: 1rem;
-        align-items: start;
-      }
-      .work-media { grid-area: media; }
-      .work-details { grid-area: details; }
-      .work-button-container { grid-area: button; text-align: center; }
-    }
-    @media (max-width: 767px) {
-      .work-item {
-        display: grid;
-        grid-template-columns: 1fr;
-        grid-template-rows: auto auto auto;
-        grid-template-areas:
-          "media"
-          "details"
-          "button";
-        gap: 1rem;
-      }
-      .work-media { grid-area: media; }
-      .work-details { grid-area: details; }
-      .work-button-container { grid-area: button; text-align: center; margin-top: 1rem; }
+    .work-item.visible {
+      opacity: 1;
+      transform: translateY(0);
     }
     .work-media {
+      flex: 0 0 120px;
       width: 120px;
       height: 120px;
       overflow: hidden;
     }
     @media (max-width: 768px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+      .work-item {
+        flex-direction: column;
+      }
       .work-media {
         width: 100%;
         height: 0;
@@ -450,6 +434,7 @@
       filter: grayscale(100%);
     }
     .work-details {
+      flex: 1;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -648,11 +633,6 @@
     .work-button:hover {
       background: #0ff;
       color: #000;
-    }
-    /* Стили для заголовков полей карточек */
-    .field-label {
-      color: #0ff;
-      font-weight: bold;
     }
   </style>
 
@@ -1198,49 +1178,41 @@
               mediaElement = placeholderDiv;
             }
             media.appendChild(mediaElement);
-            // Создаём блок с описанием карточки и оборачиваем заголовки полей в акцентный цвет
             const details = document.createElement("div");
             details.className = "work-details";
             const h3 = document.createElement("h3");
             h3.textContent = sanitize(item.title) || "Без названия";
             const pYear = document.createElement("p");
-            pYear.innerHTML = "<span class='field-label'>Год:</span> <span class='scramble-text' data-text='" + (sanitize(item.year) || "—") + "'>-</span>";
+            pYear.innerHTML = "Год: <span class='scramble-text' data-text='" + (sanitize(item.year) || "—") + "'>-</span>";
             const pDesc = document.createElement("p");
-            pDesc.innerHTML = "<span class='field-label'>Описание:</span> <span class='scramble-text' data-text='" + (sanitize(item.description) || "") + "'>-</span>";
+            pDesc.innerHTML = "Описание: <span class='scramble-text' data-text='" + (sanitize(item.description) || "") + "'>-</span>";
             const pMaterials = document.createElement("p");
-            pMaterials.innerHTML = "<span class='field-label'>Материалы:</span> <span class='scramble-text' data-text='" + (sanitize(item.materials) || "—") + "'>-</span>";
+            pMaterials.innerHTML = "Материалы: <span class='scramble-text' data-text='" + (sanitize(item.materials) || "—") + "'>-</span>";
             const pStatus = document.createElement("p");
-            pStatus.innerHTML = "<span class='field-label'>Статус:</span> <span class='scramble-text' data-text='" + (sanitize(item.status) || "—") + "'>-</span>";
+            pStatus.innerHTML = "Статус: <span class='scramble-text' data-text='" + (sanitize(item.status) || "—") + "'>-</span>";
             details.appendChild(h3);
             details.appendChild(pYear);
             details.appendChild(pDesc);
             details.appendChild(pMaterials);
             details.appendChild(pStatus);
-            // Создаём отдельный контейнер для кнопки (если указаны данные)
-            let btnContainer = null;
             const btnName = sanitize(item.btnname);
             const btnLink = sanitize(item.btnlink);
             if (btnName !== "" && btnLink !== "") {
-              btnContainer = document.createElement("div");
-              btnContainer.className = "work-button-container";
               const btn = document.createElement("a");
               btn.textContent = btnName;
               btn.href = btnLink;
               btn.className = "work-button";
               btn.target = "_blank";
-              btnContainer.appendChild(btn);
+              details.appendChild(btn);
             }
-            // Добавляем элементы в карточку: сначала изображение, затем описание и, если есть, кнопку
             article.appendChild(media);
             article.appendChild(details);
-            if(btnContainer) {
-              article.appendChild(btnContainer);
-            }
             container.appendChild(article);
             cardObserver.observe(article);
           });
         }
       });
+    });
   </script>
 
   <!-- Загрузка цитат из quote.csv -->
