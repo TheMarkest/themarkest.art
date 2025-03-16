@@ -15,8 +15,8 @@
   <meta name="msapplication-TileColor" content="#000000">
   <meta name="theme-color" content="#000000">
 
-  <!-- Подключаем шрифт Orbitron (ретрофутуристичный, поддерживает кириллицу и латиницу) -->
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+  <!-- Подключаем шрифт Russo One (ретрофутуристичный, поддерживает кириллицу и латиницу) -->
+  <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap&subset=cyrillic" rel="stylesheet">
 
   <!-- 1) CSS-переменные (глитч-интенсивность) -->
   <style>
@@ -91,7 +91,7 @@
       scroll-behavior: smooth;
     }
     body {
-      font-family: 'Orbitron', sans-serif;
+      font-family: 'Russo One', sans-serif;
       background: #000;
       color: #fff;
       line-height: 1.5;
@@ -634,13 +634,6 @@
       background: #0ff;
       color: #000;
     }
-    /* Новое правило: если кнопка находится в блоке с изображением, она занимает всю ширину */
-    .work-media .work-button {
-      display: block;
-      width: 100%;
-      text-align: center;
-      margin-top: 0.5rem;
-    }
   </style>
 
   <!-- 10) TextScramble Styles -->
@@ -912,7 +905,11 @@
       clone.style.visibility = "hidden";
       clone.style.zIndex = "-9999";
       document.body.appendChild(clone);
-      const h = clone.offsetHeight;
+      let h = clone.offsetHeight;
+      const btn = clone.querySelector(".work-button");
+      if (btn) {
+        h += btn.offsetHeight;
+      }
       document.body.removeChild(clone);
       return h;
     }
@@ -1210,8 +1207,7 @@
               btn.href = btnLink;
               btn.className = "work-button";
               btn.target = "_blank";
-              // Перемещаем кнопку под картинку, внутри блока media
-              media.appendChild(btn);
+              details.appendChild(btn);
             }
             article.appendChild(media);
             article.appendChild(details);
