@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TheMarkest.art – Glitch Image + Portrait</title>
-  <meta name="description" content="Портфолио художника в стиле sci‑fi/cyberpunk, с волной, старомониторным эффектом, TextScramble, пиксельным глитч‑логотипом, фото художника и удобными карточками работ." />
+  <meta name="description"
+    content="Портфолио художника в стиле sci‑fi/cyberpunk, с волной, старомониторным эффектом, TextScramble, пиксельным глитч‑логотипом, фото художника и удобными карточками работ." />
 
   <!-- Favicons -->
   <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/apple-touch-icon.png">
@@ -14,9 +16,6 @@
   <link rel="manifest" href="assets/favicon/site.webmanifest">
   <meta name="msapplication-TileColor" content="#000000">
   <meta name="theme-color" content="#000000">
-
-  <!-- Подключение ретрофутуристичного шрифта Orbitron (Latin & Cyrillic) -->
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
 
   <!-- 1) CSS-переменные (глитч-интенсивность) -->
   <style>
@@ -33,63 +32,122 @@
       content: "";
       pointer-events: none;
       position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
       z-index: 9999;
       background:
-        radial-gradient(circle at center, rgba(0,0,0,0) 30%, rgba(0,0,0,0.85) 100%),
-        radial-gradient(circle, rgba(255,255,255,0.05) 1%, rgba(255,255,255,0) 60%);
+        radial-gradient(circle at center, rgba(0, 0, 0, 0) 30%, rgba(0, 0, 0, 0.85) 100%),
+        radial-gradient(circle, rgba(255, 255, 255, 0.05) 1%, rgba(255, 255, 255, 0) 60%);
       background-blend-mode: multiply;
       animation: flicker 10s infinite;
     }
+
     body::after {
       content: "";
       pointer-events: none;
       position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
       z-index: 99999;
-      background: repeating-linear-gradient(
-        0deg,
-        rgba(255,255,255,0.05) 0px,
-        rgba(255,255,255,0.05) 2px,
-        rgba(255,255,255,0) 4px,
-        rgba(255,255,255,0) 6px
-      );
+      background: repeating-linear-gradient(0deg,
+          rgba(255, 255, 255, 0.05) 0px,
+          rgba(255, 255, 255, 0.05) 2px,
+          rgba(255, 255, 255, 0) 4px,
+          rgba(255, 255, 255, 0) 6px);
       animation: scanline 0.15s infinite steps(1);
       mix-blend-mode: lighten;
     }
+
     @keyframes flicker {
-      0%   { opacity: 0.03; }
-      10%  { opacity: 0.06; }
-      20%  { opacity: 0.10; }
-      30%  { opacity: 0.08; }
-      40%  { opacity: 0.12; }
-      50%  { opacity: 0.07; }
-      60%  { opacity: 0.14; }
-      70%  { opacity: 0.09; }
-      80%  { opacity: 0.05; }
-      90%  { opacity: 0.11; }
-      100% { opacity: 0.03; }
+      0% {
+        opacity: 0.03;
+      }
+
+      10% {
+        opacity: 0.06;
+      }
+
+      20% {
+        opacity: 0.10;
+      }
+
+      30% {
+        opacity: 0.08;
+      }
+
+      40% {
+        opacity: 0.12;
+      }
+
+      50% {
+        opacity: 0.07;
+      }
+
+      60% {
+        opacity: 0.14;
+      }
+
+      70% {
+        opacity: 0.09;
+      }
+
+      80% {
+        opacity: 0.05;
+      }
+
+      90% {
+        opacity: 0.11;
+      }
+
+      100% {
+        opacity: 0.03;
+      }
     }
+
     @keyframes scanline {
-      0%   { transform: translateY(0); }
-      100% { transform: translateY(4px); }
+      0% {
+        transform: translateY(0);
+      }
+
+      100% {
+        transform: translateY(4px);
+      }
     }
   </style>
 
   <!-- 3) Сброс и базовые стили -->
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
     body {
-      font-family: "Orbitron", sans-serif;
+      font-family: "IBM Plex Sans", sans-serif;
       background: #000;
       color: #fff;
       line-height: 1.5;
     }
-    a { color: inherit; text-decoration: none; transition: color 0.3s; }
-    a:hover { color: #0ff; }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    a:hover {
+      color: #0ff;
+    }
+
     .container {
       max-width: 1200px;
       margin: 0 auto;
@@ -97,23 +155,27 @@
     }
   </style>
 
-  <!-- 4) Хедер: Волна + Контент, меню, переключатель языка -->
+  <!-- 4) Хедер: Волна + Контент, меню -->
   <style>
     header {
       position: fixed;
-      top: 0; left: 0;
+      top: 0;
+      left: 0;
       width: 100%;
       height: 160px;
       z-index: 1000;
     }
+
     #waveCanvas {
       display: block;
       width: 100%;
       height: 100%;
     }
+
     .header-content {
       position: absolute;
-      top: 0; left: 0;
+      top: 0;
+      left: 0;
       width: 100%;
       height: 120px;
       display: flex;
@@ -122,19 +184,23 @@
       padding: 0 20px;
       z-index: 10;
     }
+
     .logo-container {
       position: absolute;
       left: 20px;
       top: 10px;
     }
+
     .nav-links {
       display: flex;
       gap: 20px;
     }
+
     .nav-links a {
       font-size: 1.4rem;
       color: #fff;
     }
+
     .burger {
       display: none;
       background: none;
@@ -144,6 +210,7 @@
       right: 20px;
       top: 20px;
     }
+
     .burger span {
       display: block;
       width: 25px;
@@ -151,30 +218,17 @@
       background: #fff;
       margin: 4px 0;
     }
-    /* Переключатель языка */
-    .language-switcher {
-      position: absolute;
-      top: 10px;
-      right: 80px;
-    }
-    .language-switcher button {
-      background: none;
-      border: 1px solid #0ff;
-      color: #0ff;
-      padding: 5px 10px;
-      margin-left: 5px;
-      cursor: pointer;
-      text-transform: uppercase;
-      font-family: inherit;
-      transition: background 0.3s, color 0.3s;
-    }
-    .language-switcher button:hover {
-      background: #0ff;
-      color: #000;
-    }
+
     @media (max-width: 768px) {
-      .header-content { justify-content: center; }
-      .logo-container { position: static; margin: 0 auto; }
+      .header-content {
+        justify-content: center;
+      }
+
+      .logo-container {
+        position: static;
+        margin: 0 auto;
+      }
+
       .nav-links {
         display: none;
         flex-direction: column;
@@ -186,20 +240,34 @@
         border: 1px solid #333;
         border-radius: 6px;
       }
-      .burger { display: block; }
+
+      .burger {
+        display: block;
+      }
     }
   </style>
 
   <!-- 5) Мерцающие заголовки (сниженная интенсивность) -->
   <style>
-    h1, h2, h3 {
+    h1,
+    h2,
+    h3 {
       animation: heading-glow 3s infinite alternate;
       text-shadow: 0 0 1px #0ff, 0 0 2px #0ff, 0 0 3px #0ff;
     }
+
     @keyframes heading-glow {
-      0% { text-shadow: 0 0 1px #0ff, 0 0 2px #0ff, 0 0 3px #0ff; }
-      50% { text-shadow: 0 0 2px #0ff, 0 0 3px #0ff, 0 0 4px #0ff; }
-      100% { text-shadow: 0 0 1px #0ff, 0 0 2px #0ff, 0 0 3px #0ff; }
+      0% {
+        text-shadow: 0 0 1px #0ff, 0 0 2px #0ff, 0 0 3px #0ff;
+      }
+
+      50% {
+        text-shadow: 0 0 2px #0ff, 0 0 3px #0ff, 0 0 4px #0ff;
+      }
+
+      100% {
+        text-shadow: 0 0 1px #0ff, 0 0 2px #0ff, 0 0 3px #0ff;
+      }
     }
   </style>
 
@@ -212,70 +280,205 @@
       image-rendering: pixelated;
       position: relative;
     }
+
     .glitch-image img {
       display: block;
       width: 100%;
       height: 100%;
       image-rendering: pixelated;
     }
+
     .glitch-image::before,
     .glitch-image::after {
       content: "";
       position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
       background: url("assets/logo.svg") no-repeat center;
       background-size: 312px 119px;
       image-rendering: pixelated;
       pointer-events: none;
       mix-blend-mode: screen;
     }
+
     .glitch-image::before {
       filter: drop-shadow(-2px 0px #ff00c1);
       animation: glitch-anim 3s infinite linear alternate;
     }
+
     .glitch-image::after {
       filter: drop-shadow(2px 0px #00fff9);
       animation: glitch-anim2 3s infinite linear alternate;
     }
+
     @keyframes glitch-anim {
-      0%   { clip: rect(10px,9999px,20px,0); transform: translateX(0) skew(0deg); }
-      5%   { clip: rect(3px,9999px,15px,0); transform: translateX(calc(-3px * var(--glitch-intensity))) skew(calc(1deg * var(--glitch-intensity))); }
-      10%  { clip: rect(25px,9999px,35px,0); transform: translateX(calc(4px * var(--glitch-intensity))) skew(calc(-2deg * var(--glitch-intensity))); }
-      15%  { clip: rect(18px,9999px,28px,0); transform: translateX(calc(-2px * var(--glitch-intensity))) skew(calc(3deg * var(--glitch-intensity))); }
-      20%  { clip: rect(8px,9999px,18px,0); transform: translateX(calc(2px * var(--glitch-intensity))) skew(calc(-1deg * var(--glitch-intensity))); }
-      25%  { clip: rect(30px,9999px,42px,0); transform: translateX(calc(-4px * var(--glitch-intensity))) skew(calc(2deg * var(--glitch-intensity))); }
-      30%  { clip: rect(12px,9999px,25px,0); transform: translateX(calc(3px * var(--glitch-intensity))) skew(calc(-3deg * var(--glitch-intensity))); }
-      35%  { clip: rect(15px,9999px,27px,0); transform: translateX(calc(1px * var(--glitch-intensity))) skew(calc(1deg * var(--glitch-intensity))); }
-      40%  { clip: rect(5px,9999px,15px,0); transform: translateX(calc(-2px * var(--glitch-intensity))) skew(calc(1deg * var(--glitch-intensity))); }
-      50%  { clip: rect(22px,9999px,35px,0); transform: translateX(calc(4px * var(--glitch-intensity))) skew(calc(-2deg * var(--glitch-intensity))); }
-      60%  { clip: rect(38px,9999px,48px,0); transform: translateX(calc(-3px * var(--glitch-intensity))) skew(calc(3deg * var(--glitch-intensity))); }
-      70%  { clip: rect(10px,9999px,20px,0); transform: translateX(calc(1px * var(--glitch-intensity))) skew(calc(-1deg * var(--glitch-intensity))); }
-      80%  { clip: rect(28px,9999px,40px,0); transform: translateX(calc(-4px * var(--glitch-intensity))) skew(calc(2deg * var(--glitch-intensity))); }
-      90%  { clip: rect(15px,9999px,25px,0); transform: translateX(calc(2px * var(--glitch-intensity))) skew(calc(-2deg * var(--glitch-intensity))); }
-      100% { clip: rect(10px,9999px,20px,0); transform: translateX(0) skew(0deg); }
+      0% {
+        clip: rect(10px, 9999px, 20px, 0);
+        transform: translateX(0) skew(0deg);
+      }
+
+      5% {
+        clip: rect(3px, 9999px, 15px, 0);
+        transform: translateX(calc(-3px * var(--glitch-intensity))) skew(calc(1deg * var(--glitch-intensity)));
+      }
+
+      10% {
+        clip: rect(25px, 9999px, 35px, 0);
+        transform: translateX(calc(4px * var(--glitch-intensity))) skew(calc(-2deg * var(--glitch-intensity)));
+      }
+
+      15% {
+        clip: rect(18px, 9999px, 28px, 0);
+        transform: translateX(calc(-2px * var(--glitch-intensity))) skew(calc(3deg * var(--glitch-intensity)));
+      }
+
+      20% {
+        clip: rect(8px, 9999px, 18px, 0);
+        transform: translateX(calc(2px * var(--glitch-intensity))) skew(calc(-1deg * var(--glitch-intensity)));
+      }
+
+      25% {
+        clip: rect(30px, 9999px, 42px, 0);
+        transform: translateX(calc(-4px * var(--glitch-intensity))) skew(calc(2deg * var(--glitch-intensity)));
+      }
+
+      30% {
+        clip: rect(12px, 9999px, 25px, 0);
+        transform: translateX(calc(3px * var(--glitch-intensity))) skew(calc(-3deg * var(--glitch-intensity)));
+      }
+
+      35% {
+        clip: rect(15px, 9999px, 27px, 0);
+        transform: translateX(calc(1px * var(--glitch-intensity))) skew(calc(1deg * var(--glitch-intensity)));
+      }
+
+      40% {
+        clip: rect(5px, 9999px, 15px, 0);
+        transform: translateX(calc(-2px * var(--glitch-intensity))) skew(calc(1deg * var(--glitch-intensity)));
+      }
+
+      50% {
+        clip: rect(22px, 9999px, 35px, 0);
+        transform: translateX(calc(4px * var(--glitch-intensity))) skew(calc(-2deg * var(--glitch-intensity)));
+      }
+
+      60% {
+        clip: rect(38px, 9999px, 48px, 0);
+        transform: translateX(calc(-3px * var(--glitch-intensity))) skew(calc(3deg * var(--glitch-intensity)));
+      }
+
+      70% {
+        clip: rect(10px, 9999px, 20px, 0);
+        transform: translateX(calc(1px * var(--glitch-intensity))) skew(calc(-1deg * var(--glitch-intensity)));
+      }
+
+      80% {
+        clip: rect(28px, 9999px, 40px, 0);
+        transform: translateX(calc(-4px * var(--glitch-intensity))) skew(calc(2deg * var(--glitch-intensity)));
+      }
+
+      90% {
+        clip: rect(15px, 9999px, 25px, 0);
+        transform: translateX(calc(2px * var(--glitch-intensity))) skew(calc(-2deg * var(--glitch-intensity)));
+      }
+
+      100% {
+        clip: rect(10px, 9999px, 20px, 0);
+        transform: translateX(0) skew(0deg);
+      }
     }
+
     @keyframes glitch-anim2 {
-      0%   { clip: rect(5px,9999px,15px,0); transform: translateX(0) skew(0deg); }
-      5%   { clip: rect(28px,9999px,40px,0); transform: translateX(calc(2px * var(--glitch-intensity))) skew(calc(-1deg * var(--glitch-intensity))); }
-      10%  { clip: rect(18px,9999px,30px,0); transform: translateX(calc(-4px * var(--glitch-intensity))) skew(calc(2deg * var(--glitch-intensity))); }
-      15%  { clip: rect(35px,9999px,55px,0); transform: translateX(calc(3px * var(--glitch-intensity))) skew(calc(-2deg * var(--glitch-intensity))); }
-      20%  { clip: rect(12px,9999px,25px,0); transform: translateX(calc(-2px * var(--glitch-intensity))) skew(calc(1deg * var(--glitch-intensity))); }
-      25%  { clip: rect(40px,9999px,55px,0); transform: translateX(calc(4px * var(--glitch-intensity))) skew(calc(-3deg * var(--glitch-intensity))); }
-      30%  { clip: rect(22px,9999px,35px,0); transform: translateX(calc(-3px * var(--glitch-intensity))) skew(calc(2deg * var(--glitch-intensity))); }
-      35%  { clip: rect(12px,9999px,24px,0); transform: translateX(calc(1px * var(--glitch-intensity))) skew(calc(-1deg * var(--glitch-intensity))); }
-      40%  { clip: rect(8px,9999px,20px,0); transform: translateX(calc(1px * var(--glitch-intensity))) skew(calc(-1deg * var(--glitch-intensity))); }
-      50%  { clip: rect(30px,9999px,40px,0); transform: translateX(calc(-2px * var(--glitch-intensity))) skew(calc(3deg * var(--glitch-intensity))); }
-      60%  { clip: rect(15px,9999px,25px,0); transform: translateX(calc(4px * var(--glitch-intensity))) skew(calc(-2deg * var(--glitch-intensity))); }
-      70%  { clip: rect(45px,9999px,60px,0); transform: translateX(calc(-4px * var(--glitch-intensity))) skew(calc(1deg * var(--glitch-intensity))); }
-      80%  { clip: rect(25px,9999px,35px,0); transform: translateX(calc(3px * var(--glitch-intensity))) skew(calc(-3deg * var(--glitch-intensity))); }
-      90%  { clip: rect(5px,9999px,15px,0); transform: translateX(calc(-1px * var(--glitch-intensity))) skew(calc(2deg * var(--glitch-intensity))); }
-      100% { clip: rect(5px,9999px,15px,0); transform: translateX(0) skew(0deg); }
+      0% {
+        clip: rect(5px, 9999px, 15px, 0);
+        transform: translateX(0) skew(0deg);
+      }
+
+      5% {
+        clip: rect(28px, 9999px, 40px, 0);
+        transform: translateX(calc(2px * var(--glitch-intensity))) skew(calc(-1deg * var(--glitch-intensity)));
+      }
+
+      10% {
+        clip: rect(18px, 9999px, 30px, 0);
+        transform: translateX(calc(-4px * var(--glitch-intensity))) skew(calc(2deg * var(--glitch-intensity)));
+      }
+
+      15% {
+        clip: rect(35px, 9999px, 55px, 0);
+        transform: translateX(calc(3px * var(--glitch-intensity))) skew(calc(-2deg * var(--glitch-intensity)));
+      }
+
+      20% {
+        clip: rect(12px, 9999px, 25px, 0);
+        transform: translateX(calc(-2px * var(--glitch-intensity))) skew(calc(1deg * var(--glitch-intensity)));
+      }
+
+      25% {
+        clip: rect(40px, 9999px, 55px, 0);
+        transform: translateX(calc(4px * var(--glitch-intensity))) skew(calc(-3deg * var(--glitch-intensity)));
+      }
+
+      30% {
+        clip: rect(22px, 9999px, 35px, 0);
+        transform: translateX(calc(-3px * var(--glitch-intensity))) skew(calc(2deg * var(--glitch-intensity)));
+      }
+
+      35% {
+        clip: rect(12px, 9999px, 24px, 0);
+        transform: translateX(calc(1px * var(--glitch-intensity))) skew(calc(-1deg * var(--glitch-intensity)));
+      }
+
+      40% {
+        clip: rect(8px, 9999px, 20px, 0);
+        transform: translateX(calc(1px * var(--glitch-intensity))) skew(calc(-1deg * var(--glitch-intensity)));
+      }
+
+      50% {
+        clip: rect(30px, 9999px, 40px, 0);
+        transform: translateX(calc(-2px * var(--glitch-intensity))) skew(calc(3deg * var(--glitch-intensity)));
+      }
+
+      60% {
+        clip: rect(15px, 9999px, 25px, 0);
+        transform: translateX(calc(4px * var(--glitch-intensity))) skew(calc(-2deg * var(--glitch-intensity)));
+      }
+
+      70% {
+        clip: rect(45px, 9999px, 60px, 0);
+        transform: translateX(calc(-4px * var(--glitch-intensity))) skew(calc(1deg * var(--glitch-intensity)));
+      }
+
+      80% {
+        clip: rect(25px, 9999px, 35px, 0);
+        transform: translateX(calc(3px * var(--glitch-intensity))) skew(calc(-3deg * var(--glitch-intensity)));
+      }
+
+      90% {
+        clip: rect(5px, 9999px, 15px, 0);
+        transform: translateX(calc(-1px * var(--glitch-intensity))) skew(calc(2deg * var(--glitch-intensity)));
+      }
+
+      100% {
+        clip: rect(5px, 9999px, 15px, 0);
+        transform: translateX(0) skew(0deg);
+      }
     }
+
     @keyframes glitch-skew {
-      0%   { transform: skew(0deg); }
-      50%  { transform: skew(1deg); }
-      100% { transform: skew(0deg); }
+      0% {
+        transform: skew(0deg);
+      }
+
+      50% {
+        transform: skew(1deg);
+      }
+
+      100% {
+        transform: skew(0deg);
+      }
     }
   </style>
 
@@ -291,19 +494,21 @@
       justify-content: center;
       text-align: center;
     }
+
     #cover .cover-content {
-      background: rgba(0,0,0,0.4);
+      background: rgba(0, 0, 0, 0.4);
       padding: 2rem;
       border-radius: 8px;
       max-width: 600px;
       margin: 2rem;
     }
+
     #cover .cover-content h2 {
       font-size: 2rem;
       margin-bottom: 1rem;
       text-transform: uppercase;
     }
-    /* Добавлен id для смены перевода подзаголовка */
+
     #cover .cover-content p {
       font-size: 1.1rem;
       opacity: 0.9;
@@ -317,12 +522,14 @@
       padding: 4rem 0;
       background: #000;
     }
+
     h2 {
       text-align: center;
       font-size: 2rem;
       margin-bottom: 2rem;
       text-transform: uppercase;
     }
+
     /* Сетка портфолио – одна колонка */
     .grid {
       display: grid;
@@ -331,6 +538,7 @@
       max-width: 1000px;
       margin: 0 auto;
     }
+
     .work-item {
       opacity: 0;
       transform: translateY(20px);
@@ -345,25 +553,35 @@
       width: 100%;
       margin-bottom: 1rem;
     }
+
     .work-item.visible {
       opacity: 1;
       transform: translateY(0);
     }
+
     .work-media {
       flex: 0 0 120px;
       width: 120px;
       height: 120px;
       overflow: hidden;
     }
+
     @media (max-width: 768px) {
-      .grid { grid-template-columns: 1fr; }
-      .work-item { flex-direction: column; }
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .work-item {
+        flex-direction: column;
+      }
+
       .work-media {
         width: 100%;
         height: 0;
         padding-bottom: 100%;
         position: relative;
       }
+
       .work-thumb,
       .placeholder-logo {
         position: absolute;
@@ -374,6 +592,7 @@
         object-fit: cover;
       }
     }
+
     .work-thumb {
       width: 100%;
       height: 100%;
@@ -385,6 +604,7 @@
       decoding: async;
       filter: grayscale(100%);
     }
+
     .placeholder-logo {
       width: 100%;
       height: 100%;
@@ -395,25 +615,30 @@
       border-radius: 6px;
       background: #333;
     }
+
     .placeholder-logo img {
       width: 40%;
       filter: grayscale(100%);
     }
+
     .work-details {
       flex: 1;
       display: flex;
       flex-direction: column;
       justify-content: center;
     }
+
     .work-item h3 {
       margin-bottom: 0.5rem;
       font-size: 1.2rem;
     }
+
     .work-item p {
       font-size: 0.95rem;
       opacity: 0.9;
       margin-bottom: 0.5rem;
     }
+
     .about-content {
       display: flex;
       flex-direction: column;
@@ -421,32 +646,36 @@
       max-width: 1000px;
       margin: 0 auto;
     }
+
     .bio-row {
       display: flex;
       flex-direction: row;
       gap: 2rem;
     }
+
     .bio {
       flex: 1;
       display: flex;
       flex-direction: column;
     }
-    /* Добавлены id для перевода */
-    .bio h3 { 
+
+    .bio h3 {
       font-size: 1.3rem;
       margin-bottom: 1rem;
       text-transform: uppercase;
     }
+
     .bio p {
       font-size: 1rem;
       opacity: 0.9;
       line-height: 1.5;
       white-space: pre-line;
-      background: rgba(255,255,255,0.1);
-      border: 1px solid rgba(255,255,255,0.2);
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
       padding: 10px;
       border-radius: 4px;
     }
+
     .artist-photo {
       width: 250px;
       height: 250px;
@@ -455,6 +684,7 @@
       align-items: center;
       justify-content: center;
     }
+
     .artist-photo img {
       width: 100%;
       height: 100%;
@@ -466,28 +696,41 @@
       loading: lazy;
       decoding: async;
     }
+
     .artist-statement {
       width: 100%;
     }
+
     .artist-statement h3 {
       font-size: 1.3rem;
       margin-bottom: 1rem;
       text-transform: uppercase;
     }
+
     .artist-statement p {
       font-size: 1rem;
       opacity: 0.9;
       line-height: 1.5;
       white-space: pre-line;
-      background: rgba(255,255,255,0.1);
-      border: 1px solid rgba(255,255,255,0.2);
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
       padding: 10px;
       border-radius: 4px;
     }
+
     @media (max-width: 768px) {
-      .bio-row { flex-direction: column; }
-      .artist-photo { width: 100%; height: auto; }
-      .artist-photo img { height: auto; }
+      .bio-row {
+        flex-direction: column;
+      }
+
+      .artist-photo {
+        width: 100%;
+        height: auto;
+      }
+
+      .artist-photo img {
+        height: auto;
+      }
     }
   </style>
 
@@ -500,8 +743,14 @@
       max-width: 500px;
       margin: 0 auto;
     }
-    form label { font-weight: 600; margin-bottom: 0.3rem; }
-    form input, form textarea {
+
+    form label {
+      font-weight: 600;
+      margin-bottom: 0.3rem;
+    }
+
+    form input,
+    form textarea {
       padding: 0.6rem;
       border: 1px solid #333;
       border-radius: 4px;
@@ -509,7 +758,13 @@
       color: #fff;
       font-family: inherit;
     }
-    form input:focus, form textarea:focus { outline: none; border-color: #0ff; }
+
+    form input:focus,
+    form textarea:focus {
+      outline: none;
+      border-color: #0ff;
+    }
+
     form button {
       background: #0ff;
       color: #000;
@@ -520,17 +775,23 @@
       cursor: pointer;
       transition: background 0.3s;
     }
-    form button:hover { background: #0cc; }
+
+    form button:hover {
+      background: #0cc;
+    }
+
     .contact-social {
       text-align: center;
       margin-top: 2rem;
     }
+
     footer {
       background: #000;
       padding: 2rem 0;
       text-align: center;
       font-size: 0.9rem;
     }
+
     /* Полноэкранное модальное окно */
     .modal {
       display: none;
@@ -540,9 +801,11 @@
       top: 0;
       width: 100%;
       height: 100%;
-      background-color: rgba(0,0,0,0.95);
+      background-color: rgba(0, 0, 0, 0.95);
       overflow: hidden;
+      /* без прокрутки */
     }
+
     /* Контейнер под заголовок + медиа */
     .modal-content {
       display: flex;
@@ -551,7 +814,9 @@
       height: 100%;
       position: relative;
       overflow: hidden;
+      /* без вертикального скролла */
     }
+
     /* Заголовок (title) */
     .modal-title-bar {
       flex: 0 0 auto;
@@ -565,6 +830,7 @@
       position: relative;
       z-index: 1;
     }
+
     /* Медиа по центру, растягивается */
     .modal-media-wrapper {
       flex: 1 1 auto;
@@ -573,11 +839,13 @@
       justify-content: center;
       overflow: hidden;
     }
+
     .modal-media {
       max-width: 100%;
       max-height: 100%;
       object-fit: contain;
     }
+
     /* New styles for contact buttons */
     .contact-buttons {
       display: grid;
@@ -585,6 +853,7 @@
       gap: 1rem;
       margin-top: 2rem;
     }
+
     .contact-button {
       display: block;
       text-align: center;
@@ -596,10 +865,12 @@
       font-weight: 600;
       transition: background 0.3s, color 0.3s;
     }
+
     .contact-button:hover {
       background: #0ff;
       color: #000;
     }
+
     /* Кнопка-закрытие (крестик) внутри заголовка */
     .modal-close {
       position: absolute;
@@ -612,9 +883,12 @@
       cursor: pointer;
       z-index: 2;
     }
-    .modal-close:hover, .modal-close:focus {
+
+    .modal-close:hover,
+    .modal-close:focus {
       color: #bbb;
     }
+
     .work-button {
       display: inline-block;
       margin-top: 0.5rem;
@@ -627,12 +901,11 @@
       font-size: 0.9rem;
       font-weight: 600;
     }
+
     .work-button:hover {
       background: #0ff;
       color: #000;
     }
-    /* Footer translation */
-    #footer-text { text-align: center; }
   </style>
 
   <!-- 10) TextScramble Styles -->
@@ -648,7 +921,7 @@
     .floating-quote {
       position: absolute;
       z-index: 1;
-      color: rgba(255,255,255,0.3);
+      color: rgba(255, 255, 255, 0.3);
       font-style: italic;
       font-size: 1.1rem;
       pointer-events: none;
@@ -658,25 +931,45 @@
       max-width: 30vw;
       word-wrap: break-word;
     }
-    .floating-quote .quote-text { display: block; }
+
+    .floating-quote .quote-text {
+      display: block;
+    }
+
     .floating-quote .quote-author {
       display: block;
       margin-left: 1.5em;
       margin-top: 0.3em;
       opacity: 0.7;
     }
+
     @keyframes quoteFlicker {
-      0%   { opacity: 0; }
-      10%  { opacity: 0.7; }
-      50%  { opacity: 0.5; }
-      80%  { opacity: 0.3; }
-      100% { opacity: 0; }
+      0% {
+        opacity: 0;
+      }
+
+      10% {
+        opacity: 0.7;
+      }
+
+      50% {
+        opacity: 0.5;
+      }
+
+      80% {
+        opacity: 0.3;
+      }
+
+      100% {
+        opacity: 0;
+      }
     }
   </style>
 
   <!-- Подключаем Papa Parse для CSV -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
 </head>
+
 <body>
   <!-- HEADER -->
   <header>
@@ -688,17 +981,11 @@
         </div>
       </div>
       <nav class="nav-links">
-        <a id="nav-cover" href="#cover">Обложка</a>
-        <a id="nav-works" href="#works">Портфолио</a>
-        <a id="nav-about" href="#about">О художнике</a>
-        <a id="nav-contact" href="#contact">Контакты</a>
+        <a href="#cover">Обложка</a>
+        <a href="#works">Портфолио</a>
+        <a href="#about">О художнике</a>
+        <a href="#contact">Контакты</a>
       </nav>
-      <div class="language-switcher">
-        <button onclick="setLanguage('ru')">RU</button>
-        <button onclick="setLanguage('en')">EN</button>
-        <button onclick="setLanguage('kz')">KZ</button>
-        <button onclick="setLanguage('ua')">UA</button>
-      </div>
       <button class="burger">
         <span></span>
         <span></span>
@@ -711,7 +998,7 @@
   <section id="cover">
     <div class="cover-content">
       <h2>MARK BOGDANOV</h2>
-      <p id="cover-subheading">Искусство о науке.</p>
+      <p>Искусство о науке.</p>
     </div>
   </section>
 
@@ -720,7 +1007,7 @@
     <!-- Портфолио -->
     <section id="works">
       <div class="container">
-        <h2 id="works-heading">Портфолио</h2>
+        <h2>Портфолио</h2>
         <div class="grid" id="portfolio-container">
           <!-- Карточки будут генерироваться из CSV -->
         </div>
@@ -730,13 +1017,32 @@
     <!-- О художнике -->
     <section id="about">
       <div class="container">
-        <h2 id="about-heading">О художнике</h2>
+        <h2>О художнике</h2>
         <div class="about-content">
           <div class="bio-row">
             <div class="bio">
-              <h3 id="bio-title">Биография</h3>
-              <p id="bio-text">
-Марк Богданов — медиа-художник и скульптор, работающий на стыке искусства, науки и технологий. В своих произведениях он исследует влияние технического прогресса на эстетику, форму и восприятие объектов. Используя современные методы производства — 3D-печать, лазерную резку, цифровую обработку, а также традиционные ремесленные техники, он создаёт скульптуры и арт-объекты, в которых соединяются прошлое и будущее, искусство и инженерия.
+              <h3>Биография</h3>
+              <p>
+                Марк Богданов — медиа-художник и скульптор, работающий на стыке искусства, науки и технологий. В своих
+                произведениях он исследует влияние технического прогресса на эстетику, форму и восприятие объектов.
+                Используя современные методы производства — 3D-печать, лазерную резку, цифровую обработку, а также
+                традиционные ремесленные техники, он создаёт скульптуры и арт-объекты, в которых соединяются прошлое и
+                будущее, искусство и инженерия.
+
+                Родившись в семье хореографов, он с детства находился в среде искусства, наблюдая за процессом его
+                создания — от академической подготовки до профессионального становления. Вдохновляясь сценографией,
+                пластикой движений и ритмической структурой композиции, он в то же время всегда тяготел к техническим
+                наукам. Образование в сфере оптико-электроники сформировало его особый взгляд на искусство — не как на
+                средство выражения эмоций, а как инструмент исследования реальности, отражающий структурные
+                закономерности мира.
+
+                В своих работах он обращается к конструктивизму, ретрофутуризму и эстетике инженерных форм, рассматривая
+                искусство как способ осмысления научного знания. Он стремится не просто фиксировать образы, а выявлять
+                внутренние принципы их организации, перекладывая идеи математики, физики и архитектуры в материальные
+                структуры.
+
+                Основной интерес художника — это диалог технологий и искусства, исследование того, как новые методы
+                производства изменяют не только материальный мир, но и саму природу художественного восприятия.
               </p>
             </div>
             <div class="artist-photo">
@@ -744,9 +1050,24 @@
             </div>
           </div>
           <div class="artist-statement">
-            <h3 id="statement-title">Artist Statement</h3>
-            <p id="statement-text">
-Я создаю скульптуры, в которых современные технологии производства встречаются с наследием инженерной мысли прошлого. Моё искусство — это поиск формы, структуры и материала, отражающих логику научного прогресса.
+            <h3>Artist Statement</h3>
+            <p>
+              Я создаю скульптуры, в которых современные технологии производства встречаются с наследием инженерной
+              мысли прошлого.
+              Моё искусство — это поиск формы, структуры и материала, отражающих логику научного прогресса.
+
+              В своих работах я сочетаю 3D-печать, лазерную резку, цифровую обработку и традиционные ремесленные
+              техники,
+              интегрируя их в единую художественную систему. Мне важно показать, как технологии формируют эстетику и
+              как через них можно создавать новые визуальные смыслы, выходящие за пределы привычного восприятия.
+
+              Я вдохновляюсь конструктивизмом, ретрофутуризмом и инженерной эстетикой, рассматривая искусство как способ
+              взаимодействия с научным знанием.
+              В моих скульптурах можно увидеть интертекстуальность инженерных решений, где каждая деталь несёт смысл и
+              отсылает к механике, архитектуре и оптике.
+
+              Меня интересует диалог между прошлым и будущим: как технологии меняются, но принципы остаются вечными.
+              В этом я вижу красоту — в переплетении точности, формы и замысла.
             </p>
           </div>
         </div>
@@ -756,7 +1077,7 @@
     <!-- Контакты -->
     <section id="contact">
       <div class="container">
-        <h2 id="contact-heading">Контакты</h2>
+        <h2>Контакты</h2>
         <div class="contact-buttons">
           <a class="contact-button" href="https://t.me/markestart" target="_blank">Telegram</a>
           <a class="contact-button" href="https://instagram.com/markestart" target="_blank">Instagram</a>
@@ -769,14 +1090,18 @@
   </main>
 
   <footer>
-    <div class="container" id="footer-text">&copy; 2025 TheMarkest.art. Все права защищены.</div>
+    <div class="container">
+      &copy; 2025 TheMarkest.art. Все права защищены.
+    </div>
   </footer>
 
   <!-- Модальное окно для полноэкранного просмотра медиа -->
   <div id="modal" class="modal">
+    <!-- Крестик: &#10005; -->
     <div id="modal-content" class="modal-content">
       <div id="modal-title-bar" class="modal-title-bar">
         <span id="modal-close" class="modal-close">&#10005;</span>
+        <!-- Заголовок работы будет вставляться в JS -->
         <span id="modal-title-text"></span>
       </div>
       <div id="modal-media-wrapper" class="modal-media-wrapper"></div>
@@ -809,8 +1134,8 @@
         dots.push({
           x,
           pinned: false,
-          freq: FREQ_MIN + Math.random()*(FREQ_MAX - FREQ_MIN),
-          phase: Math.random()*Math.PI*2
+          freq: FREQ_MIN + Math.random() * (FREQ_MAX - FREQ_MIN),
+          phase: Math.random() * Math.PI * 2
         });
       }
       dots.push({ x: width, pinned: true });
@@ -829,6 +1154,7 @@
       ctx.closePath();
       ctx.fillStyle = HEADER_BG_COLOR;
       ctx.fill();
+
       ctx.beginPath();
       ctx.strokeStyle = "#0ff";
       ctx.lineWidth = LINE_WIDTH;
@@ -837,9 +1163,10 @@
         else ctx.lineTo(p.x, p.y);
       });
       ctx.stroke();
+
       wavePoints.forEach(p => {
         ctx.beginPath();
-        ctx.arc(p.x, p.y, DOT_RADIUS, 0, Math.PI*2);
+        ctx.arc(p.x, p.y, DOT_RADIUS, 0, Math.PI * 2);
         ctx.fillStyle = "#0ff";
         ctx.fill();
       });
@@ -877,7 +1204,7 @@
       allEls.forEach(el => {
         const tag = el.tagName.toLowerCase();
         if (
-          !['h1','h2','h3','h4','h5','h6','button','a'].includes(tag) &&
+          !['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'button', 'a'].includes(tag) &&
           !el.closest('.floating-quote') &&
           el.children.length === 0 &&
           el.textContent.trim().length > 0 &&
@@ -964,7 +1291,7 @@
   <script>
     const cardObserver = new IntersectionObserver((entries, obs) => {
       entries.forEach(entry => {
-        if(entry.isIntersecting){
+        if (entry.isIntersecting) {
           const article = entry.target;
           const finalHeight = measureCardHeight(article);
           article.style.height = finalHeight + "px";
@@ -1002,9 +1329,10 @@
     const modalMediaWrapper = document.getElementById("modal-media-wrapper");
     const modalClose = document.getElementById("modal-close");
 
-    document.getElementById("portfolio-container").addEventListener("click", function(e) {
+    document.getElementById("portfolio-container").addEventListener("click", function (e) {
       let target = e.target;
       if (target.classList.contains("work-thumb")) {
+        // Находим заголовок работы
         const article = target.closest(".work-item");
         let titleText = "";
         if (article) {
@@ -1013,9 +1341,14 @@
             titleText = titleEl.textContent.trim();
           }
         }
+        // Устанавливаем заголовок
         modalTitleText.textContent = titleText || "Без названия";
+        // Очищаем контейнер
         modalMediaWrapper.innerHTML = "";
+        // Открываем модалку
         modal.style.display = "block";
+
+        // Вставляем нужное медиа
         if (target.tagName.toLowerCase() === "img") {
           let img = document.createElement("img");
           img.src = target.src;
@@ -1024,7 +1357,7 @@
         } else if (target.tagName.toLowerCase() === "video") {
           let video = document.createElement("video");
           const sourceEl = target.querySelector("source");
-          if(sourceEl) {
+          if (sourceEl) {
             video.src = sourceEl.src;
             video.type = sourceEl.type;
           } else {
@@ -1039,13 +1372,13 @@
       }
     });
 
-    modalClose.addEventListener("click", function() {
+    modalClose.addEventListener("click", function () {
       modal.style.display = "none";
       modalMediaWrapper.innerHTML = "";
       modalTitleText.textContent = "";
     });
 
-    modal.addEventListener("click", function(e) {
+    modal.addEventListener("click", function (e) {
       if (e.target === modal) {
         modal.style.display = "none";
         modalMediaWrapper.innerHTML = "";
@@ -1066,7 +1399,7 @@
         download: true,
         header: true,
         skipEmptyLines: true,
-        complete: function(results) {
+        complete: function (results) {
           console.log("CSV parse results:", results.data);
           const data = results.data;
           const container = document.getElementById("portfolio-container");
@@ -1076,7 +1409,7 @@
               if (typeof val === "string") return val.trim() === "";
               return !val;
             });
-            if(allEmpty) return;
+            if (allEmpty) return;
 
             const article = document.createElement("article");
             article.className = "work-item";
@@ -1127,8 +1460,12 @@
                   attempt++;
                   mediaElement.src = url;
                 }
-                mediaElement.onerror = function() { tryNext(); };
-                mediaElement.onload = function() { mediaElement.onerror = null; };
+                mediaElement.onerror = function () {
+                  tryNext();
+                };
+                mediaElement.onload = function () {
+                  mediaElement.onerror = null;
+                };
                 tryNext();
               }
             } else {
@@ -1182,6 +1519,7 @@
             article.appendChild(details);
             container.appendChild(article);
 
+            // Фиксируем высоту карточки и запускаем TextScramble при появлении
             cardObserver.observe(article);
           });
         }
@@ -1196,7 +1534,7 @@
       download: true,
       header: true,
       skipEmptyLines: true,
-      complete: function(results) {
+      complete: function (results) {
         quotesArray = results.data;
       }
     });
@@ -1218,99 +1556,25 @@
       const x = 0.05 * docWidth + Math.random() * (0.9 * docWidth);
       const y = 0.1 * docHeight + Math.random() * (0.8 * docHeight);
       div.style.left = x + 'px';
-      div.style.top  = y + 'px';
+      div.style.top = y + 'px';
       document.body.appendChild(div);
       setTimeout(() => { div.remove(); }, 10000);
     }
     setInterval(spawnQuote, 5000);
   </script>
 
-  <!-- Скрипт переключения языка -->
+  <!-- Burger Menu Script -->
   <script>
-    const translations = {
-      ru: {
-        nav: { cover: "Обложка", works: "Портфолио", about: "О художнике", contact: "Контакты" },
-        cover: { subheading: "Искусство о науке." },
-        about: {
-          heading: "О художнике",
-          biographyTitle: "Биография",
-          biographyText: "Марк Богданов — медиа-художник и скульптор, работающий на стыке искусства, науки и технологий. В своих произведениях он исследует влияние технического прогресса на эстетику, форму и восприятие объектов. Используя современные методы производства — 3D-печать, лазерную резку, цифровую обработку, а также традиционные ремесленные техники, он создаёт скульптуры и арт-объекты, в которых соединяются прошлое и будущее, искусство и инженерия.",
-          statementTitle: "Artist Statement",
-          statementText: "Я создаю скульптуры, в которых современные технологии производства встречаются с наследием инженерной мысли прошлого. Моё искусство — это поиск формы, структуры и материала, отражающих логику научного прогресса."
-        },
-        works: { heading: "Портфолио" },
-        contact: { heading: "Контакты" },
-        footer: { text: "&copy; 2025 TheMarkest.art. Все права защищены." }
-      },
-      en: {
-        nav: { cover: "Cover", works: "Portfolio", about: "About the Artist", contact: "Contact" },
-        cover: { subheading: "Art about Science." },
-        about: {
-          heading: "About the Artist",
-          biographyTitle: "Biography",
-          biographyText: "Mark Bogdanov is a media artist and sculptor working at the intersection of art, science, and technology. In his works, he explores the influence of technological progress on aesthetics, form, and perception. Using modern production methods – 3D printing, laser cutting, digital processing, as well as traditional craftsmanship, he creates sculptures and art objects that merge the past and the future, art and engineering.",
-          statementTitle: "Artist Statement",
-          statementText: "I create sculptures where modern production technologies meet the legacy of past engineering thought. My art is a quest for form, structure, and material that reflects the logic of scientific progress."
-        },
-        works: { heading: "Portfolio" },
-        contact: { heading: "Contact" },
-        footer: { text: "&copy; 2025 TheMarkest.art. All rights reserved." }
-      },
-      kz: {
-        nav: { cover: "Бет", works: "Портфолио", about: "Өнер иесі туралы", contact: "Байланыс" },
-        cover: { subheading: "Ғылым туралы өнер." },
-        about: {
-          heading: "Өнер иесі туралы",
-          biographyTitle: "Өмірбаян",
-          biographyText: "Марк Богданов – медиа-суретші және мүсінші, өнер, ғылым және технологиялар қиылысында жұмыс істейді. Өз шығармаларында ол технологиялық прогрестің эстетика, форма және объектілерді қабылдауына әсерін зерттейді. Заманауи өндіріс әдістерін – 3D басып шығару, лазерлік кесу, сандық өңдеу, сондай-ақ дәстүрлі шеберлік әдістерін қолданып, ол өткен мен болашақты, өнер мен инженерияны біріктіретін мүсіндер мен өнер нысандарын жасайды.",
-          statementTitle: "Өнер иесінің мәлімдемесі",
-          statementText: "Мен заманауи өндіріс технологиялары өткен инженерлік ойдың мұрасымен кездесетін мүсіндер жасаймын. Менің өнерім – ғылыми прогрестің логикасын көрсететін форма, құрылым және материалды іздеу."
-        },
-        works: { heading: "Портфолио" },
-        contact: { heading: "Байланыс" },
-        footer: { text: "&copy; 2025 TheMarkest.art. Барлық құқықтар қорғалған." }
-      },
-      ua: {
-        nav: { cover: "Обкладинка", works: "Портфоліо", about: "Про художника", contact: "Контакти" },
-        cover: { subheading: "Мистецтво про науку." },
-        about: {
-          heading: "Про художника",
-          biographyTitle: "Біографія",
-          biographyText: "Марк Богданов – медіа-художник і скульптор, який працює на перетині мистецтва, науки та технологій. У своїх роботах він досліджує вплив технологічного прогресу на естетику, форму та сприйняття об'єктів. Використовуючи сучасні методи виробництва – 3D-друк, лазерне різання, цифрову обробку, а також традиційні ремісничі техніки, він створює скульптури та арт-об’єкти, що об’єднують минуле і майбутнє, мистецтво і інженерію.",
-          statementTitle: "Artist Statement",
-          statementText: "Я створюю скульптури, в яких сучасні технології виробництва зустрічаються з спадщиною минулого інженерного мислення. Моє мистецтво – це пошук форми, структури та матеріалу, що відображають логіку наукового прогресу."
-        },
-        works: { heading: "Портфоліо" },
-        contact: { heading: "Контакти" },
-        footer: { text: "&copy; 2025 TheMarkest.art. Всі права захищені." }
+    const burger = document.querySelector('.burger');
+    const navLinks = document.querySelector('.nav-links');
+    burger.addEventListener('click', () => {
+      if (getComputedStyle(navLinks).display === 'none') {
+        navLinks.style.display = 'flex';
+      } else {
+        navLinks.style.display = 'none';
       }
-    };
-
-    function setLanguage(lang) {
-      // Навигация
-      document.getElementById("nav-cover").innerText = translations[lang].nav.cover;
-      document.getElementById("nav-works").innerText = translations[lang].nav.works;
-      document.getElementById("nav-about").innerText = translations[lang].nav.about;
-      document.getElementById("nav-contact").innerText = translations[lang].nav.contact;
-      // Cover section
-      document.getElementById("cover-subheading").innerText = translations[lang].cover.subheading;
-      // About section
-      document.getElementById("about-heading").innerText = translations[lang].about.heading;
-      document.getElementById("bio-title").innerText = translations[lang].about.biographyTitle;
-      document.getElementById("bio-text").innerText = translations[lang].about.biographyText;
-      document.getElementById("statement-title").innerText = translations[lang].about.statementTitle;
-      document.getElementById("statement-text").innerText = translations[lang].about.statementText;
-      // Works section
-      document.getElementById("works-heading").innerText = translations[lang].works.heading;
-      // Contact section
-      document.getElementById("contact-heading").innerText = translations[lang].contact.heading;
-      // Footer
-      document.getElementById("footer-text").innerHTML = translations[lang].footer.text;
-      // Update document language attribute
-      document.documentElement.lang = lang;
-    }
-    // Устанавливаем язык по умолчанию (русский)
-    setLanguage('ru');
+    });
   </script>
 </body>
+
 </html>
