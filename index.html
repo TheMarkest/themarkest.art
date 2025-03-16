@@ -693,6 +693,8 @@
         clone.style.height = 'auto';
         clone.style.whiteSpace = 'pre-line';
         clone.style.opacity = '1';
+        // Задаём клону ту же ширину, что и оригиналу, чтобы учесть перенос строк
+        clone.style.width = el.offsetWidth + "px";
         document.body.appendChild(clone);
         const fullHeight = clone.offsetHeight;
         document.body.removeChild(clone);
@@ -1264,8 +1266,7 @@
           });
         }
       });
-    });
-  </script>
+    </script>
 
   <!-- Загрузка цитат из quote.csv -->
   <script>
