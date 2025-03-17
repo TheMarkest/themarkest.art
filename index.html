@@ -687,8 +687,15 @@
         if (!el.hasAttribute('data-text')) {
           el.setAttribute('data-text', el.textContent.trim());
         }
-        // Используем scrollHeight для вычисления полной высоты текста
-        const fullHeight = el.scrollHeight;
+        const clone = el.cloneNode(true);
+        clone.style.visibility = 'hidden';
+        clone.style.position = 'absolute';
+        clone.style.height = 'auto';
+        clone.style.whiteSpace = 'pre-line';
+        clone.style.opacity = '1';
+        document.body.appendChild(clone);
+        const fullHeight = clone.offsetHeight;
+        document.body.removeChild(clone);
         el.style.height = fullHeight + "px";
         el.textContent = "";
         el.classList.add('scramble-text');
@@ -1257,7 +1264,8 @@
           });
         }
       });
-    </script>
+    });
+  </script>
 
   <!-- Загрузка цитат из quote.csv -->
   <script>
