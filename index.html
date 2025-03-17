@@ -54,28 +54,8 @@
       fixBioAndStatementHeight('.bio p, .artist-statement p');
     });
   </script>
-
-  <!-- Автоматическая установка scramble-text для остальных элементов -->
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const allEls = document.querySelectorAll('body *');
-      allEls.forEach(el => {
-        const tag = el.tagName.toLowerCase();
-        if (
-          !['h1', 'h2', 'h3', 'button', 'a'].includes(tag) &&
-          !el.closest('.floating-quote') &&
-          el.children.length === 0 &&
-          el.textContent.trim().length > 0 &&
-          !el.classList.contains('scramble-text')
-        ) {
-          el.classList.add('scramble-text');
-        }
-      });
-      document.querySelectorAll('.scramble-text').forEach(el => {
-        scrambleObserver.observe(el);
-      });
-    });
-  </script>
+  
+  <!-- (Удалён дублирующий блок автоматического назначения scramble-text из head) -->
 </head>
 <body>
   <!-- HEADER -->
@@ -246,7 +226,6 @@
       if (!lastWaveTime) lastWaveTime = timestamp;
       const delta = timestamp - lastWaveTime;
       lastWaveTime = timestamp;
-      // Поддерживаем скорость ~1.2 единиц в секунду (0.0012 * delta)
       time += delta * 0.0012;
       
       ctx.clearRect(0, 0, width, height);
@@ -308,7 +287,7 @@
     }
   </script>
 
-  <!-- Автоматическая установка scramble-text (для остальных элементов) -->
+  <!-- Автоматическая установка scramble-text (объединённый блок) -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const allEls = document.querySelectorAll('body *');
@@ -428,7 +407,7 @@
     }, { threshold: 0.1 });
   </script>
 
-  <!-- Burger Menu Script -->
+  <!-- Burger Menu Script (единственный блок) -->
   <script>
     const burger = document.querySelector('.burger');
     const navLinks = document.querySelector('.nav-links');
@@ -656,19 +635,6 @@
       setTimeout(() => { div.remove(); }, 10000);
     }
     setInterval(spawnQuote, 5000);
-  </script>
-
-  <!-- Дублирующий код для Burger Menu (оставлен для совместимости) -->
-  <script>
-    const burger2 = document.querySelector('.burger');
-    const navLinks2 = document.querySelector('.nav-links');
-    burger2.addEventListener('click', () => {
-      if (getComputedStyle(navLinks2).display === 'none') {
-        navLinks2.style.display = 'flex';
-      } else {
-        navLinks2.style.display = 'none';
-      }
-    });
   </script>
 </body>
 </html>

@@ -20,6 +20,7 @@
       radial-gradient(circle, rgba(255, 255, 255, 0.05) 1%, rgba(255, 255, 255, 0) 60%);
     background-blend-mode: multiply;
     animation: flicker 10s infinite;
+    will-change: opacity;
   }
   body::after {
     content: "";
@@ -37,6 +38,7 @@
         rgba(255, 255, 255, 0) 6px);
     animation: scanline 0.15s infinite steps(1);
     mix-blend-mode: lighten;
+    will-change: transform, opacity;
   }
   @keyframes flicker {
     0% { opacity: 0.03; }
@@ -246,6 +248,7 @@
     image-rendering: pixelated;
     pointer-events: none;
     mix-blend-mode: screen;
+    will-change: transform;
   }
   .glitch-image::before {
     filter: drop-shadow(-2px 0px #ff00c1);
@@ -641,6 +644,7 @@
     transform: translate(-50%, -50%);
     max-width: 30vw;
     word-wrap: break-word;
+    will-change: opacity, transform;
   }
   .floating-quote .quote-text {
     display: block;
@@ -658,4 +662,3 @@
     80% { opacity: 0.3; }
     100% { opacity: 0; }
   }
-  
