@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TheMarkest.art – Glitch Image + Portrait</title>
-  <meta name="description" content="Портфолио художника в стиле sci‑fi/cyberpunk, с волной, старомониторным эффектом, TextScramble, пиксельным глитч‑логотипом, фото художника и удобными карточками работ." />
+  <!-- Заголовок и meta-description будут обновлены динамически -->
+  <title data-i18n-key="title"></title>
+  <meta name="description" id="meta-description" content="">
 
   <!-- Favicons -->
   <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/apple-touch-icon.png">
@@ -704,7 +705,7 @@
   <!-- Подключаем Papa Parse для CSV -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
 
-  <!-- Новый метод для предрасчёта высоты блоков био и стейтмента (отдельно от карточек портфолио) -->
+  <!-- Скрипты для предварительного расчёта высоты блоков био и стейтмента, TextScramble и появления карточек – без изменений -->
   <script>
     function fixBioAndStatementHeight(selector) {
       document.querySelectorAll(selector).forEach(el => {
@@ -712,19 +713,16 @@
           el.setAttribute('data-text', el.textContent.trim());
         }
         const clone = el.cloneNode(true);
-        // Устанавливаем ширину клона равной ширине оригинала для корректного переноса строк
         clone.style.width = el.offsetWidth + "px";
         clone.style.visibility = 'hidden';
         clone.style.position = 'absolute';
         clone.style.height = 'auto';
         clone.style.whiteSpace = 'pre-line';
         clone.style.opacity = '1';
-        // Сдвигаем клон за пределы экрана
         clone.style.left = "-9999px";
         document.body.appendChild(clone);
         const fullHeight = clone.offsetHeight;
         document.body.removeChild(clone);
-        // Добавляем дополнительное пространство (20px)
         el.style.height = (fullHeight + 20) + "px";
         el.textContent = "";
         el.classList.add('scramble-text');
@@ -734,8 +732,6 @@
       fixBioAndStatementHeight('.bio p, .artist-statement p');
     });
   </script>
-
-  <!-- Автоматическая установка scramble-text для остальных элементов -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const allEls = document.querySelectorAll('body *');
@@ -756,258 +752,6 @@
       });
     });
   </script>
-</head>
-<body>
-  <!-- HEADER -->
-  <header>
-    <canvas id="waveCanvas"></canvas>
-    <div class="header-content">
-      <div class="logo-container">
-        <div class="glitch-image">
-          <img src="assets/logo.svg" alt="TheMarkest.art Logo" />
-        </div>
-      </div>
-      <nav class="nav-links">
-        <a href="#cover">Обложка</a>
-        <a href="#works">Портфолио</a>
-        <a href="#about">О художнике</a>
-        <a href="#contact">Контакты</a>
-      </nav>
-      <!-- Переключатель языка -->
-      <div class="language-switcher">
-        <div class="language-buttons">
-          <button>EN</button>
-          <button>RU</button>
-          <button>KZ</button>
-          <button>UA</button>
-        </div>
-        <select class="language-dropdown">
-          <option value="EN">EN</option>
-          <option value="RU">RU</option>
-          <option value="KZ">KZ</option>
-          <option value="UA">UA</option>
-        </select>
-      </div>
-      <button class="burger">
-        <span></span>
-        <span></span>
-        <span></span>
-      </button>
-    </div>
-  </header>
-
-  <!-- COVER -->
-  <section id="cover">
-    <div class="cover-content">
-      <h2>MARK BOGDANOV</h2>
-      <p>Искусство о науке.</p>
-    </div>
-  </section>
-
-  <!-- MAIN CONTENT -->
-  <main>
-    <!-- Портфолио -->
-    <section id="works">
-      <div class="container">
-        <h2>Портфолио</h2>
-        <div class="grid" id="portfolio-container">
-          <!-- Карточки будут генерироваться из CSV -->
-        </div>
-      </div>
-    </section>
-
-    <!-- О художнике -->
-    <section id="about">
-      <div class="container">
-        <h2>О художнике</h2>
-        <div class="about-content">
-          <div class="bio-row">
-            <div class="bio">
-              <h3>Биография</h3>
-              <p>
-                Марк Богданов — художник, работающий на стыке искусства, технологий и инженерной эстетики. В своих произведениях он исследует влияние научного прогресса на визуальные формы, сочетая современные методы производства (3D-печать, лазерную резку, цифровую обработку) с традиционными материалами.
-
-                Родился в 1998 году в семье хореографов и вырос между Санкт-Петербургом и Одессой — двумя городами с глубокими культурными традициями. Детство и юность пришлись на переломные десятилетия цифровой революции, когда искусство и технологии начали стремительно сближаться. Это время сформировало его интерес к новым методам создания и восприятия искусства, где материальный объект все чаще сочетался с виртуальными и механическими компонентами.
-                
-                Получив образование в сфере оптико-электроники, он переосмыслил принципы традиционной скульптуры через призму научного знания. Вдохновляясь конструктивизмом, ретрофутуризмом и инженерным мышлением, он рассматривает искусство не только как средство самовыражения, но и как способ изучения структуры окружающего мира. Его работы исследуют, как технологии не просто изменяют художественную эстетику, но и формируют новые принципы взаимодействия человека с объектом.
-              </p>
-            </div>
-            <div class="artist-photo">
-              <img src="assets/portrait.png" alt="Portrait of the Artist" loading="lazy" decoding="async" />
-            </div>
-          </div>
-          <div class="artist-statement">
-            <h3>Artist Statement</h3>
-            <p>
-              Я создаю скульптуры, в которых современные технологии производства встречаются с наследием инженерной
-              мысли прошлого.
-              Моё искусство — это поиск формы, структуры и материала, отражающих логику научного прогресса.
-
-              В своих работах я сочетаю 3D-печать, лазерную резку, цифровую обработку и традиционные ремесленные
-              техники,
-              интегрируя их в единую художественную систему. Мне важно показать, как технологии формируют эстетику и
-              как через них можно создавать новые визуальные смыслы, выходящие за пределы привычного восприятия.
-
-              Я вдохновляюсь конструктивизмом, ретрофутуризмом и инженерной эстетикой, рассматривая искусство как способ
-              взаимодействия с научным знанием.
-              В моих скульптурах можно увидеть интертекстуальность инженерных решений, где каждая деталь несёт смысл и
-              отсылает к механике, архитектуре и оптике.
-
-              Меня интересует диалог между прошлым и будущим: как технологии меняются, но принципы остаются вечными.
-              В этом я вижу красоту — в переплетении точности, формы и замысла.
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Контакты -->
-    <section id="contact">
-      <div class="container">
-        <h2>Контакты</h2>
-        <div class="contact-buttons">
-          <a class="contact-button" href="https://t.me/markestart" target="_blank">Telegram</a>
-          <a class="contact-button" href="https://instagram.com/markestart" target="_blank">Instagram</a>
-          <a class="contact-button" href="tel:+77051248743">Телефон</a>
-          <a class="contact-button" href="mailto:markbogdanovofficial@gmail.com">Email</a>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <footer>
-    <div class="container">
-      &copy; 2025 TheMarkest.art. Все права защищены.
-    </div>
-  </footer>
-
-  <!-- Модальное окно для полноэкранного просмотра медиа -->
-  <div id="modal" class="modal">
-    <div id="modal-content" class="modal-content">
-      <div id="modal-title-bar" class="modal-title-bar">
-        <span id="modal-close" class="modal-close">&#10005;</span>
-        <span id="modal-title-text"></span>
-      </div>
-      <div id="modal-media-wrapper" class="modal-media-wrapper"></div>
-    </div>
-  </div>
-
-  <!-- Wave Animation Script -->
-  <script>
-    const canvas = document.getElementById("waveCanvas");
-    const ctx = canvas.getContext("2d");
-    let width = 0, height = 0;
-    let time = 0;
-    let dots = [];
-    const AMPLITUDE = 15;
-    const DOT_SPACING = 40;
-    const FREQ_MIN = 0.03;
-    const FREQ_MAX = 0.08;
-    const LINE_WIDTH = 2;
-    const DOT_RADIUS = 4;
-    const HEADER_BG_COLOR = "rgba(85,85,85,0.8)";
-    const BASELINE = 120;
-    function initDots() {
-      width = canvas.offsetWidth;
-      height = canvas.offsetHeight;
-      canvas.width = width;
-      canvas.height = height;
-      dots = [];
-      dots.push({ x: 0, pinned: true });
-      for (let x = DOT_SPACING; x <= width - DOT_SPACING; x += DOT_SPACING) {
-        dots.push({
-          x,
-          pinned: false,
-          freq: FREQ_MIN + Math.random() * (FREQ_MAX - FREQ_MIN),
-          phase: Math.random() * Math.PI * 2
-        });
-      }
-      dots.push({ x: width, pinned: true });
-    }
-    function animateWave() {
-      ctx.clearRect(0, 0, width, height);
-      const wavePoints = dots.map(dot => {
-        if (dot.pinned) return { x: dot.x, y: BASELINE };
-        let wave = AMPLITUDE * Math.sin(dot.x * dot.freq + time + dot.phase);
-        return { x: dot.x, y: BASELINE + wave };
-      });
-      ctx.beginPath();
-      ctx.moveTo(0, 0);
-      wavePoints.forEach(p => ctx.lineTo(p.x, p.y));
-      ctx.lineTo(width, 0);
-      ctx.closePath();
-      ctx.fillStyle = HEADER_BG_COLOR;
-      ctx.fill();
-
-      ctx.beginPath();
-      ctx.strokeStyle = "#0ff";
-      ctx.lineWidth = LINE_WIDTH;
-      wavePoints.forEach((p, i) => {
-        if (i === 0) ctx.moveTo(p.x, p.y);
-        else ctx.lineTo(p.x, p.y);
-      });
-      ctx.stroke();
-
-      wavePoints.forEach(p => {
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, DOT_RADIUS, 0, Math.PI * 2);
-        ctx.fillStyle = "#0ff";
-        ctx.fill();
-      });
-      time += 0.02;
-      requestAnimationFrame(animateWave);
-    }
-    function onResize() { initDots(); }
-    window.addEventListener("resize", onResize);
-    initDots();
-    animateWave();
-  </script>
-
-  <!-- measureCardHeight (для карточек портфолио, без изменений) -->
-  <script>
-    function measureCardHeight(article) {
-      const clone = article.cloneNode(true);
-      clone.querySelectorAll(".scramble-text").forEach(el => {
-        const txt = el.getAttribute("data-text") || el.textContent;
-        el.textContent = txt;
-      });
-      clone.style.position = "absolute";
-      clone.style.visibility = "hidden";
-      clone.style.zIndex = "-9999";
-      document.body.appendChild(clone);
-      let h = clone.offsetHeight;
-      const btn = clone.querySelector(".work-button");
-      if (btn) {
-        h += btn.offsetHeight;
-      }
-      document.body.removeChild(clone);
-      return h;
-    }
-  </script>
-
-  <!-- Автоматическая установка scramble-text (для остальных элементов) -->
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const allEls = document.querySelectorAll('body *');
-      allEls.forEach(el => {
-        const tag = el.tagName.toLowerCase();
-        if (
-          !['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'button', 'a'].includes(tag) &&
-          !el.closest('.floating-quote') &&
-          el.children.length === 0 &&
-          el.textContent.trim().length > 0 &&
-          !el.classList.contains('scramble-text')
-        ) {
-          el.classList.add('scramble-text');
-        }
-      });
-      document.querySelectorAll('.scramble-text').forEach(el => {
-        scrambleObserver.observe(el);
-      });
-    });
-  </script>
-
-  <!-- TextScramble + IntersectionObserver -->
   <script>
     class TextScramble {
       constructor(el) {
@@ -1074,8 +818,6 @@
       });
     }, { root: null, rootMargin: "0px 0px -10% 0px", threshold: 0.1 });
   </script>
-
-  <!-- Наблюдатель для появления карточек -->
   <script>
     const cardObserver = new IntersectionObserver((entries, obs) => {
       entries.forEach(entry => {
@@ -1108,7 +850,7 @@
     });
   </script>
 
-  <!-- Модальное окно -->
+  <!-- Модальное окно для полноэкранного просмотра медиа -->
   <script>
     const modal = document.getElementById("modal");
     const modalContent = document.getElementById("modal-content");
@@ -1166,21 +908,82 @@
     });
   </script>
 
-  <!-- CSV-Генерация карточек портфолио -->
+  <!-- Скрипты для динамической загрузки текстов, карточек портфолио и цитат -->
   <script>
+    // Глобальные переменные для текущего языка и цитат
+    let currentLanguage = "RU"; // язык по умолчанию
+    let quotesArray = [];
+
+    // Функция загрузки JSON с текстами для выбранного языка
+    function loadTexts(lang) {
+      currentLanguage = lang;
+      // Обновляем lang атрибут для <html>; для UA ставим uk
+      document.documentElement.lang = (lang.toUpperCase() === "UA") ? "uk" : lang.toLowerCase();
+      fetch(lang.toLowerCase() + "text.json")
+        .then(response => response.json())
+        .then(data => {
+          updateTexts(data);
+          // После загрузки текстов перезагружаем карточки портфолио и цитаты
+          loadPortfolio();
+          loadQuotes();
+        })
+        .catch(err => console.error("Ошибка загрузки текстов:", err));
+    }
+
+    // Функция обновления текстового контента по ключам data-i18n-key
+    function updateTexts(data) {
+      if(data.title) document.querySelector('title').textContent = data.title;
+      if(data.metaDescription) document.getElementById('meta-description').setAttribute('content', data.metaDescription);
+      if(data.nav) {
+        if(data.nav.cover) document.querySelector('[data-i18n-key="nav.cover"]').textContent = data.nav.cover;
+        if(data.nav.portfolio) document.querySelector('[data-i18n-key="nav.portfolio"]').textContent = data.nav.portfolio;
+        if(data.nav.about) document.querySelector('[data-i18n-key="nav.about"]').textContent = data.nav.about;
+        if(data.nav.contact) document.querySelector('[data-i18n-key="nav.contact"]').textContent = data.nav.contact;
+      }
+      if(data.cover) {
+        if(data.cover.name) document.querySelector('[data-i18n-key="cover.name"]').textContent = data.cover.name;
+        if(data.cover.tagline) document.querySelector('[data-i18n-key="cover.tagline"]').textContent = data.cover.tagline;
+      }
+      if(data.portfolio && data.portfolio.title) {
+        document.querySelector('[data-i18n-key="portfolio.title"]').textContent = data.portfolio.title;
+      }
+      if(data.about) {
+        if(data.about.title) document.querySelector('[data-i18n-key="about.title"]').textContent = data.about.title;
+        if(data.about.bioTitle) document.querySelector('[data-i18n-key="about.bioTitle"]').textContent = data.about.bioTitle;
+        if(data.about.bioText) document.querySelector('[data-i18n-key="about.bioText"]').textContent = data.about.bioText;
+        if(data.about.statementTitle) document.querySelector('[data-i18n-key="about.statementTitle"]').textContent = data.about.statementTitle;
+        if(data.about.statementText) document.querySelector('[data-i18n-key="about.statementText"]').textContent = data.about.statementText;
+      }
+      if(data.contact) {
+        if(data.contact.title) document.querySelector('[data-i18n-key="contact.title"]').textContent = data.contact.title;
+        if(data.contact.buttons) {
+          if(data.contact.buttons.telegram) document.querySelector('[data-i18n-key="contact.buttons.telegram"]').textContent = data.contact.buttons.telegram;
+          if(data.contact.buttons.instagram) document.querySelector('[data-i18n-key="contact.buttons.instagram"]').textContent = data.contact.buttons.instagram;
+          if(data.contact.buttons.phone) document.querySelector('[data-i18n-key="contact.buttons.phone"]').textContent = data.contact.buttons.phone;
+          if(data.contact.buttons.email) document.querySelector('[data-i18n-key="contact.buttons.email"]').textContent = data.contact.buttons.email;
+        }
+      }
+      if(data.footer) {
+        document.querySelector('[data-i18n-key="footer"]').textContent = data.footer;
+      }
+    }
+
+    // Функция очистки нежелательных кавычек и пробелов
     function sanitize(val) {
       if (!val) return "";
       return val.replace(/^"+|"+$/g, "").trim();
     }
-    document.addEventListener('DOMContentLoaded', () => {
-      Papa.parse("artportfolio.csv", {
+
+    // Загрузка карточек портфолио из CSV для выбранного языка
+    function loadPortfolio() {
+      const container = document.getElementById("portfolio-container");
+      container.innerHTML = "";
+      Papa.parse(currentLanguage.toLowerCase() + "port.csv", {
         download: true,
         header: true,
         skipEmptyLines: true,
         complete: function (results) {
-          console.log("CSV parse results:", results.data);
           const data = results.data;
-          const container = document.getElementById("portfolio-container");
           data.forEach(item => {
             const allEmpty = Object.values(item).every(val => {
               if (typeof val === "string") return val.trim() === "";
@@ -1286,18 +1089,277 @@
           });
         }
       });
+    }
+
+    // Загрузка цитат из CSV для выбранного языка
+    function loadQuotes() {
+      Papa.parse(currentLanguage.toLowerCase() + "quote.csv", {
+        download: true,
+        header: true,
+        skipEmptyLines: true,
+        complete: function (results) {
+          quotesArray = results.data;
+        }
+      });
+    }
+
+    // Обработчики переключения языка
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('.language-buttons button').forEach(btn => {
+        btn.addEventListener('click', () => {
+          loadTexts(btn.textContent.trim());
+        });
+      });
+      document.querySelector('.language-dropdown').addEventListener('change', (e) => {
+        loadTexts(e.target.value);
+      });
+      // Загружаем язык по умолчанию
+      loadTexts(currentLanguage);
+    });
+  </script>
+</head>
+<body>
+  <!-- HEADER -->
+  <header>
+    <canvas id="waveCanvas"></canvas>
+    <div class="header-content">
+      <div class="logo-container">
+        <div class="glitch-image">
+          <img src="assets/logo.svg" alt="TheMarkest.art Logo" />
+        </div>
+      </div>
+      <nav class="nav-links">
+        <a href="#cover" data-i18n-key="nav.cover"></a>
+        <a href="#works" data-i18n-key="nav.portfolio"></a>
+        <a href="#about" data-i18n-key="nav.about"></a>
+        <a href="#contact" data-i18n-key="nav.contact"></a>
+      </nav>
+      <!-- Переключатель языка -->
+      <div class="language-switcher">
+        <div class="language-buttons">
+          <button>EN</button>
+          <button>RU</button>
+          <button>KZ</button>
+          <button>UA</button>
+        </div>
+        <select class="language-dropdown">
+          <option value="EN">EN</option>
+          <option value="RU">RU</option>
+          <option value="KZ">KZ</option>
+          <option value="UA">UA</option>
+        </select>
+      </div>
+      <button class="burger">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- COVER -->
+  <section id="cover">
+    <div class="cover-content">
+      <h2 data-i18n-key="cover.name"></h2>
+      <p data-i18n-key="cover.tagline"></p>
+    </div>
+  </section>
+
+  <!-- MAIN CONTENT -->
+  <main>
+    <!-- Портфолио -->
+    <section id="works">
+      <div class="container">
+        <h2 data-i18n-key="portfolio.title"></h2>
+        <div class="grid" id="portfolio-container">
+          <!-- Карточки будут генерироваться из CSV -->
+        </div>
+      </div>
+    </section>
+
+    <!-- О художнике -->
+    <section id="about">
+      <div class="container">
+        <h2 data-i18n-key="about.title"></h2>
+        <div class="about-content">
+          <div class="bio-row">
+            <div class="bio">
+              <h3 data-i18n-key="about.bioTitle"></h3>
+              <p data-i18n-key="about.bioText"></p>
+            </div>
+            <div class="artist-photo">
+              <img src="assets/portrait.png" alt="Portrait of the Artist" loading="lazy" decoding="async" />
+            </div>
+          </div>
+          <div class="artist-statement">
+            <h3 data-i18n-key="about.statementTitle"></h3>
+            <p data-i18n-key="about.statementText"></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Контакты -->
+    <section id="contact">
+      <div class="container">
+        <h2 data-i18n-key="contact.title"></h2>
+        <div class="contact-buttons">
+          <a class="contact-button" href="https://t.me/markestart" target="_blank" data-i18n-key="contact.buttons.telegram"></a>
+          <a class="contact-button" href="https://instagram.com/markestart" target="_blank" data-i18n-key="contact.buttons.instagram"></a>
+          <a class="contact-button" href="tel:+77051248743" data-i18n-key="contact.buttons.phone"></a>
+          <a class="contact-button" href="mailto:markbogdanovofficial@gmail.com" data-i18n-key="contact.buttons.email"></a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container" data-i18n-key="footer"></div>
+  </footer>
+
+  <!-- Модальное окно для полноэкранного просмотра медиа -->
+  <div id="modal" class="modal">
+    <div id="modal-content" class="modal-content">
+      <div id="modal-title-bar" class="modal-title-bar">
+        <span id="modal-close" class="modal-close">&#10005;</span>
+        <span id="modal-title-text"></span>
+      </div>
+      <div id="modal-media-wrapper" class="modal-media-wrapper"></div>
+    </div>
+  </div>
+
+  <!-- Wave Animation Script -->
+  <script>
+    const canvas = document.getElementById("waveCanvas");
+    const ctx = canvas.getContext("2d");
+    let width = 0, height = 0;
+    let time = 0;
+    let dots = [];
+    const AMPLITUDE = 15;
+    const DOT_SPACING = 40;
+    const FREQ_MIN = 0.03;
+    const FREQ_MAX = 0.08;
+    const LINE_WIDTH = 2;
+    const DOT_RADIUS = 4;
+    const HEADER_BG_COLOR = "rgba(85,85,85,0.8)";
+    const BASELINE = 120;
+    function initDots() {
+      width = canvas.offsetWidth;
+      height = canvas.offsetHeight;
+      canvas.width = width;
+      canvas.height = height;
+      dots = [];
+      dots.push({ x: 0, pinned: true });
+      for (let x = DOT_SPACING; x <= width - DOT_SPACING; x += DOT_SPACING) {
+        dots.push({
+          x,
+          pinned: false,
+          freq: FREQ_MIN + Math.random() * (FREQ_MAX - FREQ_MIN),
+          phase: Math.random() * Math.PI * 2
+        });
+      }
+      dots.push({ x: width, pinned: true });
+    }
+    function animateWave() {
+      ctx.clearRect(0, 0, width, height);
+      const wavePoints = dots.map(dot => {
+        if (dot.pinned) return { x: dot.x, y: BASELINE };
+        let wave = AMPLITUDE * Math.sin(dot.x * dot.freq + time + dot.phase);
+        return { x: dot.x, y: BASELINE + wave };
+      });
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      wavePoints.forEach(p => ctx.lineTo(p.x, p.y));
+      ctx.lineTo(width, 0);
+      ctx.closePath();
+      ctx.fillStyle = HEADER_BG_COLOR;
+      ctx.fill();
+      ctx.beginPath();
+      ctx.strokeStyle = "#0ff";
+      ctx.lineWidth = LINE_WIDTH;
+      wavePoints.forEach((p, i) => {
+        if (i === 0) ctx.moveTo(p.x, p.y);
+        else ctx.lineTo(p.x, p.y);
+      });
+      ctx.stroke();
+      wavePoints.forEach(p => {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, DOT_RADIUS, 0, Math.PI * 2);
+        ctx.fillStyle = "#0ff";
+        ctx.fill();
+      });
+      time += 0.02;
+      requestAnimationFrame(animateWave);
+    }
+    function onResize() { initDots(); }
+    window.addEventListener("resize", onResize);
+    initDots();
+    animateWave();
+  </script>
+
+  <!-- measureCardHeight (для карточек портфолио, без изменений) -->
+  <script>
+    function measureCardHeight(article) {
+      const clone = article.cloneNode(true);
+      clone.querySelectorAll(".scramble-text").forEach(el => {
+        const txt = el.getAttribute("data-text") || el.textContent;
+        el.textContent = txt;
+      });
+      clone.style.position = "absolute";
+      clone.style.visibility = "hidden";
+      clone.style.zIndex = "-9999";
+      document.body.appendChild(clone);
+      let h = clone.offsetHeight;
+      const btn = clone.querySelector(".work-button");
+      if (btn) {
+        h += btn.offsetHeight;
+      }
+      document.body.removeChild(clone);
+      return h;
+    }
+  </script>
+
+  <!-- Автоматическая установка scramble-text (для остальных элементов) -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const allEls = document.querySelectorAll('body *');
+      allEls.forEach(el => {
+        const tag = el.tagName.toLowerCase();
+        if (
+          !['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'button', 'a'].includes(tag) &&
+          !el.closest('.floating-quote') &&
+          el.children.length === 0 &&
+          el.textContent.trim().length > 0 &&
+          !el.classList.contains('scramble-text')
+        ) {
+          el.classList.add('scramble-text');
+        }
+      });
+      document.querySelectorAll('.scramble-text').forEach(el => {
+        scrambleObserver.observe(el);
+      });
     });
   </script>
 
-  <!-- Загрузка цитат из quote.csv -->
+  <!-- TextScramble + IntersectionObserver -->
   <script>
-    let quotesArray = [];
-    Papa.parse("quote.csv", {
-      download: true,
-      header: true,
-      skipEmptyLines: true,
-      complete: function (results) {
-        quotesArray = results.data;
+    // (код TextScramble уже определён выше)
+  </script>
+
+  <!-- Наблюдатель для появления карточек -->
+  <script>
+    // (cardObserver уже определён выше)
+  </script>
+
+  <!-- Дублирующий код для Burger Menu (оставлен для совместимости) -->
+  <script>
+    const burgerMenu = document.querySelector('.burger');
+    const navMenu = document.querySelector('.nav-links');
+    burgerMenu.addEventListener('click', () => {
+      if (getComputedStyle(navMenu).display === 'none') {
+        navMenu.style.display = 'flex';
+      } else {
+        navMenu.style.display = 'none';
       }
     });
   </script>
@@ -1323,19 +1385,6 @@
       setTimeout(() => { div.remove(); }, 10000);
     }
     setInterval(spawnQuote, 5000);
-  </script>
-
-  <!-- Дублирующий код для Burger Menu (оставлен для совместимости) -->
-  <script>
-    const burger = document.querySelector('.burger');
-    const navLinks = document.querySelector('.nav-links');
-    burger.addEventListener('click', () => {
-      if (getComputedStyle(navLinks).display === 'none') {
-        navLinks.style.display = 'flex';
-      } else {
-        navLinks.style.display = 'none';
-      }
-    });
   </script>
 </body>
 </html>
