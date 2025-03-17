@@ -25,8 +25,7 @@
   <!-- Подключение внешнего файла стилей -->
   <link rel="stylesheet" href="styles.css">
   
-  <!-- Внешний скрипт PapaParse с defer -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js" defer></script>
+  <!-- Убрали внешний парсер CSV -->
 </head>
 <body>
   <!-- HEADER -->
@@ -82,7 +81,7 @@
       <div class="container">
         <h2>Портфолио</h2>
         <div class="grid" id="portfolio-container">
-          <!-- Карточки будут генерироваться из CSV -->
+          <!-- Карточки будут генерироваться из JSON -->
         </div>
       </div>
     </section>
@@ -404,20 +403,18 @@
     });
   </script>
 
-  <!-- CSV-Генерация карточек портфолио -->
+  <!-- Генерация карточек портфолио на основе JSON -->
   <script>
     function sanitize(val) {
-      return val ? val.replace(/^"+|"+$/g, "").trim() : "";
+      return val ? val.toString().trim() : "";
     }
     document.addEventListener('DOMContentLoaded', () => {
-      Papa.parse("artportfolio.csv", {
-        download: true,
-        header: true,
-        skipEmptyLines: true,
-        complete: function (results) {
-          const data = results.data;
+      fetch("artportfolio.json")
+        .then(response => response.json())
+        .then(data => {
           const container = document.getElementById("portfolio-container");
           data.forEach(item => {
+            // Если все поля пустые – пропускаем
             const allEmpty = Object.values(item).every(val => typeof val === "string" ? val.trim() === "" : !val);
             if (allEmpty) return;
             const article = document.createElement("article");
@@ -516,8 +513,8 @@
             container.appendChild(article);
             cardObserver.observe(article);
           });
-        }
-      });
+        })
+        .catch(error => console.error("Error loading artportfolio.json:", error));
     });
   </script>
 
@@ -542,14 +539,10 @@
       setTimeout(() => { div.remove(); }, 10000);
     }
     let quotesArray = [];
-    Papa.parse("quote.csv", {
-      download: true,
-      header: true,
-      skipEmptyLines: true,
-      complete: function (results) {
-        quotesArray = results.data;
-      }
-    });
+    fetch("quote.json")
+      .then(response => response.json())
+      .then(data => { quotesArray = data; })
+      .catch(error => console.error("Error loading quote.json:", error));
     setInterval(spawnQuote, 8000);
   </script>
 </body>
