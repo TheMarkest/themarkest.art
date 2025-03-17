@@ -334,7 +334,8 @@
       }
       setText(newText) {
         cancelAnimationFrame(this.frameRequest);
-        this.frame = 0;
+        this.elapsed = 0;
+        this.lastTime = null;
         this.queue = [];
         this.spans = [];
         this.el.textContent = "";
@@ -343,25 +344,31 @@
           this.el.appendChild(span);
           this.spans.push(span);
           const to = newText[i];
-          const start = Math.floor(Math.random() * 20);
-          const end = start + Math.floor(Math.random() * 20);
+          const start = Math.random() * 200; // задержка старта от 0 до 200 мс
+          const duration = Math.random() * 200 + 200; // продолжительность от 200 до 400 мс
+          const end = start + duration;
           this.queue.push({ to, start, end, char: null });
         }
         return new Promise(resolve => {
           this.resolve = resolve;
-          this.update();
+          requestAnimationFrame(this.update);
         });
       }
-      update() {
+      update(timestamp) {
+        if (!this.lastTime) this.lastTime = timestamp;
+        const delta = timestamp - this.lastTime;
+        this.lastTime = timestamp;
+        this.elapsed += delta;
+        
         let complete = 0;
         for (let i = 0, n = this.queue.length; i < n; i++) {
           const { to, start, end } = this.queue[i];
           const span = this.spans[i];
-          if (this.frame >= end) {
+          if (this.elapsed >= end) {
             complete++;
             span.textContent = to;
             span.classList.remove("dud");
-          } else if (this.frame >= start) {
+          } else if (this.elapsed >= start) {
             if (!this.queue[i].char || Math.random() < 0.28) {
               this.queue[i].char = this.randomChar();
             }
@@ -375,7 +382,6 @@
           this.resolve();
         } else {
           this.frameRequest = requestAnimationFrame(this.update);
-          this.frame++;
         }
       }
       randomChar() {
