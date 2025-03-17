@@ -15,8 +15,8 @@
   <meta name="msapplication-TileColor" content="#000000">
   <meta name="theme-color" content="#000000">
 
-  <!-- Подключаем шрифт Orbitron (ретрофутуристичный, поддерживает кириллицу и латиницу) -->
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap&subset=cyrillic" rel="stylesheet">
+  <!-- Подключаем шрифт Exo 2 (ретрофутуристичный, поддерживает кириллицу и латиницу) -->
+  <link href="https://fonts.googleapis.com/css2?family=Exo+2&display=swap&subset=cyrillic" rel="stylesheet">
 
   <!-- 1) CSS-переменные (глитч-интенсивность) -->
   <style>
@@ -91,7 +91,7 @@
       scroll-behavior: smooth;
     }
     body {
-      font-family: 'Orbitron', sans-serif;
+      font-family: 'Exo 2', sans-serif;
       background: #000;
       color: #fff;
       line-height: 1.5;
@@ -724,7 +724,7 @@
         // Добавляем дополнительное пространство (20px)
         el.style.height = (fullHeight + 20) + "px";
         el.textContent = "";
-        el.classList.add('scramble-text');
+        // Не добавляем класс scramble-text для этих элементов – они будут обрабатываться отдельно
       });
     }
     window.addEventListener('load', () => {
@@ -732,10 +732,49 @@
     });
   </script>
 
-  <!-- Автоматическая установка scramble-text для остальных элементов -->
+  <!-- Функция для разбивки текста в блоках био и стейтмента на предложения и применение эффекта TextScramble к каждому предложению -->
+  <script>
+    function processScrambleParagraphs(selector) {
+      document.querySelectorAll(selector).forEach(el => {
+        const original = el.getAttribute('data-text') || el.textContent.trim();
+        // Разбиваем текст на предложения по знакам препинания
+        let sentences = original.match(/[^.!?]+[.!?]+[\])'"`’”]*|.+/g);
+        if (sentences) {
+          el.innerHTML = "";
+          sentences.forEach((sentence, index) => {
+            let span = document.createElement("span");
+            span.className = "scramble-sentence";
+            span.setAttribute("data-text", sentence.trim());
+            span.setAttribute("data-index", index);
+            span.style.display = "block";
+            span.style.opacity = "0";
+            el.appendChild(span);
+          });
+        }
+      });
+    }
+
+    const sentenceObserver = new IntersectionObserver((entries, obs) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const el = entry.target;
+          const idx = parseInt(el.getAttribute("data-index"), 10) || 0;
+          setTimeout(() => {
+            const original = el.getAttribute("data-text");
+            el.textContent = "";
+            const fx = new TextScramble(el);
+            fx.setText(original);
+          }, idx * 300);
+          obs.unobserve(el);
+        }
+      });
+    }, { root: null, rootMargin: "0px 0px -10% 0px", threshold: 0.1 });
+  </script>
+
+  <!-- Автоматическая установка scramble-text для остальных элементов, исключая блоки био и стейтмента -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      const allEls = document.querySelectorAll('body *');
+      const allEls = document.querySelectorAll('body *:not(.bio p):not(.artist-statement p)');
       allEls.forEach(el => {
         const tag = el.tagName.toLowerCase();
         if (
@@ -750,6 +789,11 @@
       });
       document.querySelectorAll('.scramble-text').forEach(el => {
         scrambleObserver.observe(el);
+      });
+      // Обработка блоков био и artist statement – разбивка на предложения
+      processScrambleParagraphs('.bio p, .artist-statement p');
+      document.querySelectorAll('.scramble-sentence').forEach(el => {
+         sentenceObserver.observe(el);
       });
     });
   </script>
@@ -997,10 +1041,10 @@
     }
   </script>
 
-  <!-- Автоматическая установка scramble-text (для остальных элементов) -->
+  <!-- Автоматическая установка scramble-text для остальных элементов, исключая блоки био и стейтмента -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      const allEls = document.querySelectorAll('body *');
+      const allEls = document.querySelectorAll('body *:not(.bio p):not(.artist-statement p)');
       allEls.forEach(el => {
         const tag = el.tagName.toLowerCase();
         if (
@@ -1015,6 +1059,11 @@
       });
       document.querySelectorAll('.scramble-text').forEach(el => {
         scrambleObserver.observe(el);
+      });
+      // Обработка блоков био и artist statement – разбивка на предложения
+      processScrambleParagraphs('.bio p, .artist-statement p');
+      document.querySelectorAll('.scramble-sentence').forEach(el => {
+         sentenceObserver.observe(el);
       });
     });
   </script>
@@ -1298,7 +1347,6 @@
           });
         }
       });
-    });
   </script>
 
   <!-- Загрузка цитат из quote.csv -->
