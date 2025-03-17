@@ -158,8 +158,9 @@
       top: 20px;
       display: flex;
       gap: 10px;
+      align-items: center;
     }
-    .language-switcher button {
+    .language-buttons button {
       background: transparent;
       border: 1px solid #0ff;
       color: #0ff;
@@ -169,9 +170,18 @@
       font-size: 0.9rem;
       transition: background 0.3s, color 0.3s;
     }
-    .language-switcher button:hover {
+    .language-buttons button:hover {
       background: #0ff;
       color: #000;
+    }
+    .language-dropdown {
+      display: none;
+      background: transparent;
+      border: 1px solid #0ff;
+      color: #0ff;
+      padding: 5px 10px;
+      font-family: inherit;
+      font-size: 0.9rem;
     }
     .burger {
       display: none;
@@ -215,6 +225,12 @@
       .language-switcher {
         right: 20px;
         top: 70px;
+      }
+      .language-buttons {
+        display: none;
+      }
+      .language-dropdown {
+        display: block;
       }
     }
   </style>
@@ -705,7 +721,7 @@
         el.classList.add('scramble-text');
       });
     }
-    document.addEventListener('DOMContentLoaded', () => {
+    window.addEventListener('load', () => {
       fixBioAndStatementHeight('.bio p, .artist-statement p');
     });
   </script>
@@ -750,10 +766,18 @@
       </nav>
       <!-- Переключатель языка -->
       <div class="language-switcher">
-        <button>EN</button>
-        <button>RU</button>
-        <button>KZ</button>
-        <button>UA</button>
+        <div class="language-buttons">
+          <button>EN</button>
+          <button>RU</button>
+          <button>KZ</button>
+          <button>UA</button>
+        </div>
+        <select class="language-dropdown">
+          <option value="EN">EN</option>
+          <option value="RU">RU</option>
+          <option value="KZ">KZ</option>
+          <option value="UA">UA</option>
+        </select>
       </div>
       <button class="burger">
         <span></span>
