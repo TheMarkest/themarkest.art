@@ -285,11 +285,12 @@
     }
   </script>
 
-  <!-- Автоматическая установка scramble-text только для элементов внутри main -->
+  <!-- Автоматическая установка scramble-text для main и для обложки -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      const allEls = document.querySelectorAll('main *');
-      allEls.forEach(el => {
+      // Применяем scramble для элементов внутри main
+      const mainEls = document.querySelectorAll('main *');
+      mainEls.forEach(el => {
         const tag = el.tagName.toLowerCase();
         if (
           !['h1', 'h2', 'h3', 'button', 'a'].includes(tag) &&
@@ -299,10 +300,16 @@
           !el.classList.contains('scramble-text')
         ) {
           el.classList.add('scramble-text');
+          scrambleObserver.observe(el);
         }
       });
-      document.querySelectorAll('.scramble-text').forEach(el => {
-        scrambleObserver.observe(el);
+      // Применяем scramble для подзаголовка обложки
+      const coverEls = document.querySelectorAll('#cover .cover-content p');
+      coverEls.forEach(el => {
+        if (!el.classList.contains('scramble-text')) {
+          el.classList.add('scramble-text');
+          scrambleObserver.observe(el);
+        }
       });
     });
   </script>
@@ -467,7 +474,7 @@
     });
   </script>
 
-  <!-- CSV-Генерация карточек портфолио (без лишнего console.log) -->
+  <!-- CSV-Генерация карточек портфолио -->
   <script>
     function sanitize(val) {
       if (!val) return "";
