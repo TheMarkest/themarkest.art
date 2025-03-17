@@ -15,8 +15,8 @@
   <meta name="msapplication-TileColor" content="#000000">
   <meta name="theme-color" content="#000000">
 
-  <!-- Подключаем шрифт VT323 (ретрофутуристичный, поддерживает кириллицу и латиницу) -->
-  <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap&subset=cyrillic" rel="stylesheet">
+  <!-- Подключаем шрифт Orbitron (ретрофутуристичный, поддерживает кириллицу и латиницу) -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap&subset=cyrillic" rel="stylesheet">
 
   <!-- 1) CSS-переменные (глитч-интенсивность) -->
   <style>
@@ -91,7 +91,7 @@
       scroll-behavior: smooth;
     }
     body {
-      font-family: 'VT323', sans-serif;
+      font-family: 'Orbitron', sans-serif;
       background: #000;
       color: #fff;
       line-height: 1.5;
@@ -723,16 +723,8 @@
         document.body.removeChild(clone);
         // Добавляем дополнительное пространство (20px)
         el.style.height = (fullHeight + 20) + "px";
-        // Разбиваем оригинальный текст на подблоки по строкам (каждый абзац)
-        const originalText = el.getAttribute('data-text');
-        const paragraphs = originalText.split(/\n+/).map(p => p.trim()).filter(p => p !== '');
-        el.innerHTML = '';
-        paragraphs.forEach(par => {
-          const subDiv = document.createElement('div');
-          subDiv.classList.add('scramble-text');
-          subDiv.setAttribute('data-text', par);
-          el.appendChild(subDiv);
-        });
+        el.textContent = "";
+        el.classList.add('scramble-text');
       });
     }
     window.addEventListener('load', () => {
@@ -1306,6 +1298,7 @@
           });
         }
       });
+    });
   </script>
 
   <!-- Загрузка цитат из quote.csv -->
