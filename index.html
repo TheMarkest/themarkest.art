@@ -209,12 +209,13 @@
     </div>
   </div>
 
-  <!-- Wave Animation Script -->
+  <!-- Оптимизированный Wave Animation Script (на основе времени) -->
   <script>
     const canvas = document.getElementById("waveCanvas");
     const ctx = canvas.getContext("2d");
     let width = 0, height = 0;
     let time = 0;
+    let lastWaveTime;
     let dots = [];
     const AMPLITUDE = 15;
     const DOT_SPACING = 40;
@@ -241,11 +242,17 @@
       }
       dots.push({ x: width, pinned: true });
     }
-    function animateWave() {
+    function animateWave(timestamp) {
+      if (!lastWaveTime) lastWaveTime = timestamp;
+      const delta = timestamp - lastWaveTime;
+      lastWaveTime = timestamp;
+      // Поддерживаем скорость ~1.2 единиц в секунду (0.0012 * delta)
+      time += delta * 0.0012;
+      
       ctx.clearRect(0, 0, width, height);
       const wavePoints = dots.map(dot => {
         if (dot.pinned) return { x: dot.x, y: BASELINE };
-        let wave = AMPLITUDE * Math.sin(dot.x * dot.freq + time + dot.phase);
+        const wave = AMPLITUDE * Math.sin(dot.x * dot.freq + time + dot.phase);
         return { x: dot.x, y: BASELINE + wave };
       });
       ctx.beginPath();
@@ -271,13 +278,12 @@
         ctx.fillStyle = "#0ff";
         ctx.fill();
       });
-      time += 0.02;
       requestAnimationFrame(animateWave);
     }
     function onResize() { initDots(); }
     window.addEventListener("resize", onResize);
     initDots();
-    animateWave();
+    requestAnimationFrame(animateWave);
   </script>
 
   <!-- measureCardHeight (для карточек портфолио, без изменений) -->
@@ -324,7 +330,7 @@
     });
   </script>
 
-  <!-- TextScramble + IntersectionObserver -->
+  <!-- Оптимизированный TextScramble + IntersectionObserver (с использованием времени) -->
   <script>
     class TextScramble {
       constructor(el) {
