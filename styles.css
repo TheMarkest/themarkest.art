@@ -197,7 +197,6 @@
     .burger {
       display: block;
     }
-    /* При адаптиве можно скорректировать положение переключателя */
     .language-switcher {
       right: 20px;
       top: 70px;
@@ -210,7 +209,7 @@
     }
   }
   
-  /* 5) Мерцающие заголовки (сниженная интенсивность) */
+  /* 5) Мерцающие заголовки */
   h1, h2, h3 {
     animation: heading-glow 3s infinite alternate;
     text-shadow: 0 0 1px #0ff, 0 0 2px #0ff, 0 0 3px #0ff;
@@ -249,6 +248,7 @@
     pointer-events: none;
     mix-blend-mode: screen;
     will-change: transform;
+    transform: translateZ(0);
   }
   .glitch-image::before {
     filter: drop-shadow(-2px 0px #ff00c1);
@@ -338,7 +338,6 @@
     margin-bottom: 2rem;
     text-transform: uppercase;
   }
-  /* Сетка портфолио – одна колонка */
   .grid {
     display: grid;
     grid-template-columns: 1fr;
@@ -349,7 +348,6 @@
   .work-item {
     opacity: 0;
     transform: translateY(20px);
-    /* Убираем transition, заменяем анимацией */
     display: flex;
     flex-direction: row;
     gap: 1rem;

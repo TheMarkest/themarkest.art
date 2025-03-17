@@ -24,7 +24,7 @@
   <!-- Подключаем Papa Parse для CSV -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
 
-  <!-- Новый метод для предрасчёта высоты блоков био и стейтмента (отдельно от карточек портфолио) -->
+  <!-- Предрасчёт высоты блоков био и стейтмента -->
   <script>
     function fixBioAndStatementHeight(selector) {
       document.querySelectorAll(selector).forEach(el => {
@@ -32,19 +32,16 @@
           el.setAttribute('data-text', el.textContent.trim());
         }
         const clone = el.cloneNode(true);
-        // Устанавливаем ширину клона равной ширине оригинала для корректного переноса строк
         clone.style.width = el.offsetWidth + "px";
         clone.style.visibility = 'hidden';
         clone.style.position = 'absolute';
         clone.style.height = 'auto';
         clone.style.whiteSpace = 'pre-line';
         clone.style.opacity = '1';
-        // Сдвигаем клон за пределы экрана
         clone.style.left = "-9999px";
         document.body.appendChild(clone);
         const fullHeight = clone.offsetHeight;
         document.body.removeChild(clone);
-        // Добавляем дополнительное пространство (20px)
         el.style.height = (fullHeight + 20) + "px";
         el.textContent = "";
         el.classList.add('scramble-text');
@@ -54,8 +51,6 @@
       fixBioAndStatementHeight('.bio p, .artist-statement p');
     });
   </script>
-  
-  <!-- (Удалён дублирующий блок автоматического назначения scramble-text из head) -->
 </head>
 <body>
   <!-- HEADER -->
@@ -259,13 +254,16 @@
       });
       requestAnimationFrame(animateWave);
     }
-    function onResize() { initDots(); }
-    window.addEventListener("resize", onResize);
+    let resizeTimeout;
+    window.addEventListener("resize", () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(initDots, 100);
+    });
     initDots();
     requestAnimationFrame(animateWave);
   </script>
 
-  <!-- measureCardHeight (для карточек портфолио, без изменений) -->
+  <!-- measureCardHeight (без изменений) -->
   <script>
     function measureCardHeight(article) {
       const clone = article.cloneNode(true);
@@ -287,14 +285,14 @@
     }
   </script>
 
-  <!-- Автоматическая установка scramble-text (объединённый блок) -->
+  <!-- Автоматическая установка scramble-text только для элементов внутри main -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      const allEls = document.querySelectorAll('body *');
+      const allEls = document.querySelectorAll('main *');
       allEls.forEach(el => {
         const tag = el.tagName.toLowerCase();
         if (
-          !['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'button', 'a'].includes(tag) &&
+          !['h1', 'h2', 'h3', 'button', 'a'].includes(tag) &&
           !el.closest('.floating-quote') &&
           el.children.length === 0 &&
           el.textContent.trim().length > 0 &&
@@ -309,7 +307,7 @@
     });
   </script>
 
-  <!-- Оптимизированный TextScramble + IntersectionObserver (с использованием времени) -->
+  <!-- Оптимизированный TextScramble с таймингом -->
   <script>
     class TextScramble {
       constructor(el) {
@@ -329,8 +327,8 @@
           this.el.appendChild(span);
           this.spans.push(span);
           const to = newText[i];
-          const start = Math.random() * 200; // задержка старта от 0 до 200 мс
-          const duration = Math.random() * 200 + 200; // продолжительность от 200 до 400 мс
+          const start = Math.random() * 200;
+          const duration = Math.random() * 200 + 200;
           const end = start + duration;
           this.queue.push({ to, start, end, char: null });
         }
@@ -407,16 +405,12 @@
     }, { threshold: 0.1 });
   </script>
 
-  <!-- Burger Menu Script (единственный блок) -->
+  <!-- Единый блок для Burger Menu -->
   <script>
     const burger = document.querySelector('.burger');
     const navLinks = document.querySelector('.nav-links');
     burger.addEventListener('click', () => {
-      if (getComputedStyle(navLinks).display === 'none') {
-        navLinks.style.display = 'flex';
-      } else {
-        navLinks.style.display = 'none';
-      }
+      navLinks.style.display = (getComputedStyle(navLinks).display === 'none') ? 'flex' : 'none';
     });
   </script>
 
@@ -424,7 +418,6 @@
   <script>
     const modal = document.getElementById("modal");
     const modalContent = document.getElementById("modal-content");
-    const modalTitleBar = document.getElementById("modal-title-bar");
     const modalTitleText = document.getElementById("modal-title-text");
     const modalMediaWrapper = document.getElementById("modal-media-wrapper");
     const modalClose = document.getElementById("modal-close");
@@ -450,12 +443,8 @@
         } else if (target.tagName.toLowerCase() === "video") {
           let video = document.createElement("video");
           const sourceEl = target.querySelector("source");
-          if (sourceEl) {
-            video.src = sourceEl.src;
-            video.type = sourceEl.type;
-          } else {
-            video.src = target.src;
-          }
+          video.src = sourceEl ? sourceEl.src : target.src;
+          video.type = sourceEl ? sourceEl.type : "";
           video.controls = true;
           video.autoplay = true;
           video.playsInline = true;
@@ -464,12 +453,12 @@
         }
       }
     });
-    modalClose.addEventListener("click", function () {
+    modalClose.addEventListener("click", () => {
       modal.style.display = "none";
       modalMediaWrapper.innerHTML = "";
       modalTitleText.textContent = "";
     });
-    modal.addEventListener("click", function (e) {
+    modal.addEventListener("click", (e) => {
       if (e.target === modal) {
         modal.style.display = "none";
         modalMediaWrapper.innerHTML = "";
@@ -478,7 +467,7 @@
     });
   </script>
 
-  <!-- CSV-Генерация карточек портфолио -->
+  <!-- CSV-Генерация карточек портфолио (без лишнего console.log) -->
   <script>
     function sanitize(val) {
       if (!val) return "";
@@ -490,14 +479,10 @@
         header: true,
         skipEmptyLines: true,
         complete: function (results) {
-          console.log("CSV parse results:", results.data);
           const data = results.data;
           const container = document.getElementById("portfolio-container");
           data.forEach(item => {
-            const allEmpty = Object.values(item).every(val => {
-              if (typeof val === "string") return val.trim() === "";
-              return !val;
-            });
+            const allEmpty = Object.values(item).every(val => typeof val === "string" ? val.trim() === "" : !val);
             if (allEmpty) return;
             const article = document.createElement("article");
             article.className = "work-item";
@@ -546,12 +531,8 @@
                   attempt++;
                   mediaElement.src = url;
                 }
-                mediaElement.onerror = function () {
-                  tryNext();
-                };
-                mediaElement.onload = function () {
-                  mediaElement.onerror = null;
-                };
+                mediaElement.onerror = tryNext;
+                mediaElement.onload = () => { mediaElement.onerror = null; };
                 tryNext();
               }
             } else {
@@ -614,7 +595,7 @@
     });
   </script>
 
-  <!-- Скрипт для плавающих цитат -->
+  <!-- Скрипт для плавающих цитат (интервал 8000 мс) -->
   <script>
     function spawnQuote() {
       if (quotesArray.length === 0) return;
@@ -634,7 +615,7 @@
       document.body.appendChild(div);
       setTimeout(() => { div.remove(); }, 10000);
     }
-    setInterval(spawnQuote, 5000);
+    setInterval(spawnQuote, 8000);
   </script>
 </body>
 </html>
