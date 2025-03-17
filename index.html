@@ -680,19 +680,23 @@
   <!-- Подключаем Papa Parse для CSV -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
 
-  <!-- Новый скрипт для предрасчёта высоты блоков био и стейтмента -->
+  <!-- Новый метод для предрасчёта высоты блоков био и стейтмента (отдельно от карточек портфолио) -->
   <script>
-    function fixScrambleBlocks(selector) {
+    function fixBioAndStatementHeight(selector) {
       document.querySelectorAll(selector).forEach(el => {
         if (!el.hasAttribute('data-text')) {
           el.setAttribute('data-text', el.textContent.trim());
         }
         const clone = el.cloneNode(true);
+        // Устанавливаем ширину клона равной ширине оригинала для корректного переноса строк
+        clone.style.width = el.offsetWidth + "px";
         clone.style.visibility = 'hidden';
         clone.style.position = 'absolute';
         clone.style.height = 'auto';
         clone.style.whiteSpace = 'pre-line';
         clone.style.opacity = '1';
+        // Сдвигаем клон за пределы экрана
+        clone.style.left = "-9999px";
         document.body.appendChild(clone);
         const fullHeight = clone.offsetHeight;
         document.body.removeChild(clone);
@@ -702,11 +706,11 @@
       });
     }
     document.addEventListener('DOMContentLoaded', () => {
-      fixScrambleBlocks('.bio p, .artist-statement p');
+      fixBioAndStatementHeight('.bio p, .artist-statement p');
     });
   </script>
 
-  <!-- Автоматическая установка scramble-text -->
+  <!-- Автоматическая установка scramble-text для остальных элементов -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const allEls = document.querySelectorAll('body *');
@@ -941,7 +945,7 @@
     animateWave();
   </script>
 
-  <!-- measureCardHeight -->
+  <!-- measureCardHeight (для карточек портфолио, без изменений) -->
   <script>
     function measureCardHeight(article) {
       const clone = article.cloneNode(true);
@@ -1264,7 +1268,6 @@
           });
         }
       });
-    });
   </script>
 
   <!-- Загрузка цитат из quote.csv -->
