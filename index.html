@@ -153,7 +153,8 @@
               </p>
             </div>
             <div class="artist-photo">
-              <img src="assets/portrait.png" alt="Portrait of the Artist" loading="lazy" decoding="async" />
+              <!-- Убрали loading="lazy" decoding="async" -->
+              <img src="assets/portrait.png" alt="Portrait of the Artist" />
             </div>
           </div>
           <div class="artist-statement">
@@ -324,64 +325,54 @@
     });
   </script>
 
-  <!-- TextScramble + IntersectionObserver -->
+  <!-- УПРОЩЁННАЯ И УСКОРЕННАЯ TextScramble + IntersectionObserver -->
   <script>
     class TextScramble {
       constructor(el) {
         this.el = el;
         this.chars = '!<>-_\\/[]{}—=+*^?#________';
-        this.update = this.update.bind(this);
       }
       setText(newText) {
-        cancelAnimationFrame(this.frameRequest);
-        this.frame = 0;
-        this.queue = [];
-        this.spans = [];
-        this.el.textContent = "";
-        for (let i = 0; i < newText.length; i++) {
-          const span = document.createElement("span");
-          this.el.appendChild(span);
-          this.spans.push(span);
-          const to = newText[i];
-          const start = Math.floor(Math.random() * 20);
-          const end = start + Math.floor(Math.random() * 20);
-          this.queue.push({ to, start, end, char: null });
-        }
         return new Promise(resolve => {
-          this.resolve = resolve;
-          this.update();
-        });
-      }
-      update() {
-        let complete = 0;
-        for (let i = 0, n = this.queue.length; i < n; i++) {
-          const { to, start, end } = this.queue[i];
-          const span = this.spans[i];
-          if (this.frame >= end) {
-            complete++;
-            span.textContent = to;
-            span.classList.remove("dud");
-          } else if (this.frame >= start) {
-            if (!this.queue[i].char || Math.random() < 0.28) {
-              this.queue[i].char = this.randomChar();
+          // Полная длительность анимации (мс)
+          const totalDuration = 600;
+          // Количество шагов/кадров
+          const steps = 12;
+          const stepTime = Math.floor(totalDuration / steps);
+
+          // Массив спанов
+          this.el.textContent = "";
+          const spans = [...newText].map(ch => {
+            const span = document.createElement("span");
+            span.textContent = this.randomChar();
+            this.el.appendChild(span);
+            return span;
+          });
+
+          let currentStep = 0;
+          const scrambleInterval = setInterval(() => {
+            for (let i = 0; i < spans.length; i++) {
+              // Пока не последний шаг, подменяем на случайный символ
+              if (currentStep < steps - 1) {
+                spans[i].textContent = this.randomChar();
+              } else {
+                // На последнем шаге ставим итоговый символ
+                spans[i].textContent = newText[i];
+              }
             }
-            span.textContent = this.queue[i].char;
-            span.classList.add("dud");
-          } else {
-            span.textContent = "";
-          }
-        }
-        if (complete === this.queue.length) {
-          this.resolve();
-        } else {
-          this.frameRequest = requestAnimationFrame(this.update);
-          this.frame++;
-        }
+            currentStep++;
+            if (currentStep >= steps) {
+              clearInterval(scrambleInterval);
+              resolve();
+            }
+          }, stepTime);
+        });
       }
       randomChar() {
         return this.chars[Math.floor(Math.random() * this.chars.length)];
       }
     }
+
     const scrambleObserver = new IntersectionObserver((entries, obs) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -519,9 +510,8 @@
                 const ext = mediaId.substring(mediaId.lastIndexOf(".")).toLowerCase();
                 if (ext === ".mp4" || ext === ".webm") {
                   mediaElement = document.createElement("video");
+                  /* Убрали lazy/async */
                   mediaElement.setAttribute("controls", "controls");
-                  mediaElement.setAttribute("loading", "lazy");
-                  mediaElement.setAttribute("decoding", "async");
                   mediaElement.classList.add("work-thumb");
                   let source = document.createElement("source");
                   source.src = "assets/" + mediaId;
@@ -532,10 +522,10 @@
                   mediaElement.src = "assets/" + mediaId;
                   mediaElement.alt = sanitize(item.title) || "Изображение работы";
                   mediaElement.className = "work-thumb";
-                  mediaElement.setAttribute("loading", "lazy");
-                  mediaElement.setAttribute("decoding", "async");
+                  /* Убрали lazy/async */
                 }
               } else {
+                // Пытаемся подобрать расширение
                 const imageExtensions = [".jpg", ".jpeg", ".png", ".gif", ".svg"];
                 const videoExtensions = [".mp4", ".webm"];
                 let extList = imageExtensions.concat(videoExtensions);
@@ -543,8 +533,7 @@
                 mediaElement = document.createElement("img");
                 mediaElement.alt = sanitize(item.title) || "Изображение работы";
                 mediaElement.className = "work-thumb";
-                mediaElement.setAttribute("loading", "lazy");
-                mediaElement.setAttribute("decoding", "async");
+                /* Убрали lazy/async */
                 function tryNext() {
                   if (attempt >= extList.length) {
                     mediaElement.onerror = null;
