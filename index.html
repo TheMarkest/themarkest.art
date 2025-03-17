@@ -703,8 +703,7 @@
         el.classList.add('scramble-text');
       });
     }
-    // Теперь запускаем fixScrambleBlocks после полной загрузки страницы
-    window.addEventListener('load', () => {
+    document.addEventListener('DOMContentLoaded', () => {
       fixScrambleBlocks('.bio p, .artist-statement p');
     });
   </script>
