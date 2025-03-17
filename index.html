@@ -3,10 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <!-- Тексты из внешнего файла будут подставлены -->
-  <title data-i18n="title"></title>
-  <meta name="description" data-i18n="metaDescription" content="">
+  <title>TheMarkest.art – Glitch Image + Portrait</title>
+  <meta name="description" content="Портфолио художника в стиле sci‑fi/cyberpunk, с волной, старомониторным эффектом, TextScramble, пиксельным глитч‑логотипом, фото художника и удобными карточками работ." />
 
   <!-- Favicons -->
   <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/apple-touch-icon.png">
@@ -19,28 +17,6 @@
 
   <!-- Подключаем шрифт Handjet -->
   <link href="https://fonts.googleapis.com/css2?family=Handjet" rel="stylesheet">
-
-  <!-- Скрипт для загрузки текстов из внешнего файла -->
-  <script>
-    window.texts = {}; // Глобальный объект для текстов
-    fetch('texts.json')
-      .then(response => response.json())
-      .then(data => {
-        window.texts = data;
-        // Обновляем <title> и meta description
-        document.title = data.title;
-        const metaDesc = document.querySelector('meta[name="description"]');
-        if (metaDesc) metaDesc.setAttribute('content', data.metaDescription);
-        // Заменяем содержимое элементов с data-i18n
-        document.querySelectorAll('[data-i18n]').forEach(el => {
-          const key = el.getAttribute('data-i18n');
-          if (data[key]) {
-            el.innerText = data[key];
-          }
-        });
-      })
-      .catch(err => console.error('Error loading texts:', err));
-  </script>
 
   <!-- 1) CSS-переменные (глитч-интенсивность) -->
   <style>
@@ -792,10 +768,10 @@
         </div>
       </div>
       <nav class="nav-links">
-        <a href="#cover" data-i18n="navCover"></a>
-        <a href="#works" data-i18n="navPortfolio"></a>
-        <a href="#about" data-i18n="navAbout"></a>
-        <a href="#contact" data-i18n="navContact"></a>
+        <a href="#cover">Обложка</a>
+        <a href="#works">Портфолио</a>
+        <a href="#about">О художнике</a>
+        <a href="#contact">Контакты</a>
       </nav>
       <!-- Переключатель языка -->
       <div class="language-switcher">
@@ -823,8 +799,8 @@
   <!-- COVER -->
   <section id="cover">
     <div class="cover-content">
-      <h2 data-i18n="coverTitle"></h2>
-      <p data-i18n="coverSubtitle"></p>
+      <h2>MARK BOGDANOV</h2>
+      <p>Искусство о науке.</p>
     </div>
   </section>
 
@@ -833,7 +809,7 @@
     <!-- Портфолио -->
     <section id="works">
       <div class="container">
-        <h2 data-i18n="portfolioTitle"></h2>
+        <h2>Портфолио</h2>
         <div class="grid" id="portfolio-container">
           <!-- Карточки будут генерироваться из CSV -->
         </div>
@@ -843,20 +819,43 @@
     <!-- О художнике -->
     <section id="about">
       <div class="container">
-        <h2 data-i18n="aboutTitle"></h2>
+        <h2>О художнике</h2>
         <div class="about-content">
           <div class="bio-row">
             <div class="bio">
-              <h3 data-i18n="bioTitle"></h3>
-              <p data-i18n="bioText"></p>
+              <h3>Биография</h3>
+              <p>
+                Марк Богданов — художник, работающий на стыке искусства, технологий и инженерной эстетики. В своих произведениях он исследует влияние научного прогресса на визуальные формы, сочетая современные методы производства (3D-печать, лазерную резку, цифровую обработку) с традиционными материалами.
+
+                Родился в 1998 году в семье хореографов и вырос между Санкт-Петербургом и Одессой — двумя городами с глубокими культурными традициями. Детство и юность пришлись на переломные десятилетия цифровой революции, когда искусство и технологии начали стремительно сближаться. Это время сформировало его интерес к новым методам создания и восприятия искусства, где материальный объект все чаще сочетался с виртуальными и механическими компонентами.
+                
+                Получив образование в сфере оптико-электроники, он переосмыслил принципы традиционной скульптуры через призму научного знания. Вдохновляясь конструктивизмом, ретрофутуризмом и инженерным мышлением, он рассматривает искусство не только как средство самовыражения, но и как способ изучения структуры окружающего мира. Его работы исследуют, как технологии не просто изменяют художественную эстетику, но и формируют новые принципы взаимодействия человека с объектом.
+              </p>
             </div>
             <div class="artist-photo">
               <img src="assets/portrait.png" alt="Portrait of the Artist" loading="lazy" decoding="async" />
             </div>
           </div>
           <div class="artist-statement">
-            <h3 data-i18n="artistStatementTitle"></h3>
-            <p data-i18n="artistStatementText"></p>
+            <h3>Artist Statement</h3>
+            <p>
+              Я создаю скульптуры, в которых современные технологии производства встречаются с наследием инженерной
+              мысли прошлого.
+              Моё искусство — это поиск формы, структуры и материала, отражающих логику научного прогресса.
+
+              В своих работах я сочетаю 3D-печать, лазерную резку, цифровую обработку и традиционные ремесленные
+              техники,
+              интегрируя их в единую художественную систему. Мне важно показать, как технологии формируют эстетику и
+              как через них можно создавать новые визуальные смыслы, выходящие за пределы привычного восприятия.
+
+              Я вдохновляюсь конструктивизмом, ретрофутуризмом и инженерной эстетикой, рассматривая искусство как способ
+              взаимодействия с научным знанием.
+              В моих скульптурах можно увидеть интертекстуальность инженерных решений, где каждая деталь несёт смысл и
+              отсылает к механике, архитектуре и оптике.
+
+              Меня интересует диалог между прошлым и будущим: как технологии меняются, но принципы остаются вечными.
+              В этом я вижу красоту — в переплетении точности, формы и замысла.
+            </p>
           </div>
         </div>
       </div>
@@ -865,19 +864,21 @@
     <!-- Контакты -->
     <section id="contact">
       <div class="container">
-        <h2 data-i18n="contactTitle"></h2>
+        <h2>Контакты</h2>
         <div class="contact-buttons">
-          <a class="contact-button" href="https://t.me/markestart" target="_blank" data-i18n="contactTelegram"></a>
-          <a class="contact-button" href="https://instagram.com/markestart" target="_blank" data-i18n="contactInstagram"></a>
-          <a class="contact-button" href="tel:+77051248743" data-i18n="contactPhone"></a>
-          <a class="contact-button" href="mailto:markbogdanovofficial@gmail.com" data-i18n="contactEmail"></a>
+          <a class="contact-button" href="https://t.me/markestart" target="_blank">Telegram</a>
+          <a class="contact-button" href="https://instagram.com/markestart" target="_blank">Instagram</a>
+          <a class="contact-button" href="tel:+77051248743">Телефон</a>
+          <a class="contact-button" href="mailto:markbogdanovofficial@gmail.com">Email</a>
         </div>
       </div>
     </section>
   </main>
 
   <footer>
-    <div class="container" data-i18n="footerText"></div>
+    <div class="container">
+      &copy; 2025 TheMarkest.art. Все права защищены.
+    </div>
   </footer>
 
   <!-- Модальное окно для полноэкранного просмотра медиа -->
@@ -1126,10 +1127,7 @@
             titleText = titleEl.textContent.trim();
           }
         }
-        if (!titleText) {
-          titleText = window.texts.modalDefaultTitle || "Без названия";
-        }
-        modalTitleText.textContent = titleText;
+        modalTitleText.textContent = titleText || "Без названия";
         modalMediaWrapper.innerHTML = "";
         modal.style.display = "block";
         if (target.tagName.toLowerCase() === "img") {
@@ -1259,13 +1257,13 @@
             const h3 = document.createElement("h3");
             h3.textContent = sanitize(item.title) || "Без названия";
             const pYear = document.createElement("p");
-            pYear.innerHTML = window.texts.yearLabel + " <span class='scramble-text' data-text='" + (sanitize(item.year) || "—") + "'>-</span>";
+            pYear.innerHTML = "Год: <span class='scramble-text' data-text='" + (sanitize(item.year) || "—") + "'>-</span>";
             const pDesc = document.createElement("p");
-            pDesc.innerHTML = window.texts.descriptionLabel + " <span class='scramble-text' data-text='" + (sanitize(item.description) || "") + "'>-</span>";
+            pDesc.innerHTML = "Описание: <span class='scramble-text' data-text='" + (sanitize(item.description) || "") + "'>-</span>";
             const pMaterials = document.createElement("p");
-            pMaterials.innerHTML = window.texts.materialsLabel + " <span class='scramble-text' data-text='" + (sanitize(item.materials) || "—") + "'>-</span>";
+            pMaterials.innerHTML = "Материалы: <span class='scramble-text' data-text='" + (sanitize(item.materials) || "—") + "'>-</span>";
             const pStatus = document.createElement("p");
-            pStatus.innerHTML = window.texts.statusLabel + " <span class='scramble-text' data-text='" + (sanitize(item.status) || "—") + "'>-</span>";
+            pStatus.innerHTML = "Статус: <span class='scramble-text' data-text='" + (sanitize(item.status) || "—") + "'>-</span>";
             details.appendChild(h3);
             details.appendChild(pYear);
             details.appendChild(pDesc);
