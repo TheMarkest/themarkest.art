@@ -16,17 +16,41 @@
   <meta name="theme-color" content="#000000">
 
   <!-- Подключаем шрифт Handjet -->
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Handjet" rel="stylesheet">
-
-  <!-- Preload для фонового изображения обложки -->
-  <link rel="preload" as="image" href="https://picsum.photos/1600/900?grayscale">
 
   <!-- Подключение внешнего файла стилей -->
   <link rel="stylesheet" href="styles.css">
-  
-  <!-- Внешний скрипт PapaParse с defer -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js" defer></script>
+
+  <!-- Подключаем Papa Parse для CSV -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+
+  <!-- Предрасчёт высоты блоков био и стейтмента -->
+  <script>
+    function fixBioAndStatementHeight(selector) {
+      document.querySelectorAll(selector).forEach(el => {
+        if (!el.hasAttribute('data-text')) {
+          el.setAttribute('data-text', el.textContent.trim());
+        }
+        const clone = el.cloneNode(true);
+        clone.style.width = el.offsetWidth + "px";
+        clone.style.visibility = 'hidden';
+        clone.style.position = 'absolute';
+        clone.style.height = 'auto';
+        clone.style.whiteSpace = 'pre-line';
+        clone.style.opacity = '1';
+        clone.style.left = "-9999px";
+        document.body.appendChild(clone);
+        const fullHeight = clone.offsetHeight;
+        document.body.removeChild(clone);
+        el.style.height = (fullHeight + 20) + "px";
+        el.textContent = "";
+        el.classList.add('scramble-text');
+      });
+    }
+    window.addEventListener('load', () => {
+      fixBioAndStatementHeight('.bio p, .artist-statement p');
+    });
+  </script>
 </head>
 <body>
   <!-- HEADER -->
@@ -121,6 +145,8 @@
 
               Я вдохновляюсь конструктивизмом, ретрофутуризмом и инженерной эстетикой, рассматривая искусство как способ
               взаимодействия с научным знанием.
+              В моих скульптурах можно увидеть интертекстуальность инженерных решений, где каждая деталь несёт смысл и
+              отсылает к механике, архитектуре и оптике.
             </p>
           </div>
         </div>
@@ -158,26 +184,36 @@
     </div>
   </div>
 
-  <!-- Все основные скрипты размещены в конце для ускорения загрузки -->
-
-  <!-- Wave Animation (на основе времени) -->
+  <!-- Оптимизированный Wave Animation Script (на основе времени) -->
   <script>
     const canvas = document.getElementById("waveCanvas");
     const ctx = canvas.getContext("2d");
     let width = 0, height = 0;
-    let time = 0, lastWaveTime;
+    let time = 0;
+    let lastWaveTime;
     let dots = [];
-    const AMPLITUDE = 15, DOT_SPACING = 40, FREQ_MIN = 0.03, FREQ_MAX = 0.08;
-    const LINE_WIDTH = 2, DOT_RADIUS = 4, HEADER_BG_COLOR = "rgba(85,85,85,0.8)";
+    const AMPLITUDE = 15;
+    const DOT_SPACING = 40;
+    const FREQ_MIN = 0.03;
+    const FREQ_MAX = 0.08;
+    const LINE_WIDTH = 2;
+    const DOT_RADIUS = 4;
+    const HEADER_BG_COLOR = "rgba(85,85,85,0.8)";
     const BASELINE = 120;
     function initDots() {
       width = canvas.offsetWidth;
       height = canvas.offsetHeight;
       canvas.width = width;
       canvas.height = height;
-      dots = [{ x: 0, pinned: true }];
+      dots = [];
+      dots.push({ x: 0, pinned: true });
       for (let x = DOT_SPACING; x <= width - DOT_SPACING; x += DOT_SPACING) {
-        dots.push({ x, pinned: false, freq: FREQ_MIN + Math.random() * (FREQ_MAX - FREQ_MIN), phase: Math.random() * Math.PI * 2 });
+        dots.push({
+          x,
+          pinned: false,
+          freq: FREQ_MIN + Math.random() * (FREQ_MAX - FREQ_MIN),
+          phase: Math.random() * Math.PI * 2
+        });
       }
       dots.push({ x: width, pinned: true });
     }
@@ -186,8 +222,13 @@
       const delta = timestamp - lastWaveTime;
       lastWaveTime = timestamp;
       time += delta * 0.0012;
+      
       ctx.clearRect(0, 0, width, height);
-      const wavePoints = dots.map(dot => dot.pinned ? { x: dot.x, y: BASELINE } : { x: dot.x, y: BASELINE + AMPLITUDE * Math.sin(dot.x * dot.freq + time + dot.phase) });
+      const wavePoints = dots.map(dot => {
+        if (dot.pinned) return { x: dot.x, y: BASELINE };
+        const wave = AMPLITUDE * Math.sin(dot.x * dot.freq + time + dot.phase);
+        return { x: dot.x, y: BASELINE + wave };
+      });
       ctx.beginPath();
       ctx.moveTo(0, 0);
       wavePoints.forEach(p => ctx.lineTo(p.x, p.y));
@@ -195,11 +236,16 @@
       ctx.closePath();
       ctx.fillStyle = HEADER_BG_COLOR;
       ctx.fill();
+
       ctx.beginPath();
       ctx.strokeStyle = "#0ff";
       ctx.lineWidth = LINE_WIDTH;
-      wavePoints.forEach((p, i) => i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y));
+      wavePoints.forEach((p, i) => {
+        if (i === 0) ctx.moveTo(p.x, p.y);
+        else ctx.lineTo(p.x, p.y);
+      });
       ctx.stroke();
+
       wavePoints.forEach(p => {
         ctx.beginPath();
         ctx.arc(p.x, p.y, DOT_RADIUS, 0, Math.PI * 2);
@@ -209,12 +255,15 @@
       requestAnimationFrame(animateWave);
     }
     let resizeTimeout;
-    window.addEventListener("resize", () => { clearTimeout(resizeTimeout); resizeTimeout = setTimeout(initDots, 100); });
+    window.addEventListener("resize", () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(initDots, 100);
+    });
     initDots();
     requestAnimationFrame(animateWave);
   </script>
 
-  <!-- Функция measureCardHeight -->
+  <!-- measureCardHeight (без изменений) -->
   <script>
     function measureCardHeight(article) {
       const clone = article.cloneNode(true);
@@ -228,23 +277,33 @@
       document.body.appendChild(clone);
       let h = clone.offsetHeight;
       const btn = clone.querySelector(".work-button");
-      if (btn) h += btn.offsetHeight;
+      if (btn) {
+        h += btn.offsetHeight;
+      }
       document.body.removeChild(clone);
       return h;
     }
   </script>
 
-  <!-- Автоматическая установка эффекта scramble для элементов внутри main и для обложки -->
+  <!-- Автоматическая установка scramble-text для main и для обложки -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
+      // Применяем scramble для элементов внутри main
       const mainEls = document.querySelectorAll('main *');
       mainEls.forEach(el => {
         const tag = el.tagName.toLowerCase();
-        if (!['h1','h2','h3','button','a'].includes(tag) && !el.closest('.floating-quote') && el.children.length === 0 && el.textContent.trim().length > 0 && !el.classList.contains('scramble-text')) {
+        if (
+          !['h1', 'h2', 'h3', 'button', 'a'].includes(tag) &&
+          !el.closest('.floating-quote') &&
+          el.children.length === 0 &&
+          el.textContent.trim().length > 0 &&
+          !el.classList.contains('scramble-text')
+        ) {
           el.classList.add('scramble-text');
           scrambleObserver.observe(el);
         }
       });
+      // Применяем scramble для подзаголовка обложки
       const coverEls = document.querySelectorAll('#cover .cover-content p');
       coverEls.forEach(el => {
         if (!el.classList.contains('scramble-text')) {
@@ -255,7 +314,7 @@
     });
   </script>
 
-  <!-- TextScramble с таймингом -->
+  <!-- Оптимизированный TextScramble с таймингом -->
   <script>
     class TextScramble {
       constructor(el) {
@@ -290,6 +349,7 @@
         const delta = timestamp - this.lastTime;
         this.lastTime = timestamp;
         this.elapsed += delta;
+        
         let complete = 0;
         for (let i = 0, n = this.queue.length; i < n; i++) {
           const { to, start, end } = this.queue[i];
@@ -299,15 +359,20 @@
             span.textContent = to;
             span.classList.remove("dud");
           } else if (this.elapsed >= start) {
-            if (!this.queue[i].char || Math.random() < 0.28) this.queue[i].char = this.randomChar();
+            if (!this.queue[i].char || Math.random() < 0.28) {
+              this.queue[i].char = this.randomChar();
+            }
             span.textContent = this.queue[i].char;
             span.classList.add("dud");
           } else {
             span.textContent = "";
           }
         }
-        if (complete === this.queue.length) this.resolve();
-        else this.frameRequest = requestAnimationFrame(this.update);
+        if (complete === this.queue.length) {
+          this.resolve();
+        } else {
+          this.frameRequest = requestAnimationFrame(this.update);
+        }
       }
       randomChar() {
         return this.chars[Math.floor(Math.random() * this.chars.length)];
@@ -327,16 +392,19 @@
     }, { root: null, rootMargin: "0px 0px -10% 0px", threshold: 0.1 });
   </script>
 
-  <!-- Наблюдатель для появления карточек портфолио -->
+  <!-- Наблюдатель для появления карточек -->
   <script>
     const cardObserver = new IntersectionObserver((entries, obs) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           const article = entry.target;
-          article.style.height = measureCardHeight(article) + "px";
+          const finalHeight = measureCardHeight(article);
+          article.style.height = finalHeight + "px";
           article.classList.add('visible');
           setTimeout(() => {
-            article.querySelectorAll('.scramble-text').forEach(el => scrambleObserver.observe(el));
+            article.querySelectorAll('.scramble-text').forEach(el => {
+              scrambleObserver.observe(el);
+            });
           }, 700);
           obs.unobserve(article);
         }
@@ -356,6 +424,7 @@
   <!-- Модальное окно -->
   <script>
     const modal = document.getElementById("modal");
+    const modalContent = document.getElementById("modal-content");
     const modalTitleText = document.getElementById("modal-title-text");
     const modalMediaWrapper = document.getElementById("modal-media-wrapper");
     const modalClose = document.getElementById("modal-close");
@@ -366,7 +435,9 @@
         let titleText = "";
         if (article) {
           const titleEl = article.querySelector("h3");
-          if (titleEl) titleText = titleEl.textContent.trim();
+          if (titleEl) {
+            titleText = titleEl.textContent.trim();
+          }
         }
         modalTitleText.textContent = titleText || "Без названия";
         modalMediaWrapper.innerHTML = "";
@@ -406,7 +477,8 @@
   <!-- CSV-Генерация карточек портфолио -->
   <script>
     function sanitize(val) {
-      return val ? val.replace(/^"+|"+$/g, "").trim() : "";
+      if (!val) return "";
+      return val.replace(/^"+|"+$/g, "").trim();
     }
     document.addEventListener('DOMContentLoaded', () => {
       Papa.parse("artportfolio.csv", {
@@ -436,7 +508,7 @@
                   mediaElement.classList.add("work-thumb");
                   let source = document.createElement("source");
                   source.src = "assets/" + mediaId;
-                  source.type = ext === ".mp4" ? "video/mp4" : "video/webm";
+                  source.type = (ext === ".mp4" ? "video/mp4" : "video/webm");
                   mediaElement.appendChild(source);
                 } else {
                   mediaElement = document.createElement("img");
@@ -499,7 +571,7 @@
             details.appendChild(pStatus);
             const btnName = sanitize(item.btnname);
             const btnLink = sanitize(item.btnlink);
-            if (btnName && btnLink) {
+            if (btnName !== "" && btnLink !== "") {
               const btn = document.createElement("a");
               btn.textContent = btnName;
               btn.href = btnLink;
@@ -517,10 +589,23 @@
     });
   </script>
 
+  <!-- Загрузка цитат из quote.csv -->
+  <script>
+    let quotesArray = [];
+    Papa.parse("quote.csv", {
+      download: true,
+      header: true,
+      skipEmptyLines: true,
+      complete: function (results) {
+        quotesArray = results.data;
+      }
+    });
+  </script>
+
   <!-- Скрипт для плавающих цитат (интервал 8000 мс) -->
   <script>
     function spawnQuote() {
-      if (!quotesArray.length) return;
+      if (quotesArray.length === 0) return;
       const q = quotesArray[Math.floor(Math.random() * quotesArray.length)];
       const div = document.createElement('div');
       div.className = 'floating-quote';
@@ -537,15 +622,6 @@
       document.body.appendChild(div);
       setTimeout(() => { div.remove(); }, 10000);
     }
-    let quotesArray = [];
-    Papa.parse("quote.csv", {
-      download: true,
-      header: true,
-      skipEmptyLines: true,
-      complete: function (results) {
-        quotesArray = results.data;
-      }
-    });
     setInterval(spawnQuote, 8000);
   </script>
 </body>
