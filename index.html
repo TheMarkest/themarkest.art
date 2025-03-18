@@ -648,13 +648,13 @@
 
   <!-- Дублирующий код для Burger Menu (оставлен для совместимости) -->
   <script>
-    const burger2 = document.querySelector('.burger');
-    const navLinks2 = document.querySelector('.nav-links');
-    burger2.addEventListener('click', () => {
-      if (getComputedStyle(navLinks2).display === 'none') {
-        navLinks2.style.display = 'flex';
+    const burger = document.querySelector('.burger');
+    const navLinks = document.querySelector('.nav-links');
+    burger.addEventListener('click', () => {
+      if (getComputedStyle(navLinks).display === 'none') {
+        navLinks.style.display = 'flex';
       } else {
-        navLinks2.style.display = 'none';
+        navLinks.style.display = 'none';
       }
     });
   </script>
