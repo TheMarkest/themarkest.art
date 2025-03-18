@@ -81,7 +81,7 @@
       <div class="container">
         <h2>Портфолио</h2>
         <div class="grid" id="portfolio-container">
-          <!-- Карточки будут генерироваться из JSON -->
+          <!-- Здесь будут появляться placeholder-ы, заменяемые на карточки при прокрутке -->
         </div>
       </div>
     </section>
@@ -327,7 +327,7 @@
     }, { root: null, rootMargin: "0px 0px -10% 0px", threshold: 0.1 });
   </script>
 
-  <!-- Наблюдатель для появления карточек портфолио -->
+  <!-- Наблюдатель для появления карточек портфолио (анимация и scramble) -->
   <script>
     const cardObserver = new IntersectionObserver((entries, obs) => {
       entries.forEach(entry => {
@@ -403,7 +403,7 @@
     });
   </script>
 
-  <!-- Генерация карточек портфолио на основе JSON -->
+  <!-- Генерация карточек портфолио на основе JSON с ленивой подгрузкой -->
   <script>
     function sanitize(val) {
       return val ? val.toString().trim() : "";
@@ -413,105 +413,123 @@
         .then(response => response.json())
         .then(data => {
           const container = document.getElementById("portfolio-container");
-          data.forEach(item => {
-            // Если все поля пустые – пропускаем
-            const allEmpty = Object.values(item).every(val => typeof val === "string" ? val.trim() === "" : !val);
-            if (allEmpty) return;
-            const article = document.createElement("article");
-            article.className = "work-item";
-            const media = document.createElement("div");
-            media.className = "work-media";
-            const mediaId = sanitize(item.mediaid);
-            let mediaElement;
-            if (mediaId) {
-              if (mediaId.includes(".")) {
-                const ext = mediaId.substring(mediaId.lastIndexOf(".")).toLowerCase();
-                if (ext === ".mp4" || ext === ".webm") {
-                  mediaElement = document.createElement("video");
-                  mediaElement.setAttribute("controls", "controls");
-                  mediaElement.setAttribute("loading", "lazy");
-                  mediaElement.setAttribute("decoding", "async");
-                  mediaElement.classList.add("work-thumb");
-                  let source = document.createElement("source");
-                  source.src = "assets/" + mediaId;
-                  source.type = ext === ".mp4" ? "video/mp4" : "video/webm";
-                  mediaElement.appendChild(source);
+          // Фильтруем пустые элементы
+          const portfolioItems = data.filter(item => {
+            return !Object.values(item).every(val => typeof val === "string" ? val.trim() === "" : !val);
+          });
+          // Создаём наблюдатель для ленивой загрузки карточек
+          const lazyCardObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+              if (entry.isIntersecting) {
+                const placeholder = entry.target;
+                const index = placeholder.getAttribute("data-index");
+                const item = portfolioItems[index];
+                const article = document.createElement("article");
+                article.className = "work-item";
+                const media = document.createElement("div");
+                media.className = "work-media";
+                const mediaId = sanitize(item.mediaid);
+                let mediaElement;
+                if (mediaId) {
+                  if (mediaId.includes(".")) {
+                    const ext = mediaId.substring(mediaId.lastIndexOf(".")).toLowerCase();
+                    if (ext === ".mp4" || ext === ".webm") {
+                      mediaElement = document.createElement("video");
+                      mediaElement.setAttribute("controls", "controls");
+                      mediaElement.setAttribute("loading", "lazy");
+                      mediaElement.setAttribute("decoding", "async");
+                      mediaElement.classList.add("work-thumb");
+                      let source = document.createElement("source");
+                      source.src = "assets/" + mediaId;
+                      source.type = ext === ".mp4" ? "video/mp4" : "video/webm";
+                      mediaElement.appendChild(source);
+                    } else {
+                      let imageSrc = "assets/" + mediaId;
+                      if (ext !== ".webp") {
+                        imageSrc = imageSrc.replace(ext, ".webp");
+                      }
+                      mediaElement = document.createElement("img");
+                      mediaElement.src = imageSrc;
+                      mediaElement.alt = sanitize(item.title) || "Изображение работы";
+                      mediaElement.className = "work-thumb";
+                      mediaElement.setAttribute("loading", "lazy");
+                      mediaElement.setAttribute("decoding", "async");
+                    }
+                  } else {
+                    const webpURL = "assets/" + mediaId + ".webp";
+                    mediaElement = document.createElement("img");
+                    mediaElement.alt = sanitize(item.title) || "Изображение работы";
+                    mediaElement.className = "work-thumb";
+                    mediaElement.setAttribute("loading", "lazy");
+                    mediaElement.setAttribute("decoding", "async");
+                    let attempt = 0;
+                    function tryNext() {
+                      if (attempt >= 1) {
+                        mediaElement.onerror = null;
+                        mediaElement.src = "assets/logo.svg";
+                        return;
+                      }
+                      attempt++;
+                      mediaElement.src = webpURL;
+                    }
+                    mediaElement.onerror = tryNext;
+                    mediaElement.onload = () => { mediaElement.onerror = null; };
+                    tryNext();
+                  }
                 } else {
-                  // Если расширение не .webp, заменяем на webp
-                  let imageSrc = "assets/" + mediaId;
-                  if (ext !== ".webp") {
-                    imageSrc = imageSrc.replace(ext, ".webp");
-                  }
-                  mediaElement = document.createElement("img");
-                  mediaElement.src = imageSrc;
-                  mediaElement.alt = sanitize(item.title) || "Изображение работы";
-                  mediaElement.className = "work-thumb";
-                  mediaElement.setAttribute("loading", "lazy");
-                  mediaElement.setAttribute("decoding", "async");
+                  const placeholderDiv = document.createElement("div");
+                  placeholderDiv.className = "placeholder-logo";
+                  const placeholderImg = document.createElement("img");
+                  placeholderImg.src = "assets/logo.svg";
+                  placeholderImg.alt = "Placeholder";
+                  placeholderDiv.appendChild(placeholderImg);
+                  mediaElement = placeholderDiv;
                 }
-              } else {
-                // Если расширение не задано, пробуем webp копию
-                const webpURL = "assets/" + mediaId + ".webp";
-                mediaElement = document.createElement("img");
-                mediaElement.alt = sanitize(item.title) || "Изображение работы";
-                mediaElement.className = "work-thumb";
-                mediaElement.setAttribute("loading", "lazy");
-                mediaElement.setAttribute("decoding", "async");
-                let attempt = 0;
-                function tryNext() {
-                  if (attempt >= 1) {
-                    mediaElement.onerror = null;
-                    mediaElement.src = "assets/logo.svg";
-                    return;
-                  }
-                  attempt++;
-                  mediaElement.src = webpURL;
+                media.appendChild(mediaElement);
+                const details = document.createElement("div");
+                details.className = "work-details";
+                const h3 = document.createElement("h3");
+                h3.textContent = sanitize(item.title) || "Без названия";
+                const pYear = document.createElement("p");
+                pYear.innerHTML = "Год: <span class='scramble-text' data-text='" + (sanitize(item.year) || "—") + "'>-</span>";
+                const pDesc = document.createElement("p");
+                pDesc.innerHTML = "Описание: <span class='scramble-text' data-text='" + (sanitize(item.description) || "") + "'>-</span>";
+                const pMaterials = document.createElement("p");
+                pMaterials.innerHTML = "Материалы: <span class='scramble-text' data-text='" + (sanitize(item.materials) || "—") + "'>-</span>";
+                const pStatus = document.createElement("p");
+                pStatus.innerHTML = "Статус: <span class='scramble-text' data-text='" + (sanitize(item.status) || "—") + "'>-</span>";
+                details.appendChild(h3);
+                details.appendChild(pYear);
+                details.appendChild(pDesc);
+                details.appendChild(pMaterials);
+                details.appendChild(pStatus);
+                const btnName = sanitize(item.btnname);
+                const btnLink = sanitize(item.btnlink);
+                if (btnName && btnLink) {
+                  const btn = document.createElement("a");
+                  btn.textContent = btnName;
+                  btn.href = btnLink;
+                  btn.className = "work-button";
+                  btn.target = "_blank";
+                  details.appendChild(btn);
                 }
-                mediaElement.onerror = tryNext;
-                mediaElement.onload = () => { mediaElement.onerror = null; };
-                tryNext();
+                article.appendChild(media);
+                article.appendChild(details);
+                // Заменяем placeholder на готовую карточку
+                placeholder.replaceWith(article);
+                cardObserver.observe(article);
+                observer.unobserve(placeholder);
               }
-            } else {
-              const placeholderDiv = document.createElement("div");
-              placeholderDiv.className = "placeholder-logo";
-              const placeholderImg = document.createElement("img");
-              placeholderImg.src = "assets/logo.svg";
-              placeholderImg.alt = "Placeholder";
-              placeholderDiv.appendChild(placeholderImg);
-              mediaElement = placeholderDiv;
-            }
-            media.appendChild(mediaElement);
-            const details = document.createElement("div");
-            details.className = "work-details";
-            const h3 = document.createElement("h3");
-            h3.textContent = sanitize(item.title) || "Без названия";
-            const pYear = document.createElement("p");
-            pYear.innerHTML = "Год: <span class='scramble-text' data-text='" + (sanitize(item.year) || "—") + "'>-</span>";
-            const pDesc = document.createElement("p");
-            pDesc.innerHTML = "Описание: <span class='scramble-text' data-text='" + (sanitize(item.description) || "") + "'>-</span>";
-            const pMaterials = document.createElement("p");
-            pMaterials.innerHTML = "Материалы: <span class='scramble-text' data-text='" + (sanitize(item.materials) || "—") + "'>-</span>";
-            const pStatus = document.createElement("p");
-            pStatus.innerHTML = "Статус: <span class='scramble-text' data-text='" + (sanitize(item.status) || "—") + "'>-</span>";
-            details.appendChild(h3);
-            details.appendChild(pYear);
-            details.appendChild(pDesc);
-            details.appendChild(pMaterials);
-            details.appendChild(pStatus);
-            const btnName = sanitize(item.btnname);
-            const btnLink = sanitize(item.btnlink);
-            if (btnName && btnLink) {
-              const btn = document.createElement("a");
-              btn.textContent = btnName;
-              btn.href = btnLink;
-              btn.className = "work-button";
-              btn.target = "_blank";
-              details.appendChild(btn);
-            }
-            article.appendChild(media);
-            article.appendChild(details);
-            container.appendChild(article);
-            cardObserver.observe(article);
+            });
+          }, { threshold: 0.1 });
+          
+          // Создаём placeholder-ы для каждой карточки
+          portfolioItems.forEach((item, index) => {
+            const placeholder = document.createElement("div");
+            placeholder.className = "work-item-placeholder";
+            placeholder.setAttribute("data-index", index);
+            container.appendChild(placeholder);
+            lazyCardObserver.observe(placeholder);
           });
         })
         .catch(error => console.error("Error loading artportfolio.json:", error));
