@@ -706,9 +706,6 @@
     }
   </style>
 
-  <!-- Подключаем Papa Parse для CSV -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
-
   <!-- Новый метод для предрасчёта высоты блоков био и стейтмента (отдельно от карточек портфолио) -->
   <script>
     function fixBioAndStatementHeight(selector) {
@@ -816,7 +813,7 @@
       <div class="container">
         <h2>Портфолио</h2>
         <div class="grid" id="portfolio-container">
-          <!-- Карточки будут генерироваться из CSV -->
+          <!-- Карточки будут генерироваться из JSON -->
         </div>
       </div>
     </section>
@@ -1171,20 +1168,17 @@
     });
   </script>
 
-  <!-- CSV-Генерация карточек портфолио -->
+  <!-- Загрузка и генерация карточек портфолио из artportfolio.json -->
   <script>
     function sanitize(val) {
       if (!val) return "";
-      return val.replace(/^"+|"+$/g, "").trim();
+      return val.toString().replace(/^"+|"+$/g, "").trim();
     }
     document.addEventListener('DOMContentLoaded', () => {
-      Papa.parse("artportfolio.csv", {
-        download: true,
-        header: true,
-        skipEmptyLines: true,
-        complete: function (results) {
-          console.log("CSV parse results:", results.data);
-          const data = results.data;
+      fetch("artportfolio.json")
+        .then(response => response.json())
+        .then(data => {
+          console.log("JSON results:", data);
           const container = document.getElementById("portfolio-container");
           data.forEach(item => {
             const allEmpty = Object.values(item).every(val => {
@@ -1290,22 +1284,20 @@
             container.appendChild(article);
             cardObserver.observe(article);
           });
-        }
-      });
+        })
+        .catch(error => console.error(error));
     });
   </script>
 
-  <!-- Загрузка цитат из quote.csv -->
+  <!-- Загрузка цитат из quote.json -->
   <script>
     let quotesArray = [];
-    Papa.parse("quote.csv", {
-      download: true,
-      header: true,
-      skipEmptyLines: true,
-      complete: function (results) {
-        quotesArray = results.data;
-      }
-    });
+    fetch("quote.json")
+      .then(response => response.json())
+      .then(data => {
+        quotesArray = data;
+      })
+      .catch(error => console.error(error));
   </script>
 
   <!-- Скрипт для плавающих цитат -->
