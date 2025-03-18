@@ -15,11 +15,11 @@
   <meta name="msapplication-TileColor" content="#000000">
   <meta name="theme-color" content="#000000">
 
-  <!-- Подключаем шрифт Handjet (preconnect для ускорения) -->
+  <!-- Подключаем шрифт Handjet -->
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Handjet" rel="stylesheet">
 
-  <!-- Preload фонового изображения обложки -->
+  <!-- Preload для фонового изображения обложки -->
   <link rel="preload" as="image" href="https://picsum.photos/1600/900?grayscale">
 
   <!-- Подключение внешнего файла стилей -->
@@ -104,8 +104,7 @@
               </p>
             </div>
             <div class="artist-photo">
-              <!-- Используем WebP для портрета с fallback на PNG -->
-              <img src="assets/portrait.webp" onerror="this.onerror=null;this.src='assets/portrait.png'" alt="Portrait of the Artist" loading="lazy" decoding="async" />
+              <img src="assets/portrait.png" alt="Portrait of the Artist" loading="lazy" decoding="async" />
             </div>
           </div>
           <div class="artist-statement">
@@ -159,7 +158,7 @@
     </div>
   </div>
 
-  <!-- Все основные скрипты размещены в конце страницы для минимизации блокировки отрисовки -->
+  <!-- Все основные скрипты размещены в конце для ускорения загрузки -->
 
   <!-- Wave Animation (на основе времени) -->
   <script>
@@ -241,11 +240,7 @@
       const mainEls = document.querySelectorAll('main *');
       mainEls.forEach(el => {
         const tag = el.tagName.toLowerCase();
-        if (!['h1','h2','h3','button','a'].includes(tag) &&
-            !el.closest('.floating-quote') &&
-            el.children.length === 0 &&
-            el.textContent.trim().length > 0 &&
-            !el.classList.contains('scramble-text')) {
+        if (!['h1','h2','h3','button','a'].includes(tag) && !el.closest('.floating-quote') && el.children.length === 0 && el.textContent.trim().length > 0 && !el.classList.contains('scramble-text')) {
           el.classList.add('scramble-text');
           scrambleObserver.observe(el);
         }
@@ -304,9 +299,7 @@
             span.textContent = to;
             span.classList.remove("dud");
           } else if (this.elapsed >= start) {
-            if (!this.queue[i].char || Math.random() < 0.28) {
-              this.queue[i].char = this.randomChar();
-            }
+            if (!this.queue[i].char || Math.random() < 0.28) this.queue[i].char = this.randomChar();
             span.textContent = this.queue[i].char;
             span.classList.add("dud");
           } else {
@@ -447,7 +440,6 @@
                   mediaElement.appendChild(source);
                 } else {
                   mediaElement = document.createElement("img");
-                  // Если расширение уже указано, используем его (предполагается, что WebP версия уже предоставлена, если нужно)
                   mediaElement.src = "assets/" + mediaId;
                   mediaElement.alt = sanitize(item.title) || "Изображение работы";
                   mediaElement.className = "work-thumb";
@@ -455,8 +447,9 @@
                   mediaElement.setAttribute("decoding", "async");
                 }
               } else {
-                // Если расширение не указано, пытаемся сначала загрузить WebP, затем другие форматы
-                const extList = [".webp", ".jpg", ".jpeg", ".png", ".gif", ".svg", ".mp4", ".webm"];
+                const imageExtensions = [".jpg", ".jpeg", ".png", ".gif", ".svg"];
+                const videoExtensions = [".mp4", ".webm"];
+                let extList = imageExtensions.concat(videoExtensions);
                 let attempt = 0;
                 mediaElement = document.createElement("img");
                 mediaElement.alt = sanitize(item.title) || "Изображение работы";
@@ -521,7 +514,8 @@
           });
         }
       });
-    </script>
+    });
+  </script>
 
   <!-- Скрипт для плавающих цитат (интервал 8000 мс) -->
   <script>
