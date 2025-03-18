@@ -247,6 +247,7 @@
     h1, h2, h3 {
       animation: heading-glow 3s infinite alternate;
       text-shadow: 0 0 1px #0ff, 0 0 2px #0ff, 0 0 3px #0ff;
+      letter-spacing: 2px;
     }
     @keyframes heading-glow {
       0% { text-shadow: 0 0 1px #0ff, 0 0 2px #0ff, 0 0 3px #0ff; }
@@ -1219,7 +1220,8 @@
                   mediaElement.setAttribute("decoding", "async");
                 }
               } else {
-                const imageExtensions = [".jpg", ".jpeg", ".png", ".gif", ".svg"];
+                // Сначала пробуем варианты с webp, затем остальные
+                const imageExtensions = [".webp", ".jpg", ".jpeg", ".png", ".gif", ".svg"];
                 const videoExtensions = [".mp4", ".webm"];
                 let extList = imageExtensions.concat(videoExtensions);
                 let attempt = 0;
