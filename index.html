@@ -521,7 +521,7 @@
                 observer.unobserve(placeholder);
               }
             });
-          }, { threshold: 0.1 });
+          }, { rootMargin: "200px 0px", threshold: 0.1 });
           
           // Создаём placeholder-ы для каждой карточки
           portfolioItems.forEach((item, index) => {
