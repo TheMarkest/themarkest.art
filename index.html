@@ -15,8 +15,15 @@
   <meta name="msapplication-TileColor" content="#000000">
   <meta name="theme-color" content="#000000">
 
-  <!-- Подключаем шрифт Exo 2 (ретрофутуристичный, поддерживает кириллицу и латиницу) -->
-  <link href="https://fonts.googleapis.com/css2?family=Exo+2&display=swap&subset=cyrillic" rel="stylesheet">
+  <!-- Подключаем шрифт Handjet (загруженный в папку fonts) -->
+  <style>
+    @font-face {
+      font-family: 'Handjet';
+      src: url('fonts/Handjet-VariableFont_ELGR,ELSH,wght.ttf') format('truetype');
+      font-weight: 100 900;
+      font-style: normal;
+    }
+  </style>
 
   <!-- 1) CSS-переменные (глитч-интенсивность) -->
   <style>
@@ -91,7 +98,7 @@
       scroll-behavior: smooth;
     }
     body {
-      font-family: 'Exo 2', sans-serif;
+      font-family: 'Handjet', sans-serif;
       background: #000;
       color: #fff;
       line-height: 1.5;
