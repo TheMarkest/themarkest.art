@@ -34,7 +34,7 @@
     <div class="header-content">
       <div class="logo-container">
         <div class="glitch-image">
-          <img src="assets/logo.svg" alt="TheMarkest.art Logo" />
+          <img src="assets/logo.svg" alt="TheMarkest.art Logo" loading="lazy" decoding="async" />
         </div>
       </div>
       <nav class="nav-links">
@@ -234,23 +234,33 @@
     }
   </script>
 
-  <!-- Автоматическая установка эффекта scramble для элементов внутри main и для обложки -->
+  <!-- Инициализация эффекта TextScramble (скрываем текст до анимации) -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const mainEls = document.querySelectorAll('main *');
       mainEls.forEach(el => {
         const tag = el.tagName.toLowerCase();
-        if (!['h1','h2','h3','button','a'].includes(tag) && !el.closest('.floating-quote') && el.children.length === 0 && el.textContent.trim().length > 0 && !el.classList.contains('scramble-text')) {
+        if (!['h1','h2','h3','button','a'].includes(tag) &&
+            !el.closest('.floating-quote') &&
+            el.children.length === 0 &&
+            el.textContent.trim().length > 0) {
+          // Сохраняем оригинальный текст и очищаем элемент
+          if (!el.hasAttribute('data-text')) {
+            el.setAttribute('data-text', el.textContent.trim());
+          }
+          el.textContent = "";
           el.classList.add('scramble-text');
           scrambleObserver.observe(el);
         }
       });
       const coverEls = document.querySelectorAll('#cover .cover-content p');
       coverEls.forEach(el => {
-        if (!el.classList.contains('scramble-text')) {
-          el.classList.add('scramble-text');
-          scrambleObserver.observe(el);
+        if (!el.hasAttribute('data-text')) {
+          el.setAttribute('data-text', el.textContent.trim());
         }
+        el.textContent = "";
+        el.classList.add('scramble-text');
+        scrambleObserver.observe(el);
       });
     });
   </script>
