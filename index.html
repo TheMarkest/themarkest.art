@@ -24,8 +24,6 @@
 
   <!-- Подключение внешнего файла стилей -->
   <link rel="stylesheet" href="styles.css">
-  
-  <!-- Убрали внешний парсер CSV -->
 </head>
 <body>
   <!-- HEADER -->
@@ -96,9 +94,7 @@
               <h3>Биография</h3>
               <p>
                 Марк Богданов — художник, работающий на стыке искусства, технологий и инженерной эстетики. В своих произведениях он исследует влияние научного прогресса на визуальные формы, сочетая современные методы производства (3D-печать, лазерную резку, цифровую обработку) с традиционными материалами.
-
                 Родился в 1998 году в семье хореографов и вырос между Санкт-Петербургом и Одессой — двумя городами с глубокими культурными традициями. Детство и юность пришлись на переломные десятилетия цифровой революции, когда искусство и технологии начали стремительно сближаться. Это время сформировало его интерес к новым методам создания и восприятия искусства, где материальный объект все чаще сочетался с виртуальными и механическими компонентами.
-                
                 Получив образование в сфере оптико-электроники, он переосмыслил принципы традиционной скульптуры через призму научного знания. Вдохновляясь конструктивизмом, ретрофутуризмом и инженерным мышлением, он рассматривает искусство не только как средство самовыражения, но и как способ изучения структуры окружающего мира. Его работы исследуют, как технологии не просто изменяют художественную эстетику, но и формируют новые принципы взаимодействия человека с объектом.
               </p>
             </div>
@@ -110,15 +106,11 @@
           <div class="artist-statement">
             <h3>Artist Statement</h3>
             <p>
-              Я создаю скульптуры, в которых современные технологии производства встречаются с наследием инженерной
-              мысли прошлого.
+              Я создаю скульптуры, в которых современные технологии производства встречаются с наследием инженерной мысли прошлого.
               Моё искусство — это поиск формы, структуры и материала, отражающих логику научного прогресса.
-
-              В своих работах я сочетаю 3D-печать, лазерную резку, цифровую обработку и традиционные ремесленные
-              техники,
+              В своих работах я сочетаю 3D-печать, лазерную резку, цифровую обработку и традиционные ремесленные техники,
               интегрируя их в единую художественную систему. Мне важно показать, как технологии формируют эстетику и
               как через них можно создавать новые визуальные смыслы, выходящие за пределы привычного восприятия.
-
               Я вдохновляюсь конструктивизмом, ретрофутуризмом и инженерной эстетикой, рассматривая искусство как способ
               взаимодействия с научным знанием.
             </p>
@@ -427,108 +419,112 @@
           const portfolioItems = data.filter(item => {
             return !Object.values(item).every(val => typeof val === "string" ? val.trim() === "" : !val);
           });
-          // Создаём наблюдатель для ленивой загрузки карточек
+          // Создаём наблюдатель для ленивой загрузки карточек с сортировкой по положению и задержкой
           const lazyCardObserver = new IntersectionObserver((entries, observer) => {
-            entries.forEach(entry => {
+            // сортируем записи по вертикальному положению
+            const sortedEntries = entries.sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+            sortedEntries.forEach((entry, i) => {
               if (entry.isIntersecting) {
-                const placeholder = entry.target;
-                const index = placeholder.getAttribute("data-index");
-                const item = portfolioItems[index];
-                const article = document.createElement("article");
-                article.className = "work-item";
-                const media = document.createElement("div");
-                media.className = "work-media";
-                const mediaId = sanitize(item.mediaid);
-                let mediaElement;
-                if (mediaId) {
-                  if (mediaId.includes(".")) {
-                    const ext = mediaId.substring(mediaId.lastIndexOf(".")).toLowerCase();
-                    if (ext === ".mp4" || ext === ".webm") {
-                      mediaElement = document.createElement("video");
-                      mediaElement.setAttribute("controls", "controls");
-                      mediaElement.setAttribute("loading", "lazy");
-                      mediaElement.setAttribute("decoding", "async");
-                      mediaElement.classList.add("work-thumb");
-                      let source = document.createElement("source");
-                      source.src = "assets/" + mediaId;
-                      source.type = ext === ".mp4" ? "video/mp4" : "video/webm";
-                      mediaElement.appendChild(source);
-                    } else {
-                      let imageSrc = "assets/" + mediaId;
-                      if (ext !== ".webp") {
-                        imageSrc = imageSrc.replace(ext, ".webp");
+                setTimeout(() => {
+                  const placeholder = entry.target;
+                  const index = placeholder.getAttribute("data-index");
+                  const item = portfolioItems[index];
+                  const article = document.createElement("article");
+                  article.className = "work-item";
+                  const media = document.createElement("div");
+                  media.className = "work-media";
+                  const mediaId = sanitize(item.mediaid);
+                  let mediaElement;
+                  if (mediaId) {
+                    if (mediaId.includes(".")) {
+                      const ext = mediaId.substring(mediaId.lastIndexOf(".")).toLowerCase();
+                      if (ext === ".mp4" || ext === ".webm") {
+                        mediaElement = document.createElement("video");
+                        mediaElement.setAttribute("controls", "controls");
+                        mediaElement.setAttribute("loading", "lazy");
+                        mediaElement.setAttribute("decoding", "async");
+                        mediaElement.classList.add("work-thumb");
+                        let source = document.createElement("source");
+                        source.src = "assets/" + mediaId;
+                        source.type = ext === ".mp4" ? "video/mp4" : "video/webm";
+                        mediaElement.appendChild(source);
+                      } else {
+                        let imageSrc = "assets/" + mediaId;
+                        if (ext !== ".webp") {
+                          imageSrc = imageSrc.replace(ext, ".webp");
+                        }
+                        mediaElement = document.createElement("img");
+                        mediaElement.src = imageSrc;
+                        mediaElement.alt = sanitize(item.title) || "Изображение работы";
+                        mediaElement.className = "work-thumb";
+                        mediaElement.setAttribute("loading", "lazy");
+                        mediaElement.setAttribute("decoding", "async");
                       }
+                    } else {
+                      const webpURL = "assets/" + mediaId + ".webp";
                       mediaElement = document.createElement("img");
-                      mediaElement.src = imageSrc;
                       mediaElement.alt = sanitize(item.title) || "Изображение работы";
                       mediaElement.className = "work-thumb";
                       mediaElement.setAttribute("loading", "lazy");
                       mediaElement.setAttribute("decoding", "async");
+                      let attempt = 0;
+                      function tryNext() {
+                        if (attempt >= 1) {
+                          mediaElement.onerror = null;
+                          mediaElement.src = "assets/logo.svg";
+                          return;
+                        }
+                        attempt++;
+                        mediaElement.src = webpURL;
+                      }
+                      mediaElement.onerror = tryNext;
+                      mediaElement.onload = () => { mediaElement.onerror = null; };
+                      tryNext();
                     }
                   } else {
-                    const webpURL = "assets/" + mediaId + ".webp";
-                    mediaElement = document.createElement("img");
-                    mediaElement.alt = sanitize(item.title) || "Изображение работы";
-                    mediaElement.className = "work-thumb";
-                    mediaElement.setAttribute("loading", "lazy");
-                    mediaElement.setAttribute("decoding", "async");
-                    let attempt = 0;
-                    function tryNext() {
-                      if (attempt >= 1) {
-                        mediaElement.onerror = null;
-                        mediaElement.src = "assets/logo.svg";
-                        return;
-                      }
-                      attempt++;
-                      mediaElement.src = webpURL;
-                    }
-                    mediaElement.onerror = tryNext;
-                    mediaElement.onload = () => { mediaElement.onerror = null; };
-                    tryNext();
+                    const placeholderDiv = document.createElement("div");
+                    placeholderDiv.className = "placeholder-logo";
+                    const placeholderImg = document.createElement("img");
+                    placeholderImg.src = "assets/logo.svg";
+                    placeholderImg.alt = "Placeholder";
+                    placeholderDiv.appendChild(placeholderImg);
+                    mediaElement = placeholderDiv;
                   }
-                } else {
-                  const placeholderDiv = document.createElement("div");
-                  placeholderDiv.className = "placeholder-logo";
-                  const placeholderImg = document.createElement("img");
-                  placeholderImg.src = "assets/logo.svg";
-                  placeholderImg.alt = "Placeholder";
-                  placeholderDiv.appendChild(placeholderImg);
-                  mediaElement = placeholderDiv;
-                }
-                media.appendChild(mediaElement);
-                const details = document.createElement("div");
-                details.className = "work-details";
-                const h3 = document.createElement("h3");
-                h3.textContent = sanitize(item.title) || "Без названия";
-                const pYear = document.createElement("p");
-                pYear.innerHTML = "Год: <span class='scramble-text' data-text='" + (sanitize(item.year) || "—") + "'>-</span>";
-                const pDesc = document.createElement("p");
-                pDesc.innerHTML = "Описание: <span class='scramble-text' data-text='" + (sanitize(item.description) || "") + "'>-</span>";
-                const pMaterials = document.createElement("p");
-                pMaterials.innerHTML = "Материалы: <span class='scramble-text' data-text='" + (sanitize(item.materials) || "—") + "'>-</span>";
-                const pStatus = document.createElement("p");
-                pStatus.innerHTML = "Статус: <span class='scramble-text' data-text='" + (sanitize(item.status) || "—") + "'>-</span>";
-                details.appendChild(h3);
-                details.appendChild(pYear);
-                details.appendChild(pDesc);
-                details.appendChild(pMaterials);
-                details.appendChild(pStatus);
-                const btnName = sanitize(item.btnname);
-                const btnLink = sanitize(item.btnlink);
-                if (btnName && btnLink) {
-                  const btn = document.createElement("a");
-                  btn.textContent = btnName;
-                  btn.href = btnLink;
-                  btn.className = "work-button";
-                  btn.target = "_blank";
-                  details.appendChild(btn);
-                }
-                article.appendChild(media);
-                article.appendChild(details);
-                // Заменяем placeholder на готовую карточку
-                placeholder.replaceWith(article);
-                cardObserver.observe(article);
-                observer.unobserve(placeholder);
+                  media.appendChild(mediaElement);
+                  const details = document.createElement("div");
+                  details.className = "work-details";
+                  const h3 = document.createElement("h3");
+                  h3.textContent = sanitize(item.title) || "Без названия";
+                  const pYear = document.createElement("p");
+                  pYear.innerHTML = "Год: <span class='scramble-text' data-text='" + (sanitize(item.year) || "—") + "'>-</span>";
+                  const pDesc = document.createElement("p");
+                  pDesc.innerHTML = "Описание: <span class='scramble-text' data-text='" + (sanitize(item.description) || "") + "'>-</span>";
+                  const pMaterials = document.createElement("p");
+                  pMaterials.innerHTML = "Материалы: <span class='scramble-text' data-text='" + (sanitize(item.materials) || "—") + "'>-</span>";
+                  const pStatus = document.createElement("p");
+                  pStatus.innerHTML = "Статус: <span class='scramble-text' data-text='" + (sanitize(item.status) || "—") + "'>-</span>";
+                  details.appendChild(h3);
+                  details.appendChild(pYear);
+                  details.appendChild(pDesc);
+                  details.appendChild(pMaterials);
+                  details.appendChild(pStatus);
+                  const btnName = sanitize(item.btnname);
+                  const btnLink = sanitize(item.btnlink);
+                  if (btnName && btnLink) {
+                    const btn = document.createElement("a");
+                    btn.textContent = btnName;
+                    btn.href = btnLink;
+                    btn.className = "work-button";
+                    btn.target = "_blank";
+                    details.appendChild(btn);
+                  }
+                  article.appendChild(media);
+                  article.appendChild(details);
+                  // Заменяем placeholder на готовую карточку
+                  placeholder.replaceWith(article);
+                  cardObserver.observe(article);
+                  observer.unobserve(placeholder);
+                }, i * 200);
               }
             });
           }, { rootMargin: "200px 0px", threshold: 0.1 });
