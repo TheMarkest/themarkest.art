@@ -228,7 +228,6 @@
       .burger {
         display: block;
       }
-      /* При адаптиве можно скорректировать положение переключателя */
       .language-switcher {
         right: 20px;
         top: 70px;
@@ -388,7 +387,6 @@
       margin-bottom: 2rem;
       text-transform: uppercase;
     }
-    /* Сетка портфолио – одна колонка */
     .grid {
       display: grid;
       grid-template-columns: 1fr;
@@ -399,7 +397,6 @@
     .work-item {
       opacity: 0;
       transform: translateY(20px);
-      /* Убираем transition, заменяем анимацией */
       display: flex;
       flex-direction: row;
       gap: 1rem;
@@ -717,7 +714,7 @@
     }
   </style>
 
-  <!-- Новый метод для предрасчёта высоты блоков био и стейтмента (отдельно от карточек портфолио) -->
+  <!-- Новый метод для предрасчёта высоты блоков био и стейтмента -->
   <script>
     function fixBioAndStatementHeight(selector) {
       document.querySelectorAll(selector).forEach(el => {
@@ -725,19 +722,16 @@
           el.setAttribute('data-text', el.textContent.trim());
         }
         const clone = el.cloneNode(true);
-        // Устанавливаем ширину клона равной ширине оригинала для корректного переноса строк
         clone.style.width = el.offsetWidth + "px";
         clone.style.visibility = 'hidden';
         clone.style.position = 'absolute';
         clone.style.height = 'auto';
         clone.style.whiteSpace = 'pre-line';
         clone.style.opacity = '1';
-        // Сдвигаем клон за пределы экрана
         clone.style.left = "-9999px";
         document.body.appendChild(clone);
         const fullHeight = clone.offsetHeight;
         document.body.removeChild(clone);
-        // Добавляем дополнительное пространство (20px)
         el.style.height = (fullHeight + 20) + "px";
         el.textContent = "";
         el.classList.add('scramble-text');
@@ -781,10 +775,10 @@
         </div>
       </div>
       <nav class="nav-links">
-        <a href="#cover">Обложка</a>
-        <a href="#works">Портфолио</a>
-        <a href="#about">О художнике</a>
-        <a href="#contact">Контакты</a>
+        <a href="#cover" id="nav-cover">Обложка</a>
+        <a href="#works" id="nav-portfolio">Портфолио</a>
+        <a href="#about" id="nav-about">О художнике</a>
+        <a href="#contact" id="nav-contact">Контакты</a>
       </nav>
       <!-- Переключатель языка -->
       <div class="language-switcher">
@@ -812,8 +806,8 @@
   <!-- COVER -->
   <section id="cover">
     <div class="cover-content">
-      <h2>MARK BOGDANOV</h2>
-      <p>Искусство о науке.</p>
+      <h2 id="cover-heading">MARK BOGDANOV</h2>
+      <p id="cover-subheading">Искусство о науке.</p>
     </div>
   </section>
 
@@ -822,7 +816,7 @@
     <!-- Портфолио -->
     <section id="works">
       <div class="container">
-        <h2>Портфолио</h2>
+        <h2 id="portfolio-heading">Портфолио</h2>
         <div class="grid" id="portfolio-container">
           <!-- Карточки будут генерироваться из JSON -->
         </div>
@@ -832,15 +826,13 @@
     <!-- О художнике -->
     <section id="about">
       <div class="container">
-        <h2>О художнике</h2>
+        <h2 id="about-heading">О художнике</h2>
         <div class="about-content">
           <div class="bio-row">
             <div class="bio">
-              <h3>Биография</h3>
-              <p>
-                Марк Богданов — художник, работающий на стыке искусства, технологий и инженерной эстетики. В своих произведениях он исследует влияние научного прогресса на визуальные формы, сочетая современные методы производства (3D-печать, лазерную резку, цифровую обработку) с традиционными материалами.
-
-                Родился в 1998 году в семье хореографов и вырос между Санкт-Петербургом и Одессой — двумя городами с глубокими культурными традициями. Детство и юность пришлись на переломные десятилетия цифровой революции, когда искусство и технологии начали стремительно сближаться. Это время сформировало его интерес к новым методам создания и восприятия искусства, где материальный объект все чаще сочетался с виртуальными и механическими компонентами.
+              <h3 id="bio-title">Биография</h3>
+              <p id="bio-text">
+                <!-- Текст биографии будет подгружен из JSON -->
               </p>
             </div>
             <div class="artist-photo">
@@ -848,24 +840,9 @@
             </div>
           </div>
           <div class="artist-statement">
-            <h3>Artist Statement</h3>
-            <p>
-              Я создаю скульптуры, в которых современные технологии производства встречаются с наследием инженерной
-              мысли прошлого.
-              Моё искусство — это поиск формы, структуры и материала, отражающих логику научного прогресса.
-
-              В своих работах я сочетаю 3D-печать, лазерную резку, цифровую обработку и традиционные ремесленные
-              техники,
-              интегрируя их в единую художественную систему. Мне важно показать, как технологии формируют эстетику и
-              как через них можно создавать новые визуальные смыслы, выходящие за пределы привычного восприятия.
-
-              Я вдохновляюсь конструктивизмом, ретрофутуризмом и инженерной эстетикой, рассматривая искусство как способ
-              взаимодействия с научным знанием.
-              В моих скульптурах можно увидеть интертекстуальность инженерных решений, где каждая деталь несёт смысл и
-              отсылает к механике, архитектуре и оптике.
-
-              Меня интересует диалог между прошлым и будущим: как технологии меняются, но принципы остаются вечными.
-              В этом я вижу красоту — в переплетении точности, формы и замысла.
+            <h3 id="statement-title">Artist Statement</h3>
+            <p id="statement-text">
+              <!-- Текст artist statement будет подгружен из JSON -->
             </p>
           </div>
         </div>
@@ -875,19 +852,19 @@
     <!-- Контакты -->
     <section id="contact">
       <div class="container">
-        <h2>Контакты</h2>
+        <h2 id="contact-heading">Контакты</h2>
         <div class="contact-buttons">
-          <a class="contact-button" href="https://t.me/markestart" target="_blank">Telegram</a>
-          <a class="contact-button" href="https://instagram.com/markestart" target="_blank">Instagram</a>
-          <a class="contact-button" href="tel:+77051248743">Телефон</a>
-          <a class="contact-button" href="mailto:markbogdanovofficial@gmail.com">Email</a>
+          <a class="contact-button" href="https://t.me/markestart" target="_blank" id="btn-telegram">Telegram</a>
+          <a class="contact-button" href="https://instagram.com/markestart" target="_blank" id="btn-instagram">Instagram</a>
+          <a class="contact-button" href="tel:+77051248743" id="btn-phone">Телефон</a>
+          <a class="contact-button" href="mailto:markbogdanovofficial@gmail.com" id="btn-email">Email</a>
         </div>
       </div>
     </section>
   </main>
 
   <footer>
-    <div class="container">
+    <div class="container" id="footer-text">
       &copy; 2025 TheMarkest.art. Все права защищены.
     </div>
   </footer>
@@ -903,7 +880,7 @@
     </div>
   </div>
 
-  <!-- Wave Animation Script -->
+  <!-- Существующие скрипты: Wave Animation, TextScramble, IntersectionObserver, Burger Menu, Модальное окно и т.д. -->
   <script>
     const canvas = document.getElementById("waveCanvas");
     const ctx = canvas.getContext("2d");
@@ -949,7 +926,6 @@
       ctx.closePath();
       ctx.fillStyle = HEADER_BG_COLOR;
       ctx.fill();
-
       ctx.beginPath();
       ctx.strokeStyle = "#0ff";
       ctx.lineWidth = LINE_WIDTH;
@@ -958,7 +934,6 @@
         else ctx.lineTo(p.x, p.y);
       });
       ctx.stroke();
-
       wavePoints.forEach(p => {
         ctx.beginPath();
         ctx.arc(p.x, p.y, DOT_RADIUS, 0, Math.PI * 2);
@@ -974,29 +949,6 @@
     animateWave();
   </script>
 
-  <!-- measureCardHeight (для карточек портфолио, без изменений) -->
-  <script>
-    function measureCardHeight(article) {
-      const clone = article.cloneNode(true);
-      clone.querySelectorAll(".scramble-text").forEach(el => {
-        const txt = el.getAttribute("data-text") || el.textContent;
-        el.textContent = txt;
-      });
-      clone.style.position = "absolute";
-      clone.style.visibility = "hidden";
-      clone.style.zIndex = "-9999";
-      document.body.appendChild(clone);
-      let h = clone.offsetHeight;
-      const btn = clone.querySelector(".work-button");
-      if (btn) {
-        h += btn.offsetHeight;
-      }
-      document.body.removeChild(clone);
-      return h;
-    }
-  </script>
-
-  <!-- TextScramble + IntersectionObserver -->
   <script>
     class TextScramble {
       constructor(el) {
@@ -1064,7 +1016,6 @@
     }, { root: null, rootMargin: "0px 0px -10% 0px", threshold: 0.1 });
   </script>
 
-  <!-- Наблюдатель для появления карточек -->
   <script>
     const cardObserver = new IntersectionObserver((entries, obs) => {
       entries.forEach(entry => {
@@ -1084,7 +1035,6 @@
     }, { threshold: 0.1 });
   </script>
 
-  <!-- Burger Menu Script (убран дублирующий скрипт) -->
   <script>
     const burger = document.querySelector('.burger');
     const navLinks = document.querySelector('.nav-links');
@@ -1097,7 +1047,6 @@
     });
   </script>
 
-  <!-- Модальное окно -->
   <script>
     const modal = document.getElementById("modal");
     const modalContent = document.getElementById("modal-content");
@@ -1155,18 +1104,72 @@
     });
   </script>
 
-  <!-- Загрузка и генерация карточек портфолио из artportfolio.json -->
+  <!-- Язык и динамическая подгрузка текстов, цитат и портфолио -->
   <script>
+    // Глобальная переменная для текущего языка (по умолчанию RU)
+    let currentLang = "RU";
+    // Глобальный массив для цитат
+    let quotesArray = [];
+    
+    // Функция для очистки и форматирования строк
     function sanitize(val) {
       if (!val) return "";
       return val.toString().replace(/^"+|"+$/g, "").trim();
     }
-    document.addEventListener('DOMContentLoaded', () => {
-      fetch("artportfolio.json")
+    
+    function loadLanguage(lang) {
+      currentLang = lang;
+      // Подгрузка основного текста сайта из файла, например "rutext.json"
+      fetch(lang.toLowerCase() + "text.json")
         .then(response => response.json())
         .then(data => {
-          console.log("JSON results:", data);
+          if(data.title) {
+            document.title = data.title;
+          }
+          if(data.metaDescription) {
+            document.querySelector('meta[name="description"]').setAttribute("content", data.metaDescription);
+          }
+          // Обновление навигации
+          document.getElementById("nav-cover").textContent = data.nav.cover;
+          document.getElementById("nav-portfolio").textContent = data.nav.portfolio;
+          document.getElementById("nav-about").textContent = data.nav.about;
+          document.getElementById("nav-contact").textContent = data.nav.contact;
+          // Обновление обложки
+          document.getElementById("cover-heading").textContent = data.cover.heading;
+          document.getElementById("cover-subheading").textContent = data.cover.subheading;
+          // Обновление заголовков секций
+          document.getElementById("portfolio-heading").textContent = data.sections.portfolio;
+          document.getElementById("about-heading").textContent = data.sections.about;
+          document.getElementById("contact-heading").textContent = data.sections.contact;
+          // Обновление раздела "О художнике"
+          document.getElementById("bio-title").textContent = data.about.bioTitle;
+          document.getElementById("bio-text").textContent = data.about.bioText;
+          document.getElementById("statement-title").textContent = data.about.statementTitle;
+          document.getElementById("statement-text").textContent = data.about.statementText;
+          // Обновление кнопок контактов
+          document.getElementById("btn-telegram").textContent = data.contactButtons.telegram;
+          document.getElementById("btn-instagram").textContent = data.contactButtons.instagram;
+          document.getElementById("btn-phone").textContent = data.contactButtons.phone;
+          document.getElementById("btn-email").textContent = data.contactButtons.email;
+          // Обновление футера
+          document.getElementById("footer-text").innerHTML = data.footer;
+        })
+        .catch(error => console.error("Error loading language file:", error));
+      
+      // Подгрузка цитат из файла, например "ruquote.json"
+      fetch(lang.toLowerCase() + "quote.json")
+        .then(response => response.json())
+        .then(data => {
+          quotesArray = data;
+        })
+        .catch(error => console.error("Error loading quotes file:", error));
+      
+      // Подгрузка работ портфолио из файла, например "ruport.json"
+      fetch(lang.toLowerCase() + "port.json")
+        .then(response => response.json())
+        .then(data => {
           const container = document.getElementById("portfolio-container");
+          container.innerHTML = "";
           data.forEach(item => {
             const allEmpty = Object.values(item).every(val => {
               if (typeof val === "string") return val.trim() === "";
@@ -1201,7 +1204,6 @@
                   mediaElement.setAttribute("decoding", "async");
                 }
               } else {
-                // Сначала пробуем варианты с webp, затем остальные
                 const imageExtensions = [".webp", ".jpg", ".jpeg", ".png", ".gif", ".svg"];
                 const videoExtensions = [".mp4", ".webm"];
                 let extList = imageExtensions.concat(videoExtensions);
@@ -1272,42 +1274,21 @@
             cardObserver.observe(article);
           });
         })
-        .catch(error => console.error(error));
-    });
-  </script>
-
-  <!-- Загрузка цитат из quote.json -->
-  <script>
-    let quotesArray = [];
-    fetch("quote.json")
-      .then(response => response.json())
-      .then(data => {
-        quotesArray = data;
-      })
-      .catch(error => console.error(error));
-  </script>
-
-  <!-- Скрипт для плавающих цитат -->
-  <script>
-    function spawnQuote() {
-      if (quotesArray.length === 0) return;
-      const q = quotesArray[Math.floor(Math.random() * quotesArray.length)];
-      const div = document.createElement('div');
-      div.className = 'floating-quote';
-      div.innerHTML = `
-        <span class="quote-text">${q.text}</span>
-        <span class="quote-author">${q.author}</span>
-      `;
-      const docWidth = document.documentElement.scrollWidth;
-      const docHeight = document.documentElement.scrollHeight;
-      const x = 0.05 * docWidth + Math.random() * (0.9 * docWidth);
-      const y = 0.1 * docHeight + Math.random() * (0.8 * docHeight);
-      div.style.left = x + 'px';
-      div.style.top = y + 'px';
-      document.body.appendChild(div);
-      setTimeout(() => { div.remove(); }, 10000);
+        .catch(error => console.error("Error loading portfolio file:", error));
     }
-    setInterval(spawnQuote, 5000);
+    
+    // Слушатели переключения языка (кнопки и dropdown)
+    document.addEventListener("DOMContentLoaded", () => {
+      loadLanguage(currentLang);
+      document.querySelectorAll(".language-buttons button").forEach(button => {
+        button.addEventListener("click", () => {
+          loadLanguage(button.textContent.trim());
+        });
+      });
+      document.querySelector(".language-dropdown").addEventListener("change", (e) => {
+        loadLanguage(e.target.value);
+      });
+    });
   </script>
 
   <!-- Three.js и скрипт обложки -->
