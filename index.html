@@ -714,44 +714,15 @@
     }
   </style>
 
-  <!-- Pre-calculate height for bio and statement blocks -->
+  <!-- Helper: Check if element is in viewport -->
   <script>
-    // Теперь функция всегда устанавливает data-text равным текущему содержимому
-    function fixBioAndStatementHeight(selector) {
-      document.querySelectorAll(selector).forEach(el => {
-        el.setAttribute('data-text', el.textContent.trim());
-        const clone = el.cloneNode(true);
-        clone.style.width = el.offsetWidth + "px";
-        clone.style.visibility = 'hidden';
-        clone.style.position = 'absolute';
-        clone.style.height = 'auto';
-        clone.style.whiteSpace = 'pre-line';
-        clone.style.opacity = '1';
-        clone.style.left = "-9999px";
-        document.body.appendChild(clone);
-        const fullHeight = clone.offsetHeight;
-        document.body.removeChild(clone);
-        el.style.height = (fullHeight + 20) + "px";
-        el.textContent = "";
-        el.classList.add('scramble-text');
-      });
+    function isInViewport(el) {
+      const rect = el.getBoundingClientRect();
+      return rect.bottom >= 0 && rect.top <= window.innerHeight;
     }
   </script>
 
-  <!-- Function to reset (restart) TextScramble on all elements -->
-  <script>
-    function resetAllScramble() {
-      document.querySelectorAll('.scramble-text').forEach(el => {
-        // Сбросим текст к значению из data-text и запустим эффект заново
-        const newText = el.getAttribute('data-text') || "";
-        el.textContent = newText;
-        const fx = new TextScramble(el);
-        fx.setText(newText);
-      });
-    }
-  </script>
-
-  <!-- Function to measure portfolio card height -->
+  <!-- Pre-calculate height for portfolio cards -->
   <script>
     function measureCardHeight(article) {
       const clone = article.cloneNode(true);
@@ -1012,6 +983,7 @@
         return this.chars[Math.floor(Math.random() * this.chars.length)];
       }
     }
+    // IntersectionObserver for elements with scramble effect (used e.g. for bio and statement)
     const scrambleObserver = new IntersectionObserver((entries, obs) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -1149,18 +1121,40 @@
           document.getElementById("nav-contact").textContent = data.nav.contact;
           // Update cover
           document.getElementById("cover-heading").textContent = data.cover.heading;
-          document.getElementById("cover-subheading").textContent = data.cover.subheading;
+          // For cover subheading – force reset scramble effect immediately:
+          const coverSub = document.getElementById("cover-subheading");
+          coverSub.setAttribute("data-text", data.cover.subheading);
+          coverSub.textContent = "";
+          const fxCover = new TextScramble(coverSub);
+          fxCover.setText(data.cover.subheading);
+          
           // Update section headings
           document.getElementById("portfolio-heading").textContent = data.sections.portfolio;
           document.getElementById("about-heading").textContent = data.sections.about;
           document.getElementById("contact-heading").textContent = data.sections.contact;
-          // Update About section
-          document.getElementById("bio-title").textContent = data.about.bioTitle;
-          document.getElementById("bio-text").textContent = data.about.bioText;
-          document.getElementById("statement-title").textContent = data.about.statementTitle;
-          document.getElementById("statement-text").textContent = data.about.statementText;
-          // Recalculate block sizes and apply TextScramble for bio and statement
-          fixBioAndStatementHeight('.bio p, .artist-statement p');
+          // Update About section – handle bio and statement individually:
+          const bioEl = document.getElementById("bio-text");
+          bioEl.setAttribute("data-text", data.about.bioText);
+          bioEl.textContent = "";
+          if (isInViewport(bioEl)) {
+            const fxBio = new TextScramble(bioEl);
+            fxBio.setText(data.about.bioText);
+          } else {
+            bioEl.classList.add("scramble-text");
+            scrambleObserver.observe(bioEl);
+          }
+          
+          const statementEl = document.getElementById("statement-text");
+          statementEl.setAttribute("data-text", data.about.statementText);
+          statementEl.textContent = "";
+          if (isInViewport(statementEl)) {
+            const fxStatement = new TextScramble(statementEl);
+            fxStatement.setText(data.about.statementText);
+          } else {
+            statementEl.classList.add("scramble-text");
+            scrambleObserver.observe(statementEl);
+          }
+          
           // Update contact buttons
           document.getElementById("btn-telegram").textContent = data.contactButtons.telegram;
           document.getElementById("btn-instagram").textContent = data.contactButtons.instagram;
@@ -1168,8 +1162,6 @@
           document.getElementById("btn-email").textContent = data.contactButtons.email;
           // Update footer
           document.getElementById("footer-text").innerHTML = data.footer;
-          // Reset scramble effect for all texts on the page
-          resetAllScramble();
         })
         .catch(error => console.error("Error loading language file:", error));
       
