@@ -983,7 +983,7 @@
         return this.chars[Math.floor(Math.random() * this.chars.length)];
       }
     }
-    // IntersectionObserver for elements with scramble effect (used e.g. for bio and statement)
+    // IntersectionObserver для элементов с эффектом scramble (например, для био и statement)
     const scrambleObserver = new IntersectionObserver((entries, obs) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -1091,12 +1091,12 @@
 
   <!-- Language and Dynamic Text Loading Script -->
   <script>
-    // Global variable for current language; will be set based on system language or default to EN
+    // Глобальная переменная для текущего языка; по умолчанию EN
     let currentLang = "EN";
-    // Global array for quotes
+    // Глобальный массив для цитат
     let quotesArray = [];
     
-    // Simple sanitize function
+    // Простая функция очистки строки
     function sanitize(val) {
       if (!val) return "";
       return val.toString().replace(/^"+|"+$/g, "").trim();
@@ -1104,7 +1104,7 @@
     
     function loadLanguage(lang) {
       currentLang = lang;
-      // Load main text from language file, e.g. "entext.json"
+      // Загрузка основного текста из файла, например "entext.json"
       fetch(lang.toLowerCase() + "text.json")
         .then(response => response.json())
         .then(data => {
@@ -1114,25 +1114,24 @@
           if(data.metaDescription) {
             document.querySelector('meta[name="description"]').setAttribute("content", data.metaDescription);
           }
-          // Update navigation
+          // Обновление навигации
           document.getElementById("nav-cover").textContent = data.nav.cover;
           document.getElementById("nav-portfolio").textContent = data.nav.portfolio;
           document.getElementById("nav-about").textContent = data.nav.about;
           document.getElementById("nav-contact").textContent = data.nav.contact;
-          // Update cover
+          // Обновление обложки
           document.getElementById("cover-heading").textContent = data.cover.heading;
-          // For cover subheading – force reset scramble effect immediately:
+          // Для подзаголовка обложки сбрасываем и запускаем эффект сразу
           const coverSub = document.getElementById("cover-subheading");
           coverSub.setAttribute("data-text", data.cover.subheading);
           coverSub.textContent = "";
           const fxCover = new TextScramble(coverSub);
           fxCover.setText(data.cover.subheading);
-          
-          // Update section headings
+          // Обновление заголовков секций
           document.getElementById("portfolio-heading").textContent = data.sections.portfolio;
           document.getElementById("about-heading").textContent = data.sections.about;
           document.getElementById("contact-heading").textContent = data.sections.contact;
-          // Update About section – handle bio and statement individually:
+          // Обновление раздела "About the Artist"
           const bioEl = document.getElementById("bio-text");
           bioEl.setAttribute("data-text", data.about.bioText);
           bioEl.textContent = "";
@@ -1143,7 +1142,6 @@
             bioEl.classList.add("scramble-text");
             scrambleObserver.observe(bioEl);
           }
-          
           const statementEl = document.getElementById("statement-text");
           statementEl.setAttribute("data-text", data.about.statementText);
           statementEl.textContent = "";
@@ -1154,18 +1152,17 @@
             statementEl.classList.add("scramble-text");
             scrambleObserver.observe(statementEl);
           }
-          
-          // Update contact buttons
+          // Обновление контактных кнопок
           document.getElementById("btn-telegram").textContent = data.contactButtons.telegram;
           document.getElementById("btn-instagram").textContent = data.contactButtons.instagram;
           document.getElementById("btn-phone").textContent = data.contactButtons.phone;
           document.getElementById("btn-email").textContent = data.contactButtons.email;
-          // Update footer
+          // Обновление футера
           document.getElementById("footer-text").innerHTML = data.footer;
         })
         .catch(error => console.error("Error loading language file:", error));
       
-      // Load quotes from file, e.g. "enquote.json"
+      // Загрузка цитат из файла, например "enquote.json"
       fetch(lang.toLowerCase() + "quote.json")
         .then(response => response.json())
         .then(data => {
@@ -1173,7 +1170,7 @@
         })
         .catch(error => console.error("Error loading quotes file:", error));
       
-      // Load portfolio works from file, e.g. "enport.json"
+      // Загрузка работ портфолио из файла, например "enport.json"
       fetch(lang.toLowerCase() + "port.json")
         .then(response => response.json())
         .then(data => {
@@ -1286,7 +1283,7 @@
         .catch(error => console.error("Error loading portfolio file:", error));
     }
     
-    // On page load, determine system language and load it (default to EN)
+    // При загрузке страницы определяем системный язык и загружаем его (по умолчанию EN)
     document.addEventListener("DOMContentLoaded", () => {
       const sysLang = navigator.language || navigator.userLanguage || "en";
       let selectedLang = "EN";
@@ -1312,6 +1309,29 @@
         loadLanguage(e.target.value);
       });
     });
+  </script>
+
+  <!-- Script для случайных цитат -->
+  <script>
+    function spawnQuote() {
+      if (quotesArray.length === 0) return;
+      const q = quotesArray[Math.floor(Math.random() * quotesArray.length)];
+      const div = document.createElement('div');
+      div.className = 'floating-quote';
+      div.innerHTML = `
+        <span class="quote-text">${q.text}</span>
+        <span class="quote-author">${q.author}</span>
+      `;
+      const docWidth = document.documentElement.scrollWidth;
+      const docHeight = document.documentElement.scrollHeight;
+      const x = 0.05 * docWidth + Math.random() * (0.9 * docWidth);
+      const y = 0.1 * docHeight + Math.random() * (0.8 * docHeight);
+      div.style.left = x + 'px';
+      div.style.top = y + 'px';
+      document.body.appendChild(div);
+      setTimeout(() => { div.remove(); }, 10000);
+    }
+    setInterval(spawnQuote, 5000);
   </script>
 
   <!-- Three.js and Cover Script -->
