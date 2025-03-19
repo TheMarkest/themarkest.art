@@ -4,6 +4,8 @@ document.addEventListener("DOMContentLoaded", function() {
     
     // Определяем, мобильное ли устройство (простейшая проверка)
     const isMobile = /Mobi|Android/i.test(navigator.userAgent);
+    // Проверка на умные часы (или другое устройство с очень маленьким экраном)
+    const isSmartwatch = window.innerWidth <= 400;
     
     // Базовая позиция камеры; если мобильное – камера дальше
     const baseCameraPosition = { x: 0, y: 0, z: isMobile ? 60 : 40 };
@@ -79,20 +81,22 @@ document.addEventListener("DOMContentLoaded", function() {
     // Добавляем примитивы в сцену
     primitives.forEach(obj => scene.add(obj.mesh));
     
-    // Добавляем систему частиц
-    const particleCount = 500;
-    const particlesGeometry = new THREE.BufferGeometry();
-    const positions = new Float32Array(particleCount * 3);
-    for (let i = 0; i < particleCount; i++) {
-      // Частицы распределены внутри куба размером 200 единиц
-      positions[i * 3] = (Math.random() - 0.5) * 200;
-      positions[i * 3 + 1] = (Math.random() - 0.5) * 200;
-      positions[i * 3 + 2] = (Math.random() - 0.5) * 200;
+    // Добавляем систему частиц только если устройство не является умными часами
+    if (!isSmartwatch) {
+      const particleCount = 500;
+      const particlesGeometry = new THREE.BufferGeometry();
+      const positions = new Float32Array(particleCount * 3);
+      for (let i = 0; i < particleCount; i++) {
+        // Частицы распределены внутри куба размером 200 единиц
+        positions[i * 3] = (Math.random() - 0.5) * 200;
+        positions[i * 3 + 1] = (Math.random() - 0.5) * 200;
+        positions[i * 3 + 2] = (Math.random() - 0.5) * 200;
+      }
+      particlesGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+      const particlesMaterial = new THREE.PointsMaterial({ color: 0x888888, size: 1.5, transparent: true, opacity: 0.7 });
+      const particles = new THREE.Points(particlesGeometry, particlesMaterial);
+      scene.add(particles);
     }
-    particlesGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-    const particlesMaterial = new THREE.PointsMaterial({ color: 0x888888, size: 1.5, transparent: true, opacity: 0.7 });
-    const particles = new THREE.Points(particlesGeometry, particlesMaterial);
-    scene.add(particles);
     
     // Освещение: увеличенное ambient light и добавление directional light
     const ambientLight = new THREE.AmbientLight(0xffffff, 1.0);
@@ -163,5 +167,4 @@ document.addEventListener("DOMContentLoaded", function() {
       camera.aspect = width / height;
       camera.updateProjectionMatrix();
     });
-  });
- 
+});
