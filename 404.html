@@ -1,0 +1,1336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Дефолтный заголовок для версии EN (будет меняться при переключении языка) -->
+  <title>Mark Bogdanov – Digital Artist & Glitch Innovator</title>
+  <!-- Дефолтное описание (для EN); для других языков loadLanguage обновит эти данные -->
+  <meta name="description" content="Discover the digital art portfolio of Mark Bogdanov, showcasing glitch portraits, cyberpunk aesthetics, and innovative digital artworks that bridge art and technology." />
+  <!-- Мета-ключевые слова для повышения релевантности по запросам на русском -->
+  <meta name="keywords" content="художник марк богданов, художники алматы, художники казахстана">
+  
+  <!-- Favicons -->
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/apple-touch-icon.png">
+  <link rel="icon" type="image/svg+xml" href="assets/favicon/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="assets/favicon/favicon-96x96.png">
+  <link rel="icon" type="image/x-icon" href="assets/favicon/favicon.ico">
+  <link rel="manifest" href="assets/favicon/site.webmanifest">
+  <meta name="msapplication-TileColor" content="#000000">
+  <meta name="theme-color" content="#000000">
+
+  <!-- SEO & Social Meta Tags -->
+  <meta name="robots" content="index, follow">
+  <!-- Канонический URL для дефолтной версии -->
+  <link rel="canonical" href="https://themarkest.me">
+  
+  <!-- Альтернативные ссылки для мультиязычности -->
+  <link rel="alternate" hreflang="en" href="https://themarkest.me/en/" />
+  <link rel="alternate" hreflang="ru" href="https://themarkest.me/ru/" />
+  <link rel="alternate" hreflang="kz" href="https://themarkest.me/kz/" />
+  <link rel="alternate" hreflang="ua" href="https://themarkest.me/ua/" />
+  <link rel="alternate" hreflang="x-default" href="https://themarkest.me" />
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:title" content="Mark Bogdanov – Digital Artist & Glitch Innovator">
+  <meta property="og:description" content="Discover the digital art portfolio of Mark Bogdanov, showcasing glitch portraits, cyberpunk aesthetics, and innovative digital artworks that bridge art and technology.">
+  <meta property="og:image" content="assets/favicon/apple-touch-icon.png">
+  <meta property="og:url" content="https://themarkest.me">
+  <meta property="og:type" content="website">
+  
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Mark Bogdanov – Digital & Physical Artist ">
+  <meta name="twitter:description" content="Discover the digital art portfolio of Mark Bogdanov, showcasing cyberpunk aesthetics, and innovative digital artworks that bridge art and technology.">
+  <meta name="twitter:image" content="assets/favicon/apple-touch-icon.png">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-PSK9RZJMZS"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-PSK9RZJMZS');
+  </script>
+
+  <!-- Load Handjet font -->
+  <style>
+    @font-face {
+      font-family: 'Handjet';
+      src: url('fonts/Handjet-VariableFont_ELGR,ELSH,wght.ttf') format('truetype');
+      font-weight: 100 900;
+      font-style: normal;
+    }
+  </style>
+
+  <!-- 1) CSS Variables -->
+  <style>
+    :root {
+      --mouse-intensity: 1;
+      --scroll-intensity: 1;
+      --glitch-intensity: calc(var(--mouse-intensity) * var(--scroll-intensity));
+    }
+  </style>
+
+  <!-- 2) Retro Monitor Effect -->
+  <style>
+    body::before {
+      content: "";
+      pointer-events: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 9999;
+      background:
+        radial-gradient(circle at center, rgba(0, 0, 0, 0) 30%, rgba(0, 0, 0, 0.85) 100%),
+        radial-gradient(circle, rgba(255, 255, 255, 0.05) 1%, rgba(255, 255, 255, 0) 60%);
+      background-blend-mode: multiply;
+      animation: flicker 10s infinite;
+    }
+    body::after {
+      content: "";
+      pointer-events: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 99999;
+      background: repeating-linear-gradient(0deg,
+          rgba(255, 255, 255, 0.05) 0px,
+          rgba(255, 255, 255, 0.05) 2px,
+          rgba(255, 255, 255, 0) 4px,
+          rgba(255, 255, 255, 0) 6px);
+      animation: scanline 0.15s infinite steps(1);
+      mix-blend-mode: lighten;
+    }
+    @keyframes flicker {
+      0% { opacity: 0.03; }
+      10% { opacity: 0.06; }
+      20% { opacity: 0.10; }
+      30% { opacity: 0.08; }
+      40% { opacity: 0.12; }
+      50% { opacity: 0.07; }
+      60% { opacity: 0.14; }
+      70% { opacity: 0.09; }
+      80% { opacity: 0.05; }
+      90% { opacity: 0.11; }
+      100% { opacity: 0.03; }
+    }
+    @keyframes scanline {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(4px); }
+    }
+  </style>
+
+  <!-- 3) Reset and Basic Styles -->
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    html {
+      scroll-behavior: smooth;
+    }
+    body {
+      font-family: 'Handjet', sans-serif;
+      background: #000;
+      color: #fff;
+      line-height: 1.5;
+    }
+    a {
+      color: inherit;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    a:hover {
+      color: #0ff;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+  </style>
+
+  <!-- 4) Header: Wave + Content, Menu, Language Switcher -->
+  <style>
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 160px;
+      z-index: 1000;
+    }
+    #waveCanvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+    .header-content {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 20px;
+      z-index: 10;
+    }
+    .logo-container {
+      position: absolute;
+      left: 20px;
+      top: 10px;
+    }
+    .nav-links {
+      display: flex;
+      gap: 20px;
+    }
+    .nav-links a {
+      font-size: 1.4rem;
+      color: #fff;
+    }
+    /* Language Switcher */
+    .language-switcher {
+      position: absolute;
+      right: 80px;
+      top: 20px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    .language-buttons button {
+      background: transparent;
+      border: 1px solid #0ff;
+      color: #0ff;
+      padding: 5px 10px;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 0.9rem;
+      transition: background 0.3s, color 0.3s;
+    }
+    .language-buttons button:hover {
+      background: #0ff;
+      color: #000;
+    }
+    .language-dropdown {
+      display: none;
+      background: transparent;
+      border: 1px solid #0ff;
+      color: #0ff;
+      padding: 5px 10px;
+      font-family: inherit;
+      font-size: 0.9rem;
+    }
+    .burger {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      position: absolute;
+      right: 20px;
+      top: 20px;
+    }
+    .burger span {
+      display: block;
+      width: 25px;
+      height: 3px;
+      background: #fff;
+      margin: 4px 0;
+    }
+    @media (max-width: 768px) {
+      .header-content {
+        justify-content: center;
+      }
+      .logo-container {
+        position: static;
+        margin: 0 auto;
+      }
+      .nav-links {
+        display: none;
+        flex-direction: column;
+        background: #000;
+        position: absolute;
+        top: 60px;
+        right: 20px;
+        padding: 10px;
+        border: 1px solid #333;
+        border-radius: 6px;
+      }
+      .burger {
+        display: block;
+      }
+      .language-switcher {
+        right: 20px;
+        top: 70px;
+      }
+      .language-buttons {
+        display: none;
+      }
+      .language-dropdown {
+        display: block;
+      }
+    }
+  </style>
+
+  <!-- 5) Flickering Headings -->
+  <style>
+    h1, h2, h3 {
+      animation: heading-glow 3s infinite alternate;
+      text-shadow: 0 0 1px #0ff, 0 0 2px #0ff, 0 0 3px #0ff;
+      letter-spacing: 2px;
+    }
+    @keyframes heading-glow {
+      0% { text-shadow: 0 0 1px #0ff, 0 0 2px #0ff, 0 0 3px #0ff; }
+      50% { text-shadow: 0 0 2px #0ff, 0 0 3px #0ff, 0 0 4px #0ff; }
+      100% { text-shadow: 0 0 1px #0ff, 0 0 2px #0ff, 0 0 3px #0ff; }
+    }
+  </style>
+
+  <!-- 6) Logo Animation from CodePen by jenaroc (new animation, no glitch) -->
+  <style>
+    .glitch-image {
+      width: 312px;
+      height: 119px;
+      position: relative;
+      overflow: hidden;
+    }
+    .glitch-image img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      /* Новая анимация логотипа */
+      animation: logoAnim 3s ease-in-out infinite;
+    }
+    @keyframes logoAnim {
+      0%, 100% {
+        transform: scale(1) rotate(0deg);
+        filter: brightness(1);
+      }
+      50% {
+        transform: scale(1.05) rotate(3deg);
+        filter: brightness(1.2);
+      }
+    }
+  </style>
+
+  <!-- 7) Cover Section -->
+  <style>
+    #cover {
+      position: relative;
+      width: 100%;
+      min-height: 100vh;
+      background: #000;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+    #cover canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+    }
+    #cover .cover-content {
+      position: relative;
+      z-index: 1;
+      background: rgba(0, 0, 0, 0.4);
+      padding: 2rem;
+      border-radius: 8px;
+      max-width: 600px;
+      margin: 2rem;
+    }
+    #cover .cover-content h2 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+    }
+    #cover .cover-content p {
+      font-size: 1.1rem;
+      opacity: 0.9;
+      line-height: 1.4;
+    }
+  </style>
+
+  <!-- 8) Other Sections -->
+  <style>
+    section {
+      padding: 4rem 0;
+      background: #000;
+    }
+    h2 {
+      text-align: center;
+      font-size: 2rem;
+      margin-bottom: 2rem;
+      text-transform: uppercase;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    .work-item {
+      opacity: 0;
+      transform: translateY(20px);
+      display: flex;
+      flex-direction: row;
+      gap: 1rem;
+      background: #222;
+      border: 1px solid #333;
+      border-radius: 6px;
+      padding: 1rem;
+      width: 100%;
+      margin-bottom: 1rem;
+    }
+    .work-item.visible {
+      animation: fadeInFlicker 1s forwards;
+    }
+    @keyframes fadeInFlicker {
+      0% { opacity: 0; transform: translateY(20px); }
+      50% { opacity: 1; transform: translateY(0); }
+      70% { opacity: 0.8; }
+      100% { opacity: 1; }
+    }
+    .work-media {
+      flex: 0 0 120px;
+      width: 120px;
+      height: 120px;
+      overflow: hidden;
+    }
+    @media (max-width: 768px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+      .work-item {
+        flex-direction: column;
+      }
+      .work-media {
+        width: 100%;
+        height: 0;
+        padding-bottom: 100%;
+        position: relative;
+      }
+      .work-thumb,
+      .placeholder-logo {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+    .work-thumb {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 6px;
+      cursor: pointer;
+      image-rendering: pixelated;
+      loading: lazy;
+      decoding: async;
+      filter: grayscale(100%);
+    }
+    .placeholder-logo {
+      width: 100%;
+      height: 100%;
+      border: 2px solid #777;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 6px;
+      background: #333;
+    }
+    .placeholder-logo img {
+      width: 40%;
+      filter: grayscale(100%);
+    }
+    .work-details {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .work-item h3 {
+      margin-bottom: 0.5rem;
+      font-size: 1.2rem;
+    }
+    .work-item p {
+      font-size: 0.95rem;
+      opacity: 0.9;
+      margin-bottom: 0.5rem;
+    }
+    .about-content {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    .bio-row {
+      display: flex;
+      flex-direction: row;
+      gap: 2rem;
+    }
+    .bio {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .bio h3 {
+      font-size: 1.3rem;
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+    }
+    .bio p {
+      font-size: 1rem;
+      opacity: 0.9;
+      line-height: 1.5;
+      white-space: pre-line;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 10px;
+      border-radius: 4px;
+    }
+    .artist-photo {
+      width: 250px;
+      height: 250px;
+      flex: 0 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .artist-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border: 2px solid #0ff;
+      border-radius: 8px;
+      image-rendering: pixelated;
+      filter: grayscale(100%);
+      loading: lazy;
+      decoding: async;
+    }
+    .artist-statement {
+      width: 100%;
+    }
+    .artist-statement h3 {
+      font-size: 1.3rem;
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+    }
+    .artist-statement p {
+      font-size: 1rem;
+      opacity: 0.9;
+      line-height: 1.5;
+      white-space: pre-line;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 10px;
+      border-radius: 4px;
+    }
+    @media (max-width: 768px) {
+      .bio-row {
+        flex-direction: column;
+      }
+      .artist-photo {
+        width: 100%;
+        height: auto;
+      }
+      .artist-photo img {
+        height: auto;
+      }
+    }
+  </style>
+
+  <!-- 9) Footer, Modal, Contacts, and Work Buttons -->
+  <style>
+    footer {
+      background: #000;
+      padding: 2rem 0;
+      text-align: center;
+      font-size: 0.9rem;
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 3000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.95);
+      overflow: hidden;
+    }
+    .modal-content {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      height: 100%;
+      position: relative;
+      overflow: hidden;
+    }
+    .modal-title-bar {
+      flex: 0 0 auto;
+      background: #000;
+      color: #fff;
+      text-align: center;
+      padding: 1rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      border-bottom: 1px solid #333;
+      position: relative;
+      z-index: 1;
+    }
+    .modal-media-wrapper {
+      flex: 1 1 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .modal-media {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+    .contact-buttons {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+    .contact-button {
+      display: block;
+      text-align: center;
+      padding: 0.7rem 1rem;
+      border: 2px solid #0ff;
+      color: #0ff;
+      text-transform: uppercase;
+      text-decoration: none;
+      font-weight: 600;
+      transition: background 0.3s, color 0.3s;
+    }
+    .contact-button:hover {
+      background: #0ff;
+      color: #000;
+    }
+    .modal-close {
+      position: absolute;
+      top: 50%;
+      right: 1rem;
+      transform: translateY(-50%);
+      color: #f1f1f1;
+      font-size: 36px;
+      font-weight: bold;
+      cursor: pointer;
+      z-index: 2;
+    }
+    .modal-close:hover,
+    .modal-close:focus {
+      color: #bbb;
+    }
+    .work-button {
+      display: inline-block;
+      margin-top: 0.5rem;
+      padding: 0.4rem 0.8rem;
+      border: 1px solid #0ff;
+      color: #0ff;
+      text-transform: uppercase;
+      transition: background 0.3s, color 0.3s;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+    .work-button:hover {
+      background: #0ff;
+      color: #000;
+    }
+  </style>
+
+  <!-- 10) TextScramble Styles -->
+  <style>
+    .dud {
+      color: #0ff;
+      opacity: 0.8;
+    }
+  </style>
+
+  <!-- 11) Floating Quote Styles -->
+  <style>
+    .floating-quote {
+      position: absolute;
+      z-index: 1;
+      color: rgba(255, 255, 255, 0.3);
+      font-style: italic;
+      font-size: 1.1rem;
+      pointer-events: none;
+      text-shadow: 0 0 2px #0ff, 0 0 4px #0ff;
+      animation: quoteFlicker 10s linear forwards;
+      transform: translate(-50%, -50%);
+      max-width: 30vw;
+      word-wrap: break-word;
+    }
+    .floating-quote .quote-text {
+      display: block;
+    }
+    .floating-quote .quote-author {
+      display: block;
+      margin-left: 1.5em;
+      margin-top: 0.3em;
+      opacity: 0.7;
+    }
+    @keyframes quoteFlicker {
+      0% { opacity: 0; }
+      10% { opacity: 0.7; }
+      50% { opacity: 0.5; }
+      80% { opacity: 0.3; }
+      100% { opacity: 0; }
+    }
+  </style>
+
+  <!-- Helper: Check if element is in viewport -->
+  <script>
+    function isInViewport(el) {
+      const rect = el.getBoundingClientRect();
+      return rect.bottom >= 0 && rect.top <= window.innerHeight;
+    }
+  </script>
+
+  <!-- Pre-calculate height for portfolio cards -->
+  <script>
+    function measureCardHeight(article) {
+      const clone = article.cloneNode(true);
+      clone.querySelectorAll(".scramble-text").forEach(el => {
+        const txt = el.getAttribute("data-text") || el.textContent;
+        el.textContent = txt;
+      });
+      clone.style.position = "absolute";
+      clone.style.visibility = "hidden";
+      clone.style.zIndex = "-9999";
+      document.body.appendChild(clone);
+      let h = clone.offsetHeight;
+      const btn = clone.querySelector(".work-button");
+      if (btn) {
+        h += btn.offsetHeight;
+      }
+      document.body.removeChild(clone);
+      return h;
+    }
+  </script>
+</head>
+<body>
+  <!-- HEADER -->
+  <header>
+    <canvas id="waveCanvas"></canvas>
+    <div class="header-content">
+      <div class="logo-container">
+        <div class="glitch-image">
+          <img src="assets/logo.svg" alt="TheMarkest.art Logo" />
+        </div>
+      </div>
+      <nav class="nav-links">
+        <a href="#cover" id="nav-cover">Cover</a>
+        <a href="#works" id="nav-portfolio">Portfolio</a>
+        <a href="#about" id="nav-about">About the Artist</a>
+        <a href="#contact" id="nav-contact">Contact</a>
+      </nav>
+      <!-- Language Switcher -->
+      <div class="language-switcher">
+        <div class="language-buttons">
+          <button>EN</button>
+          <button>RU</button>
+          <button>KZ</button>
+          <button>UA</button>
+        </div>
+        <select class="language-dropdown">
+          <option value="EN">EN</option>
+          <option value="RU">RU</option>
+          <option value="KZ">KZ</option>
+          <option value="UA">UA</option>
+        </select>
+      </div>
+      <button class="burger">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- COVER -->
+  <section id="cover">
+    <div class="cover-content">
+      <h2 id="cover-heading">MARK BOGDANOV</h2>
+      <p id="cover-subheading">Art about science.</p>
+    </div>
+  </section>
+
+  <!-- MAIN CONTENT -->
+  <main>
+    <!-- Portfolio -->
+    <section id="works">
+      <div class="container">
+        <h2 id="portfolio-heading">Portfolio</h2>
+        <div class="grid" id="portfolio-container">
+          <!-- Portfolio cards will be generated from JSON -->
+        </div>
+      </div>
+    </section>
+
+    <!-- About the Artist -->
+    <section id="about">
+      <div class="container">
+        <h2 id="about-heading">About the Artist</h2>
+        <div class="about-content">
+          <div class="bio-row">
+            <div class="bio">
+              <h3 id="bio-title">Biography</h3>
+              <p id="bio-text">
+                <!-- Biography text will be loaded from JSON -->
+              </p>
+            </div>
+            <div class="artist-photo">
+              <img src="assets/portrait.png" alt="Artist Portrait" loading="lazy" decoding="async" />
+            </div>
+          </div>
+          <div class="artist-statement">
+            <h3 id="statement-title">Artist Statement</h3>
+            <p id="statement-text">
+              <!-- Artist statement text will be loaded from JSON -->
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact">
+      <div class="container">
+        <h2 id="contact-heading">Contact</h2>
+        <div class="contact-buttons">
+          <a class="contact-button" href="https://t.me/markestart" target="_blank" id="btn-telegram">Telegram</a>
+          <a class="contact-button" href="https://instagram.com/themarkest" target="_blank" id="btn-instagram">Instagram</a>
+          <a class="contact-button" href="tel:+77051248743" id="btn-phone">Phone</a>
+          <a class="contact-button" href="mailto:markbogdanovofficial@gmail.com" id="btn-email">Email</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container" id="footer-text">
+      &copy; 2025 TheMarkest.art. All rights reserved.
+    </div>
+  </footer>
+
+  <!-- Modal for full-screen media view -->
+  <div id="modal" class="modal">
+    <div id="modal-content" class="modal-content">
+      <div id="modal-title-bar" class="modal-title-bar">
+        <span id="modal-close" class="modal-close">&#10005;</span>
+        <span id="modal-title-text"></span>
+      </div>
+      <div id="modal-media-wrapper" class="modal-media-wrapper"></div>
+    </div>
+  </div>
+
+  <!-- Wave Animation Script -->
+  <script>
+    const canvas = document.getElementById("waveCanvas");
+    const ctx = canvas.getContext("2d");
+    let width = 0, height = 0;
+    let time = 0;
+    let dots = [];
+    const AMPLITUDE = 15;
+    const DOT_SPACING = 40;
+    const FREQ_MIN = 0.03;
+    const FREQ_MAX = 0.08;
+    const LINE_WIDTH = 2;
+    const DOT_RADIUS = 4;
+    const HEADER_BG_COLOR = "rgba(85,85,85,0.8)";
+    const BASELINE = 120;
+    function initDots() {
+      width = canvas.offsetWidth;
+      height = canvas.offsetHeight;
+      canvas.width = width;
+      canvas.height = height;
+      dots = [];
+      dots.push({ x: 0, pinned: true });
+      for (let x = DOT_SPACING; x <= width - DOT_SPACING; x += DOT_SPACING) {
+        dots.push({
+          x,
+          pinned: false,
+          freq: FREQ_MIN + Math.random() * (FREQ_MAX - FREQ_MIN),
+          phase: Math.random() * Math.PI * 2
+        });
+      }
+      dots.push({ x: width, pinned: true });
+    }
+    function animateWave() {
+      ctx.clearRect(0, 0, width, height);
+      const wavePoints = dots.map(dot => {
+        if (dot.pinned) return { x: dot.x, y: BASELINE };
+        let wave = AMPLITUDE * Math.sin(dot.x * dot.freq + time + dot.phase);
+        return { x: dot.x, y: BASELINE + wave };
+      });
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      wavePoints.forEach(p => ctx.lineTo(p.x, p.y));
+      ctx.lineTo(width, 0);
+      ctx.closePath();
+      ctx.fillStyle = HEADER_BG_COLOR;
+      ctx.fill();
+      ctx.beginPath();
+      ctx.strokeStyle = "#0ff";
+      ctx.lineWidth = LINE_WIDTH;
+      wavePoints.forEach((p, i) => {
+        if (i === 0) ctx.moveTo(p.x, p.y);
+        else ctx.lineTo(p.x, p.y);
+      });
+      ctx.stroke();
+      wavePoints.forEach(p => {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, DOT_RADIUS, 0, Math.PI * 2);
+        ctx.fillStyle = "#0ff";
+        ctx.fill();
+      });
+      time += 0.02;
+      requestAnimationFrame(animateWave);
+    }
+    function onResize() { initDots(); }
+    window.addEventListener("resize", onResize);
+    initDots();
+    animateWave();
+  </script>
+
+  <!-- TextScramble Script -->
+  <script>
+    class TextScramble {
+      constructor(el) {
+        this.el = el;
+        this.chars = '!<>-_\\/[]{}—=+*^?#________';
+        this.update = this.update.bind(this);
+      }
+      setText(newText) {
+        this.el.innerHTML = "";
+        const length = newText.length;
+        const promise = new Promise(resolve => this.resolve = resolve);
+        this.queue = [];
+        for (let i = 0; i < length; i++) {
+          const to = newText[i];
+          const start = Math.floor(Math.random() * 30);
+          const end = start + Math.floor(Math.random() * 30);
+          this.queue.push({ from: "", to, start, end, char: null });
+        }
+        cancelAnimationFrame(this.frameRequest);
+        this.frame = 0;
+        this.update();
+        return promise;
+      }
+      update() {
+        let output = "";
+        let complete = 0;
+        for (let i = 0, n = this.queue.length; i < n; i++) {
+          let { to, start, end, char } = this.queue[i];
+          if (this.frame >= end) {
+            complete++;
+            output += to;
+          } else if (this.frame >= start) {
+            if (!char || Math.random() < 0.28) {
+              char = this.randomChar();
+              this.queue[i].char = char;
+            }
+            output += `<span class="dud">${char}</span>`;
+          } else {
+            output += "";
+          }
+        }
+        this.el.innerHTML = output;
+        if (complete === this.queue.length) {
+          this.resolve();
+        } else {
+          this.frameRequest = requestAnimationFrame(this.update);
+          this.frame++;
+        }
+      }
+      randomChar() {
+        return this.chars[Math.floor(Math.random() * this.chars.length)];
+      }
+    }
+    // IntersectionObserver для элементов с эффектом scramble (например, для био и statement)
+    const scrambleObserver = new IntersectionObserver((entries, obs) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const el = entry.target;
+          const original = el.getAttribute('data-text') || el.textContent;
+          el.textContent = "";
+          const fx = new TextScramble(el);
+          fx.setText(original);
+          obs.unobserve(el);
+        }
+      });
+    }, { root: null, rootMargin: "0px 0px -10% 0px", threshold: 0.1 });
+  </script>
+
+  <!-- Observer for portfolio cards -->
+  <script>
+    const cardObserver = new IntersectionObserver((entries, obs) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const article = entry.target;
+          const finalHeight = measureCardHeight(article);
+          article.style.height = finalHeight + "px";
+          article.classList.add('visible');
+          setTimeout(() => {
+            article.querySelectorAll('.scramble-text').forEach(el => {
+              scrambleObserver.observe(el);
+            });
+          }, 700);
+          obs.unobserve(article);
+        }
+      });
+    }, { threshold: 0.1 });
+  </script>
+
+  <!-- Burger Menu Script -->
+  <script>
+    const burger = document.querySelector('.burger');
+    const navLinks = document.querySelector('.nav-links');
+    burger.addEventListener('click', () => {
+      if (getComputedStyle(navLinks).display === 'none') {
+        navLinks.style.display = 'flex';
+      } else {
+        navLinks.style.display = 'none';
+      }
+    });
+  </script>
+
+  <!-- Modal Script -->
+  <script>
+    const modal = document.getElementById("modal");
+    const modalContent = document.getElementById("modal-content");
+    const modalTitleBar = document.getElementById("modal-title-bar");
+    const modalTitleText = document.getElementById("modal-title-text");
+    const modalMediaWrapper = document.getElementById("modal-media-wrapper");
+    const modalClose = document.getElementById("modal-close");
+    document.getElementById("portfolio-container").addEventListener("click", function (e) {
+      let target = e.target;
+      if (target.classList.contains("work-thumb")) {
+        const article = target.closest(".work-item");
+        let titleText = "";
+        if (article) {
+          const titleEl = article.querySelector("h3");
+          if (titleEl) {
+            titleText = titleEl.textContent.trim();
+          }
+        }
+        modalTitleText.textContent = titleText || "Untitled";
+        modalMediaWrapper.innerHTML = "";
+        modal.style.display = "block";
+        if (target.tagName.toLowerCase() === "img") {
+          let img = document.createElement("img");
+          img.src = target.src;
+          img.className = "modal-media";
+          modalMediaWrapper.appendChild(img);
+        } else if (target.tagName.toLowerCase() === "video") {
+          let video = document.createElement("video");
+          const sourceEl = target.querySelector("source");
+          if (sourceEl) {
+            video.src = sourceEl.src;
+            video.type = sourceEl.type;
+          } else {
+            video.src = target.src;
+          }
+          video.controls = true;
+          video.autoplay = true;
+          video.playsInline = true;
+          video.className = "modal-media";
+          modalMediaWrapper.appendChild(video);
+        }
+      }
+    });
+    modalClose.addEventListener("click", function () {
+      modal.style.display = "none";
+      modalMediaWrapper.innerHTML = "";
+      modalTitleText.textContent = "";
+    });
+    modal.addEventListener("click", function (e) {
+      if (e.target === modal) {
+        modal.style.display = "none";
+        modalMediaWrapper.innerHTML = "";
+        modalTitleText.textContent = "";
+      }
+    });
+  </script>
+
+  <!-- Language and Dynamic Text Loading Script -->
+  <script>
+    // Глобальная переменная для текущего языка; по умолчанию EN
+    let currentLang = "EN";
+    // Глобальный массив для цитат
+    let quotesArray = [];
+    
+    // Простая функция очистки строки
+    function sanitize(val) {
+      if (!val) return "";
+      return val.toString().replace(/^"+|"+$/g, "").trim();
+    }
+    
+    function loadLanguage(lang) {
+      currentLang = lang;
+      // Загрузка основного текста из файла, например "entext.json" (для каждого языка должны быть свои файлы)
+      fetch(lang.toLowerCase() + "text.json")
+        .then(response => response.json())
+        .then(data => {
+          // Обновляем title и metaDescription – браузерный заголовок будет языковым
+          if(data.title) {
+            document.title = data.title;
+          }
+          if(data.metaDescription) {
+            document.querySelector('meta[name="description"]').setAttribute("content", data.metaDescription);
+          }
+          // Обновление навигации
+          document.getElementById("nav-cover").textContent = data.nav.cover;
+          document.getElementById("nav-portfolio").textContent = data.nav.portfolio;
+          document.getElementById("nav-about").textContent = data.nav.about;
+          document.getElementById("nav-contact").textContent = data.nav.contact;
+          // Обновление обложки
+          document.getElementById("cover-heading").textContent = data.cover.heading;
+          // Для подзаголовка обложки сбрасываем и запускаем эффект сразу
+          const coverSub = document.getElementById("cover-subheading");
+          coverSub.setAttribute("data-text", data.cover.subheading);
+          coverSub.textContent = "";
+          const fxCover = new TextScramble(coverSub);
+          fxCover.setText(data.cover.subheading);
+          // Обновление заголовков секций
+          document.getElementById("portfolio-heading").textContent = data.sections.portfolio;
+          document.getElementById("about-heading").textContent = data.sections.about;
+          document.getElementById("contact-heading").textContent = data.sections.contact;
+          // Обновление раздела "About the Artist"
+          const bioEl = document.getElementById("bio-text");
+          bioEl.setAttribute("data-text", data.about.bioText);
+          bioEl.textContent = "";
+          if (isInViewport(bioEl)) {
+            const fxBio = new TextScramble(bioEl);
+            fxBio.setText(data.about.bioText);
+          } else {
+            bioEl.classList.add("scramble-text");
+            scrambleObserver.observe(bioEl);
+          }
+          const statementEl = document.getElementById("statement-text");
+          statementEl.setAttribute("data-text", data.about.statementText);
+          statementEl.textContent = "";
+          if (isInViewport(statementEl)) {
+            const fxStatement = new TextScramble(statementEl);
+            fxStatement.setText(data.about.statementText);
+          } else {
+            statementEl.classList.add("scramble-text");
+            scrambleObserver.observe(statementEl);
+          }
+          // Обновление контактных кнопок
+          document.getElementById("btn-telegram").textContent = data.contactButtons.telegram;
+          document.getElementById("btn-instagram").textContent = data.contactButtons.instagram;
+          document.getElementById("btn-phone").textContent = data.contactButtons.phone;
+          document.getElementById("btn-email").textContent = data.contactButtons.email;
+          // Обновление футера
+          document.getElementById("footer-text").innerHTML = data.footer;
+        })
+        .catch(error => console.error("Error loading language file:", error));
+      
+      // Загрузка цитат из файла, например "enquote.json"
+      fetch(lang.toLowerCase() + "quote.json")
+        .then(response => response.json())
+        .then(data => {
+          quotesArray = data;
+        })
+        .catch(error => console.error("Error loading quotes file:", error));
+      
+      // Загрузка работ портфолио из файла, например "enport.json"
+      fetch(lang.toLowerCase() + "port.json")
+        .then(response => response.json())
+        .then(data => {
+          const container = document.getElementById("portfolio-container");
+          container.innerHTML = "";
+          data.forEach(item => {
+            const allEmpty = Object.values(item).every(val => {
+              if (typeof val === "string") return val.trim() === "";
+              return !val;
+            });
+            if (allEmpty) return;
+            const article = document.createElement("article");
+            article.className = "work-item";
+            const media = document.createElement("div");
+            media.className = "work-media";
+            const mediaId = sanitize(item.mediaid);
+            let mediaElement;
+            if (mediaId) {
+              if (mediaId.includes(".")) {
+                const ext = mediaId.substring(mediaId.lastIndexOf(".")).toLowerCase();
+                if (ext === ".mp4" || ext === ".webm") {
+                  mediaElement = document.createElement("video");
+                  mediaElement.setAttribute("controls", "controls");
+                  mediaElement.setAttribute("loading", "lazy");
+                  mediaElement.setAttribute("decoding", "async");
+                  mediaElement.classList.add("work-thumb");
+                  let source = document.createElement("source");
+                  source.src = "assets/" + mediaId;
+                  source.type = (ext === ".mp4" ? "video/mp4" : "video/webm");
+                  mediaElement.appendChild(source);
+                } else {
+                  mediaElement = document.createElement("img");
+                  mediaElement.src = "assets/" + mediaId;
+                  mediaElement.alt = sanitize(item.title) || "Work Image";
+                  mediaElement.className = "work-thumb";
+                  mediaElement.setAttribute("loading", "lazy");
+                  mediaElement.setAttribute("decoding", "async");
+                }
+              } else {
+                const imageExtensions = [".webp", ".jpg", ".jpeg", ".png", ".gif", ".svg"];
+                const videoExtensions = [".mp4", ".webm"];
+                let extList = imageExtensions.concat(videoExtensions);
+                let attempt = 0;
+                mediaElement = document.createElement("img");
+                mediaElement.alt = sanitize(item.title) || "Work Image";
+                mediaElement.className = "work-thumb";
+                mediaElement.setAttribute("loading", "lazy");
+                mediaElement.setAttribute("decoding", "async");
+                function tryNext() {
+                  if (attempt >= extList.length) {
+                    mediaElement.onerror = null;
+                    mediaElement.src = "assets/logo.svg";
+                    return;
+                  }
+                  let url = "assets/" + mediaId + extList[attempt];
+                  attempt++;
+                  mediaElement.src = url;
+                }
+                mediaElement.onerror = function () {
+                  tryNext();
+                };
+                mediaElement.onload = function () {
+                  mediaElement.onerror = null;
+                };
+                tryNext();
+              }
+            } else {
+              const placeholderDiv = document.createElement("div");
+              placeholderDiv.className = "placeholder-logo";
+              const placeholderImg = document.createElement("img");
+              placeholderImg.src = "assets/logo.svg";
+              placeholderImg.alt = "Placeholder";
+              placeholderDiv.appendChild(placeholderImg);
+              mediaElement = placeholderDiv;
+            }
+            media.appendChild(mediaElement);
+            const details = document.createElement("div");
+            details.className = "work-details";
+            const h3 = document.createElement("h3");
+            h3.textContent = sanitize(item.title) || "Untitled";
+            const pYear = document.createElement("p");
+            pYear.innerHTML = "Year: <span class='scramble-text' data-text='" + (sanitize(item.year) || "—") + "'>-</span>";
+            const pDesc = document.createElement("p");
+            pDesc.innerHTML = "Description: <span class='scramble-text' data-text='" + (sanitize(item.description) || "") + "'>-</span>";
+            const pMaterials = document.createElement("p");
+            pMaterials.innerHTML = "Materials: <span class='scramble-text' data-text='" + (sanitize(item.materials) || "—") + "'>-</span>";
+            const pStatus = document.createElement("p");
+            pStatus.innerHTML = "Status: <span class='scramble-text' data-text='" + (sanitize(item.status) || "—") + "'>-</span>";
+            details.appendChild(h3);
+            details.appendChild(pYear);
+            details.appendChild(pDesc);
+            details.appendChild(pMaterials);
+            details.appendChild(pStatus);
+            const btnName = sanitize(item.btnname);
+            const btnLink = sanitize(item.btnlink);
+            if (btnName !== "" && btnLink !== "") {
+              const btn = document.createElement("a");
+              btn.textContent = btnName;
+              btn.href = btnLink;
+              btn.className = "work-button";
+              btn.target = "_blank";
+              details.appendChild(btn);
+            }
+            article.appendChild(media);
+            article.appendChild(details);
+            container.appendChild(article);
+            cardObserver.observe(article);
+          });
+        })
+        .catch(error => console.error("Error loading portfolio file:", error));
+    }
+    
+    // При загрузке страницы определяем системный язык и загружаем его (по умолчанию EN)
+    document.addEventListener("DOMContentLoaded", () => {
+      const sysLang = navigator.language || navigator.userLanguage || "en";
+      let selectedLang = "EN";
+      if (sysLang) {
+        const langLower = sysLang.toLowerCase();
+        if(langLower.startsWith("ru")){
+          selectedLang = "RU";
+        } else if(langLower.startsWith("kz")){
+          selectedLang = "KZ";
+        } else if(langLower.startsWith("uk") || langLower.startsWith("ua")){
+          selectedLang = "UA";
+        } else {
+          selectedLang = "EN";
+        }
+      }
+      loadLanguage(selectedLang);
+      document.querySelectorAll(".language-buttons button").forEach(button => {
+        button.addEventListener("click", () => {
+          loadLanguage(button.textContent.trim());
+        });
+      });
+      document.querySelector(".language-dropdown").addEventListener("change", (e) => {
+        loadLanguage(e.target.value);
+      });
+    });
+  </script>
+
+  <!-- Script для случайных цитат с повышенной вероятностью появления в viewport -->
+  <script>
+    function spawnQuote() {
+      if (quotesArray.length === 0) return;
+      const q = quotesArray[Math.floor(Math.random() * quotesArray.length)];
+      const div = document.createElement('div');
+      div.className = 'floating-quote';
+      div.innerHTML = `
+        <span class="quote-text">${q.text}</span>
+        <span class="quote-author">${q.author}</span>
+      `;
+      let x, y;
+      // 70% шанс: координаты внутри viewport, 30% шанс: случайные по всей странице
+      if (Math.random() < 0.7) {
+        x = 0.1 * window.innerWidth + Math.random() * (0.8 * window.innerWidth);
+        y = 0.1 * window.innerHeight + Math.random() * (0.8 * window.innerHeight);
+      } else {
+        const docWidth = document.documentElement.scrollWidth;
+        const docHeight = document.documentElement.scrollHeight;
+        x = 0.05 * docWidth + Math.random() * (0.9 * docWidth);
+        y = 0.1 * docHeight + Math.random() * (0.8 * docHeight);
+      }
+      div.style.left = x + 'px';
+      div.style.top = y + 'px';
+      document.body.appendChild(div);
+      setTimeout(() => { div.remove(); }, 10000);
+    }
+    setInterval(spawnQuote, 5000);
+  </script>
+
+  <!-- Three.js and Cover Script -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+  <script src="cover.js"></script>
+</body>
+</html>
