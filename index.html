@@ -763,6 +763,28 @@
       });
     });
   </script>
+
+  <!-- Function to measure portfolio card height -->
+  <script>
+    function measureCardHeight(article) {
+      const clone = article.cloneNode(true);
+      clone.querySelectorAll(".scramble-text").forEach(el => {
+        const txt = el.getAttribute("data-text") || el.textContent;
+        el.textContent = txt;
+      });
+      clone.style.position = "absolute";
+      clone.style.visibility = "hidden";
+      clone.style.zIndex = "-9999";
+      document.body.appendChild(clone);
+      let h = clone.offsetHeight;
+      const btn = clone.querySelector(".work-button");
+      if (btn) {
+        h += btn.offsetHeight;
+      }
+      document.body.removeChild(clone);
+      return h;
+    }
+  </script>
 </head>
 <body>
   <!-- HEADER -->
@@ -1150,6 +1172,8 @@
           document.getElementById("bio-text").textContent = data.about.bioText;
           document.getElementById("statement-title").textContent = data.about.statementTitle;
           document.getElementById("statement-text").textContent = data.about.statementText;
+          // After setting new text, recalc block sizes and apply TextScramble
+          fixBioAndStatementHeight('.bio p, .artist-statement p');
           // Update contact buttons
           document.getElementById("btn-telegram").textContent = data.contactButtons.telegram;
           document.getElementById("btn-instagram").textContent = data.contactButtons.instagram;
