@@ -716,11 +716,10 @@
 
   <!-- Pre-calculate height for bio and statement blocks -->
   <script>
+    // Теперь функция всегда устанавливает data-text равным текущему содержимому
     function fixBioAndStatementHeight(selector) {
       document.querySelectorAll(selector).forEach(el => {
-        if (!el.hasAttribute('data-text')) {
-          el.setAttribute('data-text', el.textContent.trim());
-        }
+        el.setAttribute('data-text', el.textContent.trim());
         const clone = el.cloneNode(true);
         clone.style.width = el.offsetWidth + "px";
         clone.style.visibility = 'hidden';
@@ -737,31 +736,19 @@
         el.classList.add('scramble-text');
       });
     }
-    window.addEventListener('load', () => {
-      fixBioAndStatementHeight('.bio p, .artist-statement p');
-    });
   </script>
 
-  <!-- Auto-assign scramble-text class to elements -->
+  <!-- Function to reset (restart) TextScramble on all elements -->
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const allEls = document.querySelectorAll('body *');
-      allEls.forEach(el => {
-        const tag = el.tagName.toLowerCase();
-        if (
-          !['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'button', 'a'].includes(tag) &&
-          !el.closest('.floating-quote') &&
-          el.children.length === 0 &&
-          el.textContent.trim().length > 0 &&
-          !el.classList.contains('scramble-text')
-        ) {
-          el.classList.add('scramble-text');
-        }
-      });
+    function resetAllScramble() {
       document.querySelectorAll('.scramble-text').forEach(el => {
-        scrambleObserver.observe(el);
+        // Сбросим текст к значению из data-text и запустим эффект заново
+        const newText = el.getAttribute('data-text') || "";
+        el.textContent = newText;
+        const fx = new TextScramble(el);
+        fx.setText(newText);
       });
-    });
+    }
   </script>
 
   <!-- Function to measure portfolio card height -->
@@ -1172,7 +1159,7 @@
           document.getElementById("bio-text").textContent = data.about.bioText;
           document.getElementById("statement-title").textContent = data.about.statementTitle;
           document.getElementById("statement-text").textContent = data.about.statementText;
-          // After setting new text, recalc block sizes and apply TextScramble
+          // Recalculate block sizes and apply TextScramble for bio and statement
           fixBioAndStatementHeight('.bio p, .artist-statement p');
           // Update contact buttons
           document.getElementById("btn-telegram").textContent = data.contactButtons.telegram;
@@ -1181,6 +1168,8 @@
           document.getElementById("btn-email").textContent = data.contactButtons.email;
           // Update footer
           document.getElementById("footer-text").innerHTML = data.footer;
+          // Reset scramble effect for all texts on the page
+          resetAllScramble();
         })
         .catch(error => console.error("Error loading language file:", error));
       
