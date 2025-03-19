@@ -255,81 +255,56 @@
     }
   </style>
 
-  <!-- 6) Glitch Logo -->
+  <!-- 6) Glitch Logo (замена на CodePen jenaroc) -->
   <style>
-    .glitch-image {
-      width: 312px;
-      height: 119px;
-      animation: glitch-skew 1s infinite linear alternate-reverse;
-      image-rendering: pixelated;
+    .glitch {
       position: relative;
+      font-size: 80px;
+      font-family: sans-serif;
+      color: #fff;
     }
-    .glitch-image img {
-      display: block;
-      width: 100%;
-      height: 100%;
-      image-rendering: pixelated;
-    }
-    .glitch-image::before,
-    .glitch-image::after {
-      content: "";
+    .glitch::before, .glitch::after {
+      content: attr(data-text);
       position: absolute;
       top: 0;
       left: 0;
-      width: 100%;
-      height: 100%;
-      background: url("assets/logo.svg") no-repeat center;
-      background-size: 312px 119px;
-      image-rendering: pixelated;
-      pointer-events: none;
-      mix-blend-mode: screen;
+      opacity: 0.8;
     }
-    .glitch-image::before {
-      filter: drop-shadow(-2px 0px #ff00c1);
-      animation: glitch-anim 3s infinite linear alternate;
+    .glitch::before {
+      left: 2px;
+      text-shadow: -2px 0 red;
+      animation: glitch-anim 2s infinite linear alternate-reverse;
     }
-    .glitch-image::after {
-      filter: drop-shadow(2px 0px #00fff9);
-      animation: glitch-anim2 3s infinite linear alternate;
+    .glitch::after {
+      left: -2px;
+      text-shadow: 2px 0 blue;
+      animation: glitch-anim2 3s infinite linear alternate-reverse;
     }
     @keyframes glitch-anim {
-      0% { clip: rect(10px, 9999px, 20px, 0); transform: translateX(0) skew(0deg); }
-      5% { clip: rect(3px, 9999px, 15px, 0); transform: translateX(calc(-3px * var(--glitch-intensity))) skew(calc(1deg * var(--glitch-intensity))); }
-      10% { clip: rect(25px, 9999px, 35px, 0); transform: translateX(calc(4px * var(--glitch-intensity))) skew(calc(-2deg * var(--glitch-intensity))); }
-      15% { clip: rect(18px, 9999px, 28px, 0); transform: translateX(calc(-2px * var(--glitch-intensity))) skew(calc(3deg * var(--glitch-intensity))); }
-      20% { clip: rect(8px, 9999px, 18px, 0); transform: translateX(calc(2px * var(--glitch-intensity))) skew(calc(-1deg * var(--glitch-intensity))); }
-      25% { clip: rect(30px, 9999px, 42px, 0); transform: translateX(calc(-4px * var(--glitch-intensity))) skew(calc(2deg * var(--glitch-intensity))); }
-      30% { clip: rect(12px, 9999px, 25px, 0); transform: translateX(calc(3px * var(--glitch-intensity))) skew(calc(-3deg * var(--glitch-intensity))); }
-      35% { clip: rect(15px, 9999px, 27px, 0); transform: translateX(calc(1px * var(--glitch-intensity))) skew(calc(1deg * var(--glitch-intensity))); }
-      40% { clip: rect(5px, 9999px, 15px, 0); transform: translateX(calc(-2px * var(--glitch-intensity))) skew(calc(1deg * var(--glitch-intensity))); }
-      50% { clip: rect(22px, 9999px, 35px, 0); transform: translateX(calc(4px * var(--glitch-intensity))) skew(calc(-2deg * var(--glitch-intensity))); }
-      60% { clip: rect(38px, 9999px, 48px, 0); transform: translateX(calc(-3px * var(--glitch-intensity))) skew(calc(3deg * var(--glitch-intensity))); }
-      70% { clip: rect(10px, 9999px, 20px, 0); transform: translateX(calc(1px * var(--glitch-intensity))) skew(calc(-1deg * var(--glitch-intensity))); }
-      80% { clip: rect(28px, 9999px, 40px, 0); transform: translateX(calc(-4px * var(--glitch-intensity))) skew(calc(2deg * var(--glitch-intensity))); }
-      90% { clip: rect(15px, 9999px, 25px, 0); transform: translateX(calc(2px * var(--glitch-intensity))) skew(calc(-2deg * var(--glitch-intensity))); }
-      100% { clip: rect(10px, 9999px, 20px, 0); transform: translateX(0) skew(0deg); }
+      0% { clip: rect(0, 900px, 0, 0); }
+      10% { clip: rect(0, 900px, 30px, 0); }
+      20% { clip: rect(10px, 900px, 40px, 0); }
+      30% { clip: rect(0, 900px, 0, 0); }
+      40% { clip: rect(20px, 900px, 60px, 0); }
+      50% { clip: rect(10px, 900px, 40px, 0); }
+      60% { clip: rect(0, 900px, 0, 0); }
+      70% { clip: rect(20px, 900px, 60px, 0); }
+      80% { clip: rect(0, 900px, 0, 0); }
+      90% { clip: rect(10px, 900px, 40px, 0); }
+      100% { clip: rect(0, 900px, 0, 0); }
     }
     @keyframes glitch-anim2 {
-      0% { clip: rect(5px, 9999px, 15px, 0); transform: translateX(0) skew(0deg); }
-      5% { clip: rect(28px, 9999px, 40px, 0); transform: translateX(calc(2px * var(--glitch-intensity))) skew(calc(-1deg * var(--glitch-intensity))); }
-      10% { clip: rect(18px, 9999px, 30px, 0); transform: translateX(calc(-4px * var(--glitch-intensity))) skew(calc(2deg * var(--glitch-intensity))); }
-      15% { clip: rect(35px, 9999px, 55px, 0); transform: translateX(calc(3px * var(--glitch-intensity))) skew(calc(-2deg * var(--glitch-intensity))); }
-      20% { clip: rect(12px, 9999px, 25px, 0); transform: translateX(calc(-2px * var(--glitch-intensity))) skew(calc(1deg * var(--glitch-intensity))); }
-      25% { clip: rect(40px, 9999px, 55px, 0); transform: translateX(calc(4px * var(--glitch-intensity))) skew(calc(-3deg * var(--glitch-intensity))); }
-      30% { clip: rect(22px, 9999px, 35px, 0); transform: translateX(calc(-3px * var(--glitch-intensity))) skew(calc(2deg * var(--glitch-intensity))); }
-      35% { clip: rect(12px, 9999px, 24px, 0); transform: translateX(calc(1px * var(--glitch-intensity))) skew(calc(-1deg * var(--glitch-intensity))); }
-      40% { clip: rect(8px, 9999px, 20px, 0); transform: translateX(calc(1px * var(--glitch-intensity))) skew(calc(-1deg * var(--glitch-intensity))); }
-      50% { clip: rect(30px, 9999px, 40px, 0); transform: translateX(calc(-2px * var(--glitch-intensity))) skew(calc(3deg * var(--glitch-intensity))); }
-      60% { clip: rect(15px, 9999px, 25px, 0); transform: translateX(calc(4px * var(--glitch-intensity))) skew(calc(-2deg * var(--glitch-intensity))); }
-      70% { clip: rect(45px, 9999px, 60px, 0); transform: translateX(calc(-4px * var(--glitch-intensity))) skew(calc(1deg * var(--glitch-intensity))); }
-      80% { clip: rect(25px, 9999px, 35px, 0); transform: translateX(calc(3px * var(--glitch-intensity))) skew(calc(-3deg * var(--glitch-intensity))); }
-      90% { clip: rect(5px, 9999px, 15px, 0); transform: translateX(calc(-1px * var(--glitch-intensity))) skew(calc(2deg * var(--glitch-intensity))); }
-      100% { clip: rect(5px, 9999px, 15px, 0); transform: translateX(0) skew(0deg); }
-    }
-    @keyframes glitch-skew {
-      0% { transform: skew(0deg); }
-      50% { transform: skew(1deg); }
-      100% { transform: skew(0deg); }
+      0% { clip: rect(0, 900px, 0, 0); }
+      10% { clip: rect(20px, 900px, 60px, 0); }
+      20% { clip: rect(0, 900px, 0, 0); }
+      30% { clip: rect(10px, 900px, 40px, 0); }
+      40% { clip: rect(0, 900px, 0, 0); }
+      50% { clip: rect(20px, 900px, 60px, 0); }
+      60% { clip: rect(0, 900px, 0, 0); }
+      70% { clip: rect(10px, 900px, 40px, 0); }
+      80% { clip: rect(0, 900px, 0, 0); }
+      90% { clip: rect(20px, 900px, 60px, 0); }
+      100% { clip: rect(0, 900px, 0, 0); }
     }
   </style>
 
@@ -750,9 +725,8 @@
     <canvas id="waveCanvas"></canvas>
     <div class="header-content">
       <div class="logo-container">
-        <div class="glitch-image">
-          <img src="assets/logo.svg" alt="TheMarkest.art Logo" />
-        </div>
+        <!-- Заменён блок логотипа: теперь выводится текст с эффектом glitch -->
+        <div class="glitch" data-text="THEMARKEST.ART">THEMARKEST.ART</div>
       </div>
       <nav class="nav-links">
         <a href="#cover" id="nav-cover">Cover</a>
@@ -1311,7 +1285,7 @@
     });
   </script>
 
-  <!-- Script для случайных цитат -->
+  <!-- Script для случайных цитат с повышенной вероятностью в viewport -->
   <script>
     function spawnQuote() {
       if (quotesArray.length === 0) return;
@@ -1322,10 +1296,18 @@
         <span class="quote-text">${q.text}</span>
         <span class="quote-author">${q.author}</span>
       `;
-      const docWidth = document.documentElement.scrollWidth;
-      const docHeight = document.documentElement.scrollHeight;
-      const x = 0.05 * docWidth + Math.random() * (0.9 * docWidth);
-      const y = 0.1 * docHeight + Math.random() * (0.8 * docHeight);
+      let x, y;
+      if (Math.random() < 0.7) {
+        // 70% шанс: в пределах viewport
+        x = Math.random() * window.innerWidth;
+        y = Math.random() * window.innerHeight;
+      } else {
+        // Иначе – по всей странице
+        const docWidth = document.documentElement.scrollWidth;
+        const docHeight = document.documentElement.scrollHeight;
+        x = 0.05 * docWidth + Math.random() * (0.9 * docWidth);
+        y = 0.1 * docHeight + Math.random() * (0.8 * docHeight);
+      }
       div.style.left = x + 'px';
       div.style.top = y + 'px';
       document.body.appendChild(div);
