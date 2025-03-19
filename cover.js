@@ -4,17 +4,18 @@ document.addEventListener("DOMContentLoaded", function() {
     
     // Базовая позиция камеры
     const baseCameraPosition = { x: 0, y: 0, z: 40 };
-    // Максимальное смещение камеры по осям (чем больше – тем сильнее параллакс)
+    // Максимальное смещение камеры (параллакс)
     const maxOffset = 30;
-    // Коэффициент для преобразования углов наклона в смещение (прямая маппинг: 1 градус = 1 единица, с clamping)
+    // Коэффициент преобразования углов в смещение (1 градус = 1 единица смещения)
     const parallaxFactor = 1.0;
     
-    // Целевое и текущее смещения камеры (для плавной интерполяции)
+    // Целевое и текущее смещения камеры для плавного перехода
     let targetOffset = { x: 0, y: 0 };
     let currentOffset = { x: 0, y: 0 };
   
-    // Создаем сцену Three.js
+    // Создаем сцену и задаем явный фон (не черный)
     const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x222222);
     
     // Камера
     const camera = new THREE.PerspectiveCamera(75, cover.clientWidth / cover.clientHeight, 0.1, 1000);
@@ -25,7 +26,7 @@ document.addEventListener("DOMContentLoaded", function() {
     renderer.setSize(cover.clientWidth, cover.clientHeight);
     cover.insertBefore(renderer.domElement, cover.firstChild);
     
-    // Основной объект – TorusKnot (анимируется циклически)
+    // Основной объект – TorusKnotGeometry
     const torusGeometry = new THREE.TorusKnotGeometry(10, 3, 100, 16);
     const torusMaterial = new THREE.MeshStandardMaterial({ color: 0x00ffff, roughness: 0.5, metalness: 0.1 });
     const torusKnot = new THREE.Mesh(torusGeometry, torusMaterial);
@@ -33,7 +34,7 @@ document.addEventListener("DOMContentLoaded", function() {
     
     // Дополнительные примитивы с разными траекториями
     const primitives = [];
-  
+    
     // Куб: движется по кругу в плоскости XY
     const cubeGeometry = new THREE.BoxGeometry(4, 4, 4);
     const cubeMaterial = new THREE.MeshStandardMaterial({ color: 0xff0000 });
@@ -46,7 +47,7 @@ document.addEventListener("DOMContentLoaded", function() {
         cube.position.y = Math.sin(time * 0.5) * 5;
       }
     });
-  
+    
     // Сфера: осциллирует вдоль оси Z
     const sphereGeometry = new THREE.SphereGeometry(3, 32, 32);
     const sphereMaterial = new THREE.MeshStandardMaterial({ color: 0x00ff00 });
@@ -58,7 +59,7 @@ document.addEventListener("DOMContentLoaded", function() {
         sphere.position.z = 10 + Math.sin(time) * 5;
       }
     });
-  
+    
     // Конус: движется по эллиптической траектории в плоскости XY
     const coneGeometry = new THREE.ConeGeometry(3, 6, 32);
     const coneMaterial = new THREE.MeshStandardMaterial({ color: 0x0000ff });
@@ -71,11 +72,22 @@ document.addEventListener("DOMContentLoaded", function() {
         cone.position.y = -15 + Math.sin(time * 0.7) * 3;
       }
     });
-  
-    // Добавляем примитивы в сцену
+    
     primitives.forEach(obj => scene.add(obj.mesh));
-  
-    // Обработчик для ПК: движение мыши
+    
+    // Освещение: увеличиваем интенсивность ambient light и добавляем directional light
+    const ambientLight = new THREE.AmbientLight(0xffffff, 1.0);
+    scene.add(ambientLight);
+    
+    const pointLight = new THREE.PointLight(0xffffff, 1.0);
+    pointLight.position.set(25, 50, 25);
+    scene.add(pointLight);
+    
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+    directionalLight.position.set(0, 50, 50);
+    scene.add(directionalLight);
+    
+    // Обработчик для ПК: mousemove
     cover.addEventListener("mousemove", function(event) {
       const rect = cover.getBoundingClientRect();
       const offsetX = ((event.clientX - rect.left) - rect.width / 2) / (rect.width / 2);
@@ -83,12 +95,10 @@ document.addEventListener("DOMContentLoaded", function() {
       targetOffset.x = THREE.MathUtils.clamp(offsetX * maxOffset, -maxOffset, maxOffset);
       targetOffset.y = THREE.MathUtils.clamp(-offsetY * maxOffset, -maxOffset, maxOffset);
     });
-  
+    
     // Обработчик для мобильных устройств: deviceorientation
     if (window.DeviceOrientationEvent) {
       window.addEventListener("deviceorientation", function(event) {
-        // event.beta (наклон вперед/назад) и event.gamma (наклон влево/вправо)
-        // Ограничиваем диапазон (например, ±45°) и умножаем на parallaxFactor
         let normGamma = Math.max(-45, Math.min(45, event.gamma || 0));
         let normBeta  = Math.max(-45, Math.min(45, event.beta  || 0));
         targetOffset.x = THREE.MathUtils.clamp(normGamma * parallaxFactor, -maxOffset, maxOffset);
@@ -96,15 +106,15 @@ document.addEventListener("DOMContentLoaded", function() {
       }, true);
     }
     
-    // Анимация: обновление анимации модели, примитивов и смещения камеры
+    // Анимация: обновление объекта, примитивов и смещения камеры
     function animate() {
       requestAnimationFrame(animate);
       
-      // Анимация основного объекта (циклическое вращение)
+      // Циклическое вращение основного объекта
       torusKnot.rotation.x += 0.01;
       torusKnot.rotation.y += 0.01;
       
-      // Обновление дополнительных примитивов по их траекториям
+      // Обновление дополнительных примитивов
       const time = performance.now() * 0.001;
       primitives.forEach(obj => {
         if (typeof obj.update === "function") {
@@ -112,11 +122,11 @@ document.addEventListener("DOMContentLoaded", function() {
         }
       });
       
-      // Плавная интерполяция текущего смещения к целевому
+      // Плавная интерполяция смещения камеры
       currentOffset.x += (targetOffset.x - currentOffset.x) * 0.1;
       currentOffset.y += (targetOffset.y - currentOffset.y) * 0.1;
       
-      // Обновляем позицию камеры с учетом базовой позиции и смещения параллакса
+      // Обновляем позицию камеры с учетом параллакса
       camera.position.x = baseCameraPosition.x + currentOffset.x;
       camera.position.y = baseCameraPosition.y + currentOffset.y;
       camera.position.z = baseCameraPosition.z;
