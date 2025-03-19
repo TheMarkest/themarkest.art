@@ -1089,6 +1089,36 @@
       return val.toString().replace(/^"+|"+$/g, "").trim();
     }
     
+    document.addEventListener("DOMContentLoaded", () => {
+      const supportedLangs = ['ru', 'kz', 'ua', 'en'];
+      const pathSegments = window.location.pathname.split('/').filter(Boolean);
+      let selectedLang;
+      if (pathSegments.length > 0 && supportedLangs.includes(pathSegments[0].toLowerCase())) {
+        selectedLang = pathSegments[0].toUpperCase();
+      } else {
+        const sysLang = navigator.language || navigator.userLanguage || "en";
+        const langLower = sysLang.toLowerCase();
+        if(langLower.startsWith("ru")){
+          selectedLang = "RU";
+        } else if(langLower.startsWith("kz")){
+          selectedLang = "KZ";
+        } else if(langLower.startsWith("uk") || langLower.startsWith("ua")){
+          selectedLang = "UA";
+        } else {
+          selectedLang = "EN";
+        }
+      }
+      loadLanguage(selectedLang);
+      document.querySelectorAll(".language-buttons button").forEach(button => {
+        button.addEventListener("click", () => {
+          loadLanguage(button.textContent.trim());
+        });
+      });
+      document.querySelector(".language-dropdown").addEventListener("change", (e) => {
+        loadLanguage(e.target.value);
+      });
+    });
+    
     function loadLanguage(lang) {
       currentLang = lang;
       // Загрузка основного текста из файла, например "entext.json" (для каждого языка должны быть свои файлы)
@@ -1270,33 +1300,6 @@
         })
         .catch(error => console.error("Error loading portfolio file:", error));
     }
-    
-    // При загрузке страницы определяем системный язык и загружаем его (по умолчанию EN)
-    document.addEventListener("DOMContentLoaded", () => {
-      const sysLang = navigator.language || navigator.userLanguage || "en";
-      let selectedLang = "EN";
-      if (sysLang) {
-        const langLower = sysLang.toLowerCase();
-        if(langLower.startsWith("ru")){
-          selectedLang = "RU";
-        } else if(langLower.startsWith("kz")){
-          selectedLang = "KZ";
-        } else if(langLower.startsWith("uk") || langLower.startsWith("ua")){
-          selectedLang = "UA";
-        } else {
-          selectedLang = "EN";
-        }
-      }
-      loadLanguage(selectedLang);
-      document.querySelectorAll(".language-buttons button").forEach(button => {
-        button.addEventListener("click", () => {
-          loadLanguage(button.textContent.trim());
-        });
-      });
-      document.querySelector(".language-dropdown").addEventListener("change", (e) => {
-        loadLanguage(e.target.value);
-      });
-    });
   </script>
 
   <!-- Script для случайных цитат с повышенной вероятностью появления в viewport -->
