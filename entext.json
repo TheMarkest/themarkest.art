@@ -1,11 +1,11 @@
 {
   "title": "TheMarkest.art – Glitch Image + Portrait",
-  "metaDescription": "Artist portfolio in sci‑fi/cyberpunk style with retro monitor effects, TextScramble, pixel glitch logo, artist photo and portfolio cards.",
+  "metaDescription": "Artist's portfolio in a sci‑fi/cyberpunk style, featuring a wave, old monitor effect, TextScramble, pixel glitch logo, artist photo, and convenient work cards.",
   "nav": {
     "cover": "Cover",
     "portfolio": "Portfolio",
     "about": "About the Artist",
-    "contact": "Contact"
+    "contact": "Contacts"
   },
   "cover": {
     "heading": "MARK BOGDANOV",
@@ -14,13 +14,13 @@
   "sections": {
     "portfolio": "Portfolio",
     "about": "About the Artist",
-    "contact": "Contact"
+    "contact": "Contacts"
   },
   "about": {
     "bioTitle": "Biography",
-    "bioText": "Mark Bogdanov is an artist working at the intersection of art, technology and engineering aesthetics. His works explore the influence of scientific progress on visual forms, combining modern production methods with traditional materials. Born in 1998, his creativity was shaped amid the digital revolution and rich cultural traditions.",
+    "bioText": "Mark Bogdanov — an artist working at the intersection of art, technology, and engineering aesthetics. In his works, he explores the influence of scientific progress on visual forms, combining modern production methods with traditional materials. Born in 1998, his art has been shaped against the backdrop of the digital revolution and deep cultural traditions.",
     "statementTitle": "Artist Statement",
-    "statementText": "I create sculptures where modern production techniques meet the legacy of past engineering thought. My art is a search for form, structure and material that reflect the logic of scientific progress. In my works, I combine 3D printing, laser cutting, and digital processing to illustrate the dialogue between the past and the future."
+    "statementText": "I create sculptures in which modern production technologies meet the legacy of past engineering thought. My art is a search for form, structure, and material that reflect the logic of scientific progress. In my works, I combine 3D printing, laser cutting, and digital processing, striving to show a dialogue between the past and the future."
   },
   "contactButtons": {
     "telegram": "Telegram",
