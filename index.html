@@ -3,11 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <!-- Обновлённый заголовок для отображения в браузере -->
+  <!-- Дефолтный заголовок для версии EN (будет меняться при переключении языка) -->
   <title>Mark Bogdanov – Digital Artist & Glitch Innovator</title>
-  <!-- Обновлённое описание для поисковых систем -->
+  <!-- Дефолтное описание (для EN); для других языков loadLanguage обновит эти данные -->
   <meta name="description" content="Discover the digital art portfolio of Mark Bogdanov, showcasing glitch portraits, cyberpunk aesthetics, and innovative digital artworks that bridge art and technology." />
-
+  <!-- Мета-ключевые слова для повышения релевантности по запросам на русском -->
+  <meta name="keywords" content="художник марк богданов, художники алматы, художники казахстана">
+  
   <!-- Favicons -->
   <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/apple-touch-icon.png">
   <link rel="icon" type="image/svg+xml" href="assets/favicon/favicon.svg">
@@ -19,13 +21,23 @@
 
   <!-- SEO & Social Meta Tags -->
   <meta name="robots" content="index, follow">
+  <!-- Канонический URL для дефолтной версии -->
   <link rel="canonical" href="https://themarkest.me">
+  
+  <!-- Альтернативные ссылки для мультиязычности -->
+  <link rel="alternate" hreflang="en" href="https://themarkest.me/en/" />
+  <link rel="alternate" hreflang="ru" href="https://themarkest.me/ru/" />
+  <link rel="alternate" hreflang="kz" href="https://themarkest.me/kz/" />
+  <link rel="alternate" hreflang="ua" href="https://themarkest.me/ua/" />
+  <link rel="alternate" hreflang="x-default" href="https://themarkest.me" />
+
   <!-- Open Graph / Facebook -->
   <meta property="og:title" content="Mark Bogdanov – Digital Artist & Glitch Innovator">
   <meta property="og:description" content="Discover the digital art portfolio of Mark Bogdanov, showcasing glitch portraits, cyberpunk aesthetics, and innovative digital artworks that bridge art and technology.">
   <meta property="og:image" content="assets/favicon/apple-touch-icon.png">
   <meta property="og:url" content="https://themarkest.me">
   <meta property="og:type" content="website">
+  
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Mark Bogdanov – Digital Artist & Glitch Innovator">
@@ -1079,10 +1091,11 @@
     
     function loadLanguage(lang) {
       currentLang = lang;
-      // Загрузка основного текста из файла, например "entext.json"
+      // Загрузка основного текста из файла, например "entext.json" (для каждого языка должны быть свои файлы)
       fetch(lang.toLowerCase() + "text.json")
         .then(response => response.json())
         .then(data => {
+          // Обновляем title и metaDescription – браузерный заголовок будет языковым
           if(data.title) {
             document.title = data.title;
           }
