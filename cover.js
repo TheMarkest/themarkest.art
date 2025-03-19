@@ -2,18 +2,21 @@ document.addEventListener("DOMContentLoaded", function() {
     const cover = document.getElementById("cover");
     if (!cover) return;
     
-    // Базовая позиция камеры
-    const baseCameraPosition = { x: 0, y: 0, z: 40 };
-    // Максимальное смещение камеры (параллакс)
+    // Определяем, мобильное ли устройство (простейшая проверка)
+    const isMobile = /Mobi|Android/i.test(navigator.userAgent);
+    
+    // Базовая позиция камеры; если мобильное – камера дальше
+    const baseCameraPosition = { x: 0, y: 0, z: isMobile ? 60 : 40 };
+    // Максимальное смещение камеры для параллакса (интенсивность эффекта)
     const maxOffset = 30;
-    // Коэффициент преобразования углов в смещение (1 градус = 1 единица смещения)
+    // Коэффициент преобразования углов в смещение (1 градус = 1 единица)
     const parallaxFactor = 1.0;
     
     // Целевое и текущее смещения камеры для плавного перехода
     let targetOffset = { x: 0, y: 0 };
     let currentOffset = { x: 0, y: 0 };
   
-    // Создаем сцену и задаем явный фон (не черный)
+    // Создаем сцену и задаем фон
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0x222222);
     
@@ -26,18 +29,18 @@ document.addEventListener("DOMContentLoaded", function() {
     renderer.setSize(cover.clientWidth, cover.clientHeight);
     cover.insertBefore(renderer.domElement, cover.firstChild);
     
-    // Основной объект – TorusKnotGeometry
+    // Центральный объект – TorusKnot в режиме wireframe (проволочный каркас)
     const torusGeometry = new THREE.TorusKnotGeometry(10, 3, 100, 16);
-    const torusMaterial = new THREE.MeshStandardMaterial({ color: 0x00ffff, roughness: 0.5, metalness: 0.1 });
+    const torusMaterial = new THREE.MeshBasicMaterial({ color: 0x008888, wireframe: true, opacity: 0.8, transparent: true });
     const torusKnot = new THREE.Mesh(torusGeometry, torusMaterial);
     scene.add(torusKnot);
     
-    // Дополнительные примитивы с разными траекториями
+    // Дополнительные примитивы с различными траекториями
     const primitives = [];
     
     // Куб: движется по кругу в плоскости XY
     const cubeGeometry = new THREE.BoxGeometry(4, 4, 4);
-    const cubeMaterial = new THREE.MeshStandardMaterial({ color: 0xff0000 });
+    const cubeMaterial = new THREE.MeshStandardMaterial({ color: 0x883333 });
     const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
     cube.position.set(-15, 0, 0);
     primitives.push({
@@ -50,7 +53,7 @@ document.addEventListener("DOMContentLoaded", function() {
     
     // Сфера: осциллирует вдоль оси Z
     const sphereGeometry = new THREE.SphereGeometry(3, 32, 32);
-    const sphereMaterial = new THREE.MeshStandardMaterial({ color: 0x00ff00 });
+    const sphereMaterial = new THREE.MeshStandardMaterial({ color: 0x338833 });
     const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
     sphere.position.set(15, 0, 0);
     primitives.push({
@@ -62,7 +65,7 @@ document.addEventListener("DOMContentLoaded", function() {
     
     // Конус: движется по эллиптической траектории в плоскости XY
     const coneGeometry = new THREE.ConeGeometry(3, 6, 32);
-    const coneMaterial = new THREE.MeshStandardMaterial({ color: 0x0000ff });
+    const coneMaterial = new THREE.MeshStandardMaterial({ color: 0x333388 });
     const cone = new THREE.Mesh(coneGeometry, coneMaterial);
     cone.position.set(0, -15, 0);
     primitives.push({
@@ -73,9 +76,25 @@ document.addEventListener("DOMContentLoaded", function() {
       }
     });
     
+    // Добавляем примитивы в сцену
     primitives.forEach(obj => scene.add(obj.mesh));
     
-    // Освещение: увеличиваем интенсивность ambient light и добавляем directional light
+    // Добавляем систему частиц
+    const particleCount = 500;
+    const particlesGeometry = new THREE.BufferGeometry();
+    const positions = new Float32Array(particleCount * 3);
+    for (let i = 0; i < particleCount; i++) {
+      // Частицы распределены внутри куба размером 200 единиц
+      positions[i * 3] = (Math.random() - 0.5) * 200;
+      positions[i * 3 + 1] = (Math.random() - 0.5) * 200;
+      positions[i * 3 + 2] = (Math.random() - 0.5) * 200;
+    }
+    particlesGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    const particlesMaterial = new THREE.PointsMaterial({ color: 0x888888, size: 1.5, transparent: true, opacity: 0.7 });
+    const particles = new THREE.Points(particlesGeometry, particlesMaterial);
+    scene.add(particles);
+    
+    // Освещение: увеличенное ambient light и добавление directional light
     const ambientLight = new THREE.AmbientLight(0xffffff, 1.0);
     scene.add(ambientLight);
     
@@ -87,7 +106,7 @@ document.addEventListener("DOMContentLoaded", function() {
     directionalLight.position.set(0, 50, 50);
     scene.add(directionalLight);
     
-    // Обработчик для ПК: mousemove
+    // Обработчик для ПК: движение мыши
     cover.addEventListener("mousemove", function(event) {
       const rect = cover.getBoundingClientRect();
       const offsetX = ((event.clientX - rect.left) - rect.width / 2) / (rect.width / 2);
@@ -96,7 +115,7 @@ document.addEventListener("DOMContentLoaded", function() {
       targetOffset.y = THREE.MathUtils.clamp(-offsetY * maxOffset, -maxOffset, maxOffset);
     });
     
-    // Обработчик для мобильных устройств: deviceorientation
+    // Обработчик для мобильных: deviceorientation
     if (window.DeviceOrientationEvent) {
       window.addEventListener("deviceorientation", function(event) {
         let normGamma = Math.max(-45, Math.min(45, event.gamma || 0));
@@ -106,11 +125,11 @@ document.addEventListener("DOMContentLoaded", function() {
       }, true);
     }
     
-    // Анимация: обновление объекта, примитивов и смещения камеры
+    // Анимация: обновление модели, частиц и смещения камеры
     function animate() {
       requestAnimationFrame(animate);
       
-      // Циклическое вращение основного объекта
+      // Вращение центрального объекта (wireframe)
       torusKnot.rotation.x += 0.01;
       torusKnot.rotation.y += 0.01;
       
