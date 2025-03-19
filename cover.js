@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", function() {
     // Рендерер
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setSize(cover.clientWidth, cover.clientHeight);
-    // Добавляем canvas рендера в секцию обложки так, чтобы он был позади контента
+    // Добавляем canvas рендера в секцию обложки, чтобы он был позади контента
     cover.insertBefore(renderer.domElement, cover.firstChild);
     
     // Генеративный объект – TorusKnotGeometry
@@ -29,11 +29,42 @@ document.addEventListener("DOMContentLoaded", function() {
     pointLight.position.set(25, 50, 25);
     scene.add(pointLight);
     
+    // Базовое вращение и смещения, зависящие от движения
+    let baseRotationX = 0;
+    let baseRotationY = 0;
+    let rotationOffsetX = 0;
+    let rotationOffsetY = 0;
+    
+    // Обработчик движения мыши (ПК)
+    cover.addEventListener("mousemove", function(event) {
+      const rect = cover.getBoundingClientRect();
+      // Смещение относительно центра элемента
+      const x = event.clientX - rect.left - rect.width / 2;
+      const y = event.clientY - rect.top - rect.height / 2;
+      // Нормализация смещений (чувствительность можно настроить изменяя коэффициенты)
+      rotationOffsetY = (x / (rect.width / 2)) * 0.2; // вращение вокруг оси Y
+      rotationOffsetX = (y / (rect.height / 2)) * 0.2; // вращение вокруг оси X
+    });
+    
+    // Обработчик событий ориентации устройства (мобильные устройства)
+    if (window.DeviceOrientationEvent) {
+      window.addEventListener("deviceorientation", function(event) {
+        // event.gamma: наклон влево/вправо (приблизительно от -45 до 45)
+        // event.beta: наклон вперед/назад (приблизительно от -45 до 45)
+        rotationOffsetY = (event.gamma / 45) * 0.2;
+        rotationOffsetX = (event.beta / 45) * 0.2;
+      }, true);
+    }
+    
     // Анимация
     function animate() {
       requestAnimationFrame(animate);
-      torusKnot.rotation.x += 0.01;
-      torusKnot.rotation.y += 0.01;
+      // Накопление базового вращения
+      baseRotationX += 0.01;
+      baseRotationY += 0.01;
+      // Применение базового вращения с учетом смещений от движения
+      torusKnot.rotation.x = baseRotationX + rotationOffsetX;
+      torusKnot.rotation.y = baseRotationY + rotationOffsetY;
       renderer.render(scene, camera);
     }
     animate();
