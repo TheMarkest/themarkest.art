@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TheMarkest.art – Glitch Image + Portrait</title>
-  <meta name="description" content="Портфолио художника в стиле sci‑fi/cyberpunk, с волной, старомониторным эффектом, TextScramble, пиксельным глитч‑логотипом, фото художника и удобными карточками работ." />
+  <meta name="description" content="Artist portfolio in sci‑fi/cyberpunk style with retro monitor effects, TextScramble, pixel glitch logo, artist photo and portfolio cards." />
 
   <!-- Favicons -->
   <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/apple-touch-icon.png">
@@ -15,7 +15,7 @@
   <meta name="msapplication-TileColor" content="#000000">
   <meta name="theme-color" content="#000000">
 
-  <!-- Подключаем шрифт Handjet (загруженный в папку fonts) -->
+  <!-- Load Handjet font -->
   <style>
     @font-face {
       font-family: 'Handjet';
@@ -25,7 +25,7 @@
     }
   </style>
 
-  <!-- 1) CSS-переменные (глитч-интенсивность) -->
+  <!-- 1) CSS Variables -->
   <style>
     :root {
       --mouse-intensity: 1;
@@ -34,7 +34,7 @@
     }
   </style>
 
-  <!-- 2) Старомониторный эффект (виньетка + скан-линии) -->
+  <!-- 2) Retro Monitor Effect -->
   <style>
     body::before {
       content: "";
@@ -87,7 +87,7 @@
     }
   </style>
 
-  <!-- 3) Сброс и базовые стили -->
+  <!-- 3) Reset and Basic Styles -->
   <style>
     * {
       margin: 0;
@@ -118,7 +118,7 @@
     }
   </style>
 
-  <!-- 4) Хедер: Волна + Контент, меню, переключатель языка -->
+  <!-- 4) Header: Wave + Content, Menu, Language Switcher -->
   <style>
     header {
       position: fixed;
@@ -158,7 +158,7 @@
       font-size: 1.4rem;
       color: #fff;
     }
-    /* Переключатель языка */
+    /* Language Switcher */
     .language-switcher {
       position: absolute;
       right: 80px;
@@ -241,7 +241,7 @@
     }
   </style>
 
-  <!-- 5) Мерцающие заголовки (сниженная интенсивность) -->
+  <!-- 5) Flickering Headings -->
   <style>
     h1, h2, h3 {
       animation: heading-glow 3s infinite alternate;
@@ -255,7 +255,7 @@
     }
   </style>
 
-  <!-- 6) Glitch-Image (логотип) -->
+  <!-- 6) Glitch Logo -->
   <style>
     .glitch-image {
       width: 312px;
@@ -568,7 +568,7 @@
     }
   </style>
 
-  <!-- 9) Footer, модальное окно, контакты и кнопки работ -->
+  <!-- 9) Footer, Modal, Contacts, and Work Buttons -->
   <style>
     footer {
       background: #000;
@@ -681,7 +681,7 @@
     }
   </style>
 
-  <!-- 11) Стили для плавающих цитат -->
+  <!-- 11) Floating Quote Styles -->
   <style>
     .floating-quote {
       position: absolute;
@@ -714,7 +714,7 @@
     }
   </style>
 
-  <!-- Новый метод для предрасчёта высоты блоков био и стейтмента -->
+  <!-- Pre-calculate height for bio and statement blocks -->
   <script>
     function fixBioAndStatementHeight(selector) {
       document.querySelectorAll(selector).forEach(el => {
@@ -742,7 +742,7 @@
     });
   </script>
 
-  <!-- Автоматическая установка scramble-text для остальных элементов -->
+  <!-- Auto-assign scramble-text class to elements -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const allEls = document.querySelectorAll('body *');
@@ -775,12 +775,12 @@
         </div>
       </div>
       <nav class="nav-links">
-        <a href="#cover" id="nav-cover">Обложка</a>
-        <a href="#works" id="nav-portfolio">Портфолио</a>
-        <a href="#about" id="nav-about">О художнике</a>
-        <a href="#contact" id="nav-contact">Контакты</a>
+        <a href="#cover" id="nav-cover">Cover</a>
+        <a href="#works" id="nav-portfolio">Portfolio</a>
+        <a href="#about" id="nav-about">About the Artist</a>
+        <a href="#contact" id="nav-contact">Contact</a>
       </nav>
-      <!-- Переключатель языка -->
+      <!-- Language Switcher -->
       <div class="language-switcher">
         <div class="language-buttons">
           <button>EN</button>
@@ -807,56 +807,56 @@
   <section id="cover">
     <div class="cover-content">
       <h2 id="cover-heading">MARK BOGDANOV</h2>
-      <p id="cover-subheading">Искусство о науке.</p>
+      <p id="cover-subheading">Art about science.</p>
     </div>
   </section>
 
   <!-- MAIN CONTENT -->
   <main>
-    <!-- Портфолио -->
+    <!-- Portfolio -->
     <section id="works">
       <div class="container">
-        <h2 id="portfolio-heading">Портфолио</h2>
+        <h2 id="portfolio-heading">Portfolio</h2>
         <div class="grid" id="portfolio-container">
-          <!-- Карточки будут генерироваться из JSON -->
+          <!-- Portfolio cards will be generated from JSON -->
         </div>
       </div>
     </section>
 
-    <!-- О художнике -->
+    <!-- About the Artist -->
     <section id="about">
       <div class="container">
-        <h2 id="about-heading">О художнике</h2>
+        <h2 id="about-heading">About the Artist</h2>
         <div class="about-content">
           <div class="bio-row">
             <div class="bio">
-              <h3 id="bio-title">Биография</h3>
+              <h3 id="bio-title">Biography</h3>
               <p id="bio-text">
-                <!-- Текст биографии будет подгружен из JSON -->
+                <!-- Biography text will be loaded from JSON -->
               </p>
             </div>
             <div class="artist-photo">
-              <img src="assets/portrait.png" alt="Portrait of the Artist" loading="lazy" decoding="async" />
+              <img src="assets/portrait.png" alt="Artist Portrait" loading="lazy" decoding="async" />
             </div>
           </div>
           <div class="artist-statement">
             <h3 id="statement-title">Artist Statement</h3>
             <p id="statement-text">
-              <!-- Текст artist statement будет подгружен из JSON -->
+              <!-- Artist statement text will be loaded from JSON -->
             </p>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Контакты -->
+    <!-- Contact -->
     <section id="contact">
       <div class="container">
-        <h2 id="contact-heading">Контакты</h2>
+        <h2 id="contact-heading">Contact</h2>
         <div class="contact-buttons">
           <a class="contact-button" href="https://t.me/markestart" target="_blank" id="btn-telegram">Telegram</a>
           <a class="contact-button" href="https://instagram.com/markestart" target="_blank" id="btn-instagram">Instagram</a>
-          <a class="contact-button" href="tel:+77051248743" id="btn-phone">Телефон</a>
+          <a class="contact-button" href="tel:+77051248743" id="btn-phone">Phone</a>
           <a class="contact-button" href="mailto:markbogdanovofficial@gmail.com" id="btn-email">Email</a>
         </div>
       </div>
@@ -865,11 +865,11 @@
 
   <footer>
     <div class="container" id="footer-text">
-      &copy; 2025 TheMarkest.art. Все права защищены.
+      &copy; 2025 TheMarkest.art. All rights reserved.
     </div>
   </footer>
 
-  <!-- Модальное окно для полноэкранного просмотра медиа -->
+  <!-- Modal for full-screen media view -->
   <div id="modal" class="modal">
     <div id="modal-content" class="modal-content">
       <div id="modal-title-bar" class="modal-title-bar">
@@ -880,7 +880,7 @@
     </div>
   </div>
 
-  <!-- Существующие скрипты: Wave Animation, TextScramble, IntersectionObserver, Burger Menu, Модальное окно и т.д. -->
+  <!-- Wave Animation Script -->
   <script>
     const canvas = document.getElementById("waveCanvas");
     const ctx = canvas.getContext("2d");
@@ -949,6 +949,7 @@
     animateWave();
   </script>
 
+  <!-- TextScramble Script -->
   <script>
     class TextScramble {
       constructor(el) {
@@ -1016,6 +1017,7 @@
     }, { root: null, rootMargin: "0px 0px -10% 0px", threshold: 0.1 });
   </script>
 
+  <!-- Observer for portfolio cards -->
   <script>
     const cardObserver = new IntersectionObserver((entries, obs) => {
       entries.forEach(entry => {
@@ -1035,6 +1037,7 @@
     }, { threshold: 0.1 });
   </script>
 
+  <!-- Burger Menu Script -->
   <script>
     const burger = document.querySelector('.burger');
     const navLinks = document.querySelector('.nav-links');
@@ -1047,6 +1050,7 @@
     });
   </script>
 
+  <!-- Modal Script -->
   <script>
     const modal = document.getElementById("modal");
     const modalContent = document.getElementById("modal-content");
@@ -1065,7 +1069,7 @@
             titleText = titleEl.textContent.trim();
           }
         }
-        modalTitleText.textContent = titleText || "Без названия";
+        modalTitleText.textContent = titleText || "Untitled";
         modalMediaWrapper.innerHTML = "";
         modal.style.display = "block";
         if (target.tagName.toLowerCase() === "img") {
@@ -1104,14 +1108,14 @@
     });
   </script>
 
-  <!-- Язык и динамическая подгрузка текстов, цитат и портфолио -->
+  <!-- Language and Dynamic Text Loading Script -->
   <script>
-    // Глобальная переменная для текущего языка (по умолчанию RU)
-    let currentLang = "RU";
-    // Глобальный массив для цитат
+    // Global variable for current language; will be set based on system language or default to EN
+    let currentLang = "EN";
+    // Global array for quotes
     let quotesArray = [];
     
-    // Функция для очистки и форматирования строк
+    // Simple sanitize function
     function sanitize(val) {
       if (!val) return "";
       return val.toString().replace(/^"+|"+$/g, "").trim();
@@ -1119,7 +1123,7 @@
     
     function loadLanguage(lang) {
       currentLang = lang;
-      // Подгрузка основного текста сайта из файла, например "rutext.json"
+      // Load main text from language file, e.g. "entext.json"
       fetch(lang.toLowerCase() + "text.json")
         .then(response => response.json())
         .then(data => {
@@ -1129,34 +1133,34 @@
           if(data.metaDescription) {
             document.querySelector('meta[name="description"]').setAttribute("content", data.metaDescription);
           }
-          // Обновление навигации
+          // Update navigation
           document.getElementById("nav-cover").textContent = data.nav.cover;
           document.getElementById("nav-portfolio").textContent = data.nav.portfolio;
           document.getElementById("nav-about").textContent = data.nav.about;
           document.getElementById("nav-contact").textContent = data.nav.contact;
-          // Обновление обложки
+          // Update cover
           document.getElementById("cover-heading").textContent = data.cover.heading;
           document.getElementById("cover-subheading").textContent = data.cover.subheading;
-          // Обновление заголовков секций
+          // Update section headings
           document.getElementById("portfolio-heading").textContent = data.sections.portfolio;
           document.getElementById("about-heading").textContent = data.sections.about;
           document.getElementById("contact-heading").textContent = data.sections.contact;
-          // Обновление раздела "О художнике"
+          // Update About section
           document.getElementById("bio-title").textContent = data.about.bioTitle;
           document.getElementById("bio-text").textContent = data.about.bioText;
           document.getElementById("statement-title").textContent = data.about.statementTitle;
           document.getElementById("statement-text").textContent = data.about.statementText;
-          // Обновление кнопок контактов
+          // Update contact buttons
           document.getElementById("btn-telegram").textContent = data.contactButtons.telegram;
           document.getElementById("btn-instagram").textContent = data.contactButtons.instagram;
           document.getElementById("btn-phone").textContent = data.contactButtons.phone;
           document.getElementById("btn-email").textContent = data.contactButtons.email;
-          // Обновление футера
+          // Update footer
           document.getElementById("footer-text").innerHTML = data.footer;
         })
         .catch(error => console.error("Error loading language file:", error));
       
-      // Подгрузка цитат из файла, например "ruquote.json"
+      // Load quotes from file, e.g. "enquote.json"
       fetch(lang.toLowerCase() + "quote.json")
         .then(response => response.json())
         .then(data => {
@@ -1164,7 +1168,7 @@
         })
         .catch(error => console.error("Error loading quotes file:", error));
       
-      // Подгрузка работ портфолио из файла, например "ruport.json"
+      // Load portfolio works from file, e.g. "enport.json"
       fetch(lang.toLowerCase() + "port.json")
         .then(response => response.json())
         .then(data => {
@@ -1198,7 +1202,7 @@
                 } else {
                   mediaElement = document.createElement("img");
                   mediaElement.src = "assets/" + mediaId;
-                  mediaElement.alt = sanitize(item.title) || "Изображение работы";
+                  mediaElement.alt = sanitize(item.title) || "Work Image";
                   mediaElement.className = "work-thumb";
                   mediaElement.setAttribute("loading", "lazy");
                   mediaElement.setAttribute("decoding", "async");
@@ -1209,7 +1213,7 @@
                 let extList = imageExtensions.concat(videoExtensions);
                 let attempt = 0;
                 mediaElement = document.createElement("img");
-                mediaElement.alt = sanitize(item.title) || "Изображение работы";
+                mediaElement.alt = sanitize(item.title) || "Work Image";
                 mediaElement.className = "work-thumb";
                 mediaElement.setAttribute("loading", "lazy");
                 mediaElement.setAttribute("decoding", "async");
@@ -1244,15 +1248,15 @@
             const details = document.createElement("div");
             details.className = "work-details";
             const h3 = document.createElement("h3");
-            h3.textContent = sanitize(item.title) || "Без названия";
+            h3.textContent = sanitize(item.title) || "Untitled";
             const pYear = document.createElement("p");
-            pYear.innerHTML = "Год: <span class='scramble-text' data-text='" + (sanitize(item.year) || "—") + "'>-</span>";
+            pYear.innerHTML = "Year: <span class='scramble-text' data-text='" + (sanitize(item.year) || "—") + "'>-</span>";
             const pDesc = document.createElement("p");
-            pDesc.innerHTML = "Описание: <span class='scramble-text' data-text='" + (sanitize(item.description) || "") + "'>-</span>";
+            pDesc.innerHTML = "Description: <span class='scramble-text' data-text='" + (sanitize(item.description) || "") + "'>-</span>";
             const pMaterials = document.createElement("p");
-            pMaterials.innerHTML = "Материалы: <span class='scramble-text' data-text='" + (sanitize(item.materials) || "—") + "'>-</span>";
+            pMaterials.innerHTML = "Materials: <span class='scramble-text' data-text='" + (sanitize(item.materials) || "—") + "'>-</span>";
             const pStatus = document.createElement("p");
-            pStatus.innerHTML = "Статус: <span class='scramble-text' data-text='" + (sanitize(item.status) || "—") + "'>-</span>";
+            pStatus.innerHTML = "Status: <span class='scramble-text' data-text='" + (sanitize(item.status) || "—") + "'>-</span>";
             details.appendChild(h3);
             details.appendChild(pYear);
             details.appendChild(pDesc);
@@ -1277,9 +1281,23 @@
         .catch(error => console.error("Error loading portfolio file:", error));
     }
     
-    // Слушатели переключения языка (кнопки и dropdown)
+    // On page load, determine system language and load it (default to EN)
     document.addEventListener("DOMContentLoaded", () => {
-      loadLanguage(currentLang);
+      const sysLang = navigator.language || navigator.userLanguage || "en";
+      let selectedLang = "EN";
+      if (sysLang) {
+        const langLower = sysLang.toLowerCase();
+        if(langLower.startsWith("ru")){
+          selectedLang = "RU";
+        } else if(langLower.startsWith("kz")){
+          selectedLang = "KZ";
+        } else if(langLower.startsWith("uk") || langLower.startsWith("ua")){
+          selectedLang = "UA";
+        } else {
+          selectedLang = "EN";
+        }
+      }
+      loadLanguage(selectedLang);
       document.querySelectorAll(".language-buttons button").forEach(button => {
         button.addEventListener("click", () => {
           loadLanguage(button.textContent.trim());
@@ -1291,7 +1309,7 @@
     });
   </script>
 
-  <!-- Three.js и скрипт обложки -->
+  <!-- Three.js and Cover Script -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
   <script src="cover.js"></script>
 </body>

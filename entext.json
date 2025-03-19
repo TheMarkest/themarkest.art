@@ -1,33 +1,32 @@
 {
-    "title": "TheMarkest.art – Glitch Image + Portrait",
-    "metaDescription": "Портфолио художника в стиле sci‑fi/cyberpunk, с волной, старомониторным эффектом, TextScramble, пиксельным глитч‑логотипом, фото художника и удобными карточками работ.",
-    "nav": {
-      "cover": "Обложка",
-      "portfolio": "Портфолио",
-      "about": "О художнике",
-      "contact": "Контакты"
-    },
-    "cover": {
-      "heading": "MARK BOGDANOV",
-      "subheading": "Искусство о науке."
-    },
-    "sections": {
-      "portfolio": "Портфолио",
-      "about": "О художнике",
-      "contact": "Контакты"
-    },
-    "about": {
-      "bioTitle": "Биография",
-      "bioText": "Марк Богданов — художник, работающий на стыке искусства, технологий и инженерной эстетики. В своих произведениях он исследует влияние научного прогресса на визуальные формы, сочетая современные методы производства с традиционными материалами. Родился в 1998 году, его творчество формировалось на фоне цифровой революции и глубоких культурных традиций.",
-      "statementTitle": "Artist Statement",
-      "statementText": "Я создаю скульптуры, в которых современные технологии производства встречаются с наследием инженерной мысли прошлого. Моё искусство — это поиск формы, структуры и материала, отражающих логику научного прогресса. В работах я сочетаю 3D-печать, лазерную резку и цифровую обработку, стремясь показать диалог между прошлым и будущим."
-    },
-    "contactButtons": {
-      "telegram": "Telegram",
-      "instagram": "Instagram",
-      "phone": "Телефон",
-      "email": "Email"
-    },
-    "footer": "&copy; 2025 TheMarkest.art. Все права защищены."
-  }
-  
+  "title": "TheMarkest.art – Glitch Image + Portrait",
+  "metaDescription": "Artist portfolio in sci‑fi/cyberpunk style with retro monitor effects, TextScramble, pixel glitch logo, artist photo and portfolio cards.",
+  "nav": {
+    "cover": "Cover",
+    "portfolio": "Portfolio",
+    "about": "About the Artist",
+    "contact": "Contact"
+  },
+  "cover": {
+    "heading": "MARK BOGDANOV",
+    "subheading": "Art about science."
+  },
+  "sections": {
+    "portfolio": "Portfolio",
+    "about": "About the Artist",
+    "contact": "Contact"
+  },
+  "about": {
+    "bioTitle": "Biography",
+    "bioText": "Mark Bogdanov is an artist working at the intersection of art, technology and engineering aesthetics. His works explore the influence of scientific progress on visual forms, combining modern production methods with traditional materials. Born in 1998, his creativity was shaped amid the digital revolution and rich cultural traditions.",
+    "statementTitle": "Artist Statement",
+    "statementText": "I create sculptures where modern production techniques meet the legacy of past engineering thought. My art is a search for form, structure and material that reflect the logic of scientific progress. In my works, I combine 3D printing, laser cutting, and digital processing to illustrate the dialogue between the past and the future."
+  },
+  "contactButtons": {
+    "telegram": "Telegram",
+    "instagram": "Instagram",
+    "phone": "Phone",
+    "email": "Email"
+  },
+  "footer": "&copy; 2025 TheMarkest.art. All rights reserved."
+}
