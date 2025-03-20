@@ -2,8 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <!-- Обновлённый метатег viewport для умных часов -->
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <!-- Дефолтный заголовок для версии EN (будет меняться при переключении языка) -->
   <title>Mark Bogdanov – Digital & Physical Artist</title>
   <!-- Дефолтное описание (для EN); для других языков loadLanguage обновит эти данные -->
@@ -699,49 +698,6 @@
       50% { opacity: 0.5; }
       80% { opacity: 0.3; }
       100% { opacity: 0; }
-    }
-  </style>
-
-  <!-- Оптимизации для умных часов -->
-  <style>
-    /* Стили для устройств с узким экраном (например, умные часы) */
-    @media (max-width: 400px) {
-      header {
-        height: 60px;
-      }
-      #waveCanvas {
-        display: none;
-      }
-      .header-content {
-        padding: 0 10px;
-      }
-      .logo-container,
-      .nav-links,
-      .language-switcher {
-        display: none;
-      }
-      h1, h2, h3 {
-        font-size: 1rem;
-        text-shadow: none;
-        animation: none;
-      }
-      body {
-        font-size: 0.7rem;
-      }
-      .cover-content {
-        padding: 1rem;
-        margin: 1rem;
-      }
-      .floating-quote {
-        display: none;
-      }
-      .glitch-image img {
-        animation: none;
-      }
-      .work-item,
-      .modal {
-        transition: none;
-      }
     }
   </style>
 
