@@ -54,13 +54,6 @@
     gtag('config', 'G-PSK9RZJMZS');
   </script>
 
-  <!-- ЗАДАНИЕ ФЛАГА ДЛЯ УМНЫХ ЧАСОВ -->
-  <script>
-    // Фильтруем устройство как умные часы, если ширина экрана ≤ 400px и userAgent содержит ключевые слова для часов
-    window.isSmartwatch = (window.innerWidth <= 400 && /Watch|WearOS|Tizen|Smartwatch/i.test(navigator.userAgent));
-    console.log("isSmartwatch:", window.isSmartwatch);
-  </script>
-
   <!-- Load Handjet font -->
   <style>
     @font-face {
@@ -1380,10 +1373,7 @@
       document.body.appendChild(div);
       setTimeout(() => { div.remove(); }, 10000);
     }
-    // Если устройство не определяется как умные часы, запускаем цитаты
-    if (!window.isSmartwatch) {
-      setInterval(spawnQuote, 5000);
-    }
+    setInterval(spawnQuote, 5000);
   </script>
 
   <!-- Three.js and Cover Script -->
