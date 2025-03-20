@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", function() {
     // Определяем, мобильное ли устройство (простейшая проверка)
     const isMobile = /Mobi|Android/i.test(navigator.userAgent);
     // Проверка на умные часы (или другое устройство с очень маленьким экраном)
-    const isSmartwatch = window.innerWidth <= 450;
+    const isSmartwatch = window.innerWidth <= 400;
     
     // Базовая позиция камеры; если мобильное – камера дальше
     const baseCameraPosition = { x: 0, y: 0, z: isMobile ? 60 : 40 };
