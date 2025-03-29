@@ -56,22 +56,26 @@
       <label for="temporalDensity">Плотность темпорального поля:</label>
       <input type="number" id="temporalDensity" value="1" step="0.01">
     </div>
+    <div>
+      <button id="startButton">Старт вычислений</button>
+    </div>
   </div>
   <!-- Подключение Three.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script>
-    // Вспомогательная функция для остатка по модулю с положительным результатом
+    // Вспомогательная функция для остатка по модулю (возвращает положительный результат)
     function mod(a, n) {
       return ((a % n) + n) % n;
     }
     
     /* Функция distort:
        x – исходный угол (в "часовом пространстве", где 0 = 12:00)
-       aHand – угол часов (без искажений)
+       aHand – угол часовой стрелки (без искажений)
        aPin – базовый угол булавки (фиксируется при клике)
-       F – эффективный коэффициент, равный currentEF.
-       Функция растягивает участок между aHand и aPin (умножая угол на F)
-       и сжимает оставшуюся часть так, чтобы сумма углов осталась 2π.
+       F – текущий коэффициент (currentEF)
+       
+       Функция растягивает участок между aHand и aPin (умножая его на F)
+       и сжимает оставшуюся часть так, чтобы сумма углов оставалась 2π.
     */
     function distort(x, aHand, aPin, F) {
       const full = 2 * Math.PI;
@@ -86,7 +90,7 @@
       }
     }
     
-    // Массивы для хранения тик-марок и цифровых меток
+    // Массивы для хранения данных тик-марок и цифровых меток
     const tickData = []; // { mesh, baseAngle, tickLength }
     const labelData = []; // { mesh, baseAngle }
     
@@ -190,11 +194,16 @@
     // pinSetTime – время установки булавки (в мс)
     let aPinClock = null;
     let pinSetTime = null;
-    // currentEF – текущее значение Коэффициента Энштейна‑Фирсова (обновляется с учетом плотности темпорального поля)
+    // currentEF – текущее значение Коэффициента Энштейна‑Фирсова
     let currentEF = 1;
     let redPin = null;
     
-    // Обновление позиций тик-марок, меток и булавки с учетом дисторсии
+    // Флаг старта симуляции и переменные для отсчёта времени
+    let simulationStarted = false;
+    let startTime = null;
+    let lastMinute = 0;
+    
+    // Функция обновления позиций тик-марок, меток и булавки с учетом дисторсии
     function updateScale(aHand, F) {
       tickData.forEach(data => {
         let newAngle = (aPinClock !== null) ? distort(data.baseAngle, aHand, aPinClock, F) : data.baseAngle;
@@ -229,22 +238,31 @@
     
     function animate() {
       requestAnimationFrame(animate);
-      const now = new Date();
-      const totalMinutes = ((now.getHours() % 12) * 60) + now.getMinutes() + now.getSeconds()/60 + now.getMilliseconds()/60000;
+      
+      const now = Date.now();
+      const dt = (now - lastFrameTime) / 1000;
+      lastFrameTime = now;
+      
+      // Вычисляем позицию часовой стрелки по системному времени
+      const currentTime = new Date();
+      const totalMinutes = ((currentTime.getHours() % 12) * 60) + currentTime.getMinutes() + currentTime.getSeconds()/60 + currentTime.getMilliseconds()/60000;
       const aHand = (totalMinutes / 720) * 2 * Math.PI;
       hourHand.rotation.z = -aHand;
       
       let effectiveF = 1;
-      if (pinSetTime !== null) {
-        const currentTime = Date.now();
-        const dt_frame = (currentTime - lastFrameTime) / 1000;
-        lastFrameTime = currentTime;
-        // Обновляем currentEF с учетом Плотности темпорального поля
-        const temporalDensity = parseFloat(document.getElementById("temporalDensity").value) || 1;
-        currentEF += (temporalDensity - 1) * dt_frame;
+      if (simulationStarted && pinSetTime !== null) {
+        // Проверяем, не изменился ли коэффициент – обновляем currentEF каждую минуту
+        const elapsedSeconds = (now - startTime) / 1000;
+        const minutesPassed = Math.floor(elapsedSeconds / 60);
+        if (minutesPassed > lastMinute) {
+          const temporalDensity = parseFloat(document.getElementById("temporalDensity").value) || 1;
+          // Обновляем currentEF только если коэффициент изменился (плюс или минус)
+          currentEF += (temporalDensity - 1);
+          lastMinute = minutesPassed;
+          // Отображаем обновлённое значение в поле ввода
+          document.getElementById("einsteinFirsov").value = currentEF.toFixed(2);
+        }
         effectiveF = currentEF;
-        // Обновляем значение поля ввода, чтобы показать актуальное значение currentEF
-        document.getElementById("einsteinFirsov").value = currentEF.toFixed(2);
       }
       
       updateScale(aHand, effectiveF);
@@ -253,6 +271,7 @@
     
     animate();
     
+    // Обработчик клика для установки булавки
     function onMouseClick(event) {
       const mouse = new THREE.Vector2();
       mouse.x = (event.clientX / canvasWidth) * 2 - 1;
@@ -269,7 +288,7 @@
       const sceneAngle = Math.atan2(pinPos.y, pinPos.x);
       aPinClock = mod(Math.PI/2 - sceneAngle, 2 * Math.PI);
       pinSetTime = Date.now();
-      // Инициализируем currentEF из поля ввода "Коэффициент Энштейна‑Фирсова"
+      // Инициализируем currentEF из значения в поле ввода
       currentEF = parseFloat(document.getElementById("einsteinFirsov").value) || 1;
       
       if (!redPin) {
@@ -281,6 +300,17 @@
     }
     
     renderer.domElement.addEventListener('click', onMouseClick, false);
+    
+    // Обработчик кнопки "Старт вычислений"
+    document.getElementById("startButton").addEventListener("click", function() {
+      if (pinSetTime === null) {
+        alert("Сначала установите булавку на циферблат!");
+        return;
+      }
+      simulationStarted = true;
+      startTime = Date.now();
+      lastMinute = 0;
+    });
     
     window.addEventListener('resize', () => {
       const newCanvasWidth = window.innerWidth;
