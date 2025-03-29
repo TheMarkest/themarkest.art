@@ -20,7 +20,6 @@
     
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
-    // Можно задать фон рендера, чтобы циферблат лучше выделялся
     renderer.setClearColor(0xaaaaaa);
     document.body.appendChild(renderer.domElement);
     
@@ -30,16 +29,69 @@
     const clockFace = new THREE.Mesh(faceGeometry, faceMaterial);
     scene.add(clockFace);
     
-    // Функция для создания стрелки с заданными размерами и цветом
-    function createHand(width, length, color) {
-      const geometry = new THREE.BoxGeometry(width, length, 0.1);
-      // Смещаем геометрию так, чтобы основание стрелки совпадало с центром
+    // Функция для создания тик-меток (линейки)
+    function createTick(length, width, color) {
+      const geometry = new THREE.BoxGeometry(width, length, 0.05);
+      // Смещаем геометрию так, чтобы основание находилось в точке (0,0,0)
       geometry.translate(0, length / 2, 0);
       const material = new THREE.MeshBasicMaterial({ color: color });
       return new THREE.Mesh(geometry, material);
     }
     
-    // Создаем стрелки: часовая, минутная и секундная
+    // Добавляем 60 меток по окружности: каждая 5-я метка — большая (часовая)
+    for (let i = 0; i < 60; i++) {
+      const angle = i * (Math.PI * 2 / 60);
+      const isHourTick = i % 5 === 0;
+      const tickLength = isHourTick ? 0.5 : 0.25;
+      const tickWidth = isHourTick ? 0.1 : 0.05;
+      const tick = createTick(tickLength, tickWidth, 0x000000);
+      // Располагаем так, чтобы внешняя часть метки совпадала с окружностью циферблата
+      const r = 5 - tickLength;
+      tick.position.x = Math.cos(angle) * r;
+      tick.position.y = Math.sin(angle) * r;
+      tick.rotation.z = angle;
+      scene.add(tick);
+    }
+    
+    // Загружаем шрифт и добавляем цифровые обозначения (1-12)
+    const fontLoader = new THREE.FontLoader();
+    fontLoader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', function(font) {
+      for (let i = 1; i <= 12; i++) {
+        const textGeometry = new THREE.TextGeometry(i.toString(), {
+          font: font,
+          size: 0.5,
+          height: 0.1,
+          curveSegments: 12,
+        });
+        const textMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 });
+        const textMesh = new THREE.Mesh(textGeometry, textMaterial);
+        
+        // Располагаем цифры по кругу: 12 располагается сверху
+        const angle = (i * 30 - 90) * Math.PI / 180;
+        const radius = 4; // радиус, на котором размещаются цифры (можно регулировать)
+        textMesh.position.x = Math.cos(angle) * radius;
+        textMesh.position.y = Math.sin(angle) * radius;
+        
+        // Центрируем текст по его размерам
+        textGeometry.computeBoundingBox();
+        const textWidth = textGeometry.boundingBox.max.x - textGeometry.boundingBox.min.x;
+        const textHeight = textGeometry.boundingBox.max.y - textGeometry.boundingBox.min.y;
+        textMesh.position.x -= textWidth / 2;
+        textMesh.position.y -= textHeight / 2;
+        
+        scene.add(textMesh);
+      }
+    });
+    
+    // Функция для создания стрелок с заданными размерами и цветом
+    function createHand(width, length, color) {
+      const geometry = new THREE.BoxGeometry(width, length, 0.1);
+      geometry.translate(0, length / 2, 0);
+      const material = new THREE.MeshBasicMaterial({ color: color });
+      return new THREE.Mesh(geometry, material);
+    }
+    
+    // Создаем стрелки: часовую, минутную и секундную
     const hourHand = createHand(0.2, 2.5, 0x000000);
     scene.add(hourHand);
     
@@ -49,13 +101,13 @@
     const secondHand = createHand(0.05, 4, 0xff0000);
     scene.add(secondHand);
     
-    // Добавляем центральную точку (пивот)
+    // Центральная точка (пивот)
     const pivotGeometry = new THREE.CircleGeometry(0.1, 32);
     const pivotMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 });
     const pivot = new THREE.Mesh(pivotGeometry, pivotMaterial);
     scene.add(pivot);
     
-    // Функция анимации для обновления положения стрелок в соответствии с системным временем
+    // Функция анимации: обновляет положение стрелок согласно системному времени
     function animate() {
       requestAnimationFrame(animate);
       
@@ -64,12 +116,12 @@
       const minutes = now.getMinutes() + seconds / 60;
       const hours = now.getHours() % 12 + minutes / 60;
       
-      // Вычисляем углы (в радианах)
+      // Вычисляем углы в радианах
       const secondsAngle = seconds * (Math.PI * 2 / 60);
       const minutesAngle = minutes * (Math.PI * 2 / 60);
       const hoursAngle = hours * (Math.PI * 2 / 12);
       
-      // Обновляем повороты стрелок (отрицательный знак нужен, чтобы вращение шло по часовой стрелке)
+      // Обновляем повороты стрелок (отрицательный знак для вращения по часовой стрелке)
       secondHand.rotation.z = -secondsAngle;
       minuteHand.rotation.z = -minutesAngle;
       hourHand.rotation.z = -hoursAngle;
