@@ -49,14 +49,6 @@
   <!-- Элементы управления -->
   <div id="controls">
     <div>
-      <label for="distortionMagnitude">Величина искажения:</label>
-      <input type="number" id="distortionMagnitude" value="0.2" step="0.01">
-    </div>
-    <div>
-      <label for="growthCoefficient">Коэффициент роста:</label>
-      <input type="number" id="growthCoefficient" value="0.5" step="0.01">
-    </div>
-    <div>
       <label for="einsteinFirsov">Коэффициент Энштейна‑Фирсова:</label>
       <input type="number" id="einsteinFirsov" value="1" step="0.01">
     </div>
@@ -68,7 +60,7 @@
   <!-- Подключение Three.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script>
-    // Вспомогательная функция для корректного остатка по модулю (положительный результат)
+    // Вспомогательная функция остатка по модулю (с положительным результатом)
     function mod(a, n) {
       return ((a % n) + n) % n;
     }
@@ -77,9 +69,9 @@
        x – исходный угол (в "часовом пространстве", где 0 = 12:00)
        aHand – угол часов (без искажений)
        aPin – базовый угол булавки (фиксируется при клике)
-       F – коэффициент растяжения для участка от aHand до aPin.
-       Функция растягивает участок между aHand и aPin (умножая угол на F) 
-       и сжимает оставшуюся часть так, чтобы сумма осталась 2π.
+       F – эффективный коэффициент, равный currentEF.
+       Функция растягивает участок между aHand и aPin (умножая угол на F)
+       и сжимает оставшуюся часть так, чтобы сумма углов осталась 2π.
     */
     function distort(x, aHand, aPin, F) {
       const full = 2 * Math.PI;
@@ -94,15 +86,15 @@
       }
     }
     
-    // Массивы для хранения данных тик-марок и цифровых меток
-    const tickData = []; // { mesh, baseAngle, tickLength }
-    const labelData = []; // { mesh, baseAngle }
+    // Массивы для хранения тик-марок и цифровых меток
+    const tickData = []; // каждый элемент: { mesh, baseAngle, tickLength }
+    const labelData = []; // каждый элемент: { mesh, baseAngle }
     
     // Создаем сцену, камеру и рендерер на весь экран
     const scene = new THREE.Scene();
     const canvasWidth = window.innerWidth;
     const canvasHeight = window.innerHeight;
-    const camera = new THREE.PerspectiveCamera(45, canvasWidth / canvasHeight, 0.1, 1000);
+    const camera = new THREE.PerspectiveCamera(45, canvasWidth/canvasHeight, 0.1, 1000);
     camera.position.z = 12;
     
     const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -111,13 +103,12 @@
     document.body.appendChild(renderer.domElement);
     
     // Вычисляем видимую высоту сцены и задаем радиус циферблата так, чтобы диаметр был 90% высоты
-    const visibleHeight = 2 * camera.position.z * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
+    const visibleHeight = 2 * camera.position.z * Math.tan(THREE.MathUtils.degToRad(camera.fov/2));
     const clockRadius = (visibleHeight * 0.9) / 2;
     
-    // Функция для преобразования из "часового пространства" (0 = 12:00, по часовой стрелке)
-    // в угол для Three.js (где 0 = ось X, вправо)
+    // Функция преобразования угла из "часового пространства" в угол для Three.js
     function toSceneAngle(clockAngle) {
-      return Math.PI / 2 - clockAngle;
+      return Math.PI/2 - clockAngle;
     }
     
     // Создаем циферблат – белый круг
@@ -135,13 +126,13 @@
     // Создаем 144 тик-марки (каждая соответствует 5 минутам)
     const totalTicks = 144;
     for (let i = 0; i < totalTicks; i++) {
-      const baseAngle = mod(i * (2 * Math.PI / totalTicks), 2 * Math.PI); // 0 = 12:00
+      const baseAngle = mod(i * (2 * Math.PI / totalTicks), 2 * Math.PI);
       const isBig = (i % 12 === 0);
       const tickLength = isBig ? 0.5 : 0.25;
       const tickWidth = isBig ? 0.1 : 0.05;
       
       const geometry = new THREE.BoxGeometry(tickWidth, tickLength, 0.05);
-      geometry.translate(0, tickLength / 2, 0);
+      geometry.translate(0, tickLength/2, 0);
       const material = new THREE.MeshBasicMaterial({ color: 0x000000 });
       const tickMesh = new THREE.Mesh(geometry, material);
       scene.add(tickMesh);
@@ -174,17 +165,15 @@
       const shape = new THREE.Shape();
       const baseWidth = 0.3;
       const handLength = clockRadius * 0.95; // почти до рамки
-      const tipInset = 0.7;
-      
-      shape.moveTo(-baseWidth / 2, 0);
-      shape.lineTo(baseWidth / 2, 0);
-      shape.lineTo(baseWidth / 2, handLength - tipInset);
-      shape.lineTo(0.15, handLength - tipInset / 2);
+      const tipInset = 0.7;  
+      shape.moveTo(-baseWidth/2, 0);
+      shape.lineTo(baseWidth/2, 0);
+      shape.lineTo(baseWidth/2, handLength - tipInset);
+      shape.lineTo(0.15, handLength - tipInset/2);
       shape.lineTo(0, handLength);
-      shape.lineTo(-0.15, handLength - tipInset / 2);
-      shape.lineTo(-baseWidth / 2, handLength - tipInset);
-      shape.lineTo(-baseWidth / 2, 0);
-      
+      shape.lineTo(-0.15, handLength - tipInset/2);
+      shape.lineTo(-baseWidth/2, handLength - tipInset);
+      shape.lineTo(-baseWidth/2, 0);
       const extrudeSettings = { depth: 0.1, bevelEnabled: false };
       const geometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
       const material = new THREE.MeshBasicMaterial({ color: 0x000000 });
@@ -195,18 +184,15 @@
     scene.add(hourHand);
     
     // Переменные для работы с искажением:
-    // aPinClock – исходный (базовый) угол булавки (в "часовом пространстве")
+    // aPinClock – базовый угол булавки (в "часовом пространстве")
     // pinSetTime – время установки булавки (в мс)
     let aPinClock = null;
     let pinSetTime = null;
-    
-    // Переменная для текущего значения EF, которое изменяется с учетом плотности темпорального поля.
-    let currentEF = 1;  // будет инициализировано при установке булавки
-    
-    // Красная булавка (создаётся по клику)
+    // currentEF – текущее значение Коэффициента Энштейна‑Фирсова, обновляемое с учетом Плотности темпорального поля
+    let currentEF = 1;
     let redPin = null;
     
-    // Обновляем позиции тик-марок, цифровых меток и булавки с учетом дисторсии
+    // Обновление позиций тик-марок, меток и булавки с учетом дисторсии
     function updateScale(aHand, F) {
       tickData.forEach(data => {
         let newAngle = (aPinClock !== null) ? distort(data.baseAngle, aHand, aPinClock, F) : data.baseAngle;
@@ -237,10 +223,8 @@
       }
     }
     
-    // Для плавного обновления EF с учётом плотности темпорального поля
     let lastFrameTime = Date.now();
     
-    // Анимация: обновление сцены
     function animate() {
       requestAnimationFrame(animate);
       const now = new Date();
@@ -248,25 +232,15 @@
       const aHand = (totalMinutes / 720) * 2 * Math.PI;
       hourHand.rotation.z = -aHand;
       
-      let effectiveF = 1; 
+      let effectiveF = 1;
       if (pinSetTime !== null) {
-        const dt_total = (Date.now() - pinSetTime) / 1000;  // время с момента установки булавки
         const currentTime = Date.now();
         const dt_frame = (currentTime - lastFrameTime) / 1000;
         lastFrameTime = currentTime;
-        // Считываем параметры из полей ввода
-        const distortionMagnitude = parseFloat(document.getElementById("distortionMagnitude").value) || 0;
-        const growthCoefficient = parseFloat(document.getElementById("growthCoefficient").value) || 0;
-        const einsteinFirsov = parseFloat(document.getElementById("einsteinFirsov").value) || 1;
         const temporalDensity = parseFloat(document.getElementById("temporalDensity").value) || 1;
-        // Если это первый кадр после установки, инициализируем currentEF
-        if (currentEF === 1 && einsteinFirsov !== 1) {
-          currentEF = einsteinFirsov;
-        }
-        // Обновляем currentEF с учетом плотности темпорального поля:
+        // Обновляем currentEF в зависимости от Плотности темпорального поля
         currentEF += (temporalDensity - 1) * dt_frame;
-        // Вычисляем эффективный коэффициент искажения:
-        effectiveF = 1 + distortionMagnitude * dt_total * growthCoefficient * currentEF;
+        effectiveF = currentEF;
       }
       
       updateScale(aHand, effectiveF);
@@ -275,7 +249,6 @@
     
     animate();
     
-    // Обработчик клика – установка булавки и фиксация её базового угла
     function onMouseClick(event) {
       const mouse = new THREE.Vector2();
       mouse.x = (event.clientX / canvasWidth) * 2 - 1;
@@ -289,11 +262,9 @@
       if (clickPoint.length() < 0.1) return;
       
       const pinPos = clickPoint.clone().setLength(clockRadius);
-      // Вычисляем угол в сценическом пространстве и преобразуем его в "часовой" угол
       const sceneAngle = Math.atan2(pinPos.y, pinPos.x);
-      aPinClock = mod(Math.PI / 2 - sceneAngle, 2 * Math.PI);
+      aPinClock = mod(Math.PI/2 - sceneAngle, 2 * Math.PI);
       pinSetTime = Date.now();
-      // Инициализируем currentEF из поля ввода "Коэффициент Энштейна‑Фирсова"
       currentEF = parseFloat(document.getElementById("einsteinFirsov").value) || 1;
       
       if (!redPin) {
