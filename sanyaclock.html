@@ -7,16 +7,27 @@
   <style>
     body { margin: 0; overflow: hidden; }
     canvas { display: block; }
+    #timeLabel {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      font-size: 24px;
+      background: rgba(255, 255, 255, 0.7);
+      padding: 5px 10px;
+      border-radius: 5px;
+    }
   </style>
 </head>
 <body>
-  <!-- Подключаем Three.js с CDN -->
+  <!-- Надпись с вычисленным временем -->
+  <div id="timeLabel">Саня придет в: --:--</div>
+  <!-- Подключаем Three.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script>
-    // Создаем сцену, камеру и рендерер
+    // Параметры сцены
+    const clockRadius = 5;
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-    // Отодвигаем камеру, чтобы часы полностью помещались по высоте
+    const camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 1000);
     camera.position.z = 12;
     
     const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -25,7 +36,7 @@
     document.body.appendChild(renderer.domElement);
     
     // Создаем циферблат (белый круг)
-    const faceGeometry = new THREE.CircleGeometry(5, 64);
+    const faceGeometry = new THREE.CircleGeometry(clockRadius, 64);
     const faceMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
     const clockFace = new THREE.Mesh(faceGeometry, faceMaterial);
     scene.add(clockFace);
@@ -33,33 +44,26 @@
     // Функция для создания тиков (меток)
     function createTick(length, width, color) {
       const geometry = new THREE.BoxGeometry(width, length, 0.05);
-      // Смещаем геометрию так, чтобы основание находилось в (0,0)
-      geometry.translate(0, length / 2, 0);
+      geometry.translate(0, length/2, 0);
       const material = new THREE.MeshBasicMaterial({ color: color });
       return new THREE.Mesh(geometry, material);
     }
     
-    // Добавляем 60 тиков по окружности. Для корректного расположения:
-    // используем формулу: tickAngle = π/2 - (i * (2π/60))
+    // Добавляем 60 тиков по окружности: каждый 5-й – часовой (больше)
     for (let i = 0; i < 60; i++) {
-      // Вычисляем угол с нужным смещением: 0-й тик окажется вверху (12 часов)
-      const tickAngle = Math.PI / 2 - (i * (2 * Math.PI / 60));
+      const tickAngle = Math.PI/2 - (i * (2*Math.PI/60));
       const isHourTick = (i % 5 === 0);
       const tickLength = isHourTick ? 0.5 : 0.25;
       const tickWidth = isHourTick ? 0.1 : 0.05;
       const tick = createTick(tickLength, tickWidth, 0x000000);
-      // Располагаем тик так, чтобы его основание лежало на окружности
-      const r = 5 - tickLength;
+      const r = clockRadius - tickLength;
       tick.position.x = Math.cos(tickAngle) * r;
       tick.position.y = Math.sin(tickAngle) * r;
-      // Поворачиваем тик так, чтобы он был ориентирован радиально от центра:
-      // поскольку геометрия по умолчанию направлена вверх (0,1),
-      // задаем поворот = tickAngle - π/2.
-      tick.rotation.z = tickAngle - Math.PI / 2;
+      tick.rotation.z = tickAngle - Math.PI/2;
       scene.add(tick);
     }
     
-    // Загружаем шрифт и добавляем цифровые обозначения (1–12)
+    // Загружаем шрифт и размещаем цифровые обозначения (1–12)
     const fontLoader = new THREE.FontLoader();
     fontLoader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', function(font) {
       for (let i = 1; i <= 12; i++) {
@@ -71,25 +75,24 @@
         });
         const textMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 });
         const textMesh = new THREE.Mesh(textGeometry, textMaterial);
-        // Расчет угла для цифр: 12 располагается вверху, затем числа идут по часовой стрелке
-        const textAngle = Math.PI / 2 - ((i % 12) * (Math.PI / 6));
-        const radius = 4; // радиус, на котором будут размещаться цифры
+        // Вычисляем угол так, чтобы число 12 было вверху
+        const textAngle = Math.PI/2 - ((i % 12) * (Math.PI/6));
+        const radius = 4;
         textMesh.position.x = Math.cos(textAngle) * radius;
         textMesh.position.y = Math.sin(textAngle) * radius;
-        // Центрируем цифры относительно их размеров
         textGeometry.computeBoundingBox();
         const textWidth = textGeometry.boundingBox.max.x - textGeometry.boundingBox.min.x;
         const textHeight = textGeometry.boundingBox.max.y - textGeometry.boundingBox.min.y;
-        textMesh.position.x -= textWidth / 2;
-        textMesh.position.y -= textHeight / 2;
+        textMesh.position.x -= textWidth/2;
+        textMesh.position.y -= textHeight/2;
         scene.add(textMesh);
       }
     });
     
-    // Функция для создания стрелок (часовая, минутная, секундная)
+    // Функция для создания стрелок часов
     function createHand(width, length, color) {
       const geometry = new THREE.BoxGeometry(width, length, 0.1);
-      geometry.translate(0, length / 2, 0);
+      geometry.translate(0, length/2, 0);
       const material = new THREE.MeshBasicMaterial({ color: color });
       return new THREE.Mesh(geometry, material);
     }
@@ -102,26 +105,24 @@
     const secondHand = createHand(0.05, 4, 0xff0000);
     scene.add(secondHand);
     
-    // Добавляем центральную точку (пивот)
+    // Центральная точка (пивот)
     const pivotGeometry = new THREE.CircleGeometry(0.1, 32);
     const pivotMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 });
     const pivot = new THREE.Mesh(pivotGeometry, pivotMaterial);
     scene.add(pivot);
     
-    // Функция анимации: обновляет положение стрелок согласно системному времени
+    // Анимация часов (обновление стрелок в соответствии с системным временем)
     function animate() {
       requestAnimationFrame(animate);
       const now = new Date();
-      const seconds = now.getSeconds() + now.getMilliseconds() / 1000;
-      const minutes = now.getMinutes() + seconds / 60;
-      const hours = now.getHours() % 12 + minutes / 60;
+      const seconds = now.getSeconds() + now.getMilliseconds()/1000;
+      const minutes = now.getMinutes() + seconds/60;
+      const hours = now.getHours() % 12 + minutes/60;
       
-      // Вычисляем углы в радианах
-      const secondsAngle = seconds * (2 * Math.PI / 60);
-      const minutesAngle = minutes * (2 * Math.PI / 60);
-      const hoursAngle = hours * (2 * Math.PI / 12);
+      const secondsAngle = seconds * (2*Math.PI/60);
+      const minutesAngle = minutes * (2*Math.PI/60);
+      const hoursAngle = hours * (2*Math.PI/12);
       
-      // Обновляем повороты стрелок (отрицательный знак для вращения по часовой стрелке)
       secondHand.rotation.z = -secondsAngle;
       minuteHand.rotation.z = -minutesAngle;
       hourHand.rotation.z = -hoursAngle;
@@ -131,9 +132,72 @@
     
     animate();
     
+    // Переменная для булавки (единственная красная метка)
+    let redPin = null;
+    
+    // Элемент для отображения надписи времени
+    const timeLabel = document.getElementById('timeLabel');
+    
+    // Обработчик клика: вычисляет точку на плоскости, нормирует её до края циферблата,
+    // размещает красную булавку и вычисляет время по углу
+    function onMouseClick(event) {
+      // Перевод координат мыши в нормализованные [-1, 1]
+      const mouse = new THREE.Vector2();
+      mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+      mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
+      
+      // Создаем луч от камеры
+      const raycaster = new THREE.Raycaster();
+      raycaster.setFromCamera(mouse, camera);
+      
+      // Определяем пересечение с плоскостью z = 0 (где находится циферблат)
+      const plane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
+      const clickPoint = new THREE.Vector3();
+      raycaster.ray.intersectPlane(plane, clickPoint);
+      
+      // Если клик произошел слишком близко к центру – игнорируем
+      if (clickPoint.length() < 0.1) return;
+      
+      // Вычисляем точку на окружности (на краю циферблата)
+      const pinPos = clickPoint.clone().setLength(clockRadius);
+      
+      // Если булавка уже есть – перемещаем, иначе создаем новую
+      if (redPin) {
+        redPin.position.copy(pinPos);
+      } else {
+        const pinGeometry = new THREE.SphereGeometry(0.15, 16, 16);
+        const pinMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+        redPin = new THREE.Mesh(pinGeometry, pinMaterial);
+        redPin.position.copy(pinPos);
+        scene.add(redPin);
+      }
+      
+      // Вычисляем угол от верхней точки (12 часов)
+      let angle = Math.atan2(pinPos.y, pinPos.x);
+      let relativeAngle = Math.PI/2 - angle;
+      if (relativeAngle < 0) relativeAngle += 2 * Math.PI;
+      
+      // Преобразуем угол в минуты: полный круг (2π) соответствует 12 часам = 720 минут
+      let totalMinutes = (relativeAngle / (2 * Math.PI)) * 720;
+      totalMinutes = Math.round(totalMinutes);
+      
+      let hoursPart = Math.floor(totalMinutes / 60);
+      let minutesPart = totalMinutes % 60;
+      if (hoursPart === 0) hoursPart = 12;
+      
+      // Форматируем время, добавляя ведущий ноль к минутам при необходимости
+      const timeString = hoursPart + ':' + (minutesPart < 10 ? '0' : '') + minutesPart;
+      
+      // Обновляем текст в надписи
+      timeLabel.textContent = 'Саня придет в: ' + timeString;
+    }
+    
+    // Добавляем слушатель клика на канвас
+    renderer.domElement.addEventListener('click', onMouseClick, false);
+    
     // Обработка изменения размеров окна
     window.addEventListener('resize', () => {
-      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.aspect = window.innerWidth/window.innerHeight;
       camera.updateProjectionMatrix();
       renderer.setSize(window.innerWidth, window.innerHeight);
     });
