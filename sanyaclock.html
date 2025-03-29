@@ -60,7 +60,7 @@
   <!-- Подключение Three.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script>
-    // Вспомогательная функция остатка по модулю (с положительным результатом)
+    // Вспомогательная функция для остатка по модулю с положительным результатом
     function mod(a, n) {
       return ((a % n) + n) % n;
     }
@@ -87,8 +87,8 @@
     }
     
     // Массивы для хранения тик-марок и цифровых меток
-    const tickData = []; // каждый элемент: { mesh, baseAngle, tickLength }
-    const labelData = []; // каждый элемент: { mesh, baseAngle }
+    const tickData = []; // { mesh, baseAngle, tickLength }
+    const labelData = []; // { mesh, baseAngle }
     
     // Создаем сцену, камеру и рендерер на весь экран
     const scene = new THREE.Scene();
@@ -165,7 +165,8 @@
       const shape = new THREE.Shape();
       const baseWidth = 0.3;
       const handLength = clockRadius * 0.95; // почти до рамки
-      const tipInset = 0.7;  
+      const tipInset = 0.7;
+      
       shape.moveTo(-baseWidth/2, 0);
       shape.lineTo(baseWidth/2, 0);
       shape.lineTo(baseWidth/2, handLength - tipInset);
@@ -174,6 +175,7 @@
       shape.lineTo(-0.15, handLength - tipInset/2);
       shape.lineTo(-baseWidth/2, handLength - tipInset);
       shape.lineTo(-baseWidth/2, 0);
+      
       const extrudeSettings = { depth: 0.1, bevelEnabled: false };
       const geometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
       const material = new THREE.MeshBasicMaterial({ color: 0x000000 });
@@ -188,7 +190,7 @@
     // pinSetTime – время установки булавки (в мс)
     let aPinClock = null;
     let pinSetTime = null;
-    // currentEF – текущее значение Коэффициента Энштейна‑Фирсова, обновляемое с учетом Плотности темпорального поля
+    // currentEF – текущее значение Коэффициента Энштейна‑Фирсова (обновляется с учетом плотности темпорального поля)
     let currentEF = 1;
     let redPin = null;
     
@@ -237,10 +239,12 @@
         const currentTime = Date.now();
         const dt_frame = (currentTime - lastFrameTime) / 1000;
         lastFrameTime = currentTime;
+        // Обновляем currentEF с учетом Плотности темпорального поля
         const temporalDensity = parseFloat(document.getElementById("temporalDensity").value) || 1;
-        // Обновляем currentEF в зависимости от Плотности темпорального поля
         currentEF += (temporalDensity - 1) * dt_frame;
         effectiveF = currentEF;
+        // Обновляем значение поля ввода, чтобы показать актуальное значение currentEF
+        document.getElementById("einsteinFirsov").value = currentEF.toFixed(2);
       }
       
       updateScale(aHand, effectiveF);
@@ -265,6 +269,7 @@
       const sceneAngle = Math.atan2(pinPos.y, pinPos.x);
       aPinClock = mod(Math.PI/2 - sceneAngle, 2 * Math.PI);
       pinSetTime = Date.now();
+      // Инициализируем currentEF из поля ввода "Коэффициент Энштейна‑Фирсова"
       currentEF = parseFloat(document.getElementById("einsteinFirsov").value) || 1;
       
       if (!redPin) {
