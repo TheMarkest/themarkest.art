@@ -56,14 +56,17 @@
       <label for="temporalDensity">Плотность темпорального поля:</label>
       <input type="number" id="temporalDensity" value="1" step="0.01">
     </div>
-    <div>
+    <div style="margin-top:5px;">
       <button id="startButton">Старт вычислений</button>
+    </div>
+    <div style="margin-top:5px;">
+      <button id="arrivalButton">Пришествие Сани</button>
     </div>
   </div>
   <!-- Подключение Three.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script>
-    // Вспомогательная функция для остатка по модулю (возвращает положительный результат)
+    // Функция для корректного остатка по модулю (возвращает положительное значение)
     function mod(a, n) {
       return ((a % n) + n) % n;
     }
@@ -72,10 +75,10 @@
        x – исходный угол (в "часовом пространстве", где 0 = 12:00)
        aHand – угол часовой стрелки (без искажений)
        aPin – базовый угол булавки (фиксируется при клике)
-       F – текущий коэффициент (currentEF)
+       F – текущее значение коэффициента (currentEF)
        
-       Функция растягивает участок между aHand и aPin (умножая его на F)
-       и сжимает оставшуюся часть так, чтобы сумма углов оставалась 2π.
+       Растягивает участок между aHand и aPin, умножая его на F, а оставшуюся часть сжимает,
+       чтобы полный круг оставался равным 2π.
     */
     function distort(x, aHand, aPin, F) {
       const full = 2 * Math.PI;
@@ -91,8 +94,8 @@
     }
     
     // Массивы для хранения данных тик-марок и цифровых меток
-    const tickData = []; // { mesh, baseAngle, tickLength }
-    const labelData = []; // { mesh, baseAngle }
+    const tickData = []; // каждый элемент: { mesh, baseAngle, tickLength }
+    const labelData = []; // каждый элемент: { mesh, baseAngle }
     
     // Создаем сцену, камеру и рендерер на весь экран
     const scene = new THREE.Scene();
@@ -106,11 +109,12 @@
     renderer.setClearColor(0xaaaaaa);
     document.body.appendChild(renderer.domElement);
     
-    // Вычисляем видимую высоту сцены и задаем радиус циферблата так, чтобы диаметр был 90% высоты
+    // Вычисляем видимую высоту сцены и задаем радиус циферблата так, чтобы его диаметр был 90% высоты
     const visibleHeight = 2 * camera.position.z * Math.tan(THREE.MathUtils.degToRad(camera.fov/2));
     const clockRadius = (visibleHeight * 0.9) / 2;
     
-    // Функция преобразования угла из "часового пространства" в угол для Three.js
+    // Преобразование угла из "часового пространства" (0 = 12:00, по часовой стрелке)
+    // в угол для Three.js (где 0 = ось X, вправо)
     function toSceneAngle(clockAngle) {
       return Math.PI/2 - clockAngle;
     }
@@ -194,16 +198,18 @@
     // pinSetTime – время установки булавки (в мс)
     let aPinClock = null;
     let pinSetTime = null;
-    // currentEF – текущее значение Коэффициента Энштейна‑Фирсова
+    // baseL1 – базовая разница (в углах) между булавкой и часовым указателем в момент установки
+    let baseL1 = 0;
+    // currentEF – текущее значение Коэффициента Энштейна‑Фирсова (из поля ввода, обновляется плавно)
     let currentEF = 1;
     let redPin = null;
     
-    // Флаг старта симуляции и переменные для отсчёта времени
+    // Флаг симуляции
     let simulationStarted = false;
+    // Время старта симуляции
     let startTime = null;
-    let lastMinute = 0;
     
-    // Функция обновления позиций тик-марок, меток и булавки с учетом дисторсии
+    // Функция обновления позиций тиков, меток и булавки с учетом дисторсии
     function updateScale(aHand, F) {
       tickData.forEach(data => {
         let newAngle = (aPinClock !== null) ? distort(data.baseAngle, aHand, aPinClock, F) : data.baseAngle;
@@ -243,26 +249,21 @@
       const dt = (now - lastFrameTime) / 1000;
       lastFrameTime = now;
       
-      // Вычисляем позицию часовой стрелки по системному времени
+      // Вычисляем положение часовой стрелки по системному времени
       const currentTime = new Date();
       const totalMinutes = ((currentTime.getHours() % 12) * 60) + currentTime.getMinutes() + currentTime.getSeconds()/60 + currentTime.getMilliseconds()/60000;
       const aHand = (totalMinutes / 720) * 2 * Math.PI;
       hourHand.rotation.z = -aHand;
       
-      let effectiveF = 1;
+      let effectiveF = currentEF;
+      // Если симуляция запущена, обновляем currentEF плавно:
       if (simulationStarted && pinSetTime !== null) {
-        // Проверяем, не изменился ли коэффициент – обновляем currentEF каждую минуту
-        const elapsedSeconds = (now - startTime) / 1000;
-        const minutesPassed = Math.floor(elapsedSeconds / 60);
-        if (minutesPassed > lastMinute) {
-          const temporalDensity = parseFloat(document.getElementById("temporalDensity").value) || 1;
-          // Обновляем currentEF только если коэффициент изменился (плюс или минус)
-          currentEF += (temporalDensity - 1);
-          lastMinute = minutesPassed;
-          // Отображаем обновлённое значение в поле ввода
-          document.getElementById("einsteinFirsov").value = currentEF.toFixed(2);
-        }
+        // Обновляем currentEF так, чтобы за одну минуту оно изменилось на (temporalDensity - 1)
+        const temporalDensity = parseFloat(document.getElementById("temporalDensity").value) || 1;
+        currentEF += (temporalDensity - 1) * dt / 60;
         effectiveF = currentEF;
+        // Обновляем поле ввода, чтобы отобразить актуальное значение
+        document.getElementById("einsteinFirsov").value = currentEF.toFixed(2);
       }
       
       updateScale(aHand, effectiveF);
@@ -286,9 +287,15 @@
       
       const pinPos = clickPoint.clone().setLength(clockRadius);
       const sceneAngle = Math.atan2(pinPos.y, pinPos.x);
+      // Фиксируем базовый угол булавки
       aPinClock = mod(Math.PI/2 - sceneAngle, 2 * Math.PI);
       pinSetTime = Date.now();
-      // Инициализируем currentEF из значения в поле ввода
+      // При установке булавки также фиксируем разницу между её положением и положением часовой стрелки
+      const currentTime = new Date();
+      const totalMinutes = ((currentTime.getHours() % 12) * 60) + currentTime.getMinutes() + currentTime.getSeconds()/60 + currentTime.getMilliseconds()/60000;
+      const aHandAtPin = (totalMinutes / 720) * 2 * Math.PI;
+      baseL1 = mod(aPinClock - aHandAtPin, 2 * Math.PI);
+      // Инициализируем currentEF из поля ввода
       currentEF = parseFloat(document.getElementById("einsteinFirsov").value) || 1;
       
       if (!redPin) {
@@ -301,7 +308,7 @@
     
     renderer.domElement.addEventListener('click', onMouseClick, false);
     
-    // Обработчик кнопки "Старт вычислений"
+    // Кнопка "Старт вычислений" запускает симуляцию
     document.getElementById("startButton").addEventListener("click", function() {
       if (pinSetTime === null) {
         alert("Сначала установите булавку на циферблат!");
@@ -309,7 +316,22 @@
       }
       simulationStarted = true;
       startTime = Date.now();
-      lastMinute = 0;
+    });
+    
+    // Кнопка "Пришествие Сани" останавливает симуляцию и выводит итоговое искажённое время
+    document.getElementById("arrivalButton").addEventListener("click", function() {
+      if (!simulationStarted) {
+        alert("Симуляция не запущена!");
+        return;
+      }
+      simulationStarted = false;
+      // Вычисляем итоговое искажённое время как разницу между показанным временем и реальным временем.
+      // При установке булавки, базовая разница baseL1 = mod(aPinClock - aHandAtPin, 2π)
+      // В данный момент итоговый смещённый угол для булавки = aHand + currentEF * baseL1,
+      // а реальное смещение без искажения было бы = aHand + baseL1.
+      // Разница в углах = (currentEF - 1) * baseL1. Переводим её в минуты:
+      const offsetMinutes = ((currentEF - 1) * baseL1 / (2 * Math.PI)) * 720;
+      alert("Итоговое искажённое время: " + offsetMinutes.toFixed(2) + " минут");
     });
     
     window.addEventListener('resize', () => {
