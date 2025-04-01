@@ -74,8 +74,7 @@
     
     // Функция форматирования времени (в минутах -> строка HH:MM, 12-часовой формат)
     function formatTime(totalMinutes) {
-      totalMinutes = totalMinutes % 720;
-      if (totalMinutes < 0) totalMinutes += 720;
+      totalMinutes = mod(totalMinutes, 720);
       let hours = Math.floor(totalMinutes / 60);
       let minutes = Math.round(totalMinutes % 60);
       if (hours === 0) hours = 12;
@@ -94,7 +93,7 @@
     renderer.setClearColor(0xaaaaaa);
     document.body.appendChild(renderer.domElement);
     
-    // Вычисляем видимую высоту сцены и задаем радиус циферблата так, чтобы диаметр был 90% высоты
+    // Вычисляем видимую высоту сцены и задаем радиус циферблата так, чтобы его диаметр был 90% высоты
     const visibleHeight = 2 * camera.position.z * Math.tan(THREE.MathUtils.degToRad(camera.fov/2));
     const clockRadius = (visibleHeight * 0.9) / 2;
     
@@ -116,7 +115,7 @@
     const border = new THREE.Mesh(borderGeometry, borderMaterial);
     scene.add(border);
     
-    // Создаем тик-марки (144 деления, каждое 5 минут)
+    // Создаем тик-марки (144 деления)
     const totalTicks = 144;
     for (let i = 0; i < totalTicks; i++) {
       const angle = mod(i * (2 * Math.PI / totalTicks), 2 * Math.PI);
@@ -136,7 +135,7 @@
       scene.add(tickMesh);
     }
     
-    // Создаем цифровые метки (каждые 12 тиков)
+    // Создаем цифровые метки (каждые 12 делений)
     const fontLoader = new THREE.FontLoader();
     fontLoader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', function(font) {
       for (let i = 0; i < totalTicks; i += 12) {
@@ -192,18 +191,18 @@
     // Глобальные переменные для симуляции:
     // aPinClock – угол булавки (в "часовом пространстве") – вычисляется при клике
     // pinSetTime – время установки булавки (в мс)
-    // baseSetMinutes – исходное установленное время (в минутах) = время на момент установки плюс компенсирующий сдвиг
+    // baseSetMinutes – исходное установленное время (в минутах), T₀ = mod(timeAtPin + baseL1Factor, 720)
     let aPinClock = null;
     let pinSetTime = null;
     let baseSetMinutes = null;
-    // simulationCoefficient – заданное значение K (коэффициент Фирсова), из поля ввода при клике
+    // simulationCoefficient – значение K (коэффициент Фирсова) из поля ввода
     let simulationCoefficient = 0;
     // redPin – красная булавка
     let redPin = null;
     // Флаг симуляции
     let simulationStarted = false;
     
-    // Для расчёта: сохраняем baseL1Factor – перевод базовой угловой разницы в минуты
+    // Для расчёта: вычисляем baseL1Factor – перевод базовой угловой разницы в минуты
     let baseL1Factor;
     
     // Обработчик клика для установки булавки
@@ -231,7 +230,8 @@
       const aHandAtPin = (timeAtPin / 720) * 2 * Math.PI;
       const baseL1 = mod(aPinClock - aHandAtPin, 2 * Math.PI);
       baseL1Factor = (baseL1 / (2 * Math.PI)) * 720;
-      baseSetMinutes = timeAtPin + baseL1Factor;
+      // Приводим исходное время к диапазону [0,720)
+      baseSetMinutes = mod(timeAtPin + baseL1Factor, 720);
       
       // Инициализируем simulationCoefficient из поля ввода
       simulationCoefficient = parseFloat(document.getElementById("einsteinFirsov").value) || 0;
@@ -243,7 +243,7 @@
         scene.add(redPin);
       }
       
-      // Сразу обновляем положение красной булавки (исходное время = T₀)
+      // Сразу устанавливаем положение красной булавки согласно T₀
       const displayAngle = mod((baseSetMinutes / 720) * 2 * Math.PI, 2 * Math.PI);
       const sceneDisplayAngle = toSceneAngle(displayAngle);
       redPin.position.x = Math.cos(sceneDisplayAngle) * clockRadius;
@@ -268,7 +268,7 @@
       simulationStarted = true;
     });
     
-    // Кнопка "Пришествие Сани" останавливает симуляцию и показывает итоговое искажённое время
+    // Кнопка "Пришествие Сани" останавливает симуляцию и выводит итоговое дополнительное время
     document.getElementById("arrivalButton").addEventListener("click", function() {
       if (!simulationStarted) {
         alert("Симуляция не запущена!");
@@ -280,12 +280,12 @@
       alert("Итоговое дополнительное время: " + offsetMinutes.toFixed(2) + " минут");
     });
     
-    // Функция обновления положения красной булавки и индикаторов в режиме симуляции
+    // Функция обновления положения красной булавки и индикаторов во время симуляции
     function updateRedPin() {
       if (simulationStarted && pinSetTime !== null) {
         const elapsedMinutes = (Date.now() - pinSetTime) / 60000;
         const extra = simulationCoefficient * elapsedMinutes;
-        const displayMinutes = baseSetMinutes + extra;
+        const displayMinutes = mod(baseSetMinutes + extra, 720);
         const displayAngle = mod((displayMinutes / 720) * 2 * Math.PI, 2 * Math.PI);
         const sceneAngle = toSceneAngle(displayAngle);
         redPin.position.x = Math.cos(sceneAngle) * clockRadius;
@@ -299,11 +299,10 @@
       }
     }
     
-    let lastFrameTime = Date.now();
-    
     function animate() {
       requestAnimationFrame(animate);
       
+      // Обновляем положение часовой стрелки по реальному времени
       const now = new Date();
       const realMinutes = ((now.getHours() % 12) * 60) + now.getMinutes() +
                           now.getSeconds()/60 + now.getMilliseconds()/60000;
