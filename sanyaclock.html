@@ -47,7 +47,7 @@
     Калькулятор релятивистского искажения времени<br>
     вызванного Саня-полем
   </div>
-  <!-- Блок индикаторов (показатели обновляются в реальном времени) -->
+  <!-- Блок индикаторов -->
   <div id="indicators">
     (Нет данных – установите булавку)
   </div>
@@ -64,21 +64,29 @@
       <button id="arrivalButton">Пришествие Сани</button>
     </div>
   </div>
+  
   <!-- Подключение Three.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script>
-    // Функция для корректного остатка по модулю (возвращает положительное число)
+    // Функция корректного остатка по модулю (возвращает положительное число)
     function mod(a, n) {
       return ((a % n) + n) % n;
     }
     
-    // Функция форматирования времени (в минутах -> строка HH:MM, 12-часовой формат)
+    // Функция форматирования времени (в минутах -> строка "HH:MM" в 12-часовом формате)
     function formatTime(totalMinutes) {
-      totalMinutes = mod(totalMinutes, 720);
+      totalMinutes = mod(totalMinutes, 720); // приводим к диапазону 0–719
       let hours = Math.floor(totalMinutes / 60);
-      let minutes = Math.round(totalMinutes % 60);
+      let minutes = totalMinutes % 60;
+      // Округляем минуты:
+      let roundedMinutes = Math.round(minutes);
+      // Если округление дает 60, то прибавляем 1 час и сбрасываем минуты
+      if (roundedMinutes >= 60) {
+        roundedMinutes = 0;
+        hours = (hours + 1) % 12;
+      }
       if (hours === 0) hours = 12;
-      return hours + ":" + (minutes < 10 ? "0" + minutes : minutes);
+      return hours + ":" + (roundedMinutes < 10 ? "0" + roundedMinutes : roundedMinutes);
     }
     
     // Создаем сцену, камеру и рендерер (на весь экран)
@@ -93,7 +101,7 @@
     renderer.setClearColor(0xaaaaaa);
     document.body.appendChild(renderer.domElement);
     
-    // Вычисляем видимую высоту сцены и задаем радиус циферблата так, чтобы его диаметр был 90% высоты
+    // Определяем радиус циферблата так, чтобы его диаметр был 90% высоты видимой области
     const visibleHeight = 2 * camera.position.z * Math.tan(THREE.MathUtils.degToRad(camera.fov/2));
     const clockRadius = (visibleHeight * 0.9) / 2;
     
@@ -109,7 +117,7 @@
     const clockFace = new THREE.Mesh(faceGeometry, faceMaterial);
     scene.add(clockFace);
     
-    // Добавляем рамку (кольцо) вокруг циферблата
+    // Добавляем рамку вокруг циферблата
     const borderGeometry = new THREE.RingGeometry(clockRadius * 0.98, clockRadius * 1.02, 144);
     const borderMaterial = new THREE.MeshBasicMaterial({ color: 0x000000, side: THREE.DoubleSide });
     const border = new THREE.Mesh(borderGeometry, borderMaterial);
@@ -163,7 +171,7 @@
       }
     });
     
-    // Создаем часовую стрелку (движется по реальному времени)
+    // Создаем часовую стрелку (которая движется по реальному времени)
     function createHourHand() {
       const shape = new THREE.Shape();
       const baseWidth = 0.3;
@@ -189,20 +197,20 @@
     scene.add(hourHand);
     
     // Глобальные переменные для симуляции:
-    // aPinClock – угол булавки (в "часовом пространстве") – вычисляется при клике
+    // aPinClock – угол булавки (в "часовом пространстве") (вычисляется при клике)
     // pinSetTime – время установки булавки (в мс)
     // baseSetMinutes – исходное установленное время (в минутах), T₀ = mod(timeAtPin + baseL1Factor, 720)
     let aPinClock = null;
     let pinSetTime = null;
     let baseSetMinutes = null;
-    // simulationCoefficient – значение K (коэффициент Фирсова) из поля ввода
+    // simulationCoefficient – значение K (коэффициент Фирсова), задаётся из поля ввода при установке
     let simulationCoefficient = 0;
     // redPin – красная булавка
     let redPin = null;
     // Флаг симуляции
     let simulationStarted = false;
     
-    // Для расчёта: вычисляем baseL1Factor – перевод базовой угловой разницы в минуты
+    // Для расчёта: сохраняем baseL1Factor – перевод разницы углов в минуты
     let baseL1Factor;
     
     // Обработчик клика для установки булавки
@@ -243,7 +251,7 @@
         scene.add(redPin);
       }
       
-      // Сразу устанавливаем положение красной булавки согласно T₀
+      // Устанавливаем положение красной булавки согласно исходному времени T₀
       const displayAngle = mod((baseSetMinutes / 720) * 2 * Math.PI, 2 * Math.PI);
       const sceneDisplayAngle = toSceneAngle(displayAngle);
       redPin.position.x = Math.cos(sceneDisplayAngle) * clockRadius;
@@ -302,7 +310,7 @@
     function animate() {
       requestAnimationFrame(animate);
       
-      // Обновляем положение часовой стрелки по реальному времени
+      // Обновляем положение часовой стрелки (по реальному времени)
       const now = new Date();
       const realMinutes = ((now.getHours() % 12) * 60) + now.getMinutes() +
                           now.getSeconds()/60 + now.getMilliseconds()/60000;
