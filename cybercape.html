@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Управление NeoPixel</title>
+</head>
+<body>
+  <h1>ESP32 и NeoPixel</h1>
+  <button onclick="connect()">Подключиться к устройству</button>
+  <button onclick="sendColor()">Отправить цвет (красный)</button>
+  
+  <script>
+    let bleDevice;
+    let bleCharacteristic;
+
+    async function connect() {
+      try {
+        // Запрашиваем устройство с именем "ESP32_NeoPixel" и нужным сервисом
+        const device = await navigator.bluetooth.requestDevice({
+          filters: [{ name: 'ESP32_NeoPixel' }],
+          optionalServices: ['4fafc201-1fb5-459e-8fcc-c5c9c331914b']
+        });
+        const server = await device.gatt.connect();
+        const service = await server.getPrimaryService('4fafc201-1fb5-459e-8fcc-c5c9c331914b');
+        bleCharacteristic = await service.getCharacteristic('beb5483e-36e1-4688-b7f5-ea07361b26a8');
+        console.log('Соединение установлено');
+      } catch (error) {
+        console.error('Ошибка подключения:', error);
+      }
+    }
+
+    async function sendColor() {
+      try {
+        // Пример отправки команды: красный цвет (R255, G0, B0)
+        const r = 255, g = 0, b = 0;
+        const command = `R${r},G${g},B${b}`;
+        const encoder = new TextEncoder();
+        const data = encoder.encode(command);
+        await bleCharacteristic.writeValue(data);
+        console.log('Команда отправлена:', command);
+      } catch (error) {
+        console.error('Ошибка отправки команды:', error);
+      }
+    }
+  </script>
+</body>
+</html>
