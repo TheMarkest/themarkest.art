@@ -95,7 +95,9 @@
   </div>
 
   <script>
-    let bleChar, LEDS=16, refreshRate=10;
+    const SERVICE_UUID        = '4fafc201-1fb5-459e-8fcc-c5c9c331914b';
+    const CHARACTERISTIC_UUID = 'beb5483e-36e1-4688-b7f5-ea07361b26a8';
+    let bleChar, LEDS = 16, refreshRate = 10;
     const picks = [];
 
     // Навигация
@@ -108,128 +110,126 @@
       });
     });
 
-    // Обновление refreshRate
+    // Изменение частоты обновления
     document.getElementById('refreshRate').onchange = e=>{
       refreshRate = parseInt(e.target.value)||10;
     };
 
-    // Ручное управление: создаём пикеры
-    const s1=document.getElementById('strip1'),
-          s2=document.getElementById('strip2');
-    for(let i=0;i<LEDS;i++){
-      const p=document.createElement('input');
-      p.type='color'; p.value='#000000';
-      p.oninput=()=>frameSend([{i,color:p.value}]);
+    // Создаём пикеры вручную
+    const s1 = document.getElementById('strip1'), s2 = document.getElementById('strip2');
+    for (let i = 0; i < LEDS; i++) {
+      const p = document.createElement('input');
+      p.type = 'color'; p.value = '#000000';
+      p.oninput = () => frameSend([{ i, color: p.value }]);
       picks.push(p);
-      (i<LEDS/2?s1:s2).appendChild(p);
+      (i < LEDS/2 ? s1 : s2).appendChild(p);
     }
 
-    // BLE: фильтр по сервис‑UUID, optionalServices тоже
-    async function connect(){
+    // BLE: acceptAllDevices + optionalServices для гарантии появления устройства :contentReference[oaicite:0]{index=0}
+    async function connect() {
       try {
         const device = await navigator.bluetooth.requestDevice({
-          filters:[{services:['4fafc201-1fb5-459e-8fcc-c5c9c331914b']}],  // :contentReference[oaicite:0]{index=0}
-          optionalServices:['4fafc201-1fb5-459e-8fcc-c5c9c331914b']
+          acceptAllDevices: true,
+          optionalServices: [ SERVICE_UUID ]
         });
-        const server = await device.gatt.connect();
-        const svc = await server.getPrimaryService('4fafc201-1fb5-459e-8fcc-c5c9c331914b');
-        bleChar = await svc.getCharacteristic('beb5483e-36e1-4688-b7f5-ea07361b26a8');
+        const server  = await device.gatt.connect();
+        const service = await server.getPrimaryService(SERVICE_UUID);
+        bleChar = await service.getCharacteristic(CHARACTERISTIC_UUID);
         await bleChar.startNotifications();
-        bleChar.addEventListener('characteristicvaluechanged',onNotify);
-        document.getElementById('status').innerText='Статус: подключено';
-      } catch(err) {
-        console.error('BLE connect error',err);
-        alert('Не удалось подключиться: '+err);
+        bleChar.addEventListener('characteristicvaluechanged', onNotify);
+        document.getElementById('status').innerText = 'Статус: подключено';
+      } catch (err) {
+        console.error('BLE connect error:', err);
+        alert('Не удалось подключиться: ' + err);
       }
     }
 
-    // Обработка уведомлений ESP32
-    function onNotify(evt){
-      const buf = evt.target.value;
-      for(let i=0;i<LEDS;i++){
-        const r=buf.getUint8(i*3),
-              g=buf.getUint8(i*3+1),
-              b=buf.getUint8(i*3+2);
-        picks[i].value = '#'+((1<<24)|(r<<16)|(g<<8)|b).toString(16).slice(1);
+    // Обработка уведомлений от периферии
+    function onNotify(event) {
+      const buf = event.target.value;
+      for (let i = 0; i < LEDS; i++) {
+        const r = buf.getUint8(i*3),
+              g = buf.getUint8(i*3+1),
+              b = buf.getUint8(i*3+2);
+        picks[i].value = '#' + ((1<<24)|(r<<16)|(g<<8)|b).toString(16).slice(1);
       }
     }
 
-    // HEX→RGB
-    function hexToRgb(hex){
-      hex=hex.replace(/^#/,'');
-      if(hex.length===3)hex=hex.split('').map(c=>c+c).join('');
-      const val=parseInt(hex,16);
-      return {r:(val>>16)&255,g:(val>>8)&255,b:val&255};
+    // Вспомогалки
+    function hexToRgb(hex) {
+      hex = hex.replace(/^#/, '');
+      if (hex.length === 3) hex = hex.split('').map(c=>c+c).join('');
+      const val = parseInt(hex,16);
+      return { r:(val>>16)&255, g:(val>>8)&255, b:val&255 };
     }
 
-    // Отправка кадра
-    async function frameSend(changes){
-      if(!bleChar)return;
-      const buf=new Uint8Array(1+changes.length*4);
-      buf[0]=changes.length;
+    async function frameSend(changes) {
+      if (!bleChar) return;
+      const buf = new Uint8Array(1 + changes.length*4);
+      buf[0] = changes.length;
       changes.forEach((c,k)=>{
-        const {r,g,b}=hexToRgb(c.color);
-        buf[1+4*k]=c.i<0?0xFF:c.i;
-        buf[1+4*k+1]=r; buf[1+4*k+2]=g; buf[1+4*k+3]=b;
+        const {r,g,b} = hexToRgb(c.color);
+        buf[1+4*k]    = c.i<0 ? 0xFF : c.i;
+        buf[1+4*k+1]  = r;
+        buf[1+4*k+2]  = g;
+        buf[1+4*k+3]  = b;
       });
       await bleChar.writeValue(buf);
     }
 
-    // Быстрая заливка
-    function quick(s,e,id){
-      const hex=document.getElementById(id)?.value||'#000000';
-      const arr=[];
-      for(let i=s;i<e;i++)arr.push({i,color:hex});
+    function quick(s,e,id) {
+      const hex = document.getElementById(id)?.value || '#000000';
+      const arr = [];
+      for (let i=s; i<e; i++) arr.push({ i, color: hex });
       frameSend(arr);
     }
 
-    // Анимации
-    function startAnimation(name){
-      const ms=1000/refreshRate;
-      if(name==='blink')blinkAll(ms);
-      if(name==='chase')chase(ms);
-      if(name==='rainbow')rainbow(ms);
+    function startAnimation(name) {
+      const ms = 1000 / refreshRate;
+      if (name === 'blink')      blinkAll(ms);
+      else if (name === 'chase') chase(ms);
+      else if (name === 'rainbow')rainbow(ms);
     }
-    async function blinkAll(ms){
-      while(true){
-        quick(0,LEDS,'colorAll');
-        await new Promise(r=>setTimeout(r,ms));
-        frameSend([{i:-1,color:'#000000'}]);
-        await new Promise(r=>setTimeout(r,ms));
+    async function blinkAll(ms) {
+      while (true) {
+        quick(0, LEDS, 'colorAll');
+        await new Promise(r=>setTimeout(r, ms));
+        frameSend([{ i:-1, color:'#000000' }]);
+        await new Promise(r=>setTimeout(r, ms));
       }
     }
-    async function chase(ms){
-      while(true){
-        frameSend([{i:-1,color:'#000000'}]);
-        for(let i=0;i<LEDS;i++){
-          frameSend([{i,color:'#00ffff'}]);
-          await new Promise(r=>setTimeout(r,ms));
-          frameSend([{i,color:'#000000'}]);
+    async function chase(ms) {
+      while (true) {
+        frameSend([{ i:-1, color:'#000000' }]);
+        for (let i=0; i<LEDS; i++) {
+          frameSend([{ i, color:'#00ffff' }]);
+          await new Promise(r=>setTimeout(r, ms));
+          frameSend([{ i, color:'#000000' }]);
         }
       }
     }
-    async function rainbow(ms){
-      const wheel=pos=>{
-        pos=255-pos;
-        if(pos<85)return {r:255-pos*3,g:0,b:pos*3};
-        if(pos<170)pos-=85,r=0,g=pos*3,b=255-pos*3;
-        else pos-=170,r=pos*3,g=255-pos*3,b=0;
-        return {r,g,b};
+    async function rainbow(ms) {
+      const wheel = pos => {
+        pos = 255 - pos;
+        if (pos < 85) return { r:255-pos*3, g:0, b:pos*3 };
+        if (pos < 170) pos -= 85, r=0, g=pos*3, b=255-pos*3;
+        else pos -= 170, r=pos*3, g=255-pos*3, b=0;
+        return { r, g, b };
       };
-      while(true){
-        for(let j=0;j<256;j+=Math.ceil(256/LEDS)){
-          const arr=[];
-          for(let i=0;i<LEDS;i++){
-            const c=wheel((i*256/LEDS+j)&255);
-            arr.push({i,color:'#'+((1<<24)|(c.r<<16)|(c.g<<8)|c.b).toString(16).slice(1)});
+      while (true) {
+        for (let j=0; j<256; j+=Math.ceil(256/LEDS)) {
+          const arr = [];
+          for (let i=0; i<LEDS; i++) {
+            const c = wheel((i*256/LEDS + j) & 255);
+            arr.push({ i, color:'#'+((1<<24)|(c.r<<16)|(c.g<<8)|c.b).toString(16).slice(1) });
           }
           frameSend(arr);
-          await new Promise(r=>setTimeout(r,ms));
+          await new Promise(r=>setTimeout(r, ms));
         }
       }
     }
 
-    // Стробоскоп и цветомузыка — без изменений...
+    // Стробоскоп и цветомузыка без изменений...
   </script>
 </body>
 </html>
