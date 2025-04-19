@@ -1,191 +1,137 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="utf-8">
-  <title>Управление NeoPixel Стрипами</title>
-  <style>
-    body {
-      font-family: sans-serif;
-      text-align: center;
-    }
-    #controls {
-      margin: 10px 0;
-    }
-    #strips {
-      display: flex;
-      justify-content: space-around;
-      align-items: flex-start;
-      margin-top: 20px;
-    }
-    .strip-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    .led-column {
-      display: grid;
-      grid-template-rows: repeat(8, 40px);
-      grid-gap: 5px;
-    }
-    .led-column input[type="color"] {
-      width: 40px;
-      height: 40px;
-      border: none;
-      cursor: pointer;
-    }
-    .quick-control {
-      margin-top: 10px;
-    }
-    .quick-control input[type="color"] {
-      vertical-align: middle;
-    }
-    .quick-control button {
-      margin-left: 5px;
-    }
-    #global-controls {
-      margin: 20px 0;
-    }
-    #animations button {
-      margin: 0 5px;
-      padding: 5px 10px;
-    }
-  </style>
+<head><meta charset="utf-8"><title>Frame‑LED Control</title>
+<style>
+  body { font-family:sans-serif; text-align:center }
+  #strips { display:flex; justify-content:space-around; margin-top:20px }
+  .strip { display:grid; grid-template-rows:repeat(8,40px); gap:5px }
+  input[type=color] { width:40px; height:40px; border:none }
+  #controls, #anims { margin:15px }
+  #controls input, #controls button,
+  #anims button { margin:0 5px; padding:5px 10px }
+</style>
 </head>
 <body>
-  <h1>Управление NeoPixel Стрипами</h1>
-  <button onclick="connect()">Подключиться к устройству</button>
-  <p id="status">Статус: не подключено</p>
+  <h1>Frame‑LED Control</h1>
+  <button onclick="connect()">Connect</button>
+  <p id="status">Disconnected</p>
 
   <div id="strips">
-    <!-- Первая лента слева -->
-    <div class="strip-container">
-      <h3>Лента 1</h3>
-      <div id="strip1" class="led-column"></div>
-      <div class="quick-control">
-        <input type="color" id="colorStrip1" value="#ff0000">
-        <button onclick="setStripColor(0, 8, document.getElementById('colorStrip1').value)">Задать всю ленту</button>
-      </div>
-    </div>
-    <!-- Вторая лента справа -->
-    <div class="strip-container">
-      <h3>Лента 2</h3>
-      <div id="strip2" class="led-column"></div>
-      <div class="quick-control">
-        <input type="color" id="colorStrip2" value="#00ff00">
-        <button onclick="setStripColor(8, 16, document.getElementById('colorStrip2').value)">Задать всю ленту</button>
-      </div>
-    </div>
+    <div class="strip" id="s1"></div>
+    <div class="strip" id="s2"></div>
   </div>
 
-  <!-- Глобальные кнопки -->
-  <div id="global-controls">
-    <input type="color" id="colorAll" value="#0000ff">
-    <button onclick="setStripColor(0, 16, document.getElementById('colorAll').value)">Задать всем светодиодам</button>
+  <div id="controls">
+    <input type="color" id="c1" value="#ff0000">
+    <button onclick="quick(0,8,'c1')">All Strip 1</button>
+    <input type="color" id="c2" value="#00ff00">
+    <button onclick="quick(8,16,'c2')">All Strip 2</button>
+    <input type="color" id="call" value="#0000ff">
+    <button onclick="quick(0,16,'call')">All LEDs</button>
   </div>
 
-  <!-- Анимации -->
-  <div id="animations">
-    <button onclick="blinkAll()">Мигание</button>
-    <button onclick="chase()">Бегущий огонь</button>
-    <button onclick="rainbow()">Радуга</button>
+  <div id="anims">
+    <button onclick="animBlink()">Blink</button>
+    <button onclick="animChase()">Chase</button>
+    <button onclick="animRainbow()">Rainbow</button>
   </div>
 
-  <script>
-    let bleCharacteristic;
-    const LED_COUNT = 16;
+<script>
+let charac, LEDS=16;
+let picks = [];
 
-    // Инициализация столбцов для picker'ов
-    for (let i = 0; i < LED_COUNT; i++) {
-      const col = document.createElement('div');
-      col.className = 'led-cell';
-      const picker = document.createElement('input');
-      picker.type = 'color';
-      picker.value = '#000000';
-      picker.addEventListener('input', () => sendColor(i, picker.value));
-      if (i < 8) {
-        document.getElementById('strip1').appendChild(picker);
-      } else {
-        document.getElementById('strip2').appendChild(picker);
-      }
-    }
+// создаём цветопики
+for(let i=0;i<LEDS;i++){
+  let p = document.createElement('input');
+  p.type='color'; p.value='#000';
+  p.oninput = ()=> frameSend([{i,hex:p.value}]);
+  picks.push(p);
+  (i<8?document.getElementById('s1'):document.getElementById('s2')).append(p);
+}
 
-    async function connect() {
-      try {
-        const device = await navigator.bluetooth.requestDevice({
-          filters: [{ name: 'ESP32_NeoPixel' }],
-          optionalServices: ['4fafc201-1fb5-459e-8fcc-c5c9c331914b']
-        });
-        const server = await device.gatt.connect();
-        const service = await server.getPrimaryService('4fafc201-1fb5-459e-8fcc-c5c9c331914b');
-        bleCharacteristic = await service.getCharacteristic('beb5483e-36e1-4688-b7f5-ea07361b26a8');
-        document.getElementById('status').innerText = 'Статус: подключено';
-        console.log('Соединение установлено');
-      } catch (e) {
-        console.error('BLE ошибка:', e);
-        alert('Ошибка подключения: ' + e);
-      }
-    }
+async function connect(){
+  const dev = await navigator.bluetooth.requestDevice({
+    filters:[{name:'ESP32_Frame'}],
+    optionalServices:['4fafc201-1fb5-459e-8fcc-c5c9c331914b']
+  });
+  const srv = await dev.gatt.connect();
+  const svc = await srv.getPrimaryService('4fafc201-1fb5-459e-8fcc-c5c9c331914b');
+  charac = await svc.getCharacteristic('beb5483e-36e1-4688-b7f5-ea07361b26a8');
+  await charac.startNotifications();
+  charac.addEventListener('characteristicvaluechanged', onNotify);
+  document.getElementById('status').innerText='Connected';
+}
 
-    function hexToRgb(hex) {
-      hex = hex.replace('#', '');
-      if (hex.length === 3) hex = hex.split('').map(h => h+h).join('');
-      const num = parseInt(hex, 16);
-      return { r: num>>16 & 255, g: num>>8 & 255, b: num & 255 };
-    }
+// обновление полного кадра — приход уведомления
+function onNotify(e){
+  let dv = e.target.value;
+  for(let i=0;i<LEDS;i++){
+    let r=dv.getUint8(i*3), g=dv.getUint8(i*3+1), b=dv.getUint8(i*3+2);
+    let hx = '#'+((1<<24)|(r<<16)|(g<<8)|b).toString(16).slice(1);
+    picks[i].value = hx;
+  }
+}
 
-    async function sendCommand(cmd) {
-      if (!bleCharacteristic) return;
-      const data = new TextEncoder().encode(cmd);
-      await bleCharacteristic.writeValue(data);
-    }
+// отправка единого кадра из массива {i,hex}
+async function frameSend(arr){
+  let buf = new Uint8Array(1 + arr.length*4);
+  buf[0] = arr.length;
+  arr.forEach((x,idx)=>{
+    let rgb = hexToRgb(document.getElementById(x.hex?x.hex:'') || x.hex || x);
+    let base = 1 + idx*4;
+    buf[base]   = x.i;
+    buf[base+1] = rgb.r;
+    buf[base+2] = rgb.g;
+    buf[base+3] = rgb.b;
+  });
+  await charac.writeValue(buf);
+}
 
-    async function sendColor(index, hex) {
-      const {r,g,b} = hexToRgb(hex);
-      const cmd = `I${index}:R${r},G${g},B${b}`;
-      await sendCommand(cmd);
-    }
+function quick(s,e,id){
+  let h = document.getElementById(id).value;
+  let arr = [];
+  for(let i=s;i<e;i++) arr.push({i,hex:h});
+  frameSend(arr);
+}
 
-    // Задать цвет для диапазона [start, end)
-    async function setStripColor(start, end, hex) {
-      for (let i = start; i < end; i++) {
-        await sendColor(i, hex);
-      }
-    }
+function hexToRgb(hex){
+  hex=hex.replace('#','');
+  if(hex.length==3) hex=hex.split('').map(h=>h+h).join('');
+  let n=parseInt(hex,16);
+  return {r:n>>16&255, g:n>>8&255, b:n&255};
+}
 
-    // Анимации
-    async function blinkAll() {
-      for (let k = 0; k < 6; k++) {
-        await setStripColor(0, 16, k%2 ? '#ffffff' : '#000000');
-        await new Promise(r => setTimeout(r, 300));
-      }
+// анимации примеры
+async function animBlink(){
+  for(let k=0;k<6;k++){
+    quick(0,16, (k%2? 'call':'call'));
+    await new Promise(r=>setTimeout(r,300));
+  }
+}
+async function animChase(){
+  await quick(0,16,'call');  
+  for(let i=0;i<LEDS;i++){
+    await frameSend([{i,hex:'#f00'}]);
+    await new Promise(r=>setTimeout(r,100));
+    await frameSend([{i,hex:'#000'}]);
+  }
+}
+async function animRainbow(){
+  const wheel = p=>{
+    p = 255-p; if(p<85) return {r:255-p*3,g:0,b:p*3};
+    if(p<170) return {p:p-85, r:0, g:p*3, b:255-p*3};
+    p-=170; return {r:p*3,g:255-p*3,b:0};
+  };
+  for(let j=0;j<256;j+=16){
+    let arr=[];
+    for(let i=0;i<LEDS;i++){
+      let c=wheel((i*256/LEDS+j)&255);
+      arr.push({i, hex:('#'+((1<<24)|(c.r<<16)|(c.g<<8)|c.b).toString(16).slice(1))});
     }
-
-    async function chase() {
-      const base = '#0044ff';
-      await setStripColor(0, 16, '#000000');
-      for (let i = 0; i < LED_COUNT; i++) {
-        await sendColor(i, base);
-        await new Promise(r => setTimeout(r, 100));
-        await sendColor(i, '#000000');
-      }
-    }
-
-    async function rainbow() {
-      const wheel = pos => {
-        pos = 255 - pos;
-        if (pos < 85) return {r:255-pos*3, g:0, b:pos*3};
-        if (pos < 170) pos -= 85,  r=0, g=pos*3, b=255-pos*3;
-        else pos -= 170, r=pos*3, g=255-pos*3, b=0;
-        return {r,g,b};
-      };
-      for (let j = 0; j < 256; j += 16) {
-        for (let i = 0; i < LED_COUNT; i++) {
-          const c = wheel((i * 256 / LED_COUNT + j) & 255);
-          await sendColor(i, `#${((1<<24)|(c.r<<16)|(c.g<<8)|c.b).toString(16).slice(1)}`);
-        }
-        await new Promise(r => setTimeout(r, 200));
-      }
-    }
-  </script>
+    await frameSend(arr);
+    await new Promise(r=>setTimeout(r,200));
+  }
+}
+</script>
 </body>
 </html>
