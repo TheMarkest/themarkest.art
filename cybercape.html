@@ -1,137 +1,228 @@
 <!DOCTYPE html>
-<html>
-<head><meta charset="utf-8"><title>Frame‑LED Control</title>
-<style>
-  body { font-family:sans-serif; text-align:center }
-  #strips { display:flex; justify-content:space-around; margin-top:20px }
-  .strip { display:grid; grid-template-rows:repeat(8,40px); gap:5px }
-  input[type=color] { width:40px; height:40px; border:none }
-  #controls, #anims { margin:15px }
-  #controls input, #controls button,
-  #anims button { margin:0 5px; padding:5px 10px }
-</style>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <!-- Метатег для корректного отображения на мобильных устройствах -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">  <!-- :contentReference[oaicite:0]{index=0} -->
+  <title>Управление NeoPixel Стрипами</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: sans-serif;
+      text-align: center;
+    }
+
+    button {
+      padding: 8px 12px;
+      margin: 5px;
+      font-size: 1rem;
+    }
+
+    #strips {
+      display: flex;
+      justify-content: space-around;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      margin: 20px;
+    }
+
+    .strip-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 10px;
+    }
+
+    .led-column {
+      display: grid;
+      grid-template-rows: repeat(8, 40px);
+      grid-gap: 5px;
+    }
+
+    .led-column input[type="color"] {
+      width: 40px;
+      height: 40px;
+      border: none;
+      cursor: pointer;
+    }
+
+    .quick-control {
+      margin-top: 10px;
+    }
+
+    #controls, #anims {
+      margin: 15px 0;
+    }
+
+    /* Адаптация на экранах до 600px: колонки становятся вертикальными */ 
+    @media (max-width: 600px) {
+      #strips {
+        flex-direction: column;           /* :contentReference[oaicite:1]{index=1} */
+        align-items: center;
+      }
+      .strip-container {
+        width: 90%;
+      }
+    }
+  </style>
 </head>
 <body>
-  <h1>Frame‑LED Control</h1>
-  <button onclick="connect()">Connect</button>
-  <p id="status">Disconnected</p>
+  <h1>Управление NeoPixel Стрипами</h1>
+  <button onclick="connect()">Подключиться к устройству</button>
+  <p id="status">Статус: не подключено</p>
 
   <div id="strips">
-    <div class="strip" id="s1"></div>
-    <div class="strip" id="s2"></div>
+    <div class="strip-container">
+      <h3>Лента 1</h3>
+      <div id="strip1" class="led-column"></div>
+      <div class="quick-control">
+        <input type="color" id="colorStrip1" value="#ff0000">
+        <button onclick="quick(0,8,'colorStrip1')">Задать всю ленту 1</button>
+      </div>
+    </div>
+    <div class="strip-container">
+      <h3>Лента 2</h3>
+      <div id="strip2" class="led-column"></div>
+      <div class="quick-control">
+        <input type="color" id="colorStrip2" value="#00ff00">
+        <button onclick="quick(8,16,'colorStrip2')">Задать всю ленту 2</button>
+      </div>
+    </div>
   </div>
 
   <div id="controls">
-    <input type="color" id="c1" value="#ff0000">
-    <button onclick="quick(0,8,'c1')">All Strip 1</button>
-    <input type="color" id="c2" value="#00ff00">
-    <button onclick="quick(8,16,'c2')">All Strip 2</button>
-    <input type="color" id="call" value="#0000ff">
-    <button onclick="quick(0,16,'call')">All LEDs</button>
+    <input type="color" id="colorAll" value="#0000ff">
+    <button onclick="quick(0,16,'colorAll')">Задать всем светодиодам</button>
   </div>
 
   <div id="anims">
-    <button onclick="animBlink()">Blink</button>
-    <button onclick="animChase()">Chase</button>
-    <button onclick="animRainbow()">Rainbow</button>
+    <button onclick="blinkAll()">Мигание (∞)</button>
+    <button onclick="chase()">Бегущий огонь (∞)</button>
+    <button onclick="rainbow()">Радуга (∞)</button>
   </div>
 
-<script>
-let charac, LEDS=16;
-let picks = [];
+  <script>
+    let bleCharacteristic;
+    const LEDS = 16;
+    const picks = [];
 
-// создаём цветопики
-for(let i=0;i<LEDS;i++){
-  let p = document.createElement('input');
-  p.type='color'; p.value='#000';
-  p.oninput = ()=> frameSend([{i,hex:p.value}]);
-  picks.push(p);
-  (i<8?document.getElementById('s1'):document.getElementById('s2')).append(p);
-}
-
-async function connect(){
-  const dev = await navigator.bluetooth.requestDevice({
-    filters:[{name:'ESP32_Frame'}],
-    optionalServices:['4fafc201-1fb5-459e-8fcc-c5c9c331914b']
-  });
-  const srv = await dev.gatt.connect();
-  const svc = await srv.getPrimaryService('4fafc201-1fb5-459e-8fcc-c5c9c331914b');
-  charac = await svc.getCharacteristic('beb5483e-36e1-4688-b7f5-ea07361b26a8');
-  await charac.startNotifications();
-  charac.addEventListener('characteristicvaluechanged', onNotify);
-  document.getElementById('status').innerText='Connected';
-}
-
-// обновление полного кадра — приход уведомления
-function onNotify(e){
-  let dv = e.target.value;
-  for(let i=0;i<LEDS;i++){
-    let r=dv.getUint8(i*3), g=dv.getUint8(i*3+1), b=dv.getUint8(i*3+2);
-    let hx = '#'+((1<<24)|(r<<16)|(g<<8)|b).toString(16).slice(1);
-    picks[i].value = hx;
-  }
-}
-
-// отправка единого кадра из массива {i,hex}
-async function frameSend(arr){
-  let buf = new Uint8Array(1 + arr.length*4);
-  buf[0] = arr.length;
-  arr.forEach((x,idx)=>{
-    let rgb = hexToRgb(document.getElementById(x.hex?x.hex:'') || x.hex || x);
-    let base = 1 + idx*4;
-    buf[base]   = x.i;
-    buf[base+1] = rgb.r;
-    buf[base+2] = rgb.g;
-    buf[base+3] = rgb.b;
-  });
-  await charac.writeValue(buf);
-}
-
-function quick(s,e,id){
-  let h = document.getElementById(id).value;
-  let arr = [];
-  for(let i=s;i<e;i++) arr.push({i,hex:h});
-  frameSend(arr);
-}
-
-function hexToRgb(hex){
-  hex=hex.replace('#','');
-  if(hex.length==3) hex=hex.split('').map(h=>h+h).join('');
-  let n=parseInt(hex,16);
-  return {r:n>>16&255, g:n>>8&255, b:n&255};
-}
-
-// анимации примеры
-async function animBlink(){
-  for(let k=0;k<6;k++){
-    quick(0,16, (k%2? 'call':'call'));
-    await new Promise(r=>setTimeout(r,300));
-  }
-}
-async function animChase(){
-  await quick(0,16,'call');  
-  for(let i=0;i<LEDS;i++){
-    await frameSend([{i,hex:'#f00'}]);
-    await new Promise(r=>setTimeout(r,100));
-    await frameSend([{i,hex:'#000'}]);
-  }
-}
-async function animRainbow(){
-  const wheel = p=>{
-    p = 255-p; if(p<85) return {r:255-p*3,g:0,b:p*3};
-    if(p<170) return {p:p-85, r:0, g:p*3, b:255-p*3};
-    p-=170; return {r:p*3,g:255-p*3,b:0};
-  };
-  for(let j=0;j<256;j+=16){
-    let arr=[];
-    for(let i=0;i<LEDS;i++){
-      let c=wheel((i*256/LEDS+j)&255);
-      arr.push({i, hex:('#'+((1<<24)|(c.r<<16)|(c.g<<8)|c.b).toString(16).slice(1))});
+    // Инициализация 16 пикеров
+    for (let i = 0; i < LEDS; i++) {
+      const p = document.createElement('input');
+      p.type = 'color';
+      p.value = '#000000';
+      p.oninput = () => frameSend([{ i, color: p.value }]);
+      picks.push(p);
+      (i < 8 ? document.getElementById('strip1') : document.getElementById('strip2')).appendChild(p);
     }
-    await frameSend(arr);
-    await new Promise(r=>setTimeout(r,200));
-  }
-}
-</script>
+
+    // Устанавливаем соединение с ESP32 по BLE
+    async function connect() {
+      try {
+        const device = await navigator.bluetooth.requestDevice({
+          filters: [{ name: 'ESP32_Frame' }],
+          optionalServices: ['4fafc201-1fb5-459e-8fcc-c5c9c331914b']
+        });
+        const server = await device.gatt.connect();
+        const service = await server.getPrimaryService('4fafc201-1fb5-459e-8fcc-c5c9c331914b');
+        bleCharacteristic = await service.getCharacteristic('beb5483e-36e1-4688-b7f5-ea07361b26a8');
+        await bleCharacteristic.startNotifications();
+        bleCharacteristic.addEventListener('characteristicvaluechanged', onNotify);
+        document.getElementById('status').innerText = 'Статус: подключено';
+      } catch (e) {
+        console.error('BLE ошибка:', e);
+        alert('Ошибка подключения: ' + e);
+      }
+    }
+
+    // Обработка уведомлений от ESP32
+    function onNotify(event) {
+      const data = event.target.value;
+      for (let i = 0; i < LEDS; i++) {
+        const r = data.getUint8(i*3);
+        const g = data.getUint8(i*3 + 1);
+        const b = data.getUint8(i*3 + 2);
+        const hex = '#' + ((1<<24)|(r<<16)|(g<<8)|b).toString(16).slice(1);
+        picks[i].value = hex;
+      }
+    }
+
+    // Преобразование HEX в {r,g,b}
+    function hexToRgb(hex) {
+      hex = hex.replace('#','');
+      if (hex.length === 3) hex = hex.split('').map(h=>h+h).join('');
+      const num = parseInt(hex,16);
+      return { r: num>>16 & 255, g: num>>8 & 255, b: num & 255 };
+    }
+
+    // Отправка кадра: первые байт = число записей, затем [idx,R,G,B]×N
+    async function frameSend(changes) {
+      if (!bleCharacteristic) return;
+      const buf = new Uint8Array(1 + changes.length * 4);
+      buf[0] = changes.length;
+      changes.forEach((c, i) => {
+        const { r, g, b } = hexToRgb(c.color);
+        buf[1 + 4*i]     = c.i;
+        buf[1 + 4*i + 1] = r;
+        buf[1 + 4*i + 2] = g;
+        buf[1 + 4*i + 3] = b;
+      });
+      await bleCharacteristic.writeValue(buf);
+    }
+
+    // Быстрая заливка диапазона [s,e)
+    function quick(s, e, inputId) {
+      const hex = document.getElementById(inputId).value;
+      const arr = [];
+      for (let i = s; i < e; i++) arr.push({ i, color: hex });
+      frameSend(arr);
+    }
+
+    // Анимации, повторяются бесконечно
+    async function blinkAll() {
+      while (true) {
+        quick(0, 16, 'colorAll');
+        await new Promise(r => setTimeout(r, 500));
+        quick(0, 16, ''); // пустой inputId — передаётся чёрный
+        await new Promise(r => setTimeout(r, 500));
+      }
+    }
+
+    async function chase() {
+      while (true) {
+        quick(0, 16, ''); // очистить
+        for (let i = 0; i < LEDS; i++) {
+          await frameSend([{ i, color: '#00ffff' }]);
+          await new Promise(r => setTimeout(r, 100));
+          await frameSend([{ i, color: '#000000' }]);
+        }
+      }
+    }
+
+    async function rainbow() {
+      const wheel = pos => {
+        pos = 255 - pos;
+        if (pos < 85) return { r:255-pos*3, g:0, b:pos*3 };
+        if (pos < 170) pos -= 85,  r=0, g=pos*3, b=255-pos*3;
+        else pos -= 170, r=pos*3, g=255-pos*3, b=0;
+        return { r, g, b };
+      };
+      while (true) {
+        for (let j = 0; j < 256; j += 16) {
+          const arr = [];
+          for (let i = 0; i < LEDS; i++) {
+            const c = wheel((i * 256 / LEDS + j) & 255);
+            arr.push({
+              i,
+              color: '#'+((1<<24)|(c.r<<16)|(c.g<<8)|c.b).toString(16).slice(1)
+            });
+          }
+          await frameSend(arr);
+          await new Promise(r => setTimeout(r, 200));
+        }
+      }
+    }
+  </script>
 </body>
 </html>
