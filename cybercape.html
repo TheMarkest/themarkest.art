@@ -2,53 +2,113 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Управление отдельными светодиодами</title>
+  <title>Управление NeoPixel Стрипами</title>
   <style>
-    /* Используем CSS для организации элементов в виде сетки */
-    #ledContainer {
-      display: grid;
-      grid-template-columns: repeat(8, 50px);
-      grid-gap: 10px;
+    body {
+      font-family: sans-serif;
+      text-align: center;
+    }
+    #controls {
+      margin: 10px 0;
+    }
+    #strips {
+      display: flex;
+      justify-content: space-around;
+      align-items: flex-start;
       margin-top: 20px;
     }
-    #ledContainer input[type="color"] {
-      width: 50px;
-      height: 50px;
+    .strip-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .led-column {
+      display: grid;
+      grid-template-rows: repeat(8, 40px);
+      grid-gap: 5px;
+    }
+    .led-column input[type="color"] {
+      width: 40px;
+      height: 40px;
       border: none;
       cursor: pointer;
+    }
+    .quick-control {
+      margin-top: 10px;
+    }
+    .quick-control input[type="color"] {
+      vertical-align: middle;
+    }
+    .quick-control button {
+      margin-left: 5px;
+    }
+    #global-controls {
+      margin: 20px 0;
+    }
+    #animations button {
+      margin: 0 5px;
+      padding: 5px 10px;
     }
   </style>
 </head>
 <body>
-  <h1>Управление отдельными светодиодами</h1>
+  <h1>Управление NeoPixel Стрипами</h1>
   <button onclick="connect()">Подключиться к устройству</button>
   <p id="status">Статус: не подключено</p>
-  <div id="ledContainer"></div>
-  
+
+  <div id="strips">
+    <!-- Первая лента слева -->
+    <div class="strip-container">
+      <h3>Лента 1</h3>
+      <div id="strip1" class="led-column"></div>
+      <div class="quick-control">
+        <input type="color" id="colorStrip1" value="#ff0000">
+        <button onclick="setStripColor(0, 8, document.getElementById('colorStrip1').value)">Задать всю ленту</button>
+      </div>
+    </div>
+    <!-- Вторая лента справа -->
+    <div class="strip-container">
+      <h3>Лента 2</h3>
+      <div id="strip2" class="led-column"></div>
+      <div class="quick-control">
+        <input type="color" id="colorStrip2" value="#00ff00">
+        <button onclick="setStripColor(8, 16, document.getElementById('colorStrip2').value)">Задать всю ленту</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Глобальные кнопки -->
+  <div id="global-controls">
+    <input type="color" id="colorAll" value="#0000ff">
+    <button onclick="setStripColor(0, 16, document.getElementById('colorAll').value)">Задать всем светодиодам</button>
+  </div>
+
+  <!-- Анимации -->
+  <div id="animations">
+    <button onclick="blinkAll()">Мигание</button>
+    <button onclick="chase()">Бегущий огонь</button>
+    <button onclick="rainbow()">Радуга</button>
+  </div>
+
   <script>
-    // Глобальные переменные для BLE
-    let bleDevice;
     let bleCharacteristic;
-    
-    // Количество светодиодов для управления
     const LED_COUNT = 16;
-    
-    // Заполняем контейнер элементами выбора цвета для каждого светодиода
-    const ledContainer = document.getElementById("ledContainer");
+
+    // Инициализация столбцов для picker'ов
     for (let i = 0; i < LED_COUNT; i++) {
-      // Создаем input для выбора цвета
-      const colorPicker = document.createElement("input");
-      colorPicker.type = "color";
-      colorPicker.id = "led" + i;
-      colorPicker.value = "#000000";  // исходный цвет (выключено)
-      // При изменении цвета вызываем функцию отправки команды
-      colorPicker.addEventListener("input", () => {
-        sendColor(i, colorPicker.value);
-      });
-      ledContainer.appendChild(colorPicker);
+      const col = document.createElement('div');
+      col.className = 'led-cell';
+      const picker = document.createElement('input');
+      picker.type = 'color';
+      picker.value = '#000000';
+      picker.addEventListener('input', () => sendColor(i, picker.value));
+      if (i < 8) {
+        document.getElementById('strip1').appendChild(picker);
+      } else {
+        document.getElementById('strip2').appendChild(picker);
+      }
     }
-    
-    // Функция для подключения к BLE устройству
+
     async function connect() {
       try {
         const device = await navigator.bluetooth.requestDevice({
@@ -58,45 +118,72 @@
         const server = await device.gatt.connect();
         const service = await server.getPrimaryService('4fafc201-1fb5-459e-8fcc-c5c9c331914b');
         bleCharacteristic = await service.getCharacteristic('beb5483e-36e1-4688-b7f5-ea07361b26a8');
-        document.getElementById("status").innerText = "Статус: подключено";
-        console.log("Соединение установлено");
-        alert("Соединение установлено");
-      } catch (error) {
-        console.error("Ошибка подключения:", error);
-        alert("Ошибка подключения: " + error);
+        document.getElementById('status').innerText = 'Статус: подключено';
+        console.log('Соединение установлено');
+      } catch (e) {
+        console.error('BLE ошибка:', e);
+        alert('Ошибка подключения: ' + e);
       }
     }
-    
-    // Функция для преобразования HEX-цвета в объект с RGB-компонентами
+
     function hexToRgb(hex) {
-      hex = hex.replace(/^#/, '');
-      if (hex.length === 3) {
-        hex = hex.split('').map(c => c + c).join('');
-      }
-      const bigint = parseInt(hex, 16);
-      const r = (bigint >> 16) & 255;
-      const g = (bigint >> 8) & 255;
-      const b = bigint & 255;
-      return { r, g, b };
+      hex = hex.replace('#', '');
+      if (hex.length === 3) hex = hex.split('').map(h => h+h).join('');
+      const num = parseInt(hex, 16);
+      return { r: num>>16 & 255, g: num>>8 & 255, b: num & 255 };
     }
-    
-    // Функция для отправки BLE команды с цветом для конкретного светодиода
-    async function sendColor(ledIndex, hexColor) {
-      if (!bleCharacteristic) {
-        console.error("BLE устройство не подключено");
-        return;
+
+    async function sendCommand(cmd) {
+      if (!bleCharacteristic) return;
+      const data = new TextEncoder().encode(cmd);
+      await bleCharacteristic.writeValue(data);
+    }
+
+    async function sendColor(index, hex) {
+      const {r,g,b} = hexToRgb(hex);
+      const cmd = `I${index}:R${r},G${g},B${b}`;
+      await sendCommand(cmd);
+    }
+
+    // Задать цвет для диапазона [start, end)
+    async function setStripColor(start, end, hex) {
+      for (let i = start; i < end; i++) {
+        await sendColor(i, hex);
       }
-      const rgb = hexToRgb(hexColor);
-      // Формируем строковую команду, например: "I3:R123,G45,B67" для светодиода с индексом 3
-      const command = `I${ledIndex}:R${rgb.r},G${rgb.g},B${rgb.b}`;
-      console.log("Отправка команды:", command);
-      try {
-        const encoder = new TextEncoder();
-        const data = encoder.encode(command);
-        await bleCharacteristic.writeValue(data);
-        console.log("Команда отправлена успешно");
-      } catch (error) {
-        console.error("Ошибка отправки команды:", error);
+    }
+
+    // Анимации
+    async function blinkAll() {
+      for (let k = 0; k < 6; k++) {
+        await setStripColor(0, 16, k%2 ? '#ffffff' : '#000000');
+        await new Promise(r => setTimeout(r, 300));
+      }
+    }
+
+    async function chase() {
+      const base = '#0044ff';
+      await setStripColor(0, 16, '#000000');
+      for (let i = 0; i < LED_COUNT; i++) {
+        await sendColor(i, base);
+        await new Promise(r => setTimeout(r, 100));
+        await sendColor(i, '#000000');
+      }
+    }
+
+    async function rainbow() {
+      const wheel = pos => {
+        pos = 255 - pos;
+        if (pos < 85) return {r:255-pos*3, g:0, b:pos*3};
+        if (pos < 170) pos -= 85,  r=0, g=pos*3, b=255-pos*3;
+        else pos -= 170, r=pos*3, g=255-pos*3, b=0;
+        return {r,g,b};
+      };
+      for (let j = 0; j < 256; j += 16) {
+        for (let i = 0; i < LED_COUNT; i++) {
+          const c = wheel((i * 256 / LED_COUNT + j) & 255);
+          await sendColor(i, `#${((1<<24)|(c.r<<16)|(c.g<<8)|c.b).toString(16).slice(1)}`);
+        }
+        await new Promise(r => setTimeout(r, 200));
       }
     }
   </script>
