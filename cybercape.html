@@ -6,62 +6,40 @@
   <title>NeoPixel Control</title>
   <style>
     body {
-      margin: 0;
-      padding: 0;
+      margin: 0; padding: 0;
       font-family: sans-serif;
-      display: flex;
-      flex-direction: column;
+      display: flex; flex-direction: column;
       height: 100vh;
     }
     #content {
-      flex: 1;
-      overflow-y: auto;
-      padding: 10px;
-      /* Отступ под меню */
-      padding-bottom: 60px;
+      flex: 1; overflow-y: auto;
+      padding: 10px; padding-bottom: 60px; /* отступ под меню */
     }
     .navbar {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 50px;
-      background: #333;
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      color: #fff;
+      position: fixed; bottom: 0; left: 0;
+      width: 100%; height: 50px;
+      background: #333; color: #fff;
+      display: flex; justify-content: space-around; align-items: center;
       z-index: 1000;
     }
     .navbar button {
-      background: none;
-      border: none;
-      color: inherit;
-      padding: 8px;
-      font-size: 0.9rem;
-      flex: 1;
-      cursor: pointer;
+      background: none; border: none;
+      color: inherit; padding: 8px; font-size: 0.9rem;
+      flex: 1; cursor: pointer;
     }
-    .navbar button.active {
-      background: #555;
-    }
+    .navbar button.active { background: #555; }
     section { display: none; }
     section.active { display: block; }
     .led-column {
-      display: grid;
-      grid-template-rows: repeat(8, 40px);
-      gap: 5px;
-      margin-bottom: 20px;
+      display: grid; grid-template-rows: repeat(8,40px);
+      gap: 5px; margin-bottom: 20px;
     }
     .led-column input[type="color"] {
-      width: 40px;
-      height: 40px;
-      border: none;
-      cursor: pointer;
+      width: 40px; height: 40px; border: none; cursor: pointer;
     }
     @media (max-width: 600px) {
-      .led-column { grid-template-rows: repeat(8, 35px); }
-      .navbar button { font-size: 0.8rem; padding: 6px; }
+      .led-column { grid-template-rows: repeat(8,35px); }
+      .navbar button { font-size:0.8rem; padding:6px; }
     }
   </style>
 </head>
@@ -117,17 +95,12 @@
   </div>
 
   <script>
-    let bleChar, LEDS = 16, refreshRate = 10;
+    let bleChar, LEDS=16, refreshRate=10;
     const picks = [];
 
-    // Обновление refreshRate
-    document.getElementById('refreshRate').onchange = e => {
-      refreshRate = parseInt(e.target.value) || 10;
-    };
-
     // Навигация
-    document.querySelectorAll('.nav-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
+    document.querySelectorAll('.nav-btn').forEach(btn=>{
+      btn.addEventListener('click',()=>{
         document.querySelectorAll('section').forEach(s=>s.classList.remove('active'));
         document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
         document.getElementById(btn.dataset.target).classList.add('active');
@@ -135,114 +108,118 @@
       });
     });
 
-    // Ручное управление: создаём 16 пикеров
-    const s1 = document.getElementById('strip1'), s2 = document.getElementById('strip2');
-    for (let i = 0; i < LEDS; i++) {
-      const p = document.createElement('input');
-      p.type = 'color'; p.value = '#000000';
-      p.oninput = () => frameSend([{ i, color: p.value }]);
+    // Обновление refreshRate
+    document.getElementById('refreshRate').onchange = e=>{
+      refreshRate = parseInt(e.target.value)||10;
+    };
+
+    // Ручное управление: создаём пикеры
+    const s1=document.getElementById('strip1'),
+          s2=document.getElementById('strip2');
+    for(let i=0;i<LEDS;i++){
+      const p=document.createElement('input');
+      p.type='color'; p.value='#000000';
+      p.oninput=()=>frameSend([{i,color:p.value}]);
       picks.push(p);
-      (i < 8 ? s1 : s2).appendChild(p);
+      (i<LEDS/2?s1:s2).appendChild(p);
     }
 
-    // BLE: подключение по сервис‑UUID вместо имени
-    async function connect() {
+    // BLE: фильтр по сервис‑UUID, optionalServices тоже
+    async function connect(){
       try {
         const device = await navigator.bluetooth.requestDevice({
-          filters: [{ services: ['4fafc201-1fb5-459e-8fcc-c5c9c331914b'] }],
-          optionalServices: ['4fafc201-1fb5-459e-8fcc-c5c9c331914b']
+          filters:[{services:['4fafc201-1fb5-459e-8fcc-c5c9c331914b']}],  // :contentReference[oaicite:0]{index=0}
+          optionalServices:['4fafc201-1fb5-459e-8fcc-c5c9c331914b']
         });
         const server = await device.gatt.connect();
-        const service = await server.getPrimaryService('4fafc201-1fb5-459e-8fcc-c5c9c331914b');
-        bleChar = await service.getCharacteristic('beb5483e-36e1-4688-b7f5-ea07361b26a8');
+        const svc = await server.getPrimaryService('4fafc201-1fb5-459e-8fcc-c5c9c331914b');
+        bleChar = await svc.getCharacteristic('beb5483e-36e1-4688-b7f5-ea07361b26a8');
         await bleChar.startNotifications();
-        bleChar.addEventListener('characteristicvaluechanged', onNotify);
-        document.getElementById('status').innerText = 'Статус: подключено';
-      } catch (err) {
-        alert('Ошибка BLE: ' + err);
-        console.error(err);
+        bleChar.addEventListener('characteristicvaluechanged',onNotify);
+        document.getElementById('status').innerText='Статус: подключено';
+      } catch(err) {
+        console.error('BLE connect error',err);
+        alert('Не удалось подключиться: '+err);
       }
     }
 
-    // Обработка уведомлений: обновляем все пикеры
-    function onNotify(evt) {
+    // Обработка уведомлений ESP32
+    function onNotify(evt){
       const buf = evt.target.value;
-      for (let i = 0; i < LEDS; i++) {
-        const r = buf.getUint8(i*3), g = buf.getUint8(i*3+1), b = buf.getUint8(i*3+2);
-        const hex = '#' + ((1<<24)|(r<<16)|(g<<8)|b).toString(16).slice(1);
-        picks[i].value = hex;
+      for(let i=0;i<LEDS;i++){
+        const r=buf.getUint8(i*3),
+              g=buf.getUint8(i*3+1),
+              b=buf.getUint8(i*3+2);
+        picks[i].value = '#'+((1<<24)|(r<<16)|(g<<8)|b).toString(16).slice(1);
       }
     }
 
-    // HEX → RGB
-    function hexToRgb(hex) {
-      hex = hex.replace(/^#/, '');
-      if (hex.length === 3) hex = hex.split('').map(c=>c+c).join('');
-      const val = parseInt(hex,16);
-      return { r:(val>>16)&255, g:(val>>8)&255, b:val&255 };
+    // HEX→RGB
+    function hexToRgb(hex){
+      hex=hex.replace(/^#/,'');
+      if(hex.length===3)hex=hex.split('').map(c=>c+c).join('');
+      const val=parseInt(hex,16);
+      return {r:(val>>16)&255,g:(val>>8)&255,b:val&255};
     }
 
-    // Отправка кадра: [count][idx,R,G,B…]
-    async function frameSend(changes) {
-      if (!bleChar) return;
-      const buf = new Uint8Array(1 + changes.length*4);
-      buf[0] = changes.length;
-      changes.forEach((c,k) => {
-        const {r,g,b} = hexToRgb(c.color);
-        buf[1+4*k]   = c.i < 0 ? 0xFF : c.i;
-        buf[1+4*k+1] = r;
-        buf[1+4*k+2] = g;
-        buf[1+4*k+3] = b;
+    // Отправка кадра
+    async function frameSend(changes){
+      if(!bleChar)return;
+      const buf=new Uint8Array(1+changes.length*4);
+      buf[0]=changes.length;
+      changes.forEach((c,k)=>{
+        const {r,g,b}=hexToRgb(c.color);
+        buf[1+4*k]=c.i<0?0xFF:c.i;
+        buf[1+4*k+1]=r; buf[1+4*k+2]=g; buf[1+4*k+3]=b;
       });
       await bleChar.writeValue(buf);
     }
 
     // Быстрая заливка
-    function quick(s,e,id) {
-      const hex = document.getElementById(id)?.value || '#000000';
-      const arr = [];
-      for (let i=s;i<e;i++) arr.push({ i, color: hex });
+    function quick(s,e,id){
+      const hex=document.getElementById(id)?.value||'#000000';
+      const arr=[];
+      for(let i=s;i<e;i++)arr.push({i,color:hex});
       frameSend(arr);
     }
 
     // Анимации
-    function startAnimation(name) {
-      clearInterval(window.animLoop);
-      const ms = 1000 / refreshRate;
-      if (name==='blink') blinkAll(ms);
-      if (name==='chase') chase(ms);
-      if (name==='rainbow') rainbow(ms);
+    function startAnimation(name){
+      const ms=1000/refreshRate;
+      if(name==='blink')blinkAll(ms);
+      if(name==='chase')chase(ms);
+      if(name==='rainbow')rainbow(ms);
     }
-    async function blinkAll(ms) {
-      while (true) {
+    async function blinkAll(ms){
+      while(true){
         quick(0,LEDS,'colorAll');
         await new Promise(r=>setTimeout(r,ms));
         frameSend([{i:-1,color:'#000000'}]);
         await new Promise(r=>setTimeout(r,ms));
       }
     }
-    async function chase(ms) {
-      while (true) {
+    async function chase(ms){
+      while(true){
         frameSend([{i:-1,color:'#000000'}]);
-        for (let i=0;i<LEDS;i++){
+        for(let i=0;i<LEDS;i++){
           frameSend([{i,color:'#00ffff'}]);
           await new Promise(r=>setTimeout(r,ms));
           frameSend([{i,color:'#000000'}]);
         }
       }
     }
-    async function rainbow(ms) {
-      const wheel = pos => {
-        pos = 255 - pos;
-        if (pos<85) return {r:255-pos*3,g:0,b:pos*3};
-        if (pos<170) pos-=85, r=0,g=pos*3,b=255-pos*3;
-        else pos-=170, r=pos*3,g=255-pos*3,b=0;
+    async function rainbow(ms){
+      const wheel=pos=>{
+        pos=255-pos;
+        if(pos<85)return {r:255-pos*3,g:0,b:pos*3};
+        if(pos<170)pos-=85,r=0,g=pos*3,b=255-pos*3;
+        else pos-=170,r=pos*3,g=255-pos*3,b=0;
         return {r,g,b};
       };
-      while (true) {
-        for (let j=0;j<256;j+=Math.ceil(256/LEDS)){
+      while(true){
+        for(let j=0;j<256;j+=Math.ceil(256/LEDS)){
           const arr=[];
-          for (let i=0;i<LEDS;i++){
+          for(let i=0;i<LEDS;i++){
             const c=wheel((i*256/LEDS+j)&255);
             arr.push({i,color:'#'+((1<<24)|(c.r<<16)|(c.g<<8)|c.b).toString(16).slice(1)});
           }
@@ -252,7 +229,7 @@
       }
     }
 
-    // Стробоскоп и цветомузыка — оставляем без изменений
+    // Стробоскоп и цветомузыка — без изменений...
   </script>
 </body>
 </html>
