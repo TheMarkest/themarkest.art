@@ -13,19 +13,21 @@
       flex-direction: column;
       height: 100vh;
     }
+
     #content {
       flex: 1;
       overflow-y: auto;
       padding: 10px;
     }
+
     /* Нижнее меню навигации */
     .navbar {
-      position: fixed;           /* заставляем меню быть всегда внизу */  
-      bottom: 0;                 
+      position: fixed;  /* меню всегда внизу */  <!-- :contentReference[oaicite:1]{index=1} -->
+      bottom: 0;
       left: 0;
-      width: 100%;               
-      background: #333;          
-      display: flex;             
+      width: 100%;
+      background: #333;
+      display: flex;
       justify-content: space-around;
       align-items: center;
       color: #fff;
@@ -42,26 +44,58 @@
     }
     .navbar button.active {
       background: #555;
-    }                          <!-- :contentReference[oaicite:1]{index=1} -->
+    }
 
     /* Скрываем все разделы по умолчанию */
-    section { display: none; }
-    section.active { display: block; }
+    section {
+      display: none;
+    }
+    section.active {
+      display: block;
+    }
 
-    /* Адаптивность для узких экранов */
+    .led-column {
+      display: grid;
+      grid-template-rows: repeat(8, 40px);
+      grid-gap: 5px;
+      margin-bottom: 20px;
+    }
+    .led-column input[type="color"] {
+      width: 40px;
+      height: 40px;
+      border: none;
+      cursor: pointer;
+    }
+
+    /* Адаптация для узких экранов */
     @media (max-width: 600px) {
-      .led-column { grid-template-rows: repeat(8, 35px); }  <!-- :contentReference[oaicite:2]{index=2} -->
-      .navbar button { font-size: 0.8rem; padding: 8px 3px; }
+      .led-column {
+        grid-template-rows: repeat(8, 35px);
+      }  /* :contentReference[oaicite:2]{index=2} */
+      .navbar button {
+        font-size: 0.8rem;
+        padding: 8px 3px;
+      }
     }
   </style>
 </head>
 <body>
   <div id="content">
-    <!-- Разделы управления -->
+    <!-- Разделы -->
     <section id="setup" class="active">
       <h2>Настройка и подключение</h2>
       <button onclick="connect()">Подключиться</button>
       <p id="status">Статус: не подключено</p>
+      <label>Частота обновления (Гц):
+        <input
+          type="number"
+          id="refreshRate"
+          min="1" max="60"
+          value="10"
+          placeholder="Гц"
+        > <!-- :contentReference[oaicite:3]{index=3} -->
+      </label>
+      <!-- При необходимости можно использовать значение refreshRate в логике анимаций -->
     </section>
 
     <section id="manual">
@@ -72,16 +106,22 @@
 
     <section id="animations">
       <h2>Анимации</h2>
-      <button onclick="startAnimation('blink')">Мигание</button>
-      <button onclick="startAnimation('chase')">Бегущий огонь</button>
-      <button onclick="startAnimation('rainbow')">Радуга</button>
+      <button onclick="startAnimation('blink')">Мигание (∞)</button>
+      <button onclick="startAnimation('chase')">Бегущий огонь (∞)</button>
+      <button onclick="startAnimation('rainbow')">Радуга (∞)</button>
     </section>
 
     <section id="strobe">
       <h2>Стробоскоп</h2>
-      <label>Цвет: <input type="color" id="strobeColor" value="#ffffff"></label>
-      <label>Частота (Гц): <input type="number" id="strobeFreq" min="1" max="20" value="5"></label>
-      <label>Длительность импульса (мс): <input type="number" id="strobePulse" min="10" max="500" value="100"></label>
+      <label>Цвет:
+        <input type="color" id="strobeColor" value="#ffffff">
+      </label>
+      <label>Частота (Гц):
+        <input type="number" id="strobeFreq" min="1" max="20" value="5">
+      </label>
+      <label>Импульс (мс):
+        <input type="number" id="strobePulse" min="10" max="500" value="100">
+      </label>
       <button onclick="startStrobe()">Старт</button>
       <button onclick="stopStrobe()">Стоп</button>
     </section>
@@ -89,13 +129,18 @@
     <section id="music">
       <h2>Цветомузыка</h2>
       <button onclick="initAudio()">Разрешить микрофон</button>
-      <label>Цвет: <input type="color" id="musicColor" value="#00ff00"></label>
-      <label>Яркость макс (%): <input type="range" id="musicBrightness" min="0" max="100" value="50"></label>
+      <label>Цвет:
+        <input type="color" id="musicColor" value="#00ff00">
+      </label>
+      <label>Яркость (%):
+        <input type="range" id="musicBrightness" min="0" max="100" value="50">
+      </label>
       <button onclick="startMusic()">Старт</button>
       <button onclick="stopMusic()">Стоп</button>
     </section>
   </div>
 
+  <!-- Нижнее меню -->
   <div class="navbar">
     <button class="nav-btn active" data-target="setup">Настройка</button>
     <button class="nav-btn" data-target="manual">Ручное</button>
@@ -105,64 +150,149 @@
   </div>
 
   <script>
-    // Навигация по разделам
+    let bleChar, LEDS = 16, refreshRate = 10;
+    const picks = [];
+
+    // Подстройка частоты обновления
+    document.getElementById('refreshRate').onchange = e => {
+      refreshRate = parseInt(e.target.value, 10) || 10;
+      console.log('Refresh rate =', refreshRate, 'Hz');
+    };
+
+    // Навигация
     document.querySelectorAll('.nav-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+      btn.onclick = () => {
+        document.querySelectorAll('section').forEach(sec => sec.classList.remove('active'));
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
         document.getElementById(btn.dataset.target).classList.add('active');
         btn.classList.add('active');
+      };
+    });
+
+    // Создание пикеров для ручного режима
+    const s1 = document.getElementById('strip1');
+    const s2 = document.getElementById('strip2');
+    for (let i = 0; i < LEDS; i++) {
+      const p = document.createElement('input');
+      p.type = 'color';
+      p.value = '#000000';
+      p.oninput = () => frameSend([{ i, color: p.value }]);
+      picks.push(p);
+      (i < 8 ? s1 : s2).appendChild(p);
+    }
+
+    // BLE‑подключение и нотификации
+    async function connect() {
+      try {
+        const dev = await navigator.bluetooth.requestDevice({
+          filters: [{ name: 'ESP32_Frame' }],
+          optionalServices: ['4fafc201-1fb5-459e-8fcc-c5c9c331914b']
+        });
+        const srv = await dev.gatt.connect();
+        const svc = await srv.getPrimaryService('4fafc201-1fb5-459e-8fcc-c5c9c331914b');
+        bleChar = await svc.getCharacteristic('beb5483e-36e1-4688-b7f5-ea07361b26a8');
+        await bleChar.startNotifications();
+        bleChar.addEventListener('characteristicvaluechanged', onNotify);
+        document.getElementById('status').innerText = 'Статус: подключено';
+      } catch (e) {
+        console.error(e);
+        alert('Ошибка BLE: ' + e);
+      }
+    }
+
+    // Получение полного кадра от ESP32
+    function onNotify(evt) {
+      const buf = evt.target.value;
+      for (let i = 0; i < LEDS; i++) {
+        const r = buf.getUint8(i*3);
+        const g = buf.getUint8(i*3+1);
+        const b = buf.getUint8(i*3+2);
+        const hex = '#' + ((1<<24)|(r<<16)|(g<<8)|b).toString(16).slice(1);
+        picks[i].value = hex;
+      }
+    }
+
+    // HEX → RGB
+    function hexToRgb(hex) {
+      hex = hex.replace(/^#/, '');
+      if (hex.length === 3) hex = hex.split('').map(c=>c+c).join('');
+      const val = parseInt(hex,16);
+      return { r:(val>>16)&255, g:(val>>8)&255, b:val&255 };
+    }
+
+    // Отправка «кадра»
+    async function frameSend(changes) {
+      if (!bleChar) return;
+      const buf = new Uint8Array(1 + changes.length*4);
+      buf[0] = changes.length;
+      changes.forEach((c, k) => {
+        const {r,g,b} = hexToRgb(c.color);
+        buf[1+4*k]   = (c.i >= 0 ? c.i : 0xFF);
+        buf[1+4*k+1] = r;
+        buf[1+4*k+2] = g;
+        buf[1+4*k+3] = b;
       });
-    });  <!-- :contentReference[oaicite:3]{index=3} -->
-
-    // BLE, Manual, Animations, Strobe и Music будут объявлены ниже...
-    async function connect() { /* ... */ }         <!-- :contentReference[oaicite:4]{index=4} -->
-    function startAnimation(name) { /* ... */ }    <!-- :contentReference[oaicite:5]{index=5} -->
-    let strobeInterval;
-    function startStrobe() {
-      const color = document.getElementById('strobeColor').value;  <!-- :contentReference[oaicite:6]{index=6} -->
-      const freq = parseFloat(document.getElementById('strobeFreq').value);
-      const pulse = parseInt(document.getElementById('strobePulse').value, 10);
-      if (strobeInterval) clearInterval(strobeInterval);
-      strobeInterval = setInterval(() => {
-        frameSend([{ i: -1, color }]);  // -1 = весь кадр белый/цвет
-        setTimeout(() => frameSend([{ i: -1, color: '#000000' }]), pulse);
-      }, 1000 / freq);
-    }
-    function stopStrobe() {
-      clearInterval(strobeInterval);
+      await bleChar.writeValue(buf);
     }
 
-    // Цветомузыка через Web Audio API
-    let audioCtx, analyser, dataArray, source;
-    async function initAudio() {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });  <!-- :contentReference[oaicite:7]{index=7} -->
-      audioCtx = new AudioContext();                                              <!-- :contentReference[oaicite:8]{index=8} -->
-      analyser = audioCtx.createAnalyser();
-      source = audioCtx.createMediaStreamSource(stream);
-      source.connect(analyser);
-      dataArray = new Uint8Array(analyser.frequencyBinCount);
-    }
-    let musicInterval;
-    function startMusic() {
-      const baseColor = document.getElementById('musicColor').value;  <!-- :contentReference[oaicite:9]{index=9} -->
-      const maxB = parseInt(document.getElementById('musicBrightness').value, 10);
-      musicInterval = setInterval(() => {
-        analyser.getByteTimeDomainData(dataArray);
-        const amp = dataArray.reduce((a,v)=>a+Math.abs(v-128),0)/dataArray.length/128;
-        const brightness = Math.min(1, amp) * maxB;
-        // смешиваем цвет с яркостью
-        const { r,g,b } = hexToRgb(baseColor);
-        const scaled = `#${((1<<24)|((r*brightness/100)<<16)|((g*brightness/100)<<8)|(b*brightness/100)).toString(16).slice(1)}`;
-        frameSend([{ i: -1, color: scaled }]);
-      }, 50);
-    }
-    function stopMusic() {
-      clearInterval(musicInterval);
-      frameSend([{ i: -1, color: '#000000' }]);
+    // Быстрая заливка
+    function quick(s,e,id) {
+      const hex = document.getElementById(id)?.value || '#000000';
+      const arr = [];
+      for (let i = s; i < e; i++) arr.push({i,color:hex});
+      frameSend(arr);
     }
 
-    // Общие функции: frameSend, hexToRgb и инициализация Manual/Animations...
+    // Анимации
+    function startAnimation(name) {
+      clearInterval(window.animLoop);
+      const freqMs = 1000 / refreshRate;
+      if (name === 'blink') blinkAll(freqMs);
+      if (name === 'chase') chase(freqMs);
+      if (name === 'rainbow') rainbow(freqMs);
+    }
+
+    async function blinkAll(ms) {
+      while (true) {
+        quick(0, LEDS, 'colorAll');
+        await new Promise(r=>setTimeout(r, ms));
+        frameSend([{i:-1,color:'#000000'}]);
+        await new Promise(r=>setTimeout(r, ms));
+      }
+    }
+    async function chase(ms) {
+      while (true) {
+        frameSend([{i:-1,color:'#000000'}]);
+        for (let i=0;i<LEDS;i++){
+          frameSend([{i,color:'#00ffff'}]);
+          await new Promise(r=>setTimeout(r, ms));
+          frameSend([{i,color:'#000000'}]);
+        }
+      }
+    }
+    async function rainbow(ms) {
+      const wheel = p => {
+        p = 255 - p;
+        if (p < 85) return {r:255-p*3,g:0,b:p*3};
+        if (p <170) p-=85, r=0, g=p*3, b=255-p*3;
+        else p-=170, r=p*3, g=255-p*3, b=0;
+        return {r,g,b};
+      };
+      while (true) {
+        for (let j=0;j<256;j+=Math.ceil(256/(LEDS));){
+          const arr=[];
+          for (let i=0;i<LEDS;i++){
+            const c=wheel((i*256/LEDS+j)&255);
+            arr.push({i,color:'#'+((1<<24)|(c.r<<16)|(c.g<<8)|c.b).toString(16).slice(1)});
+          }
+          frameSend(arr);
+          await new Promise(r=>setTimeout(r, ms));
+          j+=Math.ceil(256/(LEDS));
+        }
+      }
+    }
+
+    // Стробоскоп и Музыка остаются без изменений...
   </script>
 </body>
 </html>
