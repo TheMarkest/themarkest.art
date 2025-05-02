@@ -12,17 +12,16 @@
       height: 100vh;
     }
     #content {
-      position: relative; /* для абсолютной кнопки Stop */ 
+      position: relative;
       flex: 1; overflow-y: auto;
-      padding: 10px; padding-bottom: 60px; /* место под меню */
+      padding: 10px; padding-bottom: 60px;
     }
-    /* Кнопка «Стоп всех» */
     #stopAllBtn {
       position: absolute; top: 10px; right: 10px;
       padding: 8px 12px; font-size: 0.9rem;
       background: #e74c3c; color: #fff;
       border: none; border-radius: 4px;
-      cursor: pointer; z-index: 1001; /* :contentReference[oaicite:5]{index=5} */
+      cursor: pointer; z-index: 1001;
     }
     .navbar {
       position: fixed; bottom: 0; left: 0;
@@ -43,27 +42,27 @@
     /* Двухколоночный grid для ручного режима */
     #manual {
       display: grid;
-      grid-template-columns: 1fr 1fr; gap: 20px; /* :contentReference[oaicite:6]{index=6} */
+      grid-template-columns: 1fr 1fr; gap: 20px;
     }
     .strip-panel {
       display: flex; flex-direction: column; align-items: center;
     }
     .led-column {
       display: grid;
-      grid-template-rows: repeat(8, 40px); gap: 5px; margin-bottom: 10px; /* :contentReference[oaicite:7]{index=7} */
+      grid-template-rows: repeat(8, 40px); gap: 5px; margin-bottom: 10px;
     }
     .led-column input[type="color"] {
-      width: 40px; height: 40px; border: none; cursor: pointer; /* :contentReference[oaicite:8]{index=8} */
+      width: 40px; height: 40px; border: none; cursor: pointer;
     }
     .quick-control {
       display: flex; align-items: center; margin-bottom: 20px;
     }
     .quick-control input[type="color"] { margin-right: 5px; }
     #global-control {
-      grid-column: 1 / span 2; text-align: center; margin-top: 10px; /* :contentReference[oaicite:9]{index=9} */
+      grid-column: 1 / span 2; text-align: center; margin-top: 10px;
     }
 
-    @media (max-width: 600px) { /* :contentReference[oaicite:10]{index=10} */
+    @media (max-width: 600px) {
       #manual { grid-template-columns: 1fr; }
       .led-column { grid-template-rows: repeat(8, 35px); }
       .navbar button { font-size: 0.8rem; padding: 6px; }
@@ -72,7 +71,6 @@
 </head>
 <body>
   <div id="content">
-    <!-- Кнопка «Стоп всех» -->
     <button id="stopAllBtn" onclick="stopAll()">Стоп всех</button>
 
     <!-- Настройка и подключение -->
@@ -89,19 +87,19 @@
     <section id="manual">
       <h2>Ручное задание цветов</h2>
       <div class="strip-panel">
-        <h3>Лента 1</h3>
+        <h3>Лента 1</h3>
         <div id="strip1" class="led-column"></div>
         <div class="quick-control">
           <input type="color" id="colorStrip1" value="#ff0000">
-          <button onclick="quick(0,8,'colorStrip1')">Залить ленту 1</button>
+          <button onclick="quick(0,8,'colorStrip1')">Залить ленту 1</button>
         </div>
       </div>
       <div class="strip-panel">
-        <h3>Лента 2</h3>
+        <h3>Лента 2</h3>
         <div id="strip2" class="led-column"></div>
         <div class="quick-control">
           <input type="color" id="colorStrip2" value="#00ff00">
-          <button onclick="quick(8,16,'colorStrip2')">Залить ленту 2</button>
+          <button onclick="quick(8,16,'colorStrip2')">Залить ленту 2</button>
         </div>
       </div>
       <div id="global-control">
@@ -123,7 +121,7 @@
       <h2>Стробоскоп</h2>
       <label>Цвет: <input type="color" id="strobeColor" value="#ffffff"></label><br>
       <label>Частота (Гц): <input type="number" id="strobeFreq" min="1" max="20" value="5"></label><br>
-      <label>Импульс (мс): <input type="number" id="strobePulse" min="10" max="500" value="100"></label><br>
+      <label>Длительность импульса (мс): <input type="number" id="strobePulse" min="10" max="500" value="100"></label><br>
       <button onclick="startStrobe()">Старт</button>
       <button onclick="stopStrobe()">Стоп</button>
     </section>
@@ -148,28 +146,25 @@
   </div>
 
   <script>
-    const SERVICE_UUID        = '4fafc201-1fb5-459e-8fcc-c5c9c331914b';
+    // Constants
+    const SERVICE_UUID        = '4fafc201-1fb5-459e-8fcc-c5c9c331914b';  // :contentReference[oaicite:0]{index=0}
     const CHARACTERISTIC_UUID = 'beb5483e-36e1-4688-b7f5-ea07361b26a8';
 
+    // State variables
     let bleChar, LEDS = 16, refreshRate = 10;
     const picks = [];
     let stopFlag = false;
 
-    // Wake Lock API для предотвращения сна экрана :contentReference[oaicite:11]{index=11}
+    // Wake Lock API для предотвращения сна экрана :contentReference[oaicite:1]{index=1}
     let wakeLock = null;
     async function requestWakeLock() {
       try {
         wakeLock = await navigator.wakeLock.request('screen');
-        console.log('Wake Lock активен');
-        wakeLock.addEventListener('release', () =>
-          console.log('Wake Lock был освобождён')
-        );
       } catch (err) {
         console.error(`Ошибка Wake Lock: ${err.name}, ${err.message}`);
       }
     }
-    // При восстановлении видимости снова запрашиваем Wake Lock :contentReference[oaicite:12]{index=12}
-    document.addEventListener('visibilitychange', () => {
+    document.addEventListener('visibilitychange', () => {  // :contentReference[oaicite:2]{index=2}
       if (document.visibilityState === 'visible' && wakeLock !== null) {
         requestWakeLock();
       }
@@ -185,7 +180,7 @@
       });
     });
 
-    // Обработка refreshRate
+    // Обновление refreshRate
     document.getElementById('refreshRate').onchange = e => {
       refreshRate = parseInt(e.target.value, 10) || 10;
     };
@@ -195,33 +190,34 @@
           strip2Div = document.getElementById('strip2');
     for (let i = 0; i < LEDS; i++) {
       const p = document.createElement('input');
-      p.type = 'color'; p.value = '#000000';
+      p.type = 'color'; p.value = '#000000';  // :contentReference[oaicite:3]{index=3}
       p.oninput = () => frameSend([{ i, color: p.value }]);
       picks.push(p);
       if (i < 8) strip1Div.appendChild(p);
       else strip2Div.appendChild(p);
     }
 
-    // BLE‑подключение
+    // BLE-подключение
     async function connect() {
       try {
         const device = await navigator.bluetooth.requestDevice({
-          acceptAllDevices: true, optionalServices: [SERVICE_UUID]
-        });
+          acceptAllDevices: true,
+          optionalServices: [ SERVICE_UUID ]
+        });  // :contentReference[oaicite:4]{index=4}
         const server  = await device.gatt.connect();
         const service = await server.getPrimaryService(SERVICE_UUID);
         bleChar = await service.getCharacteristic(CHARACTERISTIC_UUID);
-        await bleChar.startNotifications();
-        bleChar.addEventListener('characteristicvaluechanged', onNotify);
+        await bleChar.startNotifications();     // :contentReference[oaicite:5]{index=5}
+        bleChar.addEventListener('characteristicvaluechanged', onNotify);  // :contentReference[oaicite:6]{index=6}
         document.getElementById('status').innerText = 'Статус: подключено';
-        requestWakeLock(); // Запрашиваем Wake Lock сразу после подключения :contentReference[oaicite:13]{index=13}
+        requestWakeLock();                       // :contentReference[oaicite:7]{index=7}
       } catch (err) {
         console.error('BLE connect error:', err);
         alert('Не удалось подключиться: ' + err);
       }
     }
 
-    // Уведомления от устройства
+    // Обработка уведомлений
     function onNotify(evt) {
       const buf = evt.target.value;
       for (let i = 0; i < LEDS; i++) {
@@ -243,18 +239,20 @@
     // Отправка кадра
     async function frameSend(changes) {
       if (!bleChar) return;
-      const buf = new Uint8Array(1 + changes.length*4);
+      const buf = new Uint8Array(1 + changes.length * 4);
       buf[0] = changes.length;
       changes.forEach((c,k) => {
         const {r,g,b} = hexToRgb(c.color);
-        buf[1+4*k]   = c.i<0?0xFF:c.i;
-        buf[1+4*k+1] = r; buf[1+4*k+2] = g; buf[1+4*k+3] = b;
+        buf[1+4*k]   = c.i < 0 ? 0xFF : c.i;
+        buf[1+4*k+1] = r;
+        buf[1+4*k+2] = g;
+        buf[1+4*k+3] = b;
       });
-      await bleChar.writeValue(buf);  // :contentReference[oaicite:14]{index=14}
+      await bleChar.writeValue(buf);           // :contentReference[oaicite:8]{index=8}
     }
 
-    // Быстрая заливка
-    function quick(s,e,id) {
+    // Быстрая заливка диапазона
+    function quick(s, e, id) {
       const hex = document.getElementById(id)?.value || '#000000';
       const arr = [];
       for (let i = s; i < e; i++) arr.push({ i, color: hex });
@@ -265,7 +263,7 @@
     async function startAnimation(name) {
       stopAll();
       stopFlag = false;
-      const ms = 1000 / refreshRate;  // :contentReference[oaicite:15]{index=15}
+      const ms = 1000 / refreshRate;            // :contentReference[oaicite:9]{index=9}
       if (name === 'blink') await blinkAll(ms);
       if (name === 'chase') await chase(ms);
       if (name === 'rainbow') await rainbow(ms);
@@ -274,7 +272,7 @@
     async function blinkAll(ms) {
       while (!stopFlag) {
         quick(0, LEDS, 'colorAll');
-        await new Promise(r=>setTimeout(r, ms));  // :contentReference[oaicite:16]{index=16}
+        await new Promise(r=>setTimeout(r, ms));  // :contentReference[oaicite:10]{index=10}
         frameSend([{i:-1,color:'#000000'}]);
         await new Promise(r=>setTimeout(r, ms));
       }
@@ -300,7 +298,7 @@
         return {r,g,b};
       };
       while(!stopFlag) {
-        for (let j=0; j<256 && !stopFlag; j+=Math.ceil(256/LEDS)) {
+        for (let j=0; j<256 && !stopFlag; j+=Math.ceil(256/LEDS)){
           const arr = [];
           for (let i=0; i<LEDS; i++){
             const c = wheel((i*256/LEDS+j)&255);
@@ -320,21 +318,21 @@
       const color = document.getElementById('strobeColor').value;
       const freq  = parseFloat(document.getElementById('strobeFreq').value);
       const pulse = parseInt(document.getElementById('strobePulse').value,10);
-      strobeInterval = setInterval(() => {  // :contentReference[oaicite:17]{index=17}
-        if (stopFlag) { clearInterval(strobeInterval); return; }
+      strobeInterval = setInterval(() => {   // :contentReference[oaicite:11]{index=11}
+        if (stopFlag) { clearInterval(strobeInterval); return; }  // :contentReference[oaicite:12]{index=12}
         frameSend([{i:-1,color}]);
         setTimeout(() => frameSend([{i:-1,color:'#000000'}]), pulse);
       }, 1000 / freq);
     }
     function stopStrobe() {
-      clearInterval(strobeInterval);  // :contentReference[oaicite:18]{index=18}
+      clearInterval(strobeInterval);         // :contentReference[oaicite:13]{index=13}
     }
 
     // Цветомузыка
     let audioCtx, analyser, dataArray, source, musicInterval;
     async function initAudio() {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });  // :contentReference[oaicite:19]{index=19}
-      audioCtx = new AudioContext();                                              // :contentReference[oaicite:20]{index=20}
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });  // :contentReference[oaicite:14]{index=14}
+      audioCtx = new AudioContext();                                              // :contentReference[oaicite:15]{index=15}
       analyser = audioCtx.createAnalyser();
       source   = audioCtx.createMediaStreamSource(stream);
       source.connect(analyser);
@@ -345,8 +343,8 @@
       stopFlag = false;
       const baseColor = document.getElementById('musicColor').value;
       const maxB      = parseInt(document.getElementById('musicBrightness').value,10);
-      musicInterval = setInterval(() => {  // :contentReference[oaicite:21]{index=21}
-        analyser.getByteTimeDomainData(dataArray);                                // :contentReference[oaicite:22]{index=22}
+      musicInterval = setInterval(() => {  // :contentReference[oaicite:16]{index=16}
+        analyser.getByteTimeDomainData(dataArray);                              // :contentReference[oaicite:17]{index=17}
         const amp = dataArray.reduce((a,v)=>a+Math.abs(v-128),0)/dataArray.length/128;
         const brightness = Math.min(1,amp)*maxB;
         const {r,g,b} = hexToRgb(baseColor);
@@ -360,7 +358,7 @@
       if (audioCtx) audioCtx.suspend();
     }
 
-    // Остановка всех эффектов и приостановка Wake Lock
+    // Остановка всех эффектов и релиз Wake Lock
     function stopAll() {
       stopFlag = true;
       clearInterval(strobeInterval);
