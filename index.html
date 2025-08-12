@@ -10,6 +10,11 @@
   <!-- Мета-ключевые слова для повышения релевантности по запросам на русском -->
   <meta name="keywords" content="художник марк богданов, художники алматы, художники казахстана">
   
+  <!-- Preload critical resources -->
+  <link rel="preload" href="fonts/Handjet-VariableFont_ELGR,ELSH,wght.ttf" as="font" type="font/ttf" crossorigin>
+  <link rel="preload" href="assets/portrait.webp" as="image" type="image/webp">
+  <link rel="dns-prefetch" href="https://www.googletagmanager.com">
+  
   <!-- Favicons -->
   <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/apple-touch-icon.png">
   <link rel="icon" type="image/svg+xml" href="assets/favicon/favicon.svg">
@@ -43,6 +48,54 @@
   <meta name="twitter:title" content="Mark Bogdanov – Digital & Physical Artist ">
   <meta name="twitter:description" content="Discover the digital art portfolio of Mark Bogdanov, showcasing cyberpunk aesthetics, and innovative digital artworks that bridge art and technology.">
   <meta name="twitter:image" content="assets/favicon/apple-touch-icon.png">
+
+  <!-- Structured Data (JSON-LD) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Mark Bogdanov",
+    "jobTitle": "Digital & Physical Artist",
+    "description": "Digital and physical artist specializing in cyberpunk aesthetics and innovative artworks that bridge art and technology",
+    "url": "https://themarkest.art",
+    "image": "https://themarkest.art/assets/portrait.png",
+    "sameAs": [
+      "https://themarkest.art"
+    ],
+    "knowsAbout": [
+      "Digital Art",
+      "Physical Art",
+      "Interactive Installations",
+      "Cyberpunk Art",
+      "Technology Art"
+    ],
+    "nationality": "Kazakhstan",
+    "worksFor": {
+      "@type": "Organization",
+      "name": "Independent Artist"
+    }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Mark Bogdanov - Digital & Physical Artist Portfolio",
+    "url": "https://themarkest.art",
+    "description": "Discover the digital art portfolio of Mark Bogdanov, showcasing cyberpunk aesthetics, and innovative digital artworks that bridge art and technology.",
+    "author": {
+      "@type": "Person",
+      "name": "Mark Bogdanov"
+    },
+    "inLanguage": ["en", "ru", "kz", "ua"],
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://themarkest.art/?search={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  }
+  </script>
 
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-PSK9RZJMZS"></script>

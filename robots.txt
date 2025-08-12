@@ -1,0 +1,14 @@
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://themarkest.art/sitemap.xml
+
+# Block access to any admin or configuration files
+Disallow: /admin/
+Disallow: /.git/
+Disallow: /config/
+
+# Allow crawling of assets
+Allow: /assets/
+Allow: /fonts/

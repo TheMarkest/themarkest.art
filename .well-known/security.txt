@@ -1,0 +1,4 @@
+Contact: mailto:contact@themarkest.art
+Expires: 2025-12-31T23:59:59.000Z
+Preferred-Languages: en, ru, kz, ua
+Canonical: https://themarkest.art/.well-known/security.txt
