@@ -3,18 +3,22 @@ document.addEventListener("DOMContentLoaded", function() {
     if (!cover) return;
     
     // Определяем, мобильное ли устройство (простейшая проверка)
-    const isMobile = /Mobi|Android/i.test(navigator.userAgent);
+  const isMobile = /Mobi|Android/i.test(navigator.userAgent);
     
-    // Базовая позиция камеры; если мобильное – камера дальше
-    const baseCameraPosition = { x: 0, y: 0, z: isMobile ? 60 : 40 };
-    // Максимальное смещение камеры для параллакса (интенсивность эффекта)
-    const maxOffset = 30;
-    // Коэффициент преобразования углов в смещение (1 градус = 1 единица)
-    const parallaxFactor = 1.0;
+  // Базовая позиция камеры; если мобильное – камера дальше
+  const baseCameraPosition = { x: 0, y: 0, z: isMobile ? 60 : 40 };
+  // Максимальные смещения камеры для параллакса
+  const maxOffset = 30;
+  const maxDepthOffset = isMobile ? 18 : 12;
+  const maxRotation = THREE.MathUtils.degToRad(8);
+  const smoothing = 0.18;
     
-    // Целевое и текущее смещения камеры для плавного перехода
-    let targetOffset = { x: 0, y: 0 };
-    let currentOffset = { x: 0, y: 0 };
+  // Целевые и текущие состояния камеры
+  let targetOffset = { x: 0, y: 0, z: 0 };
+  let currentOffset = { x: 0, y: 0, z: 0 };
+  let targetRotationZ = 0;
+  let currentRotationZ = 0;
+  let orientationPermissionRequested = false;
   
     // Создаем сцену и задаем фон
     const scene = new THREE.Scene();
@@ -108,22 +112,69 @@ document.addEventListener("DOMContentLoaded", function() {
     
     // Обработчик для ПК: движение мыши
     cover.addEventListener("mousemove", function(event) {
+      if (isMobile) return;
       const rect = cover.getBoundingClientRect();
       const offsetX = ((event.clientX - rect.left) - rect.width / 2) / (rect.width / 2);
       const offsetY = ((event.clientY - rect.top) - rect.height / 2) / (rect.height / 2);
       targetOffset.x = THREE.MathUtils.clamp(offsetX * maxOffset, -maxOffset, maxOffset);
       targetOffset.y = THREE.MathUtils.clamp(-offsetY * maxOffset, -maxOffset, maxOffset);
+      targetOffset.z = 0;
     });
-    
-    // Обработчик для мобильных: deviceorientation
-    if (window.DeviceOrientationEvent) {
-      window.addEventListener("deviceorientation", function(event) {
-        let normGamma = Math.max(-45, Math.min(45, event.gamma || 0));
-        let normBeta  = Math.max(-45, Math.min(45, event.beta  || 0));
-        targetOffset.x = THREE.MathUtils.clamp(normGamma * parallaxFactor, -maxOffset, maxOffset);
-        targetOffset.y = THREE.MathUtils.clamp(-normBeta * parallaxFactor, -maxOffset, maxOffset);
-      }, true);
+
+    function handleDeviceOrientation(event) {
+      const rawGamma = typeof event.gamma === "number" ? event.gamma : 0; // left/right
+      const rawBeta = typeof event.beta === "number" ? event.beta : 0;   // front/back
+      const rawAlpha = typeof event.alpha === "number" ? event.alpha : 0; // compass
+
+      const clampedGamma = THREE.MathUtils.clamp(rawGamma, -60, 60);
+      const clampedBeta = THREE.MathUtils.clamp(rawBeta, -60, 60);
+
+      const normalizedGamma = clampedGamma / 60; // -1 .. 1
+      const normalizedBeta = clampedBeta / 60;   // -1 .. 1
+
+      targetOffset.x = THREE.MathUtils.clamp(normalizedGamma * maxOffset, -maxOffset, maxOffset);
+      targetOffset.y = THREE.MathUtils.clamp(-normalizedBeta * maxOffset, -maxOffset, maxOffset);
+      targetOffset.z = THREE.MathUtils.clamp(normalizedBeta * maxDepthOffset, -maxDepthOffset, maxDepthOffset);
+
+      const wrappedAlpha = ((rawAlpha % 360) + 360) % 360; // 0..360
+      const yaw = wrappedAlpha > 180 ? wrappedAlpha - 360 : wrappedAlpha; // -180..180
+      const normalizedYaw = yaw / 180; // -1 .. 1
+      targetRotationZ = THREE.MathUtils.clamp(normalizedYaw * maxRotation, -maxRotation, maxRotation);
     }
+
+    function setupDeviceOrientation() {
+      if (!isMobile || !window.DeviceOrientationEvent) {
+        return;
+      }
+
+      const attachListener = () => {
+        window.addEventListener("deviceorientation", handleDeviceOrientation, { passive: true });
+      };
+
+      if (typeof DeviceOrientationEvent.requestPermission === "function") {
+        const requestPermission = () => {
+          if (orientationPermissionRequested) return;
+          orientationPermissionRequested = true;
+          DeviceOrientationEvent.requestPermission()
+            .then(state => {
+              if (state === "granted") {
+                attachListener();
+              }
+            })
+            .catch(console.error)
+            .finally(() => {
+              window.removeEventListener("touchend", requestPermission);
+              window.removeEventListener("click", requestPermission);
+            });
+        };
+        window.addEventListener("touchend", requestPermission);
+        window.addEventListener("click", requestPermission);
+      } else {
+        attachListener();
+      }
+    }
+
+    setupDeviceOrientation();
     
     // Анимация: обновление модели, частиц и смещения камеры
     function animate() {
@@ -141,15 +192,18 @@ document.addEventListener("DOMContentLoaded", function() {
         }
       });
       
-      // Плавная интерполяция смещения камеры
-      currentOffset.x += (targetOffset.x - currentOffset.x) * 0.1;
-      currentOffset.y += (targetOffset.y - currentOffset.y) * 0.1;
+  // Плавная интерполяция смещения и поворота камеры
+  currentOffset.x += (targetOffset.x - currentOffset.x) * smoothing;
+  currentOffset.y += (targetOffset.y - currentOffset.y) * smoothing;
+  currentOffset.z += (targetOffset.z - currentOffset.z) * smoothing;
+  currentRotationZ += (targetRotationZ - currentRotationZ) * smoothing;
       
-      // Обновляем позицию камеры с учетом параллакса
-      camera.position.x = baseCameraPosition.x + currentOffset.x;
-      camera.position.y = baseCameraPosition.y + currentOffset.y;
-      camera.position.z = baseCameraPosition.z;
-      camera.lookAt(scene.position);
+  // Обновляем позицию камеры с учетом параллакса
+  camera.position.x = baseCameraPosition.x + currentOffset.x;
+  camera.position.y = baseCameraPosition.y + currentOffset.y;
+  camera.position.z = baseCameraPosition.z + currentOffset.z;
+  camera.lookAt(scene.position);
+  camera.rotation.z += currentRotationZ;
       
       renderer.render(scene, camera);
     }
